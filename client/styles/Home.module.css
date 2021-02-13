@@ -1,0 +1,48 @@
+#nprogress .bar {
+  height: 4px !important;
+  background: #ee592e;
+}
+
+.nav {
+  /* background-color: #2f3c51 !important; */
+  background-color: #4d6e74 !important;
+  color: black;
+  position: sticky;
+  /* display: flex; */
+  /* overflow: hidden; */
+  /* position: fixed; */
+}
+
+.nav a:hover {
+  border-radius: none;
+}
+
+.subcard {
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, .2);
+  background-color: #eeeff0;
+  padding: 30px;
+  border-radius: 10px;
+  /* transform: translateY(-800px); */
+}
+
+.title {
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, .2);
+  background-color: #eeeff0;
+  padding: 20px;
+  border-radius: 15px;
+  /* transform: translateY(-800px); */
+}
+
+/* .foodOrder {
+  color: 'grey';
+  border: '1px solid grey';
+  padding: '10px';
+  boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)';
+  borderRadius: '8px';
+  borderBlock: '5px'
+} */
+
+/* set media when on phone to align items like body and divs center on reg and login maybe even put nav on bottom or make a side nav */
+/* @media {
+  40
+} */
