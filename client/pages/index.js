@@ -70,23 +70,23 @@ const Home = ({ categories }) => {
           href=""
           style={{
             color: 'grey',
-            border: '1px solid grey',
+            // border: '1px solid grey',
             // padding: '10px',
             boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
             borderRadius: '8px',
             // borderBlock: '5px',
           }}
-          className="bg-light col-md-4 p-3 "
+          className="bg-light p-3 "
         >
           <div className="row p-3">
-            <div className="col-md-4 p-3">
+            {/* <div className="col-md-4 p-3">
               <img
                 src={c.image && c.image.url}
                 alt={c.name}
                 style={{ width: '100px', height: 'auto' }}
               />
-            </div>
-            <div className="col-md-4 p-3">
+            </div> */}
+            <div className="col-md-4 mb-5 p-2">
               <h3>{c.name}</h3>
             </div>
           </div>
@@ -95,23 +95,23 @@ const Home = ({ categories }) => {
     ));
   return (
     <Layout>
-      <div className="row">
-        <div className="col-md-8">
-          <h1 className="font-weight-bold">Browse Orders</h1>
+      <div className="p-3">
+        <div className="">
+          <h2 className="font-weight-bold">Here is where you'll see the weekly menu appear</h2>
         </div>
       </div>
 
-      <div className="row p-3">
+      <div className="row flex-column justify-content-center  p-3">
 
 
         {listCategories()}
 
         </div>
 
-      <div className="row pt-5">
+      {/* <div className="row pt-5">
         <h2 className="font-weight-bold pb-3">Trending</h2>
         <div className="col-md-12 overflow-hidden">{listOfLinks()}</div>
-      </div>
+      </div> */}
     </Layout>
   );
 };

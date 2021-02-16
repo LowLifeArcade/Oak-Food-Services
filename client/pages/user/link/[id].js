@@ -1,4 +1,7 @@
 // imports
+import styles from '../../../styles/Home.module.css';
+import moment from 'moment';
+
 import { useState, useEffect } from 'react';
 import Layout from '../../../components/Layout';
 import axos from 'axios';
@@ -12,31 +15,161 @@ const Update = ({ oldLink, token }) => {
   // state
   // console.log('old link data from user[id]', oldLink);
   const [state, setState] = useState({
-    title: oldLink.title,
-    url: oldLink.url,
-    categories: oldLink.categories,
-    loadedCategories: [],
+    // title: oldLink.title,
+    // url: oldLink.url,
+    // categories: oldLink.categories,
+    mealRequest: oldLink.mealRequest ,
+    pickupTime: oldLink.pickupTime,
+    pickupOption: oldLink.pickupOption,
+    buttonText: 'Update',
+    // loadedCategories: [],
     success: '',
     error: '',
-    type: oldLink.type,
-    medium: oldLink.medium,
+    // type: oldLink.type,
+    // medium: oldLink.medium,
   });
 
   const {
-    title,
-    url,
-    categories,
-    loadedCategories,
+    pickupOption,
+    pickupTime,
+    mealRequest,
+    // title,
+    // url,
+    // categories,
+    // loadedCategories,
     success,
     error,
-    type,
-    medium,
+    // type,
+    // medium,
   } = state;
 
   // load categories when component mounts useing useEffect
   useEffect(() => {
     loadCategories();
   }, []);
+
+
+  // meal request select
+  const handleSelectChange = (e) => {
+    let i = e.target.getAttribute('data-index');
+    {
+      console.log(i);
+    }
+
+    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    meal.meal = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    meals[i] = meal; // puts meal[i] back into mealRequest array
+    setState({ ...state, mealRequest: [...meals], success: '',
+    error: '', }); //puts ...mealRequest with new meal back into mealRequest: []
+    // setState({...state,
+    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
+    // console.log(e.target.getAttribute("data-index"))
+  };
+
+  const selectMealRequest = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            defaultValue={state.mealRequest[i].meal}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectChange(e)}
+            className="form-control"
+          >
+            {' '}
+            <option value="">Choose an option</option>
+            <option value={'Standard'}>Standard</option>
+            <option value={'Vegetarian'}>Vegetarian</option>
+            <option value={'Vegan'}>Vegan (lunch only)</option>
+            <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  // pickup options(all, breakfast only, lunch only) select
+  const handlePickupOption = (e) => {
+    setState({...state, pickupOption: e.target.value, buttonText: 'Update',success: '',
+    error: '',})
+  };
+
+  const selectPickupOption = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            defaultValue={state.pickupOption}
+            // value='Breakfast and Lunch'
+            data-index={i}
+            onChange={(e) => handlePickupOption(e)}
+            className="form-control"
+          >
+            {' '}
+            <option selected value={'Breakfast and Lunch'}>Breakfast and Lunch</option>
+            <option value={'Breakfast Only'}>Breakfast Only</option>
+            <option value={'Lunch Only'}>Lunch Only</option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  // pickup times select
+  const handlePickupTimeChange = (e) => {
+    setState({...state, pickupTime: e.target.value, buttonText: 'Update', success: '', error: ''})
+  };
+
+  const selectPickupTime = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            defaultValue={state.pickupTime}
+            data-index={i}
+            onChange={(e) => handlePickupTimeChange(e)}
+            className="form-control"
+          >
+            {' '}
+            <option value="">Choose an option</option>
+            <option value={'7am-9am'}>7am-9am</option>
+            <option value={'11am-1pm'}>11am-1pm</option>
+            <option value={'4pm-6pm'}>4pm-6pm</option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  // add meal button
+  const addMeal = () => {
+    setState({
+      ...state,
+      mealRequest: [...mealRequest, { meal: 'Standard', glutenFree: false }],
+    });
+  };
+
+  // remove meal button
+  const removeMeal = (index) => {
+    const list = [...state.mealRequest];
+    // console.log(list);
+    list.splice(-1)[0];
+    // list.splice(index, 1);
+    setState({ ...state, mealRequest: list });
+  };
+
+
+
+
 
   const loadCategories = async () => {
     const response = await axios.get(`${API}/categories`);
@@ -60,7 +193,7 @@ const Update = ({ oldLink, token }) => {
     try {
       const response = await axios.put(
         dynamicUpdateUrl,
-        { title, url, categories, type, medium },
+        { mealRequest, pickupOption, pickupTime },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,7 +202,8 @@ const Update = ({ oldLink, token }) => {
       );
       setState({
         ...state,
-        success: 'Link is updated',
+        success: 'Your request is updated',
+        buttonText: 'Updated'
       });
     } catch (error) {
       console.log('LINK SUBMIT ERROR', error);
@@ -193,7 +327,35 @@ const Update = ({ oldLink, token }) => {
   // create form
   const submitLinkForm = () => (
     <form onSubmit={handleSubmit}>
+
+<div className="form-group">
+        <label htmlFor="" className="text-muted">
+          Meal Options
+        </label>
+        {selectPickupOption()}
+      </div>
+      
       <div className="form-group">
+        <label htmlFor="" className="text-muted">
+          Pickup Time
+        </label>
+        {selectPickupTime()}
+      </div>
+
+      {success && showSuccessMessage(success)}
+      {error && showErrorMessage(error)}
+      <div>
+        <button
+          disabled={!token}
+          className="btn btn-outline-warning"
+          type="submit"
+        >
+          {isAuth() || token ? state.buttonText : 'Login to Make Request'}
+        </button>
+      </div>
+      
+      
+      {/* <div className="form-group">
         <label htmlFor="" className="text-muted">
           Title
         </label>
@@ -223,46 +385,110 @@ const Update = ({ oldLink, token }) => {
         >
           {isAuth() || token ? 'Update' : 'Login to update'}
         </button>
-      </div>
+      </div> */}
     </form>
   );
 
   return (
     <Layout>
-      <div className="row">
-        <div className="col-md-12">
-          <h1>Edit Request</h1>
-          <br />
+      {console.log(oldLink)}
+    <div className="col-md-6 offset-md-3">
+      <div className={styles.subcard}>
+        <div className="row">
+          <div className="col-md-12">
+            <h2>
+              Meal Request for{' '}
+              {`${moment(new Date()).format('dddd, MMMM Do ')}`}{' '}
+            </h2>
+            <br />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-12">
+            {state.mealRequest.map((x, i) => {
+              return (
+                <>
+                  <h6 className="p-2">
+                    <label key={i} className="form-check-label text-muted">
+                      Select Meal # {`${i + 1}`}
+                    </label>
+                  </h6>
+                {/* {console.log(x)}
+                {console.log(mealRequest)} */}
+
+                  <div key={i} className="">
+                    {selectMealRequest(i)}
+                  </div>
+                </>
+              );
+            })}
+
+            <div className="">
+              {state.mealRequest.length < 5 && (
+                <button className="btn btn-warning" onClick={() => addMeal()}>
+                  Add Meal
+                </button>
+              )}
+
+              {state.mealRequest.length !== 1 && (
+                <button
+                  className="btn btn-warning float-right"
+                  onClick={() => removeMeal()}
+                >
+                  Remove Meal
+                </button>
+              )}
+            </div>
+
+            {/* {console.log(mealRequest)} */}
+          </div>
+          <div className="col-md-6 p-3">
+            {/* {success && showSuccessMessage(success)}
+            {error && showErrorMessage(error)} */}
+            {submitLinkForm()}
+          </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col-md-3">
-          <div className="form-group">
-            <label className="text-muted ml-3"> Category </label>
+    </div>
+  </Layout>
 
-            <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
-              {showCategories()}
-            </ul>
-          </div>
-          <div className="form-group">
-            <label className="text-muted ml-3"> Type </label>
 
-            {showTypes()}
-          </div>
-          <div className="form-group">
-            <label className="text-muted ml-3"> Medium </label>
+    // <Layout>
+    //   <div className="row">
+    //     <div className="col-md-12">
+    //       <h1>Edit Request</h1>
+    //       <br />
+    //     </div>
+    //   </div>
+    //   <div className="row">
+    //     <div className="col-md-3">
+    //       <div className="form-group">
+    //         <label className="text-muted ml-3"> Category </label>
 
-            {showMedium()}
-          </div>
-        </div>
-        <div className="col-md-6">
-          {/* {console.log(success)} */}
-          {success && showSuccessMessage(success)}
-          {error && showErrorMessage(error)}
-          {submitLinkForm()}
-        </div>
-      </div>
-    </Layout>
+    //         <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
+    //           {showCategories()}
+    //         </ul>
+    //       </div>
+    //       <div className="form-group">
+    //         <label className="text-muted ml-3"> Type </label>
+
+    //         {showTypes()}
+    //       </div>
+    //       <div className="form-group">
+    //         <label className="text-muted ml-3"> Medium </label>
+
+    //         {showMedium()}
+    //       </div>
+    //     </div>
+    //     <div className="col-md-6">
+    //       {/* {console.log(success)} */}
+    //       {success && showSuccessMessage(success)}
+    //       {error && showErrorMessage(error)}
+    //       {submitLinkForm()}
+    //     </div>
+    //   </div>
+    // </Layout>
   );
 };
 

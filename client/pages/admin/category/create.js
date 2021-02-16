@@ -1,13 +1,18 @@
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Resizer from 'react-image-file-resizer';
-const ReactQuill = dynamic(() => import ('react-quill'), {ssr: false})
+const ReactQuill = dynamic(() => import('react-quill'), {
+  ssr: false,
+  modules: {
+    table: true,
+  },
+});
 import { API } from '../../../config';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.snow.css';
 // import { set } from 'js-cookie';
 
 const Create = ({ user, token }) => {
@@ -19,10 +24,13 @@ const Create = ({ user, token }) => {
     buttonText: 'Create',
     image: '',
   });
+  
 
-  const[content, setContent] = useState('')
+  const [content, setContent] = useState('');
 
-  const [imageUploadButtonName, setImageUploadButtonName] = useState('Upload image')
+  const [imageUploadButtonName, setImageUploadButtonName] = useState(
+    'Upload image'
+  );
 
   const {
     name,
@@ -45,10 +53,10 @@ const Create = ({ user, token }) => {
   };
 
   const handleContent = (e) => {
-    console.log(3)
-      setContent(e)
-      setState({...state, content: {content}, success: '', error: ''})
-  }
+    console.log(3);
+    setContent(e);
+    setState({ ...state, content: { content }, success: '', error: '' });
+  };
 
   // const handleImage = (e) => {
   //     const image = e.target.files[0]
@@ -60,13 +68,13 @@ const Create = ({ user, token }) => {
     if (event.target.files[0]) {
       fileInput = true;
     }
-    setImageUploadButtonName( event.target.files[0].name)
+    setImageUploadButtonName(event.target.files[0].name);
     if (fileInput) {
       try {
         Resizer.imageFileResizer(
           event.target.files[0],
-          300,
-          300,
+          1000,
+          1000,
           'JPEG',
           100,
           0,
@@ -100,8 +108,8 @@ const Create = ({ user, token }) => {
         }
       );
       console.log('CATEGORY CREATE RESPONSE', response);
-      setImageUploadButtonName('Upload image')
-      setContent('')
+      setImageUploadButtonName('Upload image');
+      setContent('');
       setState({
         ...state,
         name: '',
@@ -118,7 +126,7 @@ const Create = ({ user, token }) => {
         ...state,
         buttonText: 'Awe',
         error: 'something boobooed',
-        // 
+        //
       });
     }
   };
@@ -158,8 +166,20 @@ const Create = ({ user, token }) => {
           placeholder="write here"
           theme="snow"
           className="pd-5 mb-3"
-          style={{  border: '1px solid #333' }}
+          style={{ border: '1px solid #333' }}
         />
+      {/* insert table somehow */}
+      
+
+        {/* <label className="text-muted">Content</label>
+        <ReactQuill
+          value={content}
+          onChange={handleContent}
+          placeholder="write here"
+          theme="snow"
+          className="pd-5 mb-3"
+          style={{  border: '1px solid #333' }}
+        /> */}
         {/* <textarea
           type="content"
           onChange={handleChange('content')}
@@ -170,6 +190,20 @@ const Create = ({ user, token }) => {
       </div>
       <div className="form-group">
         <label className="btn btn-outline-secondary">
+          Add Table
+          <input
+            id={'insert-table'}
+            onChange={(e) => () => {
+              table.insertTable(2, 2);
+            }}
+            className="form-control"
+            hidden
+          />
+        </label>
+      </div>
+
+      {/* <div className="form-group">
+        <label className="btn btn-outline-secondary">
           {imageUploadButtonName}
           <input
             onChange={handleImage}
@@ -179,7 +213,8 @@ const Create = ({ user, token }) => {
             hidden
           />
         </label>
-      </div>
+      </div> */}
+
       <button className="btn btn-outline-warning">{buttonText}</button>
     </form>
   );

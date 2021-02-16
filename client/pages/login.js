@@ -19,7 +19,13 @@ const Login = () => {
   });
 
   useEffect(() => {
-    isAuth() && Router.push('/');
+    // isAuth() && Router.push('/user');
+    isAuth() && isAuth().role === 'admin'
+          ? Router.push('admin') 
+          : isAuth() && isAuth().role === 'user'
+          ? Router.push('user')
+          : Router.push('/login')
+          // : Router.push('user')
   }, []);
 
   const { email, password, error, success, buttonText } = state;

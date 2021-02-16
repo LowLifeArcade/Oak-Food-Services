@@ -68,7 +68,7 @@ const Read = ({ user, token }) => {
               <img
                 src={c.image && c.image.url}
                 alt={c.name}
-                style={{ width: '100px', height: 'auto' }}
+                style={{ width: '1000px', height: 'auto' }}
               />
             </div>
             <div className="col-md-6">

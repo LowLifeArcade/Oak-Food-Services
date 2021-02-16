@@ -14,12 +14,13 @@ const withUser = (Page) => {
         const response = await axios.get(`${API}/user`, {
           headers: {
             authorization: `Bearer ${token}`,
-            contentType: 'application/nson',
+            contentType: 'application/json',
+            // contentType: 'application/nson',
           },
         });
         // console.log('response in withUser', response)
         user = response.data.user;
-        userLinks = response.data.links
+        userLinks = response.data.mealRequest
       } catch (error) {
         if (error.response.status === 401) {
           user = null;

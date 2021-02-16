@@ -18,10 +18,11 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 // create, list, read, update, remove
 
 exports.create = (req, res) => {
-  const { title, url, categories, type, medium } = req.body;
+  const { mealRequest, pickupOption, pickupTime } = req.body;
+  // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
-  const slug = url;
-  let link = new Link({ title, url, categories, type, medium, slug });
+  // const slug = url;
+  let link = new Link({ mealRequest, pickupOption, pickupTime });
   // posted by user. We save this for use in user dashboard etc
   link.postedBy = req.user._id;
 
@@ -33,43 +34,47 @@ exports.create = (req, res) => {
 
   // save link
   link.save((err, data) => {
-    // console.log(err);
+    console.log(err);
     if (err) {
       return res.status(400).json({
-        error: 'Link already exitss',
+        error: 'Link already exits',
       });
     }
     res.json(data);
     // find all users with categories in their profile. since we modified our user model each user will have array of categories
+
     // if new link posted has a category the user has in profile we send an email. Change to categories posted where categories will be weekly menu.
-    User.find({ categories: { $in: categories } }).exec((err, users) => {
-      if (err) {
-        throw new Error(err);
-        console.log('Error in controllers/link');
-      }
-      Category.find({ _id: { $in: categories } }).exec((err, result) => {
-        if (err) {
-          throw new Error(err);
-        } else {
-          data.categories = result;
 
-          for (let i = 0; i < users.length; i++) {
-            const params = linkPublishedParams(users[i].email, data); // email mod
-            const sendEmail = ses.sendEmail(params).promise();
+    // User.find({ categories: { $in: categories } }).exec((err, users) => {
+    //   if (err) {
+    //     throw new Error(err);
+    //     console.log('Error in controllers/link');
+    //   }
+    //   Category.find({ _id: { $in: categories } }).exec((err, result) => {
+    //     if (err) {
+    //       throw new Error(err);
+    //     } else {
+    //       data.categories = result;
 
-            sendEmail
-              .then((success) => {
-                console.log('email submitted to SES', success);
-                return;
-              })
-              .catch((failure) => {
-                console.log('error on email submitted to SES', failure);
-                return;
-              });
-          }
-        }
-      });
-    }); // $in is a mongoose thing letting you find one or many in something like categories which here comes from the newly posted link
+    //       for (let i = 0; i < users.length; i++) {
+    //         const params = linkPublishedParams(users[i].email, data); // email mod
+    //         const sendEmail = ses.sendEmail(params).promise();
+
+    //         sendEmail
+    //           .then((success) => {
+    //             console.log('email submitted to SES', success);
+    //             return;
+    //           })
+    //           .catch((failure) => {
+    //             console.log('error on email submitted to SES', failure);
+    //             return;
+    //           });
+    //       }
+    //     }
+    //   });
+    // }); 
+    
+    // $in is a mongoose thing letting you find one or many in something like categories which here comes from the newly posted link
   });
 };
 

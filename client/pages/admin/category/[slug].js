@@ -71,8 +71,8 @@ const Update = ({ oldCategory, token }) => {
       try {
         Resizer.imageFileResizer(
           event.target.files[0],
-          300,
-          300,
+          1000,
+          1000,
           'JPEG',
           100,
           0,

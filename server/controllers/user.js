@@ -9,10 +9,11 @@ exports.read = (req, res) => {
       });
     }
     Link.find({ postedBy: user })
-      .populate('categories', 'name slug')
+      // .populate('categories', 'name slug')
       .populate('postedBy', 'name')
+      .populate('mealRequest', 'mealRequest')
       .sort({ createdAt: -1 })
-      .exec((err, links) => {
+      .exec((err, mealRequest) => {
         if (err) {
           return res.status(400).json({
             error: 'Could not find links',
@@ -21,12 +22,38 @@ exports.read = (req, res) => {
         user.hashed_password = undefined;
         user.salt = undefined;
         // console.log('user from user.js',user)
-        res.json({ user, links });
+        res.json({ user, mealRequest });
       });
   });
 
   //   return res.json(req.profile);
 };
+// exports.read = (req, res) => {
+//   User.findOne({ _id: req.user._id }).exec((err, user) => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: 'User not found',
+//       });
+//     }
+//     Link.find({ postedBy: user })
+//       .populate('categories', 'name slug')
+//       .populate('postedBy', 'name')
+//       .sort({ createdAt: -1 })
+//       .exec((err, links) => {
+//         if (err) {
+//           return res.status(400).json({
+//             error: 'Could not find links',
+//           });
+//         }
+//         user.hashed_password = undefined;
+//         user.salt = undefined;
+//         // console.log('user from user.js',user)
+//         res.json({ user, links });
+//       });
+//   });
+
+//   //   return res.json(req.profile);
+// };
 
 exports.update = (req, res) => {
   const { name, password, categories } = req.body;

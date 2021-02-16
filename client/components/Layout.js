@@ -32,97 +32,90 @@ const Layout = ({ children }) => {
   );
 
   const nav = () => (
-    // const toggle = (() => {
-    //   const [classState, setClassState] = useState({addClass: ''})
-    //   const card = document.querySelector('.subcard')
-    //   card.addEventListener('click', () => {
-    //       card.classList.add('.active-card')
-    //   })
-    // }),
-    // useEffect(() => {
-    //   const card = document.querySelector('.subcard')
-    //   card.addEventListener('click', () => {
-    //       card.classList.add('.active-card')
-    //   })
-    // }),
-<nav className={styles.nav} >
-
-    <ul className={'nav nav-tabs ' + styles.nav}>
-      <li className="nav-item pointer-hand">
-        <Link href="/">
-          <a className="nav-link text-white">Home</a>
-        </Link>
-      </li>
-      
-      {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-
-      // <li className="nav-item pointer-hand">
-        <Link href="/user/link/create">
-          <a className="nav-link text-white btn btn-warning" style={{ borderRadius: '0px' }} >{ ' 📝'}</a>
-          {/* \u{1F354} */}
-        </Link>
-
-      )}
-      {process.browser && isAuth() && isAuth().role === 'admin' && (
-
-      // <li className="nav-item pointer-hand">
-        <Link href="/user/link/create">
-          <a className="nav-link text-white btn btn-success" style={{ borderRadius: '0px' }} >{ '🍱'}</a>
-        </Link>
-
-      )}
-      
-      {process.browser && !isAuth() && (
-        <React.Fragment>
-          <li className="nav-item ml-auto">
-            <Link href="/login">
-              <a className="nav-link text-white">Login</a>
-            </Link>
-          </li>
-
-          <li className="nav-item">
-            <Link href="/register">
-              <a className="nav-link text-white">Register</a>
-            </Link>
-          </li>
-        </React.Fragment>
-      )}
-
-      {process.browser && isAuth() && isAuth().role === 'admin' && (
-        <li className="nav-item ml-auto">
-          <Link href="/admin">
-            <a className="nav-link text-white">Admin: {isAuth().name}</a>
+    <nav className={styles.nav}>
+      <ul className={'nav nav-tabs ' + styles.nav}>
+        <li className="nav-item pointer-hand">
+          <Link href="/">
+            <a className="nav-link text-white">Home</a>
           </Link>
         </li>
-      )}
 
-      {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-        <li className="nav-item ml-auto">
-          <Link href="/user">
-            <a className="nav-link text-white">User: {isAuth().name}</a>
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/user/link/create">
+            <a
+              className="nav-link text-white btn btn-warning"
+              style={{ borderRadius: '0px' }}
+            >
+              {' 📝'}
+            </a>
+            {/* \u{1F354} */}
           </Link>
-        </li>
-      )}
-
-      {process.browser && isAuth() && (
-
-        
-        <li className="nav-item ">
-          <Link href="/login">
-        <a onClick={logout} className="nav-link text-white">
-          Logout
-        </a>
-          </Link>
-      </li>
         )}
-    </ul>
-    </nav>
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/user/link/create">
+            <a
+              className="nav-link text-white btn btn-success"
+              style={{ borderRadius: '0px' }}
+            >
+              {'🍱'}
+            </a>
+          </Link>
+        )}
 
+        {process.browser && !isAuth() && (
+          <React.Fragment>
+            <li className="nav-item ml-auto">
+              <Link href="/login">
+                <a className="nav-link text-white">Login</a>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link href="/register">
+                <a className="nav-link text-white">Register</a>
+              </Link>
+            </li>
+          </React.Fragment>
+        )}
+
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item ml-auto">
+            <Link href="/admin">
+              <a className="nav-link text-white">Admin: {isAuth().name}</a>
+            </Link>
+          </li>
+        )}
+
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          <li className="nav-item ml-auto">
+            <Link href="/user">
+              <a className="nav-link text-white">User: {isAuth().name}</a>
+            </Link>
+          </li>
+        )}
+
+        {process.browser && isAuth() && (
+          <li className="nav-item ">
+            <Link href="/login">
+              <a onClick={logout} className="nav-link text-white">
+                Logout
+              </a>
+            </Link>
+          </li>
+        )}
+      </ul>
+    </nav>
   );
+
+  const sideBar = () => {
+      // 
+  }
 
   return (
     <React.Fragment>
-      {head()} {nav()} <div className={"container pt-5 pb-2 "}>{children}</div>
+      {head()} {nav()} {sideBar()} <div className={'container pt-5 pb-2 '}>{children}</div>
     </React.Fragment>
   );
 };

@@ -5,136 +5,124 @@ import { getCookie } from '../../helpers/auth';
 import withUser from '../withUser';
 import Link from 'next/link';
 import moment from 'moment';
-import Router from 'next/router'
+import Router from 'next/router';
 
 import Layout from '../../components/Layout';
 
 const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm('WARNING! Confirm delete.')
+    let answer = window.confirm('WARNING! Confirm delete.');
     if (answer) {
-      handleDelete(id)
+      handleDelete(id);
     }
   };
 
   const handleDelete = async (id) => {
     // console.log('delete link', id)
-      try {
-        const response = await axios.delete(`${API}/link/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        console.log('LINK DELETE SUCCESS', response)
-        Router.replace('/user')
-      } catch (error) {
-        console.log('ERROR DELETING LINK', error)
-      }
+    try {
+      const response = await axios.delete(`${API}/link/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('LINK DELETE SUCCESS', response);
+      Router.replace('/user');
+    } catch (error) {
+      console.log('ERROR DELETING LINK', error);
+    }
+  };
+  {
+    console.log(userLinks.mealRequest);
   }
-
   const listOfLinks = () =>
     userLinks.map((l, i) => (
-      <div key={i} className="row alert alert-primary p-2">
-        <div className="col md-8">
-          <a href={l.url} target="_blank">
-            <h5 className="pt-2">{l.title} </h5>
-            <h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
-              {l.url}{' '}
-            </h6>
-          </a>
+      <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+        <h3>Your request for Feburary 15th</h3>
+        <p></p>
+        <div className="p-3">
+          {/* <a href={l.url} target="_blank"> */}
+          <h3 className="p-2">
+            {l.mealRequest.length} weekly meals:
+            <p></p>
+            {l.mealRequest.map((l, i) => (
+              <h4 className="">{l.meal}</h4>
+            ))}{' '}
+          </h3>
+          {console.log(l.mealRequest)}
+          <h2 className="pt-2 " style={{ fontSize: '20px' }}>
+            Pickup for your order is <br/>
+            between {l.pickupTime}{' '} {l.pickupDate}
+          </h2>
+          {/* </a> */}
         </div>
-        <div className="col-md-4 pt-2">
-          <span className="pull-right">
+        <div className="pt-2 p-3">
+          <span className="">
             {' '}
-            {moment(l.createdAt).fromNow() + ' by ' + l.postedBy.name}{' '}
+            {moment(l.createdAt).fromNow()}
+            {/* // + ' by ' + l.postedBy.name */}{' '}
           </span>
+
+
         </div>
 
-        <div className="col-md-12">
-          <span className="badge text-dark">
-            {l.type} / {l.medium}{' '}
-          </span>
-          {l.categories.map((c, i) => (
-            <span key={i} className="badge text-success">
-              {c.name}{' '}
-            </span>
-          ))}
-          <span className="badge text-secondary">{l.clicks} clicks </span>
+        <div className="col-md-12 ">
+          
           <Link href={`/user/link/${l._id}`}>
-            <span className="badge text-warning pull-right">Update</span>
+            <button className="badge btn btn-outline-warning text">
+              Edit Request
+            </button>
           </Link>
-          <span onClick={(e) => confirmDelete(e,l._id)} className="badge text-danger pull-right">Delete</span>
+
+          <button
+            onClick={(e) => confirmDelete(e, l._id)}
+            className="badge text-danger btn btn-outline-warning float-right"
+          >
+            Delete
+          </button>
         </div>
       </div>
     ));
 
   return (
     <Layout>
-      <h1>
+      <div className="">
+
+      <h2 className="" >
         {user.name}'s dashboard{' '}
         {/* <span className="text-danger"> /{user.role}</span>{' '} */}
-      </h1>
-
+      </h2>
+      </div>
+<br/>
       <hr />
-      <div className="row">
+      <div className="row p-2">
         <div className="cor-md-4">
           <ul className="nav flex-column">
             <li className="nav-item">
+              <Link href="/user/profile/update">
+                <a className="nav-item">Update profile</a>
+              </Link>
+            </li>
+            <li className="nav-item p-4">
               <Link href="/user/link/create">
-                <a className="nav link">Submit an request</a>
+                <button className="btn btn-warning">Submit a Request</button>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link href="/user/profile/update">
-                <a className="nav link">Update profile</a>
-              </Link>
-            </li>
-            {/* <li className="nav-item">
-              <Link href="/user/profile/update">
-                <a className="nav-link" href="">Profile Update</a>
-              </Link>
-            </li> */}
           </ul>
         </div>
+      </div>
+    <div className="col-md-8 flex-column justify-content-center ">
 
-        <div className="cor-md-8">
-          <h2>Your links</h2>
-          <br />
-          {listOfLinks()}
-        </div>
+      <h2>Your Meal Requests</h2>
+      {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
+      <div className="p-3">
+        <br />
+        {listOfLinks()}
+    </div>
       </div>
     </Layout>
   );
 };
 
 export default withUser(User);
-
-// const User = () => {
-//   const [todos, setTodos] = useState([])
-//   useEffect(() => {
-//     axios.get(`https://jsonplaceholder.typicode.com/todos`).then(response => setTodos(response.data));
-//   }, []);
-//   return (
-//     <Layout>{JSON.stringify(todos)}</Layout>
-//   )
-// };
-
-// User.getInitialProps = async (context) => {
-//   const token = getCookie('token', context.req);
-
-//   try {
-//     const response = await axios.get(`${API}/user`, {
-//       headers: {
-//         authorization: `Bearer ${token}`,
-//         contentType: 'application/nson',
-//       },
-//     });
-//     return { user: response.data };
-//   } catch (error) {
-//     if (error.response.status === 401) {
-//       return { user: 'no user' };
-//     }
-//   }
-// };
