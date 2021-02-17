@@ -120,7 +120,7 @@ const Layout = ({ children }) => {
 
   return (
     <React.Fragment>
-      {head()} {nav()} {sideBar()} <div className={'container pt-5 pb-2 '}>{children}</div>
+      {head()} {nav()} {sideBar()} <div className={'container pb-2 '}>{children}</div>
     </React.Fragment>
   );
 };

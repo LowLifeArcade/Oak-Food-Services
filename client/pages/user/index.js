@@ -34,94 +34,96 @@ const User = ({ user, token, l, userLinks }) => {
     }
   };
   {
-    console.log('pages user index',userLinks.mealRequest);
+    console.log('pages user index', userLinks.mealRequest);
   }
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
-        <h3>Your request for {moment(l.pickupDate).format('MMM Do')}</h3>
+        <h4 className="pt-1" >
+          Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
+        </h4>
+        <h4>
+          Code: <b> VtVg_broa_03</b>
+        </h4>
         <p></p>
-        <div className="p-3">
+        <div className="p-2">
           {/* <a href={l.url} target="_blank"> */}
-          <h3 className="p-2">
-            {l.mealRequest.length} weekly meals:
+          <h5 className="pb-1">
+            For {l.mealRequest.length} weekly meal{l.mealRequest.length > 1 && 's'}:
             <p></p>
             {l.mealRequest.map((l, i) => (
-              <h4 className="">{l.meal}</h4>
-            ))}{' '}
-          </h3>
+              <h6 className="">Meal {`${i +1} `} - {l.meal} </h6>
+            ))}
+          </h5>
           {console.log(l.mealRequest)}
-          <h2 className="pt-2 " style={{ fontSize: '20px' }}>
-            Pickup for your order is <br/>
-            between {l.pickupTime}{' '} 
+          <h2 className=" " style={{ fontSize: '16px' }}>
+            Pickup for your order is between <b>{l.pickupTime} </b>
           </h2>
           {/* </a> */}
         </div>
-        <div className="pt-2 p-3">
+        <div className="pt-1 ">
           <span className="">
             {' '}
             {moment(l.createdAt).fromNow()}
             {/* // + ' by ' + l.postedBy.name */}{' '}
           </span>
-
-
         </div>
 
-        <div className="col-md-12 ">
-          
+        <div className=" pb-3 pt-3">
           <Link href={`/user/link/${l._id}`}>
-            <button className="badge btn btn-outline-warning text">
+            <button className="badge btn btn-outline-warning text float-left">
               Edit Request
             </button>
           </Link>
-
-          <button
-            onClick={(e) => confirmDelete(e, l._id)}
-            className="badge text-danger btn btn-outline-warning float-right"
-          >
-            Delete
-          </button>
+          <Link href="">
+            <button
+              onClick={(e) => confirmDelete(e, l._id)}
+              className="badge text-danger btn btn-outline-warning float-right"
+            >
+              Delete
+            </button>
+          </Link>
         </div>
       </div>
     ));
 
   return (
     <Layout>
-      <div className="">
-        
+      {/* <div className=""> */}
 
-      <h2 className="" >
+      <h2 className="pt-3">
         {user.name}'s dashboard{' '}
         {/* <span className="text-danger"> /{user.role}</span>{' '} */}
       </h2>
-      </div>
-      
-<br/>
+      {/* </div> */}
       <hr />
-      <div className="row p-2">
-        <div className="cor-md-4">
-          <ul className="nav flex-column">
-            <li className="nav-item">
-              <Link href="/user/profile/update">
-                <a className="nav-item">Update profile</a>
-              </Link>
-            </li>
-            <li className="nav-item p-4">
-              <Link href="/user/link/create">
-                <button className="btn btn-warning">Submit a Request</button>
-              </Link>
-            </li>
-          </ul>
+      <div className="p-1">
+        <div className="">
+          {/* <ul className="nav flex-column"> */}
+          {/* <li className="nav-item"> */}
+          <Link href="/user/profile/update">
+            <a className="nav-item">Update profile</a>
+          </Link>
+          {/* </li> */}
+          {/* <li className="nav-item p-4"> */}
+          <Link href="/user/link/create">
+            <button className="btn btn-warning float-right">
+              Submit a Request
+            </button>
+          </Link>
+          {/* </li> */}
+          {/* </ul> */}
         </div>
       </div>
-    <div className="col-md-8 flex-column justify-content-center ">
 
-      <h2>Your Meal Requests</h2>
-      {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
-      <div className="p-3">
+      <div className="col-md flex-column justify-content-center ">
         <br />
-        {listOfLinks()}
-    </div>
+        {/* <h2>Your Meal Requests</h2> */}
+        {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
+        <div className="pb-3">
+          <br />
+          {listOfLinks()}
+        </div>
       </div>
     </Layout>
   );

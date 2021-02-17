@@ -435,7 +435,7 @@ const Update = ({ oldLink, token, _id }) => {
   return (
     <Layout>
       {/* {console.log(oldLink)} */}
-    <div className="col-md-6 offset-md-3">
+    <div className="col-md-6 offset-md-3 pt-4">
       <div className={styles.subcard}>
         <div className="row">
           <div className="col-md-12">

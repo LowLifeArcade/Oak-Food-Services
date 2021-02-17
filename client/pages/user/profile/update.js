@@ -12,6 +12,7 @@ const Profile = ({ user, token }) => {
   const [state, setState] = useState({
     name: user.name,
     email: user.email,
+    student: 'Paul, OPHS',
     password: '',
     error: '',
     success: '',
@@ -25,6 +26,7 @@ const Profile = ({ user, token }) => {
   // }, []);
 
   const {
+    student,
     name,
     email,
     password,
@@ -81,10 +83,11 @@ const Profile = ({ user, token }) => {
     );
   };
 
-  const handleChange = (name) => (e) => {
+  const handleChange = (name, student) => (e) => {
     setState({
       ...state,
       [name]: e.target.value,
+      [student]: e.target.value,
       error: '',
       success: '',
       buttonText: 'Update',
@@ -134,7 +137,11 @@ const Profile = ({ user, token }) => {
 
   const updateForm = () => (
     <form onSubmit={handleSubmit} action="POST">
-      <div className="form-group">
+       <div className="text-muted">
+
+Username
+</div>
+      <div className="form-group pt-2">
         <input
           value={name}
           onChange={handleChange('name')}
@@ -161,17 +168,32 @@ const Profile = ({ user, token }) => {
           onChange={handleChange('password')}
           type="password"
           className="form-control"
-          placeholder="Type a new password or leave blank"
+          placeholder="password"
+          disabled
           
         />
       </div>
-      <div className="form-group">
+    <div className="text-muted">
+
+        Student Name and School
+    </div>
+      <div className="form-group pt-2">
+        <input
+          value={student}
+          onChange={handleChange('student')}
+          type="text"
+          className="form-control"
+          placeholder="Student Name"
+          required
+        />
+      </div>
+      {/* <div className="form-group">
         <label className="text-muted ml-3"> Category </label>
 
         <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
           {showCategories()}
         </ul>
-      </div>
+      </div> */}
       <div className="form-group">
         <button type="text" className="btn btn-outline-warning ">
           {buttonText}
@@ -182,9 +204,10 @@ const Profile = ({ user, token }) => {
 
   return (
     <Layout>
-      <div className={styles.subcard}>
+      <div className="pt-4"></div>
+      <div className= {styles.subcard}>
         {/* + "col-md-6 offset-md-3 subcard" */}
-        <h1 className={styles.title}>Update Profile</h1>
+        <h2 className={styles.title}>Update Profile</h2>
         <br />
         {success && showSuccessMessage(success)}
         {error && showErrorMessage(error)}

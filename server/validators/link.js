@@ -21,6 +21,10 @@ exports.linkCreateValidator = [
   //   .not()
   //   .isEmpty()
   //   .withMessage('Picke a medium media or book'),
+  check('pickupDate')
+  .not()
+  .isEmpty()
+  .withMessage('Date is required!'),
   check('mealRequest')
   .not()
   .isEmpty()
@@ -36,10 +40,7 @@ exports.linkCreateValidator = [
 ];
 
 exports.linkUpdateValidator = [
-  check('pickupDate')
-  .not()
-  .isEmpty()
-  .withMessage('Date is required'),
+  
   check('mealRequest')
   .not()
   .isEmpty()

@@ -44,10 +44,10 @@ exports.create = (req, res) => {
       console.log('ERROR IN LINK CONTROLLER', err);
       if (err) {
         return res.status(400).json({
-          error: 'Date is required',
+          error: 'There was an error creating your request, but we are unsure why. Try submitting a new request or contact us about the issue',
         });
       }
-      console.log('link controller', data)
+      // console.log('link controller', data)
       res.json(data);
     })
     // find all users with categories in their profile. since we modified our user model each user will have array of categories
