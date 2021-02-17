@@ -197,8 +197,8 @@ const Update = ({ oldCategory, token }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="col-md-6 offset-md-3">
-          <h1>Update category</h1>
+        <div className="col-md-6 offset-md-3 pt-3">
+          <h1>Update Post</h1>
           <br />
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}

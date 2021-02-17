@@ -49,7 +49,7 @@ const Read = ({ user, token }) => {
   }
 
   const listCategories = () =>
-    categories.map((c, i) => (
+    categories.slice(0).reverse().map((c, i) => (
       <Link key={i} href={`/links/${c.slug}`}>
         <a
           href=""
@@ -68,7 +68,7 @@ const Read = ({ user, token }) => {
               <img
                 src={c.image && c.image.url}
                 alt={c.name}
-                style={{ width: '1000px', height: 'auto' }}
+                style={{ width: '250px', height: 'auto' }}
               />
             </div>
             <div className="col-md-6">
@@ -95,8 +95,8 @@ const Read = ({ user, token }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="col-md-12">
-          <h1>List of categories</h1>
+        <div className="col-md-12 pt-3">
+          <h1>List of Posts</h1>
           <br />
         </div>
       </div>

@@ -13,15 +13,17 @@ import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
 import 'react-quill/dist/quill.snow.css';
+import Router from 'next/router'
 // import { set } from 'js-cookie';
 
-const Create = ({ user, token }) => {
+const Create = ({ user, username, token }) => {
   const [state, setState] = useState({
     name: '',
+    postedBy: username,
     error: '',
     success: '',
     // content: {content},
-    buttonText: 'Create',
+    buttonText: 'Post',
     image: '',
   });
   
@@ -33,6 +35,7 @@ const Create = ({ user, token }) => {
   );
 
   const {
+    postedBy,
     name,
     success,
     meal,
@@ -41,6 +44,15 @@ const Create = ({ user, token }) => {
     buttonText,
     imageUploadText,
   } = state;
+
+  useEffect(() => {
+    buttonText === 'Created'
+    ? setTimeout(() => {
+        Router.push('/');
+      }, 2000)
+      : console.log('none')
+    // : Router.push('');
+  }, [buttonText])
 
   // maybe add a className that makes the div go away with transform translateY
   const handleChange = (name) => (e) => {
@@ -97,10 +109,12 @@ const Create = ({ user, token }) => {
     setState({ ...state, buttonText: 'Creating...' });
     // console.table({name, content, image});
     // console.log(...formData);
+    
+
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, image },
+        { name, content, image, postedBy },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -124,9 +138,9 @@ const Create = ({ user, token }) => {
       console.log('CATEGORY CREATE ERROR', error);
       setState({
         ...state,
-        buttonText: 'Awe',
-        error: 'something boobooed',
-        //
+        buttonText: 'Post',
+        error: 'something went wrong here',
+        // some stuff
       });
     }
   };
@@ -134,7 +148,7 @@ const Create = ({ user, token }) => {
   const createCategoryForm = () => (
     <form action="" onSubmit={handleSubmit}>
       <div className="form-group">
-        <label className="text-muted">Name</label>
+        <label className="text-muted">Post Title</label>
         <input
           type="text"
           onChange={handleChange('name')}
@@ -188,7 +202,7 @@ const Create = ({ user, token }) => {
           required
         /> */}
       </div>
-      <div className="form-group">
+      {/* <div className="form-group">
         <label className="btn btn-outline-secondary">
           Add Table
           <input
@@ -200,20 +214,20 @@ const Create = ({ user, token }) => {
             hidden
           />
         </label>
-      </div>
+      </div> */}
 
-      {/* <div className="form-group">
+      <div className="form-group">
         <label className="btn btn-outline-secondary">
           {imageUploadButtonName}
           <input
-            onChange={handleImage}
+            onChange={e => handleImage(e)}
             accept="image/*"
             type="file"
             className="form-control"
             hidden
           />
         </label>
-      </div> */}
+      </div>
 
       <button className="btn btn-outline-warning">{buttonText}</button>
     </form>
@@ -222,8 +236,8 @@ const Create = ({ user, token }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="col-md-6 offset-md-3">
-          <h1>Create category</h1>
+        <div className="col-md-6 offset-md-3 pt-3">
+          <h1>Create Post</h1>
           <br />
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}

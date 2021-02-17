@@ -51,7 +51,8 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 
   const listOfLinks = (l) =>
     allLinks.map((l, i) => (
-      <div key={i} className="row alert alert-primary p-2">
+      <>
+      {/* <div key={i} className="row alert alert-primary p-2">
         <div
           className="col-md-8"
           // onClick={(e) => handleClick(e, l._id)}
@@ -76,11 +77,11 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
           <span className="badge text-dark">
             {l.type} / {l.medium}{' '}
           </span>
-          {l.categories.map((c, i) => (
+          {/* {l.categories.map((c, i) => (
             <span key={i} className="badge text-success">
               {c.name}{' '}
             </span>
-          ))}
+          ))} 
           <Link href="">
             <a>
               <span
@@ -97,7 +98,55 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             </a>
           </Link>
         </div>
-      </div>
+      </div> */}
+
+<div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+<h4 className="pt-1" >
+  Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
+</h4>
+<h4>
+  Code: <b> VtVg_broa_03</b>
+</h4>
+<p></p>
+<div className="p-2">
+  {/* <a href={l.url} target="_blank"> */}
+  <h5 className="pb-1">
+    For {l.mealRequest.length} weekly meal{l.mealRequest.length > 1 && 's'}:
+    <p></p>
+    {l.mealRequest.map((l, i) => (
+      <h6 className="">Meal {`${i +1} `} - {l.meal} </h6>
+    ))}
+  </h5>
+  {console.log(l.mealRequest)}
+  <h2 className=" " style={{ fontSize: '16px' }}>
+    Pickup for your order is between <b>{l.pickupTime} </b>
+  </h2>
+  {/* </a> */}
+</div>
+<div className="pt-1 ">
+  <span className="">
+    {' '}
+    {moment(l.createdAt).fromNow() + ' by ' + l.postedBy.name}{' '}
+  </span>
+</div>
+
+<div className=" pb-3 pt-3">
+  <Link href={`/user/link/${l._id}`}>
+    <button className="badge btn btn-outline-warning text float-left">
+      Edit Request
+    </button>
+  </Link>
+  <Link href="">
+    <button
+      onClick={(e) => confirmDelete(e, l._id)}
+      className="badge text-danger btn btn-outline-warning float-right"
+    >
+      Delete
+    </button>
+  </Link>
+</div>
+</div>
+</>
     ));
 
   const loadMore = async () => {
@@ -127,9 +176,10 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="col-md-8">
-          <h1 className="display-4 font-weight-bold">All links</h1>
-          <div className="lead alert alert-seconary pt-4">
+        <div className="col-md-8 pt-4">
+          <h2 className="font-weight-bold">All Meal Requests</h2>
+          <div className="lead alert alert-seconary pb-3">
+          <input className="form-control" placeholder="Search requests (not active yet)" ></input>
             {/* {renderHTML(category.content || '')} */}
           </div>
         </div>

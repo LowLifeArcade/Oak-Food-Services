@@ -5,6 +5,7 @@ import { API } from '../config';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import moment from 'moment';
+import renderHTML from 'react-render-html';
 
 // refactor this into the admin only view
 const Home = ({ categories }) => {
@@ -64,49 +65,82 @@ const Home = ({ categories }) => {
   // CODE for admin /
 
   const listCategories = () =>
-    categories.map((c, i) => (
-      <Link key={i} href={`/links/${c.slug}`}>
-        <a
-          href=""
+    categories.slice(0).reverse().map((c, i) => (
+      <>
+        <div
+        className=""
           style={{
             color: 'grey',
-            // border: '1px solid grey',
+            border: '1px solid grey',
             // padding: '10px',
-            boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
-            borderRadius: '8px',
+            // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+            // borderRadius: '8px',
             // borderBlock: '5px',
           }}
-          className="bg-light p-3 "
         >
-          <div className="row p-3">
-            {/* <div className="col-md-4 p-3">
+          <Link key={i} href={`/links/${c.slug}`}>
+            <a
+              style={{
+                color: 'grey',
+                // border: '1px solid grey',
+                // padding: '10px',
+                // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+                // borderRadius: '8px',
+                // borderBlock: '5px',
+              }}
+              className="bg-light "
+            >
+              <div className="row p-4">
+                {/* <div className="col-md-4 p-3">
               <img
-                src={c.image && c.image.url}
-                alt={c.name}
-                style={{ width: '100px', height: 'auto' }}
+              src={c.image && c.image.url}
+              alt={c.name}
+              style={{ width: '100px', height: 'auto' }}
               />
             </div> */}
-            <div className="col-md-4 mb-5 p-2">
-              <h3>{c.name}</h3>
-            </div>
+
+                <div className="row">
+                  <div className="col-md-8">
+                    <h2 className="font-weight-bold p-2">{c.name}</h2>
+                    <hr />
+                    <div className="lead alert alert-seconary pt-4">
+                      {renderHTML(c.content || '')}
+                    </div>
+                    <div className="col-md-4">
+                      {c.image && (
+                        <img
+                          src={c.image.url}
+                          alt={c.name}
+                          style={{ width: '280px', maxHeight: 'auto' }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </Link>
+          <div className="col-md-4 mb-5 pt-4">
+            {/* <h3>{c.name}</h3> {c.createdAt} */}
+            {moment(c.createdAt).fromNow()} by{' '}
+            {/* {popular.map((l, i) => l.postedBy.name)} */}
+            {c.username}
           </div>
-        </a>
-      </Link>
+        </div>
+        <div className="p-2"></div>
+      </>
     ));
   return (
     <Layout>
-      <div className="p-3">
+      <div className="pt-4">
         <div className="">
-          <h2 className="font-weight-bold">Here is where you'll see the weekly menu appear</h2>
+          {/* <h3 className="font-weight-bold">Your Food Feed</h3> */}
         </div>
       </div>
 
       <div className="row flex-column justify-content-center  p-3">
-
-
         {listCategories()}
-
-        </div>
+      </div>
 
       {/* <div className="row pt-5">
         <h2 className="font-weight-bold pb-3">Trending</h2>

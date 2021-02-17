@@ -48,7 +48,14 @@ const Update = ({ oldLink, token, _id }) => {
   // load categories when component mounts useing useEffect
   useEffect(() => {
     loadCategories();
-  }, []);
+    success === 'Your request was updated'
+      ? setTimeout(() => {
+          Router.push('/user');
+        }, 2000)
+        : loadCategories()
+      // : Router.push('');
+    return () => clearTimeout();
+  }, [success]);
 
   // delete
   const confirmDelete = (e, id) => {
@@ -236,7 +243,7 @@ const Update = ({ oldLink, token, _id }) => {
       );
       setState({
         ...state,
-        success: 'Your request is updated',
+        success: 'Your request was updated',
         buttonText: 'Updated'
       });
     } catch (error) {

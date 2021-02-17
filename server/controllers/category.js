@@ -61,46 +61,57 @@ const s3 = new AWS.S3({
 
 exports.create = (req, res) => {
   // base64 taking off beginning of data
-  const { name, image, content } = req.body;
-  // image data
-  const base64Data = new Buffer.from(
-    image.replace(/^data:image\/\w+;base64,/, ''),
-    'base64'
-  );
-  const type = image.split(';')[0].split('/')[1];
+  const { name, image, content, postedBy } = req.body;
 
   // taking req.body name and making a slug for image name url i think
   const slug = slugify(name);
-  let category = new Category({ name, content, slug });
+  let category = new Category({ name, content, slug, postedBy });
 
-  // params for image data
-  const params = {
-    Bucket: 'oakfoods',
-    Key: `category/${uuidv4()}.${type}`,
-    Body: base64Data, // reads whole image before uploading !important
-    ACL: 'public-read',
-    ContentEncoding: 'base64',
-    ContentType: `image/${type}`,
-  };
+  if (image) {
+    // image data
+    const base64Data = new Buffer.from(
+      image.replace(/^data:image\/\w+;base64,/, ''),
+      'base64'
+    );
+    const type = image.split(';')[0].split('/')[1];
 
-  // upload to s3
-  s3.upload(params, (err, data) => {
-    if (err) res.status(400).json({ error: 'Upload to s3 failed' });
-    console.log('AWS UPLOAD RES DATA', data);
-    category.image.url = data.Location;
-    category.image.key = data.Key;
-    // posted by
-    // category.postedBy = data.user._id;
+    // params for image data
+    const params = {
+      Bucket: 'oakfoods',
+      Key: `category/${uuidv4()}.${type}`,
+      Body: base64Data, // reads whole image before uploading !important
+      ACL: 'public-read',
+      ContentEncoding: 'base64',
+      ContentType: `image/${type}`,
+    };
 
-    console.log(category);
+    // upload to s3
+    s3.upload(params, (err, data) => {
+      if (err) res.status(400).json({ error: 'Upload to s3 failed' });
+      console.log('AWS UPLOAD RES DATA', data);
+      category.image.url = data.Location;
+      category.image.key = data.Key;
+      // posted by
+      // category.postedBy = data.user._id;
 
+      console.log(category);
+      // save to db
+  category.save((err, success) => {
+    if (err) res.status(400).json({ error: 'Duplicate post' });
+    // console.log(err)
+    return res.json(success);
+  });
+    });
+  } else {
+
+    
     // save to db
     category.save((err, success) => {
       if (err) res.status(400).json({ error: 'Duplicate post' });
       // console.log(err)
       return res.json(success);
     });
-  });
+  }
 };
 
 // exports.create = (req, res) => {
@@ -201,7 +212,6 @@ exports.update = (req, res) => {
         });
 
         const type = image.split(';')[0].split('/')[1];
-
 
         // params for image data
         const params = {
