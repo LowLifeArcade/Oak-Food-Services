@@ -23,6 +23,7 @@ exports.read = (req, res) => {
         user.salt = undefined;
         // console.log('user from user.js',user)
         res.json({ user, mealRequest });
+        console.log(user)
       });
   });
 

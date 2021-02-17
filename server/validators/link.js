@@ -36,6 +36,10 @@ exports.linkCreateValidator = [
 ];
 
 exports.linkUpdateValidator = [
+  check('pickupDate')
+  .not()
+  .isEmpty()
+  .withMessage('Date is required'),
   check('mealRequest')
   .not()
   .isEmpty()

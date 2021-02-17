@@ -18,29 +18,38 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 // create, list, read, update, remove
 
 exports.create = (req, res) => {
-  const { mealRequest, pickupOption, pickupTime } = req.body;
+  const { mealRequest, pickupOption, pickupTime, pickupDate } = req.body;
   // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
   // const slug = url;
-  let link = new Link({ mealRequest, pickupOption, pickupTime });
+  let link = new Link({ mealRequest, pickupOption, pickupTime, pickupDate });
   // posted by user. We save this for use in user dashboard etc
-  link.postedBy = req.user._id;
+  const postedBy = link.postedBy = req.user._id;
 
-  // categories (used this for postman as it came as string)
-  // let arrayOfCategories = categories && categories.split(',');
-  // link.categories = arrayOfCategories;
-
-  // console.log(categories);
-
-  // save link
-  link.save((err, data) => {
-    console.log(err);
-    if (err) {
+  // this probably will look at all the orders so I need to make it so it only searches the users. Like Link.user or something
+  Link.findOne({ pickupDate, postedBy }).exec((err, result) => {
+    if (result) {
+      console.log(err);
       return res.status(400).json({
-        error: 'Link already exits',
+        error: "You've already submitted a request for this date. You can delete or edit the existing request from your user dashboard.",
       });
     }
-    res.json(data);
+    // categories (used this for postman as it came as string)
+    // let arrayOfCategories = categories && categories.split(',');
+    // link.categories = arrayOfCategories;
+    
+    // console.log(categories);
+    // save link
+    link.save((err, data) => {
+      console.log('ERROR IN LINK CONTROLLER', err);
+      if (err) {
+        return res.status(400).json({
+          error: 'Date is required',
+        });
+      }
+      console.log('link controller', data)
+      res.json(data);
+    })
     // find all users with categories in their profile. since we modified our user model each user will have array of categories
 
     // if new link posted has a category the user has in profile we send an email. Change to categories posted where categories will be weekly menu.

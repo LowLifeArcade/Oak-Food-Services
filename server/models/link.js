@@ -30,6 +30,11 @@ const linkSchema = new mongoose.Schema(
       required: true,
       max: 256
     },
+    pickupDate: {
+      type: String,
+      required: true,
+      // unique: true
+    },
     // title: {
     //   type: String,
     //   trim: true,
