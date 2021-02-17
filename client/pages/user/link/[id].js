@@ -1,7 +1,7 @@
 // imports
 import styles from '../../../styles/Home.module.css';
 import moment from 'moment';
-
+import Router from 'next/router'
 import { useState, useEffect } from 'react';
 import Layout from '../../../components/Layout';
 import axos from 'axios';
@@ -11,7 +11,7 @@ import { API } from '../../../config';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import axios from 'axios';
 
-const Update = ({ oldLink, token }) => {
+const Update = ({ oldLink, token, _id }) => {
   // state
   // console.log('old link data from user[id]', oldLink);
   const [state, setState] = useState({
@@ -21,6 +21,7 @@ const Update = ({ oldLink, token }) => {
     mealRequest: oldLink.mealRequest ,
     pickupTime: oldLink.pickupTime,
     pickupOption: oldLink.pickupOption,
+    pickupDate: oldLink.pickupDate,
     buttonText: 'Update',
     // loadedCategories: [],
     success: '',
@@ -33,6 +34,7 @@ const Update = ({ oldLink, token }) => {
     pickupOption,
     pickupTime,
     mealRequest,
+    pickupDate,
     // title,
     // url,
     // categories,
@@ -47,6 +49,38 @@ const Update = ({ oldLink, token }) => {
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // delete
+  const confirmDelete = (e, id) => {
+    e.preventDefault();
+    // console.log('delete >', slug);
+    let answer = window.confirm('WARNING! Confirm delete.');
+    if (answer) {
+      handleDelete(id);
+    }
+  };
+  // delete
+  const handleDelete = async (id) => {
+    // console.log('delete link', id)
+    try {
+      const response = await axios.delete(`${API}/link/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setState({...state, success: 'Request was deleted'})
+      console.log('LINK DELETE SUCCESS', response);
+      response
+      ? setTimeout(() => {
+          Router.push('/user');
+        }, 2000)
+      : Router.push('');
+    return () => clearTimeout();
+      // Router.replace('/user');
+    } catch (error) {
+      console.log('ERROR DELETING LINK', error);
+    }
+  };
 
 
   // meal request select
@@ -352,7 +386,16 @@ const Update = ({ oldLink, token }) => {
         >
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
         </button>
-      </div>
+      
+        <button
+          disabled={!token}
+          className="btn btn-outline-danger float-right"
+          onClick={(e) => confirmDelete(e, oldLink._id)}
+          >
+          {isAuth() || token ? 'Delete' : 'Login to Make Request'}
+        </button>
+   
+          </div>
       
       
       {/* <div className="form-group">
@@ -391,14 +434,15 @@ const Update = ({ oldLink, token }) => {
 
   return (
     <Layout>
-      {console.log(oldLink)}
+      {/* {console.log(oldLink)} */}
     <div className="col-md-6 offset-md-3">
       <div className={styles.subcard}>
         <div className="row">
           <div className="col-md-12">
             <h2>
               Meal Request for{' '}
-              {`${moment(new Date()).format('dddd, MMMM Do ')}`}{' '}
+              {`${moment(oldLink.pickupDate).format('MMMM Do ')}`}{' '}
+              {/* {`${moment(new Date()).format('dddd, MMMM Do ')}`}{' '} */}
             </h2>
             <br />
           </div>

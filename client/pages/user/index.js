@@ -34,12 +34,12 @@ const User = ({ user, token, l, userLinks }) => {
     }
   };
   {
-    console.log(userLinks.mealRequest);
+    console.log('pages user index',userLinks.mealRequest);
   }
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
-        <h3>Your request for Feburary 15th</h3>
+        <h3>Your request for {moment(l.pickupDate).format('MMM Do')}</h3>
         <p></p>
         <div className="p-3">
           {/* <a href={l.url} target="_blank"> */}
@@ -53,7 +53,7 @@ const User = ({ user, token, l, userLinks }) => {
           {console.log(l.mealRequest)}
           <h2 className="pt-2 " style={{ fontSize: '20px' }}>
             Pickup for your order is <br/>
-            between {l.pickupTime}{' '} {l.pickupDate}
+            between {l.pickupTime}{' '} 
           </h2>
           {/* </a> */}
         </div>
@@ -88,12 +88,14 @@ const User = ({ user, token, l, userLinks }) => {
   return (
     <Layout>
       <div className="">
+        
 
       <h2 className="" >
         {user.name}'s dashboard{' '}
         {/* <span className="text-danger"> /{user.role}</span>{' '} */}
       </h2>
       </div>
+      
 <br/>
       <hr />
       <div className="row p-2">

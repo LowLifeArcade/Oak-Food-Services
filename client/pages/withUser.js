@@ -21,6 +21,7 @@ const withUser = (Page) => {
         // console.log('response in withUser', response)
         user = response.data.user;
         userLinks = response.data.mealRequest
+        console.log('user data from withUser', response.data.mealRequest)
       } catch (error) {
         if (error.response.status === 401) {
           user = null;

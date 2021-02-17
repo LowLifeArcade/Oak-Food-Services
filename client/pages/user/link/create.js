@@ -1,4 +1,3 @@
-// imports
 import styles from '../../../styles/Home.module.css';
 import { useState, useEffect } from 'react';
 import Layout from '../../../components/Layout';
@@ -8,9 +7,15 @@ import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import axios from 'axios';
 import withUser from '../../withUser';
 import moment from 'moment';
-import Router from 'next/router'
+import Router from 'next/router';
+// import Datepicker from '../../../components/Datepicker';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
-const Create = ({ token }) => {
+const Create = ({ token, user }) => {
+  const username = user.username;
+  const [showSearch, setShowSearch] = useState(false);
+
   // state
   const [state, setState] = useState({
     mealRequest: [
@@ -18,6 +23,7 @@ const Create = ({ token }) => {
         meal: 'Standard',
       },
     ],
+    pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupOption: 'Breakfast and Lunch',
     pickUpTime: '',
     mealWeek: '',
@@ -33,13 +39,14 @@ const Create = ({ token }) => {
   });
 
   const {
+    pickupDate,
     mealRequest,
     pickupOption,
     pickupTime,
     title,
     url,
-    categories,
-    loadedCategories,
+    // categories,
+    // loadedCategories,
     success,
     error,
     type,
@@ -50,10 +57,20 @@ const Create = ({ token }) => {
   useEffect(() => {
     // const timer = setTimeout()
     loadCategories();
-  //  Router.push('user') 
-  success === 'Request was created' ?  setTimeout(() => {Router.push('/user')}, 2000) : Router.push('')
-  return () => clearTimeout();
+    //  Router.push('user')
+    success === 'Request was created'
+      ? setTimeout(() => {
+          Router.push('/user');
+        }, 2000)
+      : Router.push('');
+    return () => clearTimeout();
   }, [success]);
+
+  // change date
+  const onDateChange = (pickupDate) => {
+    setState({ ...state, pickupDate: moment(pickupDate).format('l') });
+    setShowSearch(!showSearch);
+  };
 
   // meal request select
   const handleSelectChange = (e) => {
@@ -66,7 +83,13 @@ const Create = ({ token }) => {
     let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     meal.meal = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     meals[i] = meal; // puts meal[i] back into mealRequest array
-    setState({ ...state, mealRequest: [...meals], buttonText: 'Request', success: '', error: '' }); //puts ...mealRequest with new meal back into mealRequest: []
+    setState({
+      ...state,
+      mealRequest: [...meals],
+      buttonText: 'Request',
+      success: '',
+      error: '',
+    }); //puts ...mealRequest with new meal back into mealRequest: []
     // setState({...state,
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
@@ -100,7 +123,13 @@ const Create = ({ token }) => {
 
   // pickup options(all, breakfast only, lunch only) select
   const handlePickupOption = (e) => {
-    setState({...state, pickupOption: e.target.value, buttonText: 'Request', success: '', error: ''})
+    setState({
+      ...state,
+      pickupOption: e.target.value,
+      buttonText: 'Request',
+      success: '',
+      error: '',
+    });
   };
 
   const selectPickupOption = (i) => (
@@ -116,7 +145,9 @@ const Create = ({ token }) => {
             className="form-control"
           >
             {' '}
-            <option selected value={'Breakfast and Lunch'}>Breakfast and Lunch</option>
+            <option selected value={'Breakfast and Lunch'}>
+              Breakfast and Lunch
+            </option>
             <option value={'Breakfast Only'}>Breakfast Only</option>
             <option value={'Lunch Only'}>Lunch Only</option>
           </select>
@@ -128,7 +159,13 @@ const Create = ({ token }) => {
 
   // pickup times select
   const handlePickupTimeChange = (e) => {
-    setState({...state, pickupTime: e.target.value, buttonText: 'Request', success: '', error: ''})
+    setState({
+      ...state,
+      pickupTime: e.target.value,
+      buttonText: 'Request',
+      success: '',
+      error: '',
+    });
   };
 
   const selectPickupTime = (i) => (
@@ -186,7 +223,7 @@ const Create = ({ token }) => {
     try {
       const response = await axios.post(
         `${API}/link`,
-        { mealRequest, pickupOption, pickupTime },
+        { mealRequest, pickupOption, pickupTime, pickupDate, username },
         // { title, url, categories, type, medium },
         {
           headers: {
@@ -199,7 +236,7 @@ const Create = ({ token }) => {
         ...state,
         success: 'Request was created',
         error: '',
-      })
+      });
       // .then(Router.push('/user'))
     } catch (error) {
       // console.log('LINK SUBMIT ERROR', error);
@@ -338,7 +375,7 @@ const Create = ({ token }) => {
         </label>
         {selectPickupOption()}
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="" className="text-muted">
           Pickup Time
@@ -346,8 +383,7 @@ const Create = ({ token }) => {
         {selectPickupTime()}
       </div>
 
-      {success && showSuccessMessage(success)
-      }
+      {success && showSuccessMessage(success)}
       {error && showErrorMessage(error)}
       <div>
         <button
@@ -359,7 +395,7 @@ const Create = ({ token }) => {
         </button>
       </div>
 
-       {/* <div className="form-group">
+      {/* <div className="form-group">
         <label htmlFor="" className="text-muted">
           URL
         </label>
@@ -380,10 +416,37 @@ const Create = ({ token }) => {
         <div className={styles.subcard}>
           <div className="row">
             <div className="col-md-12">
-              <h2>
-                Meal Request for{' '}
-                {`${moment(new Date()).format('dddd, MMMM Do ')}`}{' '}
-              </h2>
+              <h3>
+                Meal Request for:{' '}
+                {pickupDate && moment(state.pickupDate).format('MMM Do')}{' '}
+              </h3>
+              {showSearch && (
+                <Calendar
+                  onChange={(e) => onDateChange(e)}
+                  tileDisabled={({ date, view }) => (
+                    date.getDay() !==  1
+                  )
+                  }
+                  value={''}
+                />
+              )}
+              <br />
+              {/* // <input
+                  // type="date"
+                  // defaultValue={moment(state.pickupDate).format(
+                  //   'dddd, MMMM Do '
+                  //   )}
+                  //   /> */}
+
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => setShowSearch(!showSearch)}
+              >
+                Select Date
+              </button>
+
+              <br />
+              {/* {`${moment(state.pickupDate).format('dddd, MMMM Do ')}`}{' '} */}
               <br />
             </div>
           </div>
@@ -431,7 +494,6 @@ const Create = ({ token }) => {
               {/* {success && showSuccessMessage(success)}
               {error && showErrorMessage(error)} */}
               {submitLinkForm()}
-              
             </div>
           </div>
         </div>

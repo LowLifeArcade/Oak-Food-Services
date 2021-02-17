@@ -8,19 +8,22 @@ import { isAuth, logout } from '../helpers/auth';
 
 import styles from '../styles/Home.module.css';
 
+// progressbar
 Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();
 Router.onRouteChangeError = (url) => NProgress.done();
 
 const Layout = ({ children }) => {
   const head = () => (
-    <React.Fragment>
+    <>
+      {/* bootstrap */}
       <link
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossOrigin="anonymous"
       />
+      {/* progress bar cdn */}
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"
@@ -28,7 +31,7 @@ const Layout = ({ children }) => {
         crossOrigin="anonymous"
       />
       {/* <link rel="stylesheet" href="../styles/Home.module.css"/> */}
-    </React.Fragment>
+    </>
   );
 
   const nav = () => (
@@ -106,6 +109,8 @@ const Layout = ({ children }) => {
           </li>
         )}
       </ul>
+
+      
     </nav>
   );
 
