@@ -70,15 +70,16 @@ const Home = ({ categories }) => {
         <div
         className=""
           style={{
-            color: 'grey',
+            // color: 'grey',
             border: '1px solid grey',
             // padding: '10px',
-            // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+            boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
             // borderRadius: '8px',
             // borderBlock: '5px',
           }}
+          className="bg-white"
         >
-          <Link key={i} href={`/links/${c.slug}`}>
+          <Link key={i} href={`/links/${c.slug}`} style={{ textDecoration: 'none' }}>
             <a
               style={{
                 color: 'grey',
@@ -88,7 +89,6 @@ const Home = ({ categories }) => {
                 // borderRadius: '8px',
                 // borderBlock: '5px',
               }}
-              className="bg-light "
             >
               <div className="row p-4">
                 {/* <div className="col-md-4 p-3">
@@ -101,7 +101,7 @@ const Home = ({ categories }) => {
 
                 <div className="row">
                   <div className="col-md-8">
-                    <h2 className="font-weight-bold p-2">{c.name}</h2>
+                    <h3 className="font-weight-bold p-2">{c.name}</h3>
                     <hr />
                     <div className="lead alert alert-seconary pt-4">
                       {renderHTML(c.content || '')}
@@ -118,27 +118,28 @@ const Home = ({ categories }) => {
                   </div>
                 </div>
               </div>
-            </a>
-          </Link>
           <div className="col-md-4 mb-5 pt-4">
             {/* <h3>{c.name}</h3> {c.createdAt} */}
             {moment(c.createdAt).fromNow()} 
             {/* {popular.map((l, i) => l.postedBy.name)} */}
             {c.username}
           </div>
+            </a>
+          </Link>
+
         </div>
         <div className="p-2"></div>
       </>
     ));
   return (
     <Layout>
-      <div className="pt-4">
+      {/* <div className=" pt-4">
         <div className="">
-          {/* <h3 className="font-weight-bold">Your Food Feed</h3> */}
+          <h3 className="font-weight-bold">Your Food Feed</h3>
         </div>
-      </div>
+      </div> */}
 
-      <div className="row flex-column justify-content-center  p-3">
+      <div className="bg-light row flex-column justify-content-center  p-3">
         {listCategories()}
       </div>
 

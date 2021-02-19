@@ -16,13 +16,7 @@ const Register = () => {
     error: '',
     success: '',
     buttonText: 'Register',
-    student: [
-      // {
-      //   name: '',
-      //   schoolName: '',
-      //   group: '',
-      // },
-    ],
+    student: [],
     loadedCategories: [],
     categories: [], // categories selected by user for signup
     groups: [],
@@ -101,11 +95,7 @@ const Register = () => {
             {' '}
             <option value="">Student Group</option>
             {state.loadedGroups.map((g, i) => {
-              return (
-                <option value={g._id}>
-                  {g.name}
-                </option>
-              );
+              return <option value={g._id}>{g.name}</option>;
             })}
           </select>
           <div className="p-2"></div>
@@ -116,13 +106,16 @@ const Register = () => {
 
   // adding a student to fields
   const addStudent = (e) => {
-    e.preventDefault()
-      setState({...state, student: [...student, {name: '', schoolName: '', group: ''}]})
-  }
+    e.preventDefault();
+    setState({
+      ...state,
+      student: [...student, { name: '', schoolName: '', group: '' }],
+    });
+  };
 
   // remove meal button
   const removeStudent = (e, index) => {
-    e.preventDefault()
+    e.preventDefault();
     const list = [...state.student];
     // console.log(list);
     list.splice(-1)[0];
@@ -180,7 +173,6 @@ const Register = () => {
     });
   };
   const handleObjectNameChange = (name) => (e) => {
-
     let i = e.target.getAttribute('data-index');
 
     let students = [...state.student]; // spreads array from mealRequest: [] into an array called meals
@@ -199,7 +191,7 @@ const Register = () => {
     setState({
       ...state,
       student: [
-        ...students
+        ...students,
         // {
         //   name: e.target.value,
         // },
@@ -210,7 +202,6 @@ const Register = () => {
     });
   };
   const handleObjectSchoolChange = (name) => (e) => {
-
     let i = e.target.getAttribute('data-index');
 
     let students = [...state.student]; // spreads array from mealRequest: [] into an array called meals
@@ -229,10 +220,8 @@ const Register = () => {
     setState({
       ...state,
       student: [
-        
-          ...students
-          // schoolName: e.target.value,
-        
+        ...students,
+        // schoolName: e.target.value,
       ],
       error: '',
       success: '',
@@ -313,79 +302,78 @@ const Register = () => {
         </button>
         {/* <div className=""> */}
 
-                {!state.student.length < 1 && (
-                  <button
-                    className="btn btn-warning float-right"
-                    onClick={(e) => removeStudent(e)}
-                  >
-                    Remove Student
-                  </button>
-                  
-                )}
-              {/* </div> */}
+        {!state.student.length < 1 && (
+          <button
+            className="btn btn-warning float-right"
+            onClick={(e) => removeStudent(e)}
+          >
+            Remove Student
+          </button>
+        )}
+        {/* </div> */}
         {/* {addStudent(i)} */}
 
         <div className="row">
           <div className="col-md-12 pt-2">
-            {state.student.slice(0).reverse().map((x, i) => {
-              return (
-                <>
-                  <h6 className="p-2">
-                    <label key={i} className="form-check-label text-muted">
-                      Student # {`${i + 1}`} information
-                    </label>
-                  </h6>
-                  {/* {console.log(x)} */}
+            {state.student
+              .slice(0)
+              .reverse()
+              .map((x, i) => {
+                return (
+                  <>
+                    <h6 className="p-2">
+                      <label key={i} className="form-check-label text-muted">
+                        Student # {`${i + 1}`} information
+                      </label>
+                    </h6>
+                    {/* {console.log(x)} */}
 
-                  <div className="form-group pt-1">
-                    <input
-                      value={student.student}
-                      data-index={i}
-
-                      onChange={handleObjectNameChange()}
-                      // onChange={handleChange({student: 'name'})}
-                      type="text"
-                      className="form-control"
-                      placeholder="Student's full name"
-                      required
-                    />
-                  </div>
-                  <div className="form-group pt-1">
-                    <input
-                      value={student.student}
-                      data-index={i}
-
-                      onChange={handleObjectSchoolChange()}
-                      // onChange={handleChange({student: 'name'})}
-                      type="text"
-                      className="form-control"
-                      placeholder="School student attends"
-                      required
-                    />
-                  </div>
-                  <div key={i} className="">
-                    {addStudentGroup(i)}
-                  </div>
-                  {/* <div className="form-group">
+                    <div className="form-group pt-1">
+                      <input
+                        value={student.student}
+                        data-index={i}
+                        onChange={handleObjectNameChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="Student's full name"
+                        required
+                      />
+                    </div>
+                    <div className="form-group pt-1">
+                      <input
+                        value={student.student}
+                        data-index={i}
+                        onChange={handleObjectSchoolChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="School student attends"
+                        required
+                      />
+                    </div>
+                    <div key={i} className="">
+                      {addStudentGroup(i)}
+                    </div>
+                    {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>
 
         <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
           {showGroups()}
         </ul>
       </div> */}
-                </>
-              );
-            })}
+                  </>
+                );
+              })}
           </div>
         </div>
 
-        
-              {console.log('student array in state', state.student)}
+        {console.log('student array in state', state.student)}
 
-      <div className="pt-4"></div>
-        <button type="text" className="btn btn-warning">
+        <div className="pt-4"></div>
+        {!state.student.length < 1 && <button type="text" className="btn btn-warning">
           {buttonText}
-        </button>
+        </button>}
       </div>
     </form>
   );
@@ -401,7 +389,7 @@ const Register = () => {
         {error && showErrorMessage(error)}
         {registerForm()}
       </div>
-        <div className="pb-4"></div>
+      <div className="pb-4"></div>
     </Layout>
   );
 };

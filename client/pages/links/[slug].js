@@ -162,8 +162,9 @@ const Links = ({
       {head()}
       <Layout>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-8 pt-2">
             <h1 className="display-6 font-weight-bold pt-3">{category.name}</h1>
+            <hr/>
             <div className="lead alert alert-seconary pt-4">
               {renderHTML(category.content || '')}
             </div>
@@ -203,10 +204,10 @@ const Links = ({
           <div className="row">
             <div className="col-md-8">{listOfLinks()}</div>
             <div className="col-md-4">
-              <h2 className="lead">Most Popular in the {category.name} </h2>
+              {/* <h2 className="lead">Most Popular in the {category.name} </h2> */}
               <div className="p-3">
-                <p>show popular links</p>
-                {listOfPopularLinks()}
+                {/* <p>show popular links</p>
+                {listOfPopularLinks()} */}
               </div>
             </div>
           </div>
