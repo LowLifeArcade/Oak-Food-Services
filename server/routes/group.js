@@ -15,9 +15,9 @@ const {create, list, read, update, remove} = require('../controllers/group')
 // routes categoryCreateValidator, runValidation,
 router.post('/group', groupCreateValidator, runValidation, requireSignin, adminMiddleware, create);
 router.get('/groups', list);
-// router.post('/group/:slug', read);
-// router.put('/group/:slug', groupUpdateValidator, runValidation, requireSignin, adminMiddleware, update);
-// router.delete('/group/:slug', requireSignin, adminMiddleware, remove);
+router.post('/group/:slug', read);
+router.put('/group/:slug', groupUpdateValidator, runValidation, requireSignin, adminMiddleware, update);
+router.delete('/group/:slug', requireSignin, adminMiddleware, remove);
 
 
 module.exports = router

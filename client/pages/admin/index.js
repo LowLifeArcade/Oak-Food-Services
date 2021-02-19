@@ -30,6 +30,11 @@ const Admin = ({user}) => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link href="/admin/group/read">
+                <a className="nav-link" href="">All Groups</a>
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link href="/admin/link/read">
                 <a className="nav-link" href="">All Meal Requests</a>
               </Link>
