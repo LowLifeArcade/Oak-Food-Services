@@ -21,7 +21,7 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 exports.register = (req, res) => {
   // console.log('REGISTER CONTROLLER', req.body);\
-  const { name, email, password, categories} = req.body;
+  const { name, email, password} = req.body;
   // check if user exits
   User.findOne({ email }).exec((err, user) => {
     if (user) {
@@ -32,7 +32,7 @@ exports.register = (req, res) => {
     }
     // generate token with user name email and password
     const token = jwt.sign(
-      { name, email, password, categories },
+      { name, email, password },
       process.env.JWT_ACCOUNT_ACTIVATION,
       {
         expiresIn: '10m',

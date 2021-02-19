@@ -17,10 +17,11 @@ const Update = ({ oldCategory, token }) => {
     success: '',
     // content: {content},
     buttonText: 'Update',
-    imagePreview: oldCategory.image.url,
+    imagePreview: categoryImage,
     image: '',
   });
 
+  const categoryImage = oldCategory.image && oldCategory.image.url 
   const [content, setContent] = useState(oldCategory.content);
 
   const [imageUploadButtonName, setImageUploadButtonName] = useState(
@@ -114,7 +115,7 @@ const Update = ({ oldCategory, token }) => {
         // name: '',
         buttonText: 'Updated',
         // imageUploadText: 'Update image',
-        imagePreview: response.data.image.url,
+        imagePreview: categoryImage,
         success: `${response.data.name} is updated`,
         error: '',
       });

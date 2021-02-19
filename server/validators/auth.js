@@ -6,11 +6,11 @@ exports.userRegisterValidator = [
   check('password')
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters'),
-  check('categories')
-    .not()
-    .isEmpty()
-    // .isLength({ min: 8 })
-    .withMessage('Choose at least one school'),
+  // check('categories')
+  //   .not()
+  //   .isEmpty()
+  //   // .isLength({ min: 8 })
+  //   .withMessage('Choose at least one school'),
 ];
 
 exports.userLoginValidator = [

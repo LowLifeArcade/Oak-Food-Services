@@ -40,6 +40,30 @@ const userSchema = new mongoose.Schema(
       data: String,
       default: '',
     },
+    // students: [ // can change to schools 
+    //   { 
+    //     type: ObjectId,
+    //     ref: 'Student',
+    //     required: true
+    //   }
+    // ],
+    students: [ // can change to schools 
+      { 
+        name: {
+          type: String,
+          required: true
+        },
+        schoolName: {
+          type: String,
+          required: true
+        },
+        group:{
+          type: ObjectId,
+          ref: 'Group',
+          required: true
+        }
+      }
+    ],
     categories: [ // can change to schools 
       {
         type: ObjectId,

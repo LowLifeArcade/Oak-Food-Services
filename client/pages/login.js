@@ -100,7 +100,7 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className="col-md-6 offset-md-3">
+      <div className="col-md-6 offset-md-3 pt-4">
         <div className={styles.subcard}>
           {/* + "subcard col-md4 offset-md-3" */}
 

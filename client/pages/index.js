@@ -122,7 +122,7 @@ const Home = ({ categories }) => {
           </Link>
           <div className="col-md-4 mb-5 pt-4">
             {/* <h3>{c.name}</h3> {c.createdAt} */}
-            {moment(c.createdAt).fromNow()} by{' '}
+            {moment(c.createdAt).fromNow()} 
             {/* {popular.map((l, i) => l.postedBy.name)} */}
             {c.username}
           </div>

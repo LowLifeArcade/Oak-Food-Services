@@ -65,11 +65,13 @@ const Read = ({ user, token }) => {
         >
           <div className="row">
             <div className="col-md-3">
+              {c.image && 
               <img
-                src={c.image && c.image.url}
-                alt={c.name}
-                style={{ width: '250px', height: 'auto' }}
+              src={c.image && c.image.url}
+              alt={c.name}
+              style={{ width: '250px', height: 'auto' }}
               />
+            }
             </div>
             <div className="col-md-6">
               <h3>{c.name}</h3>

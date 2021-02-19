@@ -35,8 +35,8 @@ const Links = ({
       <meta name="description" content={stripHTML(category.content.substring(0,160))} />
       <meta property="og:title" content={category.name} />
       <meta property="og:description" content={stripHTML(category.content.substring(0,160))} />
-      <meta property="og:image" content={category.image.url} />
-      <meta property="og:image:secure_url" content={category.image.url} />
+      <meta property="og:image" content={!category.image ==='' && category.image.url} />
+      <meta property="og:image:secure_url" content={category.image && category.image.url} />
     </Head>
   );
 
@@ -156,24 +156,26 @@ const Links = ({
   //     )
   //   );
   // };
-
+   
   return (
     <>
       {head()}
       <Layout>
         <div className="row">
           <div className="col-md-8">
-            <h1 className="display-4 font-weight-bold">{category.name}</h1>
+            <h1 className="display-6 font-weight-bold pt-3">{category.name}</h1>
             <div className="lead alert alert-seconary pt-4">
               {renderHTML(category.content || '')}
             </div>
           </div>
           <div className="col-md-4">
+            {category.image && 
             <img
-              src={category.image.url}
+              src={category.image && category.image.url}
               alt={category.name}
               style={{ width: 'auto', maxHeight: '200px' }}
             />
+            }
           </div>
         </div>
         <br />

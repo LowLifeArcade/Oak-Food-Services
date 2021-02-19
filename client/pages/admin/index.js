@@ -19,6 +19,12 @@ const Admin = ({user}) => {
               </Link>
             </li>
             <li className="nav-item">
+              {/* potentially make Link an a tag if there are issues with css */}
+              <Link href="/admin/group/create">
+                <a className="nav-link" href="">Create Group</a>
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link href="/admin/category/read">
                 <a className="nav-link" href="">All Posts</a>
               </Link>
