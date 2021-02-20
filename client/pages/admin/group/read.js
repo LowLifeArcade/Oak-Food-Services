@@ -50,7 +50,7 @@ const Read = ({ user, token }) => {
 
   const listGroups = () =>
     groups.slice(0).reverse().map((c, i) => (
-      <Link key={i} href={`/links/${c.slug}`}>
+      <Link key={i} href={`/admin/group/${c.slug}`}>
         <a
           href=""
           style={{

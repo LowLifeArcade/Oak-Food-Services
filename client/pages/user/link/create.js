@@ -72,6 +72,11 @@ const Create = ({ token, user }) => {
     setShowSearch(!showSearch);
   };
 
+  const handleDisabledDates = ({ date, view }) => (
+    date.getDay() !== 5
+    // date.getDay() !== 2
+  )
+
   // meal request select
   const handleSelectChange = (e) => {
     let i = e.target.getAttribute('data-index');
@@ -216,6 +221,13 @@ const Create = ({ token, user }) => {
   const handleTitleChange = async (e) => {
     setState({ ...state, title: e.target.value, error: '', success: '' });
   };
+
+  const yesterday = [moment().subtract(1, 'day')];
+  // const disablePastDt = (current) => {
+  //   return current.isAfter(yesterday);
+  // }
+  let twoWeeksFromNow = new Date()
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -409,6 +421,7 @@ const Create = ({ token, user }) => {
        */}
     </form>
   );
+  console.log(new Date())
 
   return (
     <Layout>
@@ -423,10 +436,16 @@ const Create = ({ token, user }) => {
               {showSearch && (
                 <Calendar
                   onChange={(e) => onDateChange(e)}
-                  tileDisabled={({ date, view }) => (
-                    date.getDay() !==  1
-                  )
-                  }
+                  tileDisabled={handleDisabledDates}
+                  defaultValue={twoWeeksFromNow}
+                  // tileDisabled={(date, view) =>
+                  //   yesterday.some(date =>
+                  //      moment().isAfter(yesterday)
+                  //   )}
+                  // minDate={handlePastDate}
+                  minDate={twoWeeksFromNow}
+                  // minDate={new Date().getDate() + 14}
+
                   value={''}
                 />
               )}

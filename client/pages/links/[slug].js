@@ -10,7 +10,7 @@ import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroller';
 
 // this gets rid of extra characters in head
-const stripHTML = data => data.replace(/<\/?[^>]+(>|$)/g, '');
+const stripHTML = (data) => data.replace(/<\/?[^>]+(>|$)/g, '');
 
 const Links = ({
   query,
@@ -27,17 +27,18 @@ const Links = ({
   const [popular, setPopular] = useState([]);
 
   const head = () => (
-    <Head>
-      <title>
-        {category.name} | {APP_NAME}{' '}
-      </title>
-      {/* substring helps limit the amount of content in the head for SEO */}
-      <meta name="description" content={stripHTML(category.content.substring(0,160))} />
-      <meta property="og:title" content={category.name} />
-      <meta property="og:description" content={stripHTML(category.content.substring(0,160))} />
-      <meta property="og:image" content={!category.image ==='' && category.image.url} />
-      <meta property="og:image:secure_url" content={category.image && category.image.url} />
-    </Head>
+    <Head></Head>
+    // <Head>
+    //   <title>
+    //     {category.name} | {APP_NAME}{' '}
+    //   </title>
+    //   {/* substring helps limit the amount of content in the head for SEO */}
+    //   <meta name="description" content={stripHTML(category.content.substring(0,160))} />
+    //   <meta property="og:title" content={category.name} />
+    //   <meta property="og:description" content={stripHTML(category.content.substring(0,160))} />
+    //   <meta property="og:image" content={!category.image ==='' && category.image.url} />
+    //   <meta property="og:image:secure_url" content={category.image && category.image.url} />
+    // </Head>
   );
 
   useEffect(() => {
@@ -156,27 +157,29 @@ const Links = ({
   //     )
   //   );
   // };
-   
+
   return (
     <>
       {head()}
       <Layout>
         <div className="row">
           <div className="col-md-8 pt-2">
-            <h1 className="display-6 font-weight-bold pt-3">{category.name}</h1>
-            <hr/>
-            <div className="lead alert alert-seconary pt-4">
+            <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1>
+            <hr />
+            <div className="lead alert alert-seconary pt-2">
               {renderHTML(category.content || '')}
             </div>
           </div>
           <div className="col-md-4">
-            {category.image && 
-            <img
-              src={category.image && category.image.url}
-              alt={category.name}
-              style={{ width: 'auto', maxHeight: '200px' }}
-            />
-            }
+            {category.image && (
+              <img
+                src={category.image && category.image.url}
+                alt={category.name}
+                style={{ width: 'auto', maxHeight: '200px' }}
+              />
+            )}
+            <div className="pt-5"></div>
+            Posted {moment(category.createdAt).fromNow()}
           </div>
         </div>
         <br />

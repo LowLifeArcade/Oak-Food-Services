@@ -10,7 +10,7 @@ const { runValidation } = require('../validators');
 
 // import from controllers
 const { requireSignin, authMiddleware, adminMiddleware, canUpdateDeleteLink } = require('../controllers/auth');
-const {create, list, read, update, remove, clickCount, popular, popularInCategory} = require('../controllers/link')
+const {create, list, read, update, remove,all, clickCount, popular, popularInCategory} = require('../controllers/link')
 
 // routes categoryCreateValidator, runValidation,
 // becareful with route orders 
@@ -18,6 +18,7 @@ router.post('/link', linkCreateValidator, runValidation, requireSignin, authMidd
 router.post('/links', requireSignin, adminMiddleware, list);
 router.put('/click-count', clickCount)
 router.get('/link/popular', popular)
+router.get('/links/all', all)
 router.get('/link/popular/:slug', popularInCategory)
 router.get('/link/:id', read);
 // user only delete

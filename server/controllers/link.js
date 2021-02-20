@@ -87,6 +87,28 @@ exports.create = (req, res) => {
   });
 };
 
+exports.listAll = (req, res) => {
+  // infinite scroll
+  let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+  let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+
+  // look for items and populate
+  Link.find({})
+    .populate('postedBy', 'name')
+    .populate('categories', 'name slug')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Could not list links',
+        });
+      }
+      res.json(data);
+    });
+};
+
 exports.list = (req, res) => {
   // infinite scroll
   let limit = req.body.limit ? parseInt(req.body.limit) : 10;
@@ -175,6 +197,21 @@ exports.popular = (req, res) => {
     .populate('postedBy', 'name')
     .sort({ clicks: -1 })
     .limit(3)
+    .exec((err, links) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Links not found',
+        });
+      }
+      res.json(links);
+    });
+};
+
+exports.all = (req, res) => {
+  Link.find()
+    .populate('postedBy', 'name')
+    .sort({ clicks: -1 })
+    // .limit(3)
     .exec((err, links) => {
       if (err) {
         return res.status(400).json({
