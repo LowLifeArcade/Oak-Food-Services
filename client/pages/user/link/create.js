@@ -34,11 +34,13 @@ const Create = ({ token, user }) => {
     // loadedCategories: [],
     success: '',
     error: '',
+    students: user.students,
     // type: '',
     // medium: '',
   });
 
   const {
+    students,
     pickupDate,
     mealRequest,
     pickupOption,
@@ -52,11 +54,12 @@ const Create = ({ token, user }) => {
     type,
     medium,
   } = state;
-
+  console.log(user.students);
   // load categories when component mounts useing useEffect
   useEffect(() => {
     // const timer = setTimeout()
     loadCategories();
+    // loadStudents()
     //  Router.push('user')
     success === 'Request was created'
       ? setTimeout(() => {
@@ -72,16 +75,15 @@ const Create = ({ token, user }) => {
     setShowSearch(!showSearch);
   };
 
-  const handleDisabledDates = ({ date, view }) => (
-    date.getDay() !== 5
+  const handleDisabledDates = ({ date, view }) =>
+    date.getDay() !== 5;
     // date.getDay() !== 2
-  )
 
   // meal request select
   const handleSelectChange = (e) => {
     let i = e.target.getAttribute('data-index');
     {
-      console.log(i);
+      // console.log(i);
     }
 
     let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
@@ -218,6 +220,11 @@ const Create = ({ token, user }) => {
     setState({ ...state, loadedCategories: response.data });
   };
 
+  // const loadStudents = async () => {
+  //   const response = await axios.get(`${API}/user`);
+  //   setState({ ...state, student: [...response.data.student] });
+  // };
+
   const handleTitleChange = async (e) => {
     setState({ ...state, title: e.target.value, error: '', success: '' });
   };
@@ -226,8 +233,8 @@ const Create = ({ token, user }) => {
   // const disablePastDt = (current) => {
   //   return current.isAfter(yesterday);
   // }
-  let twoWeeksFromNow = new Date()
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12)
+  let twoWeeksFromNow = new Date();
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -421,9 +428,12 @@ const Create = ({ token, user }) => {
        */}
     </form>
   );
-  console.log(new Date())
 
   return (
+    <div className={styles.background} style={{ 
+      // background: '#eeeff0'
+     }}>
+
     <Layout>
       <div className="col-md-6 offset-md-3 pt-4">
         <div className={styles.subcard}>
@@ -435,32 +445,32 @@ const Create = ({ token, user }) => {
               </h3>
               {showSearch && (
                 <Calendar
-                  onChange={(e) => onDateChange(e)}
-                  tileDisabled={handleDisabledDates}
-                  defaultValue={twoWeeksFromNow}
-                  // tileDisabled={(date, view) =>
-                  //   yesterday.some(date =>
-                  //      moment().isAfter(yesterday)
-                  //   )}
-                  // minDate={handlePastDate}
-                  minDate={twoWeeksFromNow}
-                  // minDate={new Date().getDate() + 14}
-
-                  value={''}
+                onChange={(e) => onDateChange(e)}
+                tileDisabled={handleDisabledDates}
+                defaultValue={twoWeeksFromNow}
+                // tileDisabled={(date, view) =>
+                //   yesterday.some(date =>
+                //      moment().isAfter(yesterday)
+                //   )}
+                // minDate={handlePastDate}
+                minDate={twoWeeksFromNow}
+                // minDate={new Date().getDate() + 14}
+                
+                value={''}
                 />
-              )}
+                )}
               <br />
               {/* // <input
                   // type="date"
                   // defaultValue={moment(state.pickupDate).format(
-                  //   'dddd, MMMM Do '
-                  //   )}
+                    //   'dddd, MMMM Do '
+                    //   )}
                   //   /> */}
 
               <button
                 className="btn btn-outline-primary"
                 onClick={() => setShowSearch(!showSearch)}
-              >
+                >
                 Select Date
               </button>
 
@@ -477,11 +487,12 @@ const Create = ({ token, user }) => {
                   <>
                     <h6 className="p-2">
                       <label key={i} className="form-check-label text-muted">
-                        Select Meal # {`${i + 1}`}
+                        {/* Select Meal # {`${i + 1}`}  */}
+                        Select meal for {`${state.students[i].name}`}
                       </label>
                     </h6>
-                    {console.log(x)}
-                    {console.log(mealRequest)}
+                    {/* {console.log(x)}
+                    {console.log(mealRequest)} */}
 
                     <div key={i} className="">
                       {selectMealRequest(i)}
@@ -491,7 +502,7 @@ const Create = ({ token, user }) => {
               })}
 
               <div className="">
-                {state.mealRequest.length < 5 && (
+                {state.mealRequest.length < state.students.length && (
                   <button className="btn btn-warning" onClick={() => addMeal()}>
                     Add Meal
                   </button>
@@ -499,8 +510,8 @@ const Create = ({ token, user }) => {
 
                 {state.mealRequest.length !== 1 && (
                   <button
-                    className="btn btn-warning float-right"
-                    onClick={() => removeMeal()}
+                  className="btn btn-warning float-right"
+                  onClick={() => removeMeal()}
                   >
                     Remove Meal
                   </button>
@@ -518,12 +529,13 @@ const Create = ({ token, user }) => {
         </div>
       </div>
     </Layout>
+</div>
   );
 };
 
-Create.getInitialProps = ({ req }) => {
+Create.getInitialProps = ({ req, user }) => {
   const token = getCookie('token', req);
-  return { token };
+  return { token, user };
 };
 
 export default withUser(Create);

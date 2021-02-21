@@ -21,7 +21,7 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 exports.register = (req, res) => {
   // console.log('REGISTER CONTROLLER', req.body);\
-  const { name, email, password} = req.body;
+  const { name, email, password, students} = req.body;
   // check if user exits
   User.findOne({ email }).exec((err, user) => {
     if (user) {
@@ -32,7 +32,7 @@ exports.register = (req, res) => {
     }
     // generate token with user name email and password
     const token = jwt.sign(
-      { name, email, password },
+      { name, email, password, students },
       process.env.JWT_ACCOUNT_ACTIVATION,
       {
         expiresIn: '10m',
@@ -73,7 +73,7 @@ exports.registerActivate = (req, res) => {
         });
       }
 
-      const { name, email, password, categories } = jwt.decode(token);
+      const { name, email, password, categories, students } = jwt.decode(token);
       const username = shortId.generate();
 
       User.findOne({ email }).exec((err, user) => {
@@ -84,7 +84,7 @@ exports.registerActivate = (req, res) => {
         }
 
         // register new user
-        const newUser = new User({ username, name, email, password, categories });
+        const newUser = new User({ username, name, email, password, categories, students });
         newUser.save((err, result) => {
           if (err) {
             return res.status(401).json({

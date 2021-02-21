@@ -16,7 +16,7 @@ const Register = () => {
     error: '',
     success: '',
     buttonText: 'Register',
-    student: [],
+    students: [],
     loadedCategories: [],
     categories: [], // categories selected by user for signup
     groups: [],
@@ -33,7 +33,7 @@ const Register = () => {
     email,
     password,
     error,
-    student,
+    students,
     success,
     buttonText,
     loadedCategories,
@@ -63,13 +63,13 @@ const Register = () => {
   const handleSelectChange = (e) => {
     let i = e.target.getAttribute('data-index');
 
-    let students = [...state.student]; // spreads array from mealRequest: [] into an array called meals
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     oneStudent.group = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
     setState({
       ...state,
-      student: [...students],
+      students: [...students],
       buttonText: 'Register',
       success: '',
       error: '',
@@ -109,18 +109,18 @@ const Register = () => {
     e.preventDefault();
     setState({
       ...state,
-      student: [...student, { name: '', schoolName: '', group: '' }],
+      students: [...students, { name: '', schoolName: '', group: '' }],
     });
   };
 
   // remove meal button
   const removeStudent = (e, index) => {
     e.preventDefault();
-    const list = [...state.student];
+    const list = [...state.students];
     // console.log(list);
     list.splice(-1)[0];
     // list.splice(index, 1);
-    setState({ ...state, student: list });
+    setState({ ...state, students: list });
   };
 
   // change to toggle instead of being able to select all
@@ -175,7 +175,7 @@ const Register = () => {
   const handleObjectNameChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
 
-    let students = [...state.student]; // spreads array from mealRequest: [] into an array called meals
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     oneStudent.name = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
@@ -190,7 +190,7 @@ const Register = () => {
 
     setState({
       ...state,
-      student: [
+      students: [
         ...students,
         // {
         //   name: e.target.value,
@@ -204,7 +204,7 @@ const Register = () => {
   const handleObjectSchoolChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
 
-    let students = [...state.student]; // spreads array from mealRequest: [] into an array called meals
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     oneStudent.schoolName = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
@@ -219,7 +219,7 @@ const Register = () => {
 
     setState({
       ...state,
-      student: [
+      students: [
         ...students,
         // schoolName: e.target.value,
       ],
@@ -228,7 +228,7 @@ const Register = () => {
       buttonText: 'Register',
     });
   };
-
+  console.log(students);
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.table({ name, email, password });
@@ -238,6 +238,7 @@ const Register = () => {
         name,
         email,
         password,
+        students,
       });
       console.log(response);
       setState({
@@ -259,7 +260,10 @@ const Register = () => {
   };
 
   const registerForm = () => (
-    <form onSubmit={handleSubmit} action="POST">
+    <form onSubmit={handleSubmit} 
+    onKeyPress={e => {
+      if (e.key === 'Enter') e.preventDefault()}}
+    action="POST">
       <div className="form-group">
         <input
           value={name}
@@ -292,30 +296,11 @@ const Register = () => {
       </div>
       {/* <label className="text-muted ml-2 pt-2"> Students: </label> */}
 
-      <div className="form-group">
-        <button
-          type="text"
-          onClick={(e) => addStudent(e)}
-          className="btn btn-outline-primary "
-        >
-          {addButtonText}
-        </button>
-        {/* <div className=""> */}
-
-        {!state.student.length < 1 && (
-          <button
-            className="btn btn-warning float-right"
-            onClick={(e) => removeStudent(e)}
-          >
-            Remove Student
-          </button>
-        )}
-        {/* </div> */}
-        {/* {addStudent(i)} */}
+      
 
         <div className="row">
           <div className="col-md-12 pt-2">
-            {state.student
+            {state.students
               .slice(0)
               .reverse()
               .map((x, i) => {
@@ -330,7 +315,7 @@ const Register = () => {
 
                     <div className="form-group pt-1">
                       <input
-                        value={student.student}
+                        value={students.student}
                         data-index={i}
                         onChange={handleObjectNameChange()}
                         // onChange={handleChange({student: 'name'})}
@@ -342,7 +327,7 @@ const Register = () => {
                     </div>
                     <div className="form-group pt-1">
                       <input
-                        value={student.student}
+                        value={students.student}
                         data-index={i}
                         onChange={handleObjectSchoolChange()}
                         // onChange={handleChange({student: 'name'})}
@@ -368,29 +353,66 @@ const Register = () => {
           </div>
         </div>
 
-        {console.log('student array in state', state.student)}
+        {console.log('student array in state', state.students)}
+
+        <div className="form-group">
+        <button
+          type="text"
+          onClick={(e) => addStudent(e)}
+          className="btn btn-outline-primary "
+        >
+          {addButtonText}
+        </button>
+        {/* <div className=""> */}
+
+        {!state.students.length < 1 && (
+          <button
+            className="btn btn-danger float-right"
+            onClick={(e) => removeStudent(e)}
+          >
+            Remove 
+          </button>
+        )}
+        {/* </div> */}
+        {/* {addStudent(i)} */}
 
         <div className="pt-4"></div>
-        {!state.student.length < 1 && <button type="text" className="btn btn-warning">
-          {buttonText}
-        </button>}
+        {!state.students.length < 1 && (
+          <button type="text" className="btn btn-warning">
+            {buttonText}
+          </button>
+        )}
       </div>
     </form>
   );
 
   return (
+          <div className={styles.background} 
+          style={{ 
+            // height: '100vh'
+
+           }}
+          >
     <Layout>
-      <div className="pt-4"></div>
-      <div className={styles.subcard}>
-        {/* + "col-md-6 offset-md-3 subcard" */}
-        <h2 className={styles.title}>Register</h2>
-        <br />
-        {success && showSuccessMessage(success)}
-        {error && showErrorMessage(error)}
-        {registerForm()}
-      </div>
-      <div className="pb-4"></div>
-    </Layout>
+        <div className={styles.body}>
+        <div className="pt-5 pb-2"></div>
+
+        {/* <div className="pt-4"></div> */}
+        <div className="col-md-6 offset-md-3 pt-4">
+
+        <div className={styles.subcard}>
+          {/* + "col-md-6 offset-md-3 subcard" */}
+          <h2 className={'text-muted ' + styles.title}>Register</h2>
+          <br />
+          {success && showSuccessMessage(success)}
+          {error && showErrorMessage(error)}
+          {registerForm()}
+        </div>
+          </div>
+        </div>
+        {/* <div className="pb-4"></div> */}
+      </Layout>
+    </div>
   );
 };
 

@@ -88,6 +88,10 @@ const User = ({ user, token, l, userLinks }) => {
     ));
 
   return (
+    <div 
+    // className={styles.background}  
+    >
+
     <Layout>
       {/* <div className=""> */}
 
@@ -126,6 +130,8 @@ const User = ({ user, token, l, userLinks }) => {
         </div>
       </div>
     </Layout>
+    </div>
+
   );
 };
 

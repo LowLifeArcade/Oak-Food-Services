@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
     //     required: true
     //   }
     // ],
-    students: [ // can change to schools 
+    students: [ 
       { 
         name: {
           type: String,

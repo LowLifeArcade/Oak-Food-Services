@@ -3,11 +3,25 @@
   background: #ee592e;
 }
 
+.body {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center; 
+  /* height: 80vh; */
+  /* overflow: scroll; */
+  margin: 0;
+
+  /* background-color: #4d6e74 !important; */
+
+}
+
 .nav {
   /* background-color: #2f3c51 !important; */
   background-color: #4d6e74 !important;
-  color: black;
-  position: sticky;
+  /* color: black; */
+  /* position: sticky; */
   /* display: flex; */
   /* overflow: hidden; */
   /* position: fixed; */
@@ -19,7 +33,9 @@
 
 .subcard {
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, .2);
-  background-color: #eeeff0;
+  background-color: rgb(250, 252, 253);
+  /* background-color: #fff; */
+  /* background-color: #eeeff0; */
   padding: 30px;
   border-radius: 10px;
   /* transform: translateY(-800px); */
@@ -27,10 +43,17 @@
 
 .title {
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, .2);
-  background-color: #eeeff0;
+  background-color: rgb(247, 249, 252);
+  /* background-color: #eeeff0; */
   padding: 20px;
   border-radius: 15px;
   /* transform: translateY(-800px); */
+}
+
+.background {
+  background-color: #e6eaeb;
+  height: 100vh;
+  overflow: scroll;
 }
 
 /* .foodOrder {

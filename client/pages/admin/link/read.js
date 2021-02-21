@@ -126,7 +126,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 <div className="pt-1 ">
   <span className="">
     {' '}
-    {moment(l.createdAt).fromNow() + ' by ' + l.postedBy.name}{' '}
+    {moment(l.createdAt).fromNow()} by  {l.postedBy == null ? 'user deleted' : l.postedBy.name }{' '}
   </span>
 </div>
 

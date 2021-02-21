@@ -90,6 +90,7 @@ const Home = ({ categories }) => {
               <a
                 style={{
                   color: 'grey',
+                  textDecoration: 'none'
                   // border: '1px solid grey',
                   // padding: '10px',
                   // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
@@ -97,7 +98,7 @@ const Home = ({ categories }) => {
                   // borderBlock: '5px',
                 }}
               >
-                <div className="row p-4">
+                <div className="p-4">
                   {/* <div className="col-md-4 p-3">
               <img
               src={c.image && c.image.url}
@@ -106,14 +107,14 @@ const Home = ({ categories }) => {
               />
             </div> */}
 
-                  <div className="row">
-                    <div className="col-md-8">
+                  <div className="">
+                    <div className="">
                       <h3 className="font-weight-bold p-2">{c.name}</h3>
                       <hr />
                       <div className="lead alert alert-seconary pt-4">
                         {renderHTML(c.content || '')}
                       </div>
-                      <div className="col-md-4">
+                      <div className="">
                         {c.image && (
                           <img
                             src={c.image.url}
@@ -121,7 +122,7 @@ const Home = ({ categories }) => {
                             style={{ width: '280px', maxHeight: 'auto' }}
                           />
                         )}
-                        <div className="col-md-4 mb-2 pt-4">
+                        <div className="">
                           {/* <h3>{c.name}</h3> {c.createdAt} */}
                           Posted {moment(c.createdAt).fromNow()}
                           {/* {popular.map((l, i) => l.postedBy.name)} */}
@@ -138,6 +139,9 @@ const Home = ({ categories }) => {
         </>
       ));
   return (
+    <div className={styles.background} >
+
+    
     <Layout>
       {/* <div className=" pt-4">
         <div className="">
@@ -145,7 +149,7 @@ const Home = ({ categories }) => {
         </div>
       </div> */}
 
-      <div className="bg-light row flex-column justify-content-center  p-3">
+      <div className=" row flex-column justify-content-center pt-3 ">
         {listCategories()}
       </div>
 
@@ -154,6 +158,7 @@ const Home = ({ categories }) => {
         <div className="col-md-12 overflow-hidden">{listOfLinks()}</div>
       </div> */}
     </Layout>
+    </div>
   );
 };
 // all above for admin only view OR this will be the available food orders and people click request

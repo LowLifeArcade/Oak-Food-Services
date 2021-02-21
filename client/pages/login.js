@@ -21,11 +21,11 @@ const Login = () => {
   useEffect(() => {
     // isAuth() && Router.push('/user');
     isAuth() && isAuth().role === 'admin'
-          ? Router.push('admin') 
-          : isAuth() && isAuth().role === 'user'
-          ? Router.push('user')
-          : Router.push('/login')
-          // : Router.push('user')
+      ? Router.push('admin')
+      : isAuth() && isAuth().role === 'user'
+      ? Router.push('user')
+      : Router.push('/login');
+    // : Router.push('user')
   }, []);
 
   const { email, password, error, success, buttonText } = state;
@@ -91,29 +91,39 @@ const Login = () => {
         <button type="text" className="btn btn-outline-warning ">
           {buttonText}
         </button>
-        <Link href="/auth/password/forgot" >
-            <a className="text-danger float-right">Forgot Password?</a>
-          </Link>
+        <Link href="/auth/password/forgot">
+          <a className="text-danger float-right">Forgot Password?</a>
+        </Link>
       </div>
     </form>
   );
 
   return (
-    <Layout>
-      <div className="col-md-6 offset-md-3 pt-4">
-        <div className={styles.subcard}>
-          {/* + "subcard col-md4 offset-md-3" */}
+    <div
+      className={styles.background}
+      style={{
+        // background: '#eeeff0',
+        height: '100vh'
+      }}
+    >
+      <Layout>
+        <div className={styles.body} >
+        <div className="pt-5 pb-5"></div>
+        <div className="col-md-6 offset-md-3 pt-4">
+          <div className={styles.subcard}>
+            {/* + "subcard col-md4 offset-md-3" */}
 
-          <h1 className={styles.title}>Login</h1>
-          {/* {JSON.stringify(isAuth())} */}
-          <br />
-          {success && showSuccessMessage(success)}
-          {error && showErrorMessage(error)}
-          {loginForm()}
-          
+            <h2 className={'text-muted ' + styles.title}>Login</h2>
+            {/* {JSON.stringify(isAuth())} */}
+            <br />
+            {success && showSuccessMessage(success)}
+            {error && showErrorMessage(error)}
+            {loginForm()}
+          </div>
         </div>
-      </div>
-    </Layout>
+        </div>
+      </Layout>
+    </div>
   );
 };
 
