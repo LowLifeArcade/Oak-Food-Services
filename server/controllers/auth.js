@@ -21,7 +21,7 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 exports.register = (req, res) => {
   // console.log('REGISTER CONTROLLER', req.body);\
-  const { name, email, password, students} = req.body;
+  const { name, lastName, email, password, students } = req.body;
   // check if user exits
   User.findOne({ email }).exec((err, user) => {
     if (user) {
@@ -30,12 +30,49 @@ exports.register = (req, res) => {
         error: 'Email is taken',
       });
     }
+
+    // generate userCode
+    // if (!userCode) {
+    const makeUserCode = (length) => {
+      let result = '';
+      const chars = 'abcdefghijklmnopqrstuvwxyz';
+      const charsLength = chars.length;
+      for (var i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * charsLength));
+      }
+      return result;
+    };
+    // this takes first 3 letters of last name and 1 random character
+    const userCode =
+      lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
+    // console.log('USERCODE', userCode);
+
+    // }
+
+    // checks to see if anyone has usercode
+    User.findOne({ userCode }).exec((err, userCode) => {
+      if (userCode) {
+        const makeUserCode = (length) => {
+          let result = '';
+          const chars = 'abcdefghijklmnopqrstuvwxyz';
+          const charsLength = chars.length;
+          for (var i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * charsLength));
+          }
+          return result;
+        };
+        // this takes first 3 letters of last name and 1 random character
+        userCode =
+          lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
+      }
+    });
+
     // generate token with user name email and password
     const token = jwt.sign(
-      { name, email, password, students },
+      { name, lastName, email, password, students, userCode },
       process.env.JWT_ACCOUNT_ACTIVATION,
       {
-        expiresIn: '10m',
+        expiresIn: '30m',
       }
     );
 
@@ -73,7 +110,15 @@ exports.registerActivate = (req, res) => {
         });
       }
 
-      const { name, email, password, categories, students } = jwt.decode(token);
+      const {
+        name,
+        lastName,
+        email,
+        password,
+        categories,
+        students,
+        userCode,
+      } = jwt.decode(token);
       const username = shortId.generate();
 
       User.findOne({ email }).exec((err, user) => {
@@ -82,11 +127,22 @@ exports.registerActivate = (req, res) => {
             error: 'Email is taken',
           });
         }
+        console.log(userCode);
 
         // register new user
-        const newUser = new User({ username, name, email, password, categories, students });
+        const newUser = new User({
+          username,
+          name,
+          lastName,
+          email,
+          password,
+          categories,
+          students,
+          userCode,
+        });
         newUser.save((err, result) => {
           if (err) {
+            console.log(err);
             return res.status(401).json({
               error: 'Error saving user in database. Try again later.',
             });

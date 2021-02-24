@@ -18,13 +18,14 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 // create, list, read, update, remove
 
 exports.create = (req, res) => {
-  const { mealRequest, pickupOption, pickupTime, pickupDate } = req.body;
+  const { mealRequest, pickupOption, pickupTime, pickupDate, pickupCode } = req.body;
   // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
   // const slug = url;
-  let link = new Link({ mealRequest, pickupOption, pickupTime, pickupDate });
+  let link = new Link({ mealRequest, pickupOption, pickupTime, pickupDate, pickupCode });
   // posted by user. We save this for use in user dashboard etc
   const postedBy = link.postedBy = req.user._id;
+  // const userCode = link.userCode = req.user.userCode;
 
   // this probably will look at all the orders so I need to make it so it only searches the users. Like Link.user or something
   Link.findOne({ pickupDate, postedBy }).exec((err, result) => {
@@ -39,7 +40,7 @@ exports.create = (req, res) => {
     // link.categories = arrayOfCategories;
     
     // console.log(categories);
-    // save link
+    // save link to db
     link.save((err, data) => {
       console.log('ERROR IN LINK CONTROLLER', err);
       if (err) {
@@ -94,7 +95,8 @@ exports.listAll = (req, res) => {
 
   // look for items and populate
   Link.find({})
-    .populate('postedBy', 'name')
+    .populate('postedBy', 'name lastName')
+    .populate('pickupCode', 'name')
     .populate('categories', 'name slug')
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -116,7 +118,8 @@ exports.list = (req, res) => {
 
   // look for items and populate
   Link.find({})
-    .populate('postedBy', 'name')
+    .populate('postedBy', 'name lastName' )
+    // .populate('pickupCode', 'pickupCode')
     .populate('categories', 'name slug')
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -210,6 +213,8 @@ exports.popular = (req, res) => {
 exports.all = (req, res) => {
   Link.find()
     .populate('postedBy', 'name')
+    .populate('userCode', 'userCode')
+
     .sort({ clicks: -1 })
     // .limit(3)
     .exec((err, links) => {

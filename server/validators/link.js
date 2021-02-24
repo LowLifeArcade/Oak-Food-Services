@@ -37,6 +37,10 @@ exports.linkCreateValidator = [
   .not()
   .isEmpty()
   .withMessage('pick up time is required'),
+  check('pickupCode')
+  .not()
+  .isEmpty()
+  .withMessage('pick up code is required'),
 ];
 
 exports.linkUpdateValidator = [

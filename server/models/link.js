@@ -35,6 +35,11 @@ const linkSchema = new mongoose.Schema(
       required: true,
       // unique: true
     },
+    pickupCode: {
+      type: String,
+      required: true,
+      // unique: true
+    },
     // title: {
     //   type: String,
     //   trim: true,
@@ -57,6 +62,10 @@ const linkSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'User',
     },
+    // userCode: {
+    //   type: ObjectId,
+    //   ref: 'User',
+    // },
     // categories: [
     //   {
     //     type: ObjectId,

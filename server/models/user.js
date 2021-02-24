@@ -20,6 +20,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       max: 32,
     },
+    lastName: {
+      type: String,
+      trim: true,
+      required: true,
+      max: 32,
+    },
+   
     email: {
       type: String,
       trim: true,
@@ -71,6 +78,12 @@ const userSchema = new mongoose.Schema(
         required: true
       }
     ],
+    userCode: {
+      type: String,
+      // trim: true,
+      required: true,
+      max: 32,
+    },
   },
   { timestamps: true }
 );
