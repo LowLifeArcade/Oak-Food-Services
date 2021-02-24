@@ -10,9 +10,11 @@ import { isAuth } from '../helpers/auth';
 const Register = () => {
   const [state, setState] = useState({
     name: '',
+    lastName: '',
     addButtonText: 'Add student',
     email: '',
     password: '',
+    confirmPassword: '',
     error: '',
     success: '',
     buttonText: 'Register',
@@ -30,8 +32,10 @@ const Register = () => {
   const {
     addButtonText,
     name,
+    lastName,
     email,
     password,
+    confirmPassword,
     error,
     students,
     success,
@@ -46,6 +50,29 @@ const Register = () => {
   useEffect(() => {
     loadGroups();
   }, []);
+
+  useEffect(() => {
+    // isAuth() && Router.push('/user');
+    isAuth() && isAuth().role === 'admin'
+      ? Router.push('admin')
+      : isAuth() && isAuth().role === 'user'
+      ? Router.push('user')
+      : !isAuth() ? console.log('not registered or signed in') : Router.push('/');
+    // : Router.push('user')
+  }, [success]);
+
+  const makeUserCode = (length) => {
+    let result = '';
+    const chars = 'abcdefghijklmnopqrstuvwxyz';
+    const charsLength = chars.length;
+    for (var i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * charsLength));
+    }
+    return result;
+  };
+  // this takes first 3 letters of last name and 1 random character
+  const userCode = lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
+  console.log('USERCODE', userCode)
 
   // const loadCategories = async () => {
   //   const response = await axios.get(`${API}/categories`);
@@ -87,13 +114,14 @@ const Register = () => {
             type="select"
             // value={state.value}
             data-index={i}
-            defaultValue={''}
+            // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectChange(e)}
             className="form-control"
+            required
           >
             {' '}
-            <option value="">Student Group</option>
+            <option selected disabled value="">Choose A Student Group</option>
             {state.loadedGroups.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
             })}
@@ -231,11 +259,17 @@ const Register = () => {
   console.log(students);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.table({ name, email, password });
+    // console.table({ name, email, password });
     setState({ ...state, buttonText: 'Registering' });
+    if (password !== confirmPassword) {
+      setState({...state, error: "Passwords don't match"}); 
+      // alert('passwords dont match')
+    } else {
+
     try {
       const response = await axios.post(`${API}/register`, {
         name,
+        lastName,
         email,
         password,
         students,
@@ -243,9 +277,10 @@ const Register = () => {
       console.log(response);
       setState({
         ...state,
-        name: '',
-        email: '',
+        // name: '',
+        // email: '',
         password: '',
+        confirmPassword: '',
         buttonText: 'Submitted',
         success: response.data.message,
       });
@@ -256,7 +291,8 @@ const Register = () => {
         buttonText: 'Register',
         error: error.response.data.error,
       });
-    }
+    }    }
+
   };
 
   const registerForm = () => (
@@ -269,8 +305,20 @@ const Register = () => {
           value={name}
           onChange={handleChange('name')}
           type="text"
+
           className="form-control"
-          placeholder="Parent name"
+          placeholder="Parent First Name"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <input
+          value={lastName}
+          onChange={handleChange('lastName')}
+          type="text"
+
+          className="form-control"
+          placeholder="Parent Last Name"
           required
         />
       </div>
@@ -278,7 +326,7 @@ const Register = () => {
         <input
           value={email}
           onChange={handleChange('email')}
-          type="text"
+          type="email"
           className="form-control"
           placeholder="Email"
           required
@@ -291,6 +339,16 @@ const Register = () => {
           type="password"
           className="form-control"
           placeholder="New password"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <input
+          value={confirmPassword}
+          onChange={handleChange('confirmPassword')}
+          type="password"
+          className="form-control"
+          placeholder="Repeat password"
           required
         />
       </div>
@@ -326,6 +384,23 @@ const Register = () => {
                       />
                     </div>
                     <div className="form-group pt-1">
+                      <select
+                        value={students.student}
+                        data-index={i}
+                        onChange={handleObjectSchoolChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="School student attends"
+                        required
+                      >
+                      <option selected disabled value="">Choose A School</option>
+                      <option value="OPMS">Oak Park Middle School</option>
+                      <option value="OPHS">Oak Park High School</option>
+                      <option value="OPES">Oak Park Elementary School</option>
+                      </select>
+                    </div>
+                    {/* <div className="form-group pt-1">
                       <input
                         value={students.student}
                         data-index={i}
@@ -336,7 +411,7 @@ const Register = () => {
                         placeholder="School student attends"
                         required
                       />
-                    </div>
+                    </div> */}
                     <div key={i} className="">
                       {addStudentGroup(i)}
                     </div>
@@ -377,6 +452,8 @@ const Register = () => {
         {/* {addStudent(i)} */}
 
         <div className="pt-4"></div>
+        {success && showSuccessMessage(success)}
+          {error && showErrorMessage(error)}
         {!state.students.length < 1 && (
           <button type="text" className="btn btn-warning">
             {buttonText}
@@ -404,9 +481,9 @@ const Register = () => {
           {/* + "col-md-6 offset-md-3 subcard" */}
           <h2 className={'text-muted ' + styles.title}>Register</h2>
           <br />
-          {success && showSuccessMessage(success)}
-          {error && showErrorMessage(error)}
           {registerForm()}
+          {/* {success && showSuccessMessage(success)}
+          {error && showErrorMessage(error)} */}
         </div>
           </div>
         </div>

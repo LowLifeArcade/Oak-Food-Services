@@ -40,7 +40,7 @@ const ActivateAccount = ({ router }) => {
         success: response.data.message,
       });
     } catch (error) {
-      setState({ ...state, buttonText: 'Activation Failed', error: 'error submitting' });
+      setState({ ...state, buttonText: 'Activation Failed', error: error.response.data.error });
       // error.response.data.error
     }
   };

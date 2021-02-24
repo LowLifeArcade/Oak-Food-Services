@@ -15,7 +15,11 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const [limit, setLimit] = useState(linksLimit);
   const [skip, setSkip] = useState(0);
   const [size, setSize] = useState(totalLinks);
-
+  const [state, setState] = useState({
+    search: '',
+    error: '',
+    success: '',
+  });
   // const handleClick = async (linkId) => {
   //   const response = await axios.put(`${API}/click-count`, { linkId });
   //   loadUpdatedLinks();
@@ -35,6 +39,15 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     }
   };
 
+  const handleSearch = (name) => (e) => {
+    setState({
+      ...state,
+      [name]: e.target.value,
+      error: '',
+      success: '',
+    });
+  };
+
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`${API}/link/admin/${id}`, {
@@ -52,101 +65,58 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const listOfLinks = (l) =>
     allLinks.map((l, i) => (
       <>
-      {/* <div key={i} className="row alert alert-primary p-2">
-        <div
-          className="col-md-8"
-          // onClick={(e) => handleClick(e, l._id)}
-        >
-          <a href={l.url} target="_blank">
-            <h5 className="pt-2">{l.title} </h5>
-            <h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
-              {l.url}
-            </h6>
-          </a>
-        </div>
-        <div className="col-md-4 pt-2">
-          <span className="pull-right">
-            {moment(l.createdAt).fromNow()} by {l.postedBy.name}
-          </span>
-          <span className="badge text-secondary pull-right">
-            {l.clicks} clicks
-          </span>
-        </div>
-
-        <div className="col-md-12">
-          <span className="badge text-dark">
-            {l.type} / {l.medium}{' '}
-          </span>
-          {/* {l.categories.map((c, i) => (
-            <span key={i} className="badge text-success">
-              {c.name}{' '}
+        <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+          <h4 className="pt-1 pb-1">
+            Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
+          </h4>
+          <h4>
+            <b>Code: {l.pickupCode}</b>
+          </h4>
+          <p></p>
+          <div className="p-2">
+            {/* <a href={l.url} target="_blank"> */}
+            <h5 className="pb-1">
+              {l.mealRequest.length} weekly meal
+              {l.mealRequest.length > 1 && 's'}:<p></p>
+              <div className="p-3">
+                {l.mealRequest.map((l, i) => (
+                  <h6 className="">
+                    Meal {`${i + 1} `} - {l.meal}{' '}
+                  </h6>
+                ))}
+              </div>
+            </h5>
+            {console.log(l.mealRequest)}
+            <h2 className=" " style={{ fontSize: '16px' }}>
+              Pickup for your order is between <b>{l.pickupTime} </b> on Friday
+            </h2>
+            {/* </a> */}
+          </div>
+          <div className="pt-1 ">
+            <span className="">
+              {' '}
+              {moment(l.createdAt).fromNow()} by{' '}
+              {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
             </span>
-          ))} 
-          <Link href="">
-            <a>
-              <span
+          </div>
+
+          <div className=" pb-3 pt-3">
+            <Link href={`/user/link/${l._id}`}>
+              <button className="badge btn btn-outline-warning text float-left">
+                Edit Request
+              </button>
+            </Link>
+            <Link href="">
+              <button
                 onClick={(e) => confirmDelete(e, l._id)}
-                className="badge text-danger pull-right"
+                className="badge text-danger btn btn-outline-warning float-right"
               >
                 Delete
-              </span>
-            </a>
-          </Link>
-          <Link href={`/user/link/${l._id}`}>
-            <a>
-              <span className="badge text-warning pull-right">Update</span>
-            </a>
-          </Link>
+              </button>
+            </Link>
+          </div>
         </div>
-      </div> */}
-
-<div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
-<h4 className="pt-1" >
-  Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
-</h4>
-<h4>
-  Code: <b> VtVg_broa_03</b>
-</h4>
-<p></p>
-<div className="p-2">
-  {/* <a href={l.url} target="_blank"> */}
-  <h5 className="pb-1">
-    For {l.mealRequest.length} weekly meal{l.mealRequest.length > 1 && 's'}:
-    <p></p>
-    {l.mealRequest.map((l, i) => (
-      <h6 className="">Meal {`${i +1} `} - {l.meal} </h6>
-    ))}
-  </h5>
-  {console.log(l.mealRequest)}
-  <h2 className=" " style={{ fontSize: '16px' }}>
-    Pickup for your order is between <b>{l.pickupTime} </b>
-  </h2>
-  {/* </a> */}
-</div>
-<div className="pt-1 ">
-  <span className="">
-    {' '}
-    {moment(l.createdAt).fromNow()} by  {l.postedBy == null ? 'user deleted' : l.postedBy.name }{' '}
-  </span>
-</div>
-
-<div className=" pb-3 pt-3">
-  <Link href={`/user/link/${l._id}`}>
-    <button className="badge btn btn-outline-warning text float-left">
-      Edit Request
-    </button>
-  </Link>
-  <Link href="">
-    <button
-      onClick={(e) => confirmDelete(e, l._id)}
-      className="badge text-danger btn btn-outline-warning float-right"
-    >
-      Delete
-    </button>
-  </Link>
-</div>
-</div>
-</>
+      </>
     ));
 
   const loadMore = async () => {
@@ -179,8 +149,17 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         <div className="col-md-8 pt-4">
           <h2 className="font-weight-bold">All Meal Requests</h2>
           <div className="lead alert alert-seconary pb-3">
-          <input className="form-control" placeholder="Search requests (not active yet)" ></input>
-            {/* {renderHTML(category.content || '')} */}
+            <div className="form-group">
+              <input
+                className="form-control"
+                onChange={handleSearch('search')}
+                value={state.search}
+                type="text"
+                className="form-control"
+                placeholder="Search requests (not active yet)"
+              ></input>
+              {/* {renderHTML(category.content || '')} */}
+            </div>
           </div>
         </div>
       </div>

@@ -39,35 +39,39 @@ const User = ({ user, token, l, userLinks }) => {
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
-        <h4 className="pt-1" >
-          Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
-        </h4>
-        <h4>
-          Code: <b> VtVg_broa_03</b>
-        </h4>
-        <p></p>
-        <div className="p-2">
-          {/* <a href={l.url} target="_blank"> */}
-          <h5 className="pb-1">
-            For {l.mealRequest.length} weekly meal{l.mealRequest.length > 1 && 's'}:
-            <p></p>
-            {l.mealRequest.map((l, i) => (
-              <h6 className="">Meal {`${i +1} `} - {l.meal} </h6>
-            ))}
-          </h5>
-          {console.log(l.mealRequest)}
-          <h2 className=" " style={{ fontSize: '16px' }}>
-            Pickup for your order is between <b>{l.pickupTime} </b>
-          </h2>
-          {/* </a> */}
-        </div>
-        <div className="pt-1 ">
-          <span className="">
-            {' '}
-            {moment(l.createdAt).fromNow()}
-            {/* // + ' by ' + l.postedBy.name */}{' '}
-          </span>
-        </div>
+          <h4 className="pt-1 pb-1">
+            Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
+          </h4>
+          <h4>
+            <b>Code: {l.pickupCode}</b>
+          </h4>
+          <p></p>
+          <div className="p-2">
+            {/* <a href={l.url} target="_blank"> */}
+            <h5 className="pb-1">
+              {l.mealRequest.length} weekly meal
+              {l.mealRequest.length > 1 && 's'}:<p></p>
+              <div className="p-3">
+                {l.mealRequest.map((l, i) => (
+                  <h6 className="">
+                    Meal {`${i + 1} `} - {l.meal}{' '}
+                  </h6>
+                ))}
+              </div>
+            </h5>
+            {console.log(l.mealRequest)}
+            <h2 className=" " style={{ fontSize: '16px' }}>
+              Pickup for your order is between <b>{l.pickupTime} </b> on Friday
+            </h2>
+            {/* </a> */}
+          </div>
+          <div className="pt-1 ">
+            <span className="">
+              {' '}
+              {moment(l.createdAt).fromNow()} by{' '}
+              {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
+            </span>
+          </div>
 
         <div className=" pb-3 pt-3">
           <Link href={`/user/link/${l._id}`}>

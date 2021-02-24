@@ -12,20 +12,20 @@ const Home = ({ categories }) => {
   // move all of this CODE to admin page
   const [popular, setPopular] = useState([]);
 
-  useEffect(() => {
-    loadPopular();
-  }, []);
+  // useEffect(() => {
+  //   loadPopular();
+  // }, []);
 
-  const loadPopular = async () => {
-    const response = await axios.get(`${API}/link/popular`);
-    setPopular(response.data);
-  };
+  // const loadPopular = async () => {
+  //   const response = await axios.get(`${API}/link/popular`);
+  //   setPopular(response.data);
+  // };
   // console.log(popular);
 
   const handleClick = async (linkId) => {
     // e.preventDefault();
     const response = await axios.put(`${API}/click-count`, { linkId });
-    loadPopular();
+    // loadPopular();
   };
 
   const listOfLinks = () =>

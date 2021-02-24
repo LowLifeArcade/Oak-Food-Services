@@ -14,6 +14,7 @@ import 'react-calendar/dist/Calendar.css';
 
 const Create = ({ token, user }) => {
   const username = user.username;
+  // const userCode = user.userCode
   const [showSearch, setShowSearch] = useState(false);
 
   // state
@@ -23,6 +24,8 @@ const Create = ({ token, user }) => {
         meal: 'Standard',
       },
     ],
+    pickupCode: user.userCode + '_01',
+    pickupCodeAdd: [''],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupOption: 'Breakfast and Lunch',
     pickUpTime: '',
@@ -40,7 +43,9 @@ const Create = ({ token, user }) => {
   });
 
   const {
+    pickupCode,
     students,
+    pickupCodeAdd,
     pickupDate,
     mealRequest,
     pickupOption,
@@ -54,11 +59,11 @@ const Create = ({ token, user }) => {
     type,
     medium,
   } = state;
-  console.log(user.students);
+  // console.log(user.students);
   // load categories when component mounts useing useEffect
   useEffect(() => {
     // const timer = setTimeout()
-    loadCategories();
+    // loadCategories();
     // loadStudents()
     //  Router.push('user')
     success === 'Request was created'
@@ -90,17 +95,70 @@ const Create = ({ token, user }) => {
     let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     meal.meal = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     meals[i] = meal; // puts meal[i] back into mealRequest array
+// console.log(meal)
+    // meal.meal === 'Vegetarian' ? console.log('vege') : console.log('standard')
+
+    let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
+    let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    
+
+    // console.log(pickupCodeAdd)
+
+    let input = e.target.value
+    let frontCode = ''
+    switch (input) {
+      case 'Vegetarian' :
+        frontCode = 'Vt'
+        // console.log('vege')
+        break;
+        case 'Vegan' :
+        frontCode = 'Vg'
+        // console.log('vegan')
+        break;
+        case 'GlutenFree' :
+        frontCode = 'Gf'
+        // console.log('gf')
+        break;
+        case 'Standard' :
+        frontCode =''
+        // console.log('gf')
+        break;
+    
+      default:
+        break;
+
+    }
+    // console.log(frontCode)
+
+    code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    codes[i] = code;
+    // console.log(codes)
+    let length = codes.length
+    
+    // let newFrontCode = codes
+    let newPickupCode = codes.join('') + '_' + user.userCode + '_0' + length
+
+    // if(student[i]==='Group A') {
+      
+    // }
+
     setState({
       ...state,
       mealRequest: [...meals],
       buttonText: 'Request',
+      pickupCode:  newPickupCode, 
+      pickupCodeAdd: codes, 
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
     // setState({...state,
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
+    // setState({...state, pickupCode: user.userCode})
+    console.log(newPickupCode)
+    // console.log(codes)
   };
+  // console.log(state.pickupCodeAdd)
 
   const selectMealRequest = (i) => (
     <>
@@ -125,7 +183,9 @@ const Create = ({ token, user }) => {
           <div className="p-2"></div>
         </div>
       </div>
+      
     </>
+
   );
 
   // pickup options(all, breakfast only, lunch only) select
@@ -137,7 +197,7 @@ const Create = ({ token, user }) => {
       success: '',
       error: '',
     });
-  };
+  }
 
   const selectPickupOption = (i) => (
     <>
@@ -203,8 +263,10 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       mealRequest: [...mealRequest, { meal: 'Standard', glutenFree: false }],
+      pickupCodeAdd: [...pickupCodeAdd, '']
     });
   };
+  // console.log(pickupCodeAdd)
 
   // remove meal button
   const removeMeal = (index) => {
@@ -212,7 +274,13 @@ const Create = ({ token, user }) => {
     // console.log(list);
     list.splice(-1)[0];
     // list.splice(index, 1);
-    setState({ ...state, mealRequest: list });
+    
+    const list2 = [...state.pickupCodeAdd];
+    // console.log(list);
+    list2.splice(-1)[0];
+    setState({ ...state, mealRequest: list, pickupCodeAdd: list2 });
+    // list.splice(index, 1);
+    // setState({ ...state, pickupCodeAdd: list2 });
   };
 
   const loadCategories = async () => {
@@ -233,16 +301,26 @@ const Create = ({ token, user }) => {
   // const disablePastDt = (current) => {
   //   return current.isAfter(yesterday);
   // }
+
+  // handles lead time for orders
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.table({title, url, categories, type, medium})
+    // const toAddCode = user.userCode
+    // const newCode = user.userCode + '_0' + toString(mealRequest.length)
+  
+    // let NewPickupCode = pickupCodeAdd + pickupCode
+    
+    // pickupCode = NewPickupCode
+    // newCodeMaker()
+    // console.log(pickupCode)
     try {
       const response = await axios.post(
         `${API}/link`,
-        { mealRequest, pickupOption, pickupTime, pickupDate, username },
+        { mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode },
         // { title, url, categories, type, medium },
         {
           headers: {
@@ -428,6 +506,8 @@ const Create = ({ token, user }) => {
        */}
     </form>
   );
+
+  
 
   return (
     <div className={styles.background} style={{ 

@@ -71,7 +71,9 @@ const Login = () => {
         <input
           value={email}
           onChange={handleChange('email')}
-          type="text"
+          type="email"
+          name="email"
+          autoComplete="username"
           className="form-control"
           placeholder="Enter your email"
           required

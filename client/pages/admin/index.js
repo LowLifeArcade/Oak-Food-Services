@@ -1,9 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from '../../styles/Home.module.css';
 import withAdmin from '../withAdmin';
 import Link from 'next/link';
 import axios from 'axios';
 import { API } from '../../config';
+import ChartsEmbedSDK from '@mongodb-js/charts-embed-dom';
+
+const sdk = new ChartsEmbedSDK({
+  baseUrl: 'https://charts.mongodb.com/charts-charts-fixture-tenant-zdvkh',
+});
+const chart = sdk.createChart({
+  chartId: '48043c78-f1d9-42ab-a2e1-f2d3c088f864',
+});
 
 import Layout from '../../components/Layout';
 
@@ -25,8 +33,8 @@ const Admin = ({ user, initialRequests }) => {
     allMealsChange();
     setState({
       ...state,
-      meals: allMealsArray
-    })
+      meals: allMealsArray,
+    });
   }, []);
 
   let allMealsArray = [];
@@ -41,16 +49,12 @@ const Admin = ({ user, initialRequests }) => {
   // console.log(allMealsArray);
   console.log(state.meals);
 
-  const mealCounter = (meal) => (
+  const mealCounter = (meal) =>
     // state.meals.length
-    state.meals.filter((m) =>
-      m == meal).length
-  )
-  const allMealCounter = (meal) => (
-    state.meals.length
-    // state.meals.filter((m) =>
-    //   m == meal).length
-  )
+    state.meals.filter((m) => m == meal).length;
+  const allMealCounter = (meal) => state.meals.length;
+  // state.meals.filter((m) =>
+  //   m == meal).length
 
   // const allStandardMeals = (meal) =>
   //   requests.map((r, i) =>
@@ -58,6 +62,13 @@ const Admin = ({ user, initialRequests }) => {
   //     meal.standard === 'Standard'
   //     })
   //   );
+  const ref = useRef('chart')
+  const renderChart = () => {
+    // render the chart into a container
+    chart
+      .render(ref)
+      .catch(() => window.alert('Chart failed to initialise'));
+  };
 
   // const allMealsArray = (mr, i) =>
   //   requests.map((r, i) =>
@@ -85,7 +96,7 @@ const Admin = ({ user, initialRequests }) => {
         <div className="col-md-4">
           <h1>Admin Dashboard</h1>
           <hr />
-          <div className="col-md-8">
+          <div className="">
             <ul className="nav flex-column pt-1 ">
               <li className="nav-item">
                 {/* potentially make Link an a tag if there are issues with css */}
@@ -140,54 +151,58 @@ const Admin = ({ user, initialRequests }) => {
               </li>
               <div className="pt-2">
                 <hr />
-                <div className="">
-                  <h3>Order Data</h3>
-                </div>
-                <hr/>
-                <h3>
-                <b>{requests.length}</b> - Family Orders {' '}
-                <p/>
-                <b>{allMealCounter()}</b> - total meals
-                <hr/>
-                </h3>
-                <div className="p-2"  >
-    <h5>
 
-                {mealCounter('Standard')} - Standard meal requests
-                <hr/>
-                {mealCounter('Vegetarian')} - Vegetarian meal requests
-                <hr/>
-                {mealCounter('Vegan')} - Vegan meal requests
-                <hr/>
-                {mealCounter('GlutenFree')} - Gluten Free meal requests
-                <hr/>
-    </h5>
-                </div>
-                
                 {/* {allMealsArray()} */}
                 {/* {
-                requests.map((r,i)=>(
-                  r.mealRequest.map((mr, i) => (
-                    allMealsArray(mr, i)
-                ))
-                ))
-                } */}
+                  requests.map((r,i)=>(
+                    r.mealRequest.map((mr, i) => (
+                      allMealsArray(mr, i)
+                      ))
+                      ))
+                    } */}
                 {/* {allMealsChange()} */}
                 {/* {allVeganMeals().length}
                 {allStandardMeals().length} */}
                 {/* {requests.map((i) => (
                   <h4>graph</h4>
                 ))} */}
-                <br />
-                {/* {requests[0].mealRequest[0].meal} */}
               </div>
             </ul>
           </div>
         </div>
       </div>
+      <div className="">
+        <h3>Order Data</h3>
+      </div>
+      <hr />
+      <h3>
+        <b>{requests.length}</b> - Family Orders <p />
+        <b>{allMealCounter()}</b> - total meals
+        <hr />
+      </h3>
+      <div className="p-2">
+        <h5>
+          {mealCounter('Standard')} - Standard meal requests
+          <hr />
+          {mealCounter('Vegetarian')} - Vegetarian meal requests
+          <hr />
+          {mealCounter('Vegan')} - Vegan meal requests
+          <hr />
+          {mealCounter('GlutenFree')} - Gluten Free meal requests
+          <hr />
+        </h5>
+      </div>
+        {/* {chart.render(ref)} */}
+        {/* {renderChart()} */}
+      {/* <div className="p-2 chart" ref={ref} id="chart"> */}
+        {/* {chart.render().catch(() => window.alert('Chart failed to initialise'))} */}
+      {/* </div> */}
     </Layout>
   );
 };
+
+// https://charts.mongodb.com/charts-oakfood-apdce
+// 7e5526b4-2296-4299-9c21-9dc11ed4817a
 
 Admin.getInitialProps = async () => {
   const response = await axios.get(`${API}/links/all`);
