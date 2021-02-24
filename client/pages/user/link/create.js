@@ -24,7 +24,7 @@ const Create = ({ token, user }) => {
         meal: 'Standard',
       },
     ],
-    pickupCode: user.userCode + '_01',
+    pickupCode: user.userCode + '-01',
     pickupCodeAdd: [''],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupOption: 'Breakfast and Lunch',
@@ -136,7 +136,7 @@ const Create = ({ token, user }) => {
     let length = codes.length
     
     // let newFrontCode = codes
-    let newPickupCode = codes.join('') + '_' + user.userCode + '_0' + length
+    let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length
 
     // if(student[i]==='Group A') {
       
