@@ -25,7 +25,7 @@ const Create = ({ token, user }) => {
       },
     ],
     pickupCode: user.userCode + '-01',
-    pickupCodeAdd: [''],
+    pickupCodeAdd: [','],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupOption: 'Breakfast and Lunch',
     pickUpTime: '',
@@ -263,7 +263,7 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       mealRequest: [...mealRequest, { meal: 'Standard', glutenFree: false }],
-      pickupCodeAdd: [...pickupCodeAdd, '']
+      pickupCodeAdd: [...pickupCodeAdd, ',']
     });
   };
   // console.log(pickupCodeAdd)
@@ -305,7 +305,7 @@ const Create = ({ token, user }) => {
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
-
+console.log(pickupCodeAdd)
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.table({title, url, categories, type, medium})
@@ -320,7 +320,7 @@ const Create = ({ token, user }) => {
     try {
       const response = await axios.post(
         `${API}/link`,
-        { mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode },
+        { mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd },
         // { title, url, categories, type, medium },
         {
           headers: {

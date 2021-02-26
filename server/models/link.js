@@ -7,28 +7,28 @@ const linkSchema = new mongoose.Schema(
     //   type: ObjectId, // auto generate in sequence in database somehow
     // },
     // members: [{ firstName: String, lastName: String }]
-// ,
+    // ,
     mealRequest: [
-      { meal: {
-
-        type: String,
-        trim: true,
-        required: true,
-        max: 256
-      }
-      }
+      {
+        meal: {
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
+        },
+      },
     ],
     pickupOption: {
       type: String,
       trim: true,
       required: true,
-      max: 256
+      max: 256,
     },
     pickupTime: {
       type: String,
       trim: true,
       required: true,
-      max: 256
+      max: 256,
     },
     pickupDate: {
       type: String,
@@ -40,6 +40,13 @@ const linkSchema = new mongoose.Schema(
       required: true,
       // unique: true
     },
+    pickupCodeAdd: [
+      {
+        type: String,
+        required: true,
+        // unique: true
+      },
+    ],
     // title: {
     //   type: String,
     //   trim: true,

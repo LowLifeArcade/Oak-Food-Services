@@ -18,11 +18,11 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 // create, list, read, update, remove
 
 exports.create = (req, res) => {
-  const { mealRequest, pickupOption, pickupTime, pickupDate, pickupCode } = req.body;
+  const { mealRequest, pickupOption, pickupTime, pickupDate, pickupCode, pickupCodeAdd } = req.body;
   // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
   // const slug = url;
-  let link = new Link({ mealRequest, pickupOption, pickupTime, pickupDate, pickupCode });
+  let link = new Link({ mealRequest, pickupOption, pickupTime, pickupDate, pickupCode, pickupCodeAdd });
   // posted by user. We save this for use in user dashboard etc
   const postedBy = link.postedBy = req.user._id;
   // const userCode = link.userCode = req.user.userCode;
@@ -148,7 +148,7 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { id } = req.params;
-  const updatedLink = ({ title, url, categories, type, medium } = req.body);
+  const updatedLink = ({ mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd} = req.body);
   // const updatedLink = {title, url, categories, type, medium}
 
   Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
