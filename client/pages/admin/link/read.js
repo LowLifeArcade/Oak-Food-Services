@@ -73,7 +73,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 
   const listOfLinks = (search) =>
     allLinks
-    .filter(l => l.pickupCode.toLowerCase().includes(search))
+    .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
     .filter(l => l.pickupDate === pickupDateLookup)
     .map((l, i) => (
       <>
@@ -215,7 +215,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
                 value={state.search}
                 type="text"
                 className="form-control"
-                placeholder="Search requests (not active yet)"
+                placeholder="Search requests by pickup code"
               ></input>
               {/* {renderHTML(category.content || '')} */}
             </div>
