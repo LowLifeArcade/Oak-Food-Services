@@ -99,10 +99,23 @@ const Admin = ({ user, initialRequests }) => {
           <div className="">
             <ul className="nav flex-column pt-1 ">
               <li className="nav-item">
-                {/* potentially make Link an a tag if there are issues with css */}
+              <li className="nav-item">
+                <Link href="/admin/link/read">
+                  <a className="nav-link" href="">
+                    Meal Requests Page
+                  </a>
+                </Link>
+              </li>
                 <Link href="/admin/category/create">
                   <a className="nav-link" href="">
-                    Create Post
+                    Create Blog Post
+                  </a>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link href="/admin/category/read">
+                  <a className="nav-link" href="">
+                    Edit Blog Posts
                   </a>
                 </Link>
               </li>
@@ -110,31 +123,26 @@ const Admin = ({ user, initialRequests }) => {
                 {/* potentially make Link an a tag if there are issues with css */}
                 <Link href="/admin/group/create">
                   <a className="nav-link" href="">
-                    Create Group
+                    Create Student Group
                   </a>
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link href="/admin/category/read">
-                  <a className="nav-link" href="">
-                    All Posts
-                  </a>
-                </Link>
-              </li>
+              
               <li className="nav-item">
                 <Link href="/admin/group/read">
                   <a className="nav-link" href="">
-                    All Groups
+                    Edit Student Groups
                   </a>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link href="/admin/link/read">
+                <Link href="/user/link/create">
                   <a className="nav-link" href="">
-                    All Meal Requests
+                    Create Mock Order
                   </a>
                 </Link>
               </li>
+              
               <li className="nav-item">
                 <Link href="/user/profile/update">
                   <a className="nav-link" href="">
@@ -142,13 +150,7 @@ const Admin = ({ user, initialRequests }) => {
                   </a>
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link href="/user/profile/update">
-                  <a className="nav-link" href="">
-                    Export CSV(not working yet)
-                  </a>
-                </Link>
-              </li>
+              
               <div className="pt-2">
                 <hr />
 
