@@ -305,7 +305,8 @@ const Create = ({ token, user }) => {
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
-console.log(pickupCodeAdd)
+// console.log(pickupCodeAdd)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.table({title, url, categories, type, medium})
