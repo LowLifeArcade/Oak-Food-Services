@@ -11,6 +11,8 @@ import withAdmin from '../../withAdmin';
 import { getCookie } from '../../../helpers/auth';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { CSVLink, CSVDownload } from "react-csv";
+
 
 
 
@@ -27,6 +29,8 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     error: '',
     success: '',
   });
+
+  // console.log(allLinks)
 
   const {pickupDateLookup} = state
   // const handleClick = async (linkId) => {
@@ -71,6 +75,10 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     }
   };
 
+  const csvListOfLinks = (search) =>
+    allLinks
+    .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+
   const listOfLinks = (search) =>
     allLinks
     .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
@@ -80,7 +88,6 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
           <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
             <h4 className="pt-1 pb-1">
               Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
-              {console.log(typeof(l.pickupDate))}
             </h4>
             <h4>
               <b>Code: {l.pickupCode}</b>
@@ -174,6 +181,8 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
+  const csvData = csvListOfLinks(state.search)
+console.log('csvdata',csvListOfLinks(state.search))
 
   return (
     <Layout>
@@ -207,6 +216,8 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
                 >
                 Select Date
               </button>
+              <CSVLink className="float-right" data={csvData}>Download csv</CSVLink>
+
               <br/>
               <br/>
               <input
