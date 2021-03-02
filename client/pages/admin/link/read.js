@@ -3,7 +3,7 @@ import Layout from '../../../components/Layout';
 import styles from '../../../styles/Home.module.css';
 import axios from 'axios';
 import Link from 'next/link';
-import renderHTML from 'react-render-html';
+// import renderHTML from 'react-render-html';
 import { API } from '../../../config';
 import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -11,7 +11,7 @@ import withAdmin from '../../withAdmin';
 import { getCookie } from '../../../helpers/auth';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 
 
@@ -77,7 +77,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 
   const csvListOfLinks = (search) =>
     allLinks
-    .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+    // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+    .filter(l => l.pickupDate === pickupDateLookup)
+
 
   const listOfLinks = (search) =>
     allLinks
@@ -158,7 +160,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     );
 
     setAllLinks([...allLinks, ...response.data]);
-    console.log(...response.data);
+    // console.log(...response.data);
     // console.log('allLinks', allLinks);
     // console.log('response.data.links.length', response.data.links.length);
     setSize(response.data.length);
@@ -181,8 +183,8 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
-  const csvData = csvListOfLinks(state.search)
-console.log('csvdata',csvListOfLinks(state.search))
+  const csvData = csvListOfLinks(state.pickupDateLookup)
+// console.log('csvdata',csvListOfLinks(state.pickupDateLookup))
 
   return (
     <Layout>

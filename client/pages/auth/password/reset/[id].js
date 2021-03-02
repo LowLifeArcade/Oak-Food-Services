@@ -1,4 +1,4 @@
-import { useState ,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   showErrorMessage,
@@ -14,11 +14,20 @@ const ResetPassword = ({ router }) => {
     name: '',
     token: '',
     newPassword: '',
+    confirmPassword: '',
     buttonText: 'Reset Password',
     success: '',
     error: '',
   });
-  const { name, token, newPassword, buttonText, success, error } = state;
+  const {
+    name,
+    token,
+    newPassword,
+    buttonText,
+    success,
+    error,
+    confirmPassword,
+  } = state;
 
   useEffect(() => {
     const decoded = jwt.decode(router.query.id);
@@ -34,6 +43,11 @@ const ResetPassword = ({ router }) => {
     e.preventDefault();
     setState({ ...state, buttonText: 'Sending...' });
     // console.log('post email to ', email);
+
+    if (newPassword !== confirmPassword) {
+      setState({...state, error: "Passwords don't match"}); 
+      // alert('passwords dont match')
+    } else {
     try {
       const response = await axios.put(`${API}/reset-password`, {
         resetPasswordLink: token,
@@ -53,7 +67,17 @@ const ResetPassword = ({ router }) => {
         buttonText: 'Forgot Password',
         error: error.response.data.error,
       });
-    }
+    }}
+  };
+
+  const handleChangeConfirm = (name) => (e) => {
+    setState({
+      ...state,
+      [name]: e.target.value,
+      error: '',
+      success: '',
+      buttonText: 'Register',
+    });
   };
 
   const passwordResetForm = () => (
@@ -68,6 +92,16 @@ const ResetPassword = ({ router }) => {
           required
         />
       </div>
+      <div className="form-group">
+        <input
+          type="password"
+          className="form-control"
+          onChange={handleChangeConfirm('confirmPassword')}
+          value={confirmPassword}
+          placeholder="Repeat password"
+          required
+        />
+      </div>
       <div>
         <button className="btn btn-outline-warning">{buttonText}</button>
       </div>
@@ -77,8 +111,8 @@ const ResetPassword = ({ router }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="col-md-6 offset-md3">
-          <h1>Hi {name}, Please reset your password now.</h1>
+        <div className="col-md-6 offset-md3 pt-3">
+          <h2>Hi {name}, Please reset your password now.</h2>
           <div className="col-md-3">
             <br />
           </div>

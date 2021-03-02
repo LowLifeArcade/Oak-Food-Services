@@ -1,6 +1,5 @@
 import Layout from '../../../components/Layout';
 import { useState, useEffect } from 'react';
-import Router from 'next/router';
 import axios from 'axios';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
@@ -8,19 +7,20 @@ import styles from '../../../styles/Home.module.css';
 import { isAuth, updateUser } from '../../../helpers/auth';
 import withUser from '../../withUser';
 import Link from 'next/link';
+import  Router  from 'next/router';
 
 const Profile = ({ user, token }) => {
   const [state, setState] = useState({
-    name: user.name,
-    lastName: user.lastName,
-    email: user.email,
-    password: '',
-    confirmPassword: '',
+    // name: user.name,
+    // lastName: user.lastName,
+    // email: user.email,
+    // password: '',
+    // confirmPassword: '',
     error: '',
     success: '',
-    buttonText: 'Update',
+    buttonText: 'Register',
     addButtonText: 'Add Student',
-    students: user.students,
+    students: [{ name: '', schoolName: '', group: '' }],
     loadedCategories: [],
     categories: user.categories, // categories selected by user for signup
     groups: [],
@@ -35,11 +35,11 @@ const Profile = ({ user, token }) => {
   const {
     addButtonText,
     students,
-    name,
-    lastName,
-    email,
-    password,
-    confirmPassword,
+    // name,
+    // lastName,
+    // email,
+    // password,
+    // confirmPassword,
     error,
     success,
     buttonText,
@@ -56,12 +56,22 @@ const Profile = ({ user, token }) => {
   }, []);
 
   useEffect(() => {
-    success === "You've successfully updated your profile"
-    ? setTimeout(() => {
-      Router.push('/user') 
-    }, 2000)
-    : console.log('add students')
-}, [success])
+      success === "You've successfully registered your students"
+      ? setTimeout(() => {
+        Router.push('/user') 
+      }, 2000)
+      : console.log('add students')
+  }, [success])
+
+  // useEffect(() => {
+  //   // isAuth() && Router.push('/user');
+  //   isAuth() && isAuth().role === 'admin'
+  //     ? Router.push('admin')
+  //     : isAuth() && isAuth().role === 'user'
+  //     ? Router.push('user')
+  //     : !isAuth() ? console.log('not registered or signed in') : Router.push('/');
+  //   // : Router.push('user')
+  // }, [success]);
 
   const loadCategories = async () => {
     const response = await axios.get(`${API}/categories`);
@@ -86,7 +96,7 @@ const Profile = ({ user, token }) => {
     setState({
       ...state,
       students: [...students],
-      buttonText: 'Update',
+      buttonText: 'Register',
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
@@ -95,7 +105,6 @@ const Profile = ({ user, token }) => {
     // console.log(e.target.getAttribute("data-index"))
   };
 
-  // console.log(loadedGroups)
   const addStudentGroup = (i) => (
     <>
       <div key={i} className="form-group">
@@ -104,20 +113,17 @@ const Profile = ({ user, token }) => {
             type="select"
             // value={state.value}
             data-index={i}
-            defaultValue={loadedGroups.includes(students[i].group)}
-            value={students[i].group}
+            // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectChange(e)}
             className="form-control"
             required
           >
-            {/* if statement in loaded groups value bellow where if there's a value in default value then select that. Otherwise display options */}
-            {console.log('add', loadedGroups.includes(students[i].group))}{' '}
-            <option selected disabled value="">
-              Choose A Student Group
-            </option>
+            {' '}
+            <option selected disabled value="">Choose A Student Group</option>
             {state.loadedGroups.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
             })}
           </select>
           <div className="p-2"></div>
@@ -207,7 +213,7 @@ const Profile = ({ user, token }) => {
       [student]: e.target.value,
       error: '',
       success: '',
-      buttonText: 'Update',
+      buttonText: 'Register',
     });
   };
 
@@ -237,7 +243,7 @@ const Profile = ({ user, token }) => {
       ],
       error: '',
       success: '',
-      buttonText: 'Update',
+      buttonText: 'Register',
     });
   };
 
@@ -265,25 +271,25 @@ const Profile = ({ user, token }) => {
       ],
       error: '',
       success: '',
-      buttonText: 'Update',
+      buttonText: 'Register',
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('submit', students);
-    setState({ ...state, buttonText: 'Updating...' });
+    setState({ ...state, buttonText: 'Registering...' });
     // if (password !== confirmPassword) {
     //   setState({ ...state, error: "Passwords don't match" });
     //   // alert('passwords dont match')
     // } else {
     try {
       const response = await axios.put(
-        `${API}/user`,
+        `${API}/user/add`,
         {
-          name,
-          lastName,
-          email,
+          // name,
+          // lastName,
+          // email,
           // password,
           students,
         },
@@ -302,7 +308,7 @@ const Profile = ({ user, token }) => {
           // password: '',
           // confirmPassword: '',
           buttonText: 'Submitted',
-          success: "You've successfully updated your profile",
+          success: "You've successfully registered your students",
           // success: response.data.message,
         });
       });
@@ -310,7 +316,7 @@ const Profile = ({ user, token }) => {
       console.log(error);
       setState({
         ...state,
-        buttonText: 'Update failed',
+        buttonText: 'Register failed',
         error: error.response.data.error,
       });
     }
@@ -326,7 +332,7 @@ const Profile = ({ user, token }) => {
       action="POST"
     >
       {/* <div className="text-muted">First Name</div> */}
-      <div className="form-group pt-2">
+      {/* <div className="form-group pt-2">
         <input
           value={name}
           onChange={handleChange('name')}
@@ -336,7 +342,7 @@ const Profile = ({ user, token }) => {
           required
         />
       </div>
-      {/* <div className="text-muted">last Name</div> */}
+      
 
       <div className="form-group">
         <input
@@ -365,7 +371,7 @@ const Profile = ({ user, token }) => {
           <a className="text-danger float-right">Change Password</a>
         </Link>
       }
-      <br />
+      <br /> */}
       {/* <div className="form-group">
         <input
           value={password}
@@ -413,7 +419,7 @@ const Profile = ({ user, token }) => {
                       // onChange={handleChange({student: 'name'})}
                       type="text"
                       className="form-control"
-                      placeholder={x.name}
+                      placeholder="Student Name"
                       required
                     />
                   </div>
@@ -424,7 +430,7 @@ const Profile = ({ user, token }) => {
                       onChange={handleObjectSchoolChange()}
                       // onChange={handleChange({student: 'name'})}
                       type="text"
-                      defaultValue={x.schoolName}
+                      defaultValue={''}
                       className="form-control"
                       placeholder="School student attends"
                       required
@@ -528,7 +534,7 @@ const Profile = ({ user, token }) => {
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
               {/* + "col-md-6 offset-md-3 subcard" */}
-              <h2 className={'text-muted ' + styles.title}>Update</h2>
+              <h4 className={'text-muted ' + styles.title}>Register Students for Meal Requests</h4>
               <br />
               {registerForm()}
               {/* {success && showSuccessMessage(success)}

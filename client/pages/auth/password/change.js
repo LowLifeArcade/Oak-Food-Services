@@ -8,7 +8,7 @@ import Layout from '../../../components/Layout';
 const ForgotPassword = () => {
   const [state, setState] = useState({
     email: '',
-    buttonText: 'Forgot Password',
+    buttonText: 'Change Password',
     success: '',
     error: '',
   });
@@ -31,10 +31,10 @@ const ForgotPassword = () => {
         success: response.data.message,
       });
     } catch (error) {
-      console.log('FORGOT PW ERROR', error);
+      console.log('CHANGE PW ERROR', error);
       setState({
         ...state,
-        buttonText: 'Forgot Password',
+        buttonText: 'Change Password',
         error: error.response.data.error,
       });
     }
@@ -62,7 +62,7 @@ const ForgotPassword = () => {
     <Layout>
       <div className="row">
         <div className="col-md-6 offset-md3 pt-3">
-          <h2>Forgot Password</h2>
+          <h2>Change Password</h2>
           <div className="col-md-3">
             <br />
           </div>

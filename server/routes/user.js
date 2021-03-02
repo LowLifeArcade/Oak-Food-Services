@@ -15,11 +15,12 @@ const {userUpdateValidator} = require('../validators/auth')
 const {runValidation} = require('../validators')
 
 // import controllers
-const { read, update } = require('../controllers/user');
+const { read, update, addStudents } = require('../controllers/user');
 
 // routes
 router.get('/user', requireSignin, authMiddleware, read);
 router.get('/admin', requireSignin, adminMiddleware, read);
 router.put('/user', requireSignin, runValidation, requireSignin, authMiddleware, update);
+router.put('/user/add', requireSignin, runValidation, requireSignin, authMiddleware, addStudents);
 
 module.exports = router;

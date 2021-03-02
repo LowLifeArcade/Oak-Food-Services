@@ -1,4 +1,5 @@
 import styles from '../../styles/Home.module.css';
+import {useEffect} from 'react'
 import axios from 'axios';
 import { API } from '../../config';
 import { getCookie } from '../../helpers/auth';
@@ -9,6 +10,8 @@ import Router from 'next/router';
 
 import Layout from '../../components/Layout';
 
+
+
 const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
@@ -18,6 +21,13 @@ const User = ({ user, token, l, userLinks }) => {
       handleDelete(id);
     }
   };
+
+  useEffect(() => {
+    console.log('students!',user.students)
+    user.students.length === 0
+    ? Router.push('/user/profile/add')
+    : console.log("it's fine")
+  }, [])
 
   const handleDelete = async (id) => {
     // console.log('delete link', id)
@@ -112,6 +122,10 @@ const User = ({ user, token, l, userLinks }) => {
           <Link href="/user/profile/update">
             <a className="nav-item">Update profile</a>
           </Link>
+          {/* <br/>
+          <Link href="/user/profile/add">
+            <a className="nav-item">Add students</a>
+          </Link> */}
           {/* </li> */}
           {/* <li className="nav-item p-4"> */}
           <Link href="/user/link/create">

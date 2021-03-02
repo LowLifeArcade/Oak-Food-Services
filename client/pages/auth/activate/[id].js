@@ -5,6 +5,8 @@ import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
 import { withRouter } from 'next/router';
 import Layout from '../../../components/Layout';
+import Router from 'next/router';
+
 
 const ActivateAccount = ({ router }) => {
   const [state, setState] = useState({
@@ -24,6 +26,15 @@ const ActivateAccount = ({ router }) => {
     }
   }, [router]);
 
+  useEffect(() => {
+    success === 'Registration successful. Please login.'
+    ? setTimeout(() => {
+        Router.push('/login');
+      }, 2000)
+    : console.log("it's fine");
+  return () => clearTimeout();
+  }, [success])
+
   const clickSubmit = async (e) => {
     e.preventDefault();
     console.log('activate account');
@@ -34,7 +45,7 @@ const ActivateAccount = ({ router }) => {
       console.log('account activate response', response);
       setState({
         ...state,
-        name: '',
+        // name: '',
         token: '',
         buttonText: 'Activated!',
         success: response.data.message,

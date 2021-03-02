@@ -57,7 +57,7 @@ exports.read = (req, res) => {
 // };
 
 exports.update = (req, res) => {
-  const { name, password, categories } = req.body;
+  const { name, password, categories, students } = req.body;
   switch (true) {
     case password && password.length < 8:
       return res
@@ -67,9 +67,40 @@ exports.update = (req, res) => {
   }
   // add code to generate new password via salt and hash
 
+  
+
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { name, password, categories },
+    { name, password, categories, students },
+    { new: true }
+  ).exec((err, updated) => {
+    if (err) {
+      return res.status(400).json({
+        error: 'Could not find user to update',
+      });
+    }
+    updated.hashed_password = undefined;
+    updated.salt = undefined;
+    res.json(updated);
+  });
+};
+
+exports.addStudents = (req, res) => {
+  const { students } = req.body;
+  // switch (true) {
+  //   case password && password.length < 8:
+  //     return res
+  //       .status(400)
+  //       .json({ error: 'Password must be at least 8 characters long' });
+  //     break;
+  // }
+  // add code to generate new password via salt and hash
+
+  
+
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { students },
     { new: true }
   ).exec((err, updated) => {
     if (err) {

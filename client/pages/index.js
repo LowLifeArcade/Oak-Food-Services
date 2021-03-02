@@ -6,6 +6,9 @@ import Layout from '../components/Layout';
 import Link from 'next/link';
 import moment from 'moment';
 import renderHTML from 'react-render-html';
+import  Router  from 'next/router';
+import { isAuth } from '../helpers/auth';
+
 
 // refactor this into the admin only view
 const Home = ({ categories }) => {
@@ -21,6 +24,10 @@ const Home = ({ categories }) => {
   //   setPopular(response.data);
   // };
   // console.log(popular);
+
+  useEffect(() => {
+    !isAuth() ? Router.push('/login') : Router.push('/');
+  }, [])
 
   const handleClick = async (linkId) => {
     // e.preventDefault();

@@ -124,6 +124,7 @@ const Register = () => {
             <option selected disabled value="">Choose A Student Group</option>
             {state.loadedGroups.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
             })}
           </select>
           <div className="p-2"></div>
@@ -229,6 +230,7 @@ const Register = () => {
       buttonText: 'Register',
     });
   };
+
   const handleObjectSchoolChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -272,7 +274,7 @@ const Register = () => {
         lastName,
         email,
         password,
-        students,
+        // students,
       });
       console.log(response);
       setState({
@@ -356,11 +358,11 @@ const Register = () => {
 
       
 
-        <div className="row">
+        {/* <div className="row">
           <div className="col-md-12 pt-2">
             {state.students
               .slice(0)
-              .reverse()
+              // .reverse()
               .map((x, i) => {
                 return (
                   <>
@@ -369,7 +371,7 @@ const Register = () => {
                         Student # {`${i + 1}`} information
                       </label>
                     </h6>
-                    {/* {console.log(x)} */}
+
 
                     <div className="form-group pt-1">
                       <input
@@ -411,7 +413,7 @@ const Register = () => {
                         placeholder="School student attends"
                         required
                       />
-                    </div> */}
+                    </div> 
                     <div key={i} className="">
                       {addStudentGroup(i)}
                     </div>
@@ -421,14 +423,14 @@ const Register = () => {
         <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
           {showGroups()}
         </ul>
-      </div> */}
+      </div> 
                   </>
                 );
               })}
           </div>
         </div>
 
-        {console.log('student array in state', state.students)}
+        {console.log('student array in state', state.students[0].group)}
 
         <div className="form-group">
         <button
@@ -438,27 +440,35 @@ const Register = () => {
         >
           {addButtonText}
         </button>
-        {/* <div className=""> */}
+        {/* <div className=""> 
+          
 
-        {!state.students.length < 1 && (
+         {!state.students.length < 1 && (
           <button
-            className="btn btn-danger float-right"
-            onClick={(e) => removeStudent(e)}
+          className="btn btn-danger float-right"
+          onClick={(e) => removeStudent(e)}
           >
-            Remove 
+          Remove 
           </button>
-        )}
-        {/* </div> */}
-        {/* {addStudent(i)} */}
+          )}
+          </div> 
+        {addStudent(i)} */}
 
-        <div className="pt-4"></div>
+          <div className="row">
+          <div className="col">
+        <div className="pt-1"></div>
         {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}
-        {!state.students.length < 1 && (
+        <br/>
           <button type="text" className="btn btn-warning">
             {buttonText}
           </button>
-        )}
+        </div>
+        {/* {!state.students.length < 1 && (
+          <button type="text" className="btn btn-warning">
+            {buttonText}
+          </button>
+        )} */}
       </div>
     </form>
   );
