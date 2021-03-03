@@ -15,13 +15,13 @@ import { CSVLink } from 'react-csv';
 
 const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const [allLinks, setAllLinks] = useState(links);
-  const [completeDate, setCompleteDate] = useState('')
+  const [completeDate, setCompleteDate] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [limit, setLimit] = useState(linksLimit);
   const [skip, setSkip] = useState(0);
   const [size, setSize] = useState(totalLinks);
   const [loadmeals, setLoadmeals] = useState(false);
-  const [orderStatus, setOrderStatus] = useState(false);
+  const [orderStatus, setOrderStatus] = useState(true);
   const [state, setState] = useState({
     pickupDateLookup: new Date(),
     // loadMeals: false,
@@ -53,9 +53,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     // console.log('delete >', slug);
     let answer = window.confirm('Mark this order as completed?');
     if (answer) {
-      setCompleteDate(new Date)
+      setCompleteDate(new Date());
       setOrderStatus(true);
-      console.log(orderStatus)
+      console.log(orderStatus);
       handleComplete(id, orderStatus);
     }
   };
@@ -78,7 +78,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   };
 
   const handleComplete = async (id, orderStatus) => {
-    // console.log(orderStatus)
+    console.log(orderStatus);
 
     try {
       const response = await axios.put(
@@ -91,9 +91,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         }
       );
       console.log('MEAL COMPLETE SUCCESS', response);
-      // process.browser 
-      process.browser && window.confirm('Order is complete')
-      window.location.reload();
+      // process.browser
+      process.browser && window.location.reload();
+      window.confirm('Order is complete');
     } catch (error) {
       console.log('ERROR MEAL CATEGORY', error.response.data.error);
     }
@@ -123,7 +123,14 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       .filter((l) => l.pickupDate === pickupDateLookup)
       .map((l, i) => (
         <>
-          <div key={i} className={l.orderStatus === false ? 'p-4 alert  alert-warning ' : 'p-4 alert  alert-secondary ' + styles.subcard}>
+          <div
+            key={i}
+            className={
+              l.orderStatus === false
+                ? 'p-4 alert  alert-warning '
+                : 'p-4 alert  alert-secondary ' + styles.subcard
+            }
+          >
             {/* {console.log(l.orderStatus)} */}
             <h4 className="pt-1 pb-1">
               Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
@@ -162,20 +169,28 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             </div>
 
             <div className=" pb-3 pt-3">
-              {<Link href={`/user/link/${l._id}`}>
-                <button className="badge btn btn-outline-warning text float-left">
-                  Edit Request
-                </button>
-              </Link>}
+              {
+                <Link href={`/user/link/${l._id}`}>
+                  <button className="badge btn btn-outline-warning text float-left">
+                    Edit Request
+                  </button>
+                </Link>
+              }
               {/* {console.log(orderStatus)} */}
-              {l.orderStatus === false ? <Link href="">
-                <button
-                  onClick={(e) => confirmDelete(e, l._id)}
-                  className="text-grey btn btn-warning float-right"
-                >
-                  Complete Order?
-                </button>
-              </Link> : <h4 className='' ><b>Completed on {moment(l.updatedAt).format('MMM Do')}</b></h4>}
+              {l.orderStatus === false ? (
+                <Link href="">
+                  <button
+                    onClick={(e) => confirmDelete(e, l._id)}
+                    className="text-grey btn btn-warning float-right"
+                  >
+                    Complete Order?
+                  </button>
+                </Link>
+              ) : (
+                <h4 className="">
+                  <b>Completed on {moment(l.updatedAt).format('MMM Do')}</b>
+                </h4>
+              )}
               {/* <Link href="">
                 <button
                   onClick={(e) => confirmDelete(e, l._id)}
