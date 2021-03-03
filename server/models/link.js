@@ -18,6 +18,10 @@ const linkSchema = new mongoose.Schema(
         },
       },
     ],
+    orderStatus: {
+      type: Boolean,
+      required: false
+    },
     pickupOption: {
       type: String,
       trim: true,

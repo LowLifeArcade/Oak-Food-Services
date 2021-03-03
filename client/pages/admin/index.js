@@ -179,18 +179,18 @@ const Admin = ({ user, initialRequests }) => {
       <hr />
       <h3>
         <b>{requests.length}</b> - Family Orders <p />
-        <b>{allMealCounter()}</b> - total meals
+        <b>{allMealCounter()* 5}</b> - Individual Meals
         <hr />
       </h3>
       <div className="p-2">
         <h5>
-          {mealCounter('Standard')} - Standard meal requests
+          {mealCounter('Standard') * 5} - Standard meal requests
           <hr />
-          {mealCounter('Vegetarian')} - Vegetarian meal requests
+          {mealCounter('Vegetarian')* 5} - Vegetarian meal requests
           <hr />
-          {mealCounter('Vegan')} - Vegan meal requests
+          {mealCounter('Vegan')* 5} - Vegan meal requests
           <hr />
-          {mealCounter('GlutenFree')} - Gluten Free meal requests
+          {mealCounter('GlutenFree')* 5} - Gluten Free meal requests
           <hr />
         </h5>
       </div>

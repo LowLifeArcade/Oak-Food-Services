@@ -16,6 +16,7 @@ const Create = ({ token, user }) => {
   const username = user.username;
   // const userCode = user.userCode
   const [showSearch, setShowSearch] = useState(false);
+  // const [orderStatus, setOrderStatus] = useState(true)
 
   // state
   const [state, setState] = useState({
@@ -24,6 +25,7 @@ const Create = ({ token, user }) => {
         meal: 'Standard',
       },
     ],
+    orderStatus: false,
     pickupCode: user.userCode + '-01',
     pickupCodeAdd: [','],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
@@ -44,6 +46,7 @@ const Create = ({ token, user }) => {
 
   const {
     pickupCode,
+    orderStatus,
     students,
     pickupCodeAdd,
     pickupDate,
@@ -321,7 +324,7 @@ const Create = ({ token, user }) => {
     try {
       const response = await axios.post(
         `${API}/link`,
-        { mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd },
+        { mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd, orderStatus },
         // { title, url, categories, type, medium },
         {
           headers: {

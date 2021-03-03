@@ -49,6 +49,11 @@ const User = ({ user, token, l, userLinks }) => {
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+        <h4>
+
+                    {l.orderStatus && <b className="text-danger" >picked up on {moment(l.updatedAt).format('MMM Do')}</b>}
+        </h4>
+
           <h4 className="pt-1 pb-1">
             Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
           </h4>
@@ -64,7 +69,7 @@ const User = ({ user, token, l, userLinks }) => {
               <div className="p-3">
                 {l.mealRequest.map((l, i) => (
                   <h6 className="">
-                    Meal {`${i + 1} `} - {l.meal}{' '}
+                    Meal {`${i + 1} `} - {l.meal}{' '} x 5
                   </h6>
                 ))}
               </div>

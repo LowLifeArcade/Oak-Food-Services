@@ -5,12 +5,13 @@ const router = express.Router();
 const {
   linkCreateValidator,
   linkUpdateValidator,
+  orderStatusValidator
 } = require('../validators/link');
 const { runValidation } = require('../validators');
 
 // import from controllers
 const { requireSignin, authMiddleware, adminMiddleware, canUpdateDeleteLink } = require('../controllers/auth');
-const {create, list, read, update, remove,all, clickCount, popular, popularInCategory} = require('../controllers/link')
+const {create, list, read, update, remove,all, clickCount, popular, popularInCategory, complete} = require('../controllers/link')
 
 // routes categoryCreateValidator, runValidation,
 // becareful with route orders 
@@ -26,6 +27,7 @@ router.put('/link/:id', linkUpdateValidator, runValidation, requireSignin, authM
 router.delete('/link/:id', requireSignin, authMiddleware, canUpdateDeleteLink, remove);
 // make admin only able to do something
 router.put('/link/admin/:id', linkUpdateValidator, runValidation, requireSignin, adminMiddleware, update);
+router.put('/link/admin/complete/:id', orderStatusValidator, runValidation, requireSignin, adminMiddleware, complete);
 router.delete('/link/admin/:id', requireSignin, adminMiddleware, remove);
 
 

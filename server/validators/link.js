@@ -25,6 +25,10 @@ exports.linkCreateValidator = [
   .not()
   .isEmpty()
   .withMessage('Date is required!'),
+  check('orderStatus')
+  .not()
+  .isEmpty()
+  .withMessage('Order Status'),
   check('mealRequest')
   .not()
   .isEmpty()
@@ -47,6 +51,14 @@ exports.linkCreateValidator = [
   .withMessage('pick up code add is required'),
 ];
 
+exports.orderStatusValidator = [
+  
+  check('orderStatus')
+  .not()
+  .isEmpty()
+  .withMessage('status required'),
+];
+
 exports.linkUpdateValidator = [
   
   check('mealRequest')
@@ -61,6 +73,10 @@ exports.linkUpdateValidator = [
   .not()
   .isEmpty()
   .withMessage('pick up time is required'),
+  check('orderStatus')
+  .not()
+  .isEmpty()
+  .withMessage('order status is required'),
 
   // check('title')
   //   .not()

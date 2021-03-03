@@ -250,6 +250,29 @@ const Update = ({ oldLink, token, user, _id }) => {
     });
   };
 
+  const confirmDelete = (e, id) => {
+    e.preventDefault();
+    // console.log('delete >', slug);
+    let answer = window.confirm('WARNING! Delete this order?');
+    if (answer) {
+      handleDelete(id);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${API}/link/admin/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('LINK DELETE SUCCESS', response);
+      process.browser && window.location.reload();
+    } catch (error) {
+      console.log('ERROR LINK CATEGORY', error);
+    }
+  };
+
   const selectPickupOption = (i) => (
     <>
       <div key={i} className="form-group">
