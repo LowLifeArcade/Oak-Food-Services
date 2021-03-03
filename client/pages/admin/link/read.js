@@ -91,8 +91,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         }
       );
       console.log('MEAL COMPLETE SUCCESS', response);
-      process.browser 
-      // process.browser && window.location.reload();
+      // process.browser 
+      process.browser && window.confirm('Order is complete')
+      window.location.reload();
     } catch (error) {
       console.log('ERROR MEAL CATEGORY', error.response.data.error);
     }
