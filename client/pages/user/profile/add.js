@@ -20,11 +20,13 @@ const Profile = ({ user, token }) => {
     success: '',
     buttonText: 'Register',
     addButtonText: 'Add Student',
-    students: [{ name: '', schoolName: '', group: '' }],
+    students: [{ name: '', schoolName: '', group: '', teacher: '' }],
     loadedCategories: [],
     categories: user.categories, // categories selected by user for signup
     groups: [],
+    teachers: [],
     loadedGroups: [],
+    loadedTeachers: []
   });
   // console.log(user)
 
@@ -46,14 +48,25 @@ const Profile = ({ user, token }) => {
     loadedCategories,
     categories,
     groups,
+    teachers,
     loadedGroups,
+    loadedTeachers
   } = state;
 
   // load categories when component mounts useing useEffect
   useEffect(() => {
-    loadCategories();
+    // loadCategories();
+    // setTimeout(() => {
+    // }, 1000)
     loadGroups();
+    // loadTeachers();
   }, []);
+
+  // useEffect(() => {
+  //   // loadCategories();
+  //   // loadGroups();
+  //   loadTeachers();
+  // }, []);
 
   useEffect(() => {
       success === "You've successfully registered your students"
@@ -72,21 +85,31 @@ const Profile = ({ user, token }) => {
   //     : !isAuth() ? console.log('not registered or signed in') : Router.push('/');
   //   // : Router.push('user')
   // }, [success]);
-
-  const loadCategories = async () => {
-    const response = await axios.get(`${API}/categories`);
-    setState({ ...state, loadedCategories: response.data });
-  };
-
   const loadGroups = async () => {
     const response = await axios.get(`${API}/groups`);
+    const response2 = await axios.get(`${API}/teachers`);
     // console.log(response.data)
-    setState({ ...state, loadedGroups: response.data });
-    console.log('loaded groups', loadedGroups);
+    // setState({ ...state, loadedTeachers: response2.data });
+    // console.log(response.data)
+    setState({ ...state, loadedTeachers: response2.data, loadedGroups: response.data });
   };
 
+  // const loadCategories = async () => {
+  //   const response = await axios.get(`${API}/categories`);
+  //   setState({ ...state, loadedCategories: response.data });
+  // };
+
+
+  console.log('loaded groups', loadedGroups);
+  // const loadTeachers = async () => {
+  //   const response = await axios.get(`${API}/teachers`);
+  //   // console.log(response.data)
+  //   setState({ ...state, loadedTeachers: response.data });
+  // };
+  console.log('loaded teachers', loadedTeachers);
+
   // student add select THIS is where things are going to be tricky
-  const handleSelectChange = (e) => {
+  const handleSelectGroupChange = (e) => {
     let i = e.target.getAttribute('data-index');
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
@@ -115,13 +138,60 @@ const Profile = ({ user, token }) => {
             data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectChange(e)}
+            onChange={(e) => handleSelectGroupChange(e)}
             className="form-control"
             required
           >
             {' '}
-            <option selected disabled value="">Choose A Student Group</option>
+            <option selected disabled value="">Choose Student Group</option>
             {state.loadedGroups.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })}
+          </select>
+          <div className=""></div>
+        </div>
+      </div>
+    </>
+  );
+
+   // student add select THIS is where things are going to be tricky
+   const handleSelectTeacherChange = (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    oneStudent.teacher = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    students[i] = oneStudent; // puts meal[i] back into mealRequest array
+    setState({
+      ...state,
+      students: [...students],
+      buttonText: 'Register',
+      success: '',
+      error: '',
+    }); //puts ...mealRequest with new meal back into mealRequest: []
+    // setState({...state,
+    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
+    // console.log(e.target.getAttribute("data-index"))
+  };
+
+  const addTeacher = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">Choose Teacher</option>
+            {state.loadedTeachers.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
             })}
@@ -137,7 +207,7 @@ const Profile = ({ user, token }) => {
     e.preventDefault();
     setState({
       ...state,
-      students: [...students, { name: '', schoolName: '', group: '' }],
+      students: [...students, { name: '', schoolName: '', group: '', teacher: '' }],
     });
   };
 
@@ -435,10 +505,13 @@ const Profile = ({ user, token }) => {
                       placeholder="School student attends"
                       required
                     >
-                      <option value="">Choose A School</option>
-                      <option value="OPMS">Oak Park Middle School</option>
+                      <option value="">Choose School</option>
+                      <option value="BES">Brookside Elementary School</option>
+                      <option value="OHES">Oak Hills Elementary School</option>
+                      <option value="ROES">Red Oak Elementary School</option>
+                      <option value="MCMS">Medea Creek Middle School</option>
                       <option value="OPHS">Oak Park High School</option>
-                      <option value="OPES">Oak Park Elementary School</option>
+                      <option value="OVHS">Oak View High School</option>
                     </select>
                   </div>
                   {/* <div className="form-group pt-1">
@@ -453,8 +526,11 @@ const Profile = ({ user, token }) => {
                         required
                       />
                     </div> */}
-                  <div key={i} className="">
+                  <div key={1} className="">
                     {addStudentGroup(i)}
+                  </div>
+                  <div key={2} className="">
+                    {addTeacher(i)}
                   </div>
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>
@@ -547,5 +623,10 @@ const Profile = ({ user, token }) => {
     </div>
   );
 };
+
+// Profile.getInitialProps = () => {
+//   loadGroups();
+//   loadTeachers();
+// }
 
 export default withUser(Profile);

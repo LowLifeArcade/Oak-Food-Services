@@ -68,6 +68,11 @@ const userSchema = new mongoose.Schema(
           type: ObjectId,
           ref: 'Group',
           required: true
+        },
+        teacher:{
+          type: ObjectId,
+          ref: 'Teacher',
+          required: true
         }
       }
     ],

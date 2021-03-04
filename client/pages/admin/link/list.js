@@ -12,15 +12,15 @@ import { getCookie } from '../../../helpers/auth';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
-import Router from 'next/router'
 
-const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
-  const [allLinks, setAllLinks] = useState(links);
+// token, links, totalLinks, linksLimit, linkSkip
+const Requests = ({ token }) => {
+  // const [allLinks, setAllLinks] = useState(links);
   const [completeDate, setCompleteDate] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const [limit, setLimit] = useState(linksLimit);
+  // const [limit, setLimit] = useState(linksLimit);
   const [skip, setSkip] = useState(0);
-  const [size, setSize] = useState(totalLinks);
+  // const [size, setSize] = useState(totalLinks);
   const [loadmeals, setLoadmeals] = useState(false);
   const [orderStatus, setOrderStatus] = useState(true);
   const [state, setState] = useState({
@@ -30,24 +30,39 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     error: '',
     success: '',
   });
-
-  // useEffect(() => {
-
-  //     setLoadmeals(!loadMeals)
-  // }, [pickupDateLookup])
-
-  console.log('all links', allLinks);
-
+  const [linksByDate, setLinksByDate] = useState([]);
   const { pickupDateLookup, loadMeals } = state;
-  // const handleClick = async (linkId) => {
-  //   const response = await axios.put(`${API}/click-count`, { linkId });
-  //   loadUpdatedLinks();
-  // };
 
-  // const loadUpdatedLinks = async () => {
-  //   const response = await axios.post(`${API}/category/${query.slug}`);
-  //   setAllLinks(response.data.links);
-  // };
+  // change date
+  const onDateChange = (pickupDate) => {
+    setState({ ...state, pickupDateLookup: moment(pickupDate).format('l') });
+    // console.log(pickupDateLookup);
+    handleDateChange(pickupDate);
+    setShowSearch(!showSearch);
+    // setLoadmeals(!loadMeals);
+    // return {
+    //   linksByDate: response.data,
+    //   // links: response.data,
+    //   totalLinksByDate: response.data.length,
+    //   // token,
+    // };
+  };
+
+  const handleDateChange = async (pickupDate) => {
+    const pickupDateLookup = moment(pickupDate).format('l')
+    const response = await axios.post(
+      `${API}/links-by-date`,
+      { pickupDateLookup },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    setLinksByDate(response.data);
+  };
+  console.log('linksbydate', linksByDate);
+
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+
+  let twoWeeksFromNow = new Date();
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
   const confirmComplete = (e, id) => {
     e.preventDefault();
@@ -60,14 +75,6 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       handleComplete(id, orderStatus);
     }
   };
-  // const confirmDelete = (e, id) => {
-  //   e.preventDefault();
-  //   // console.log('delete >', slug);
-  //   let answer = window.confirm('WARNING! Delete this order?.');
-  //   if (answer) {
-  //     handleDelete(id);
-  //   }
-  // };
 
   const handleSearch = (name) => (e) => {
     setState({
@@ -93,13 +100,13 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       );
       console.log('MEAL COMPLETE SUCCESS', response);
       // process.browser
-      process.browser && Router.push('/admin/link/read')
-      window.location.reload();
+      process.browser && window.location.reload();
       window.confirm('Order is complete');
     } catch (error) {
       console.log('ERROR MEAL CATEGORY', error.response.data.error);
     }
   };
+
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`${API}/link/admin/${id}`, {
@@ -108,8 +115,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         },
       });
       console.log('LINK DELETE SUCCESS', response);
-      process.browser && Router.push('/admin/link/read')
-      // window.location.reload();
+      process.browser && window.location.reload();
     } catch (error) {
       console.log('ERROR LINK CATEGORY', error);
     }
@@ -124,37 +130,26 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     }
   };
 
-  // const handleDelete = async (id) => {
-  //   // console.log('delete link', id)
-  //   try {
-  //     const response = await axios.delete(`${API}/link/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     console.log('LINK DELETE SUCCESS', response);
-  //     Router.replace('/user');
-  //   } catch (error) {
-  //     console.log('ERROR DELETING LINK', error.response.data.error);
-  //   }
-  // };
+  const csvListOfLinks = (search) =>
+    linksByDate
+      // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+      .filter((l) => l.pickupDate === pickupDateLookup);
 
-  // const csvListOfLinks = (search) =>
-  //   allLinks
-  //     // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
-  //     .filter((l) => l.pickupDate === pickupDateLookup);
+  const csvData = linksByDate;
+  // const csvData = csvListOfLinks(state.pickupDateLookup);
+  // console.log('csvdata',csvListOfLinks(state.pickupDateLookup))
 
   const listOfLinks = (search) =>
-    allLinks
+    linksByDate
       .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
-      .filter((l) => l.pickupDate === pickupDateLookup)
+      // .filter((l) => l.pickupDate === pickupDateLookup)
       .map((l, i) => (
         <>
           <div
             key={i}
             className={
               l.orderStatus === false
-                ? 'p-4 alert  alert-warning '+ styles.subcard
+                ? 'p-4 alert  alert-warning ' + styles.subcard
                 : 'p-4 alert  alert-secondary ' + styles.subcard
             }
           >
@@ -196,14 +191,14 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             </div>
 
             <div className=" pb-3 pt-3">
-            <Link href="">
-            <button
-              onClick={(e) => confirmDelete(e, l._id)}
-              className="badge text-danger btn btn-outline-warning "
-            >
-              Delete
-            </button>
-          </Link>
+              <Link href="">
+                <button
+                  onClick={(e) => confirmDelete(e, l._id)}
+                  className="badge text-danger btn btn-outline-warning "
+                >
+                  Delete
+                </button>
+              </Link>
               {/* {
                 <Link href={`/link/admin/${l._id}`}>
                   <button className="badge btn btn-outline-warning text float-left">
@@ -240,48 +235,29 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         </>
       ));
 
-  const loadMore = async () => {
-    let toSkip = skip + limit;
+  // const loadMore = async () => {
+  //   let toSkip = skip + limit;
 
-    const response = await axios.post(
-      `${API}/links`,
-      {
-        skip: toSkip,
-        limit,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  //   const response = await axios.post(
+  //     `${API}/links`,
+  //     {
+  //       skip: toSkip,
+  //       limit,
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     }
+  //   );
 
-    setAllLinks([...allLinks, ...response.data]);
-    // console.log(...response.data);
-    // console.log('allLinks', allLinks);
-    // console.log('response.data.links.length', response.data.links.length);
-    setSize(response.data.length);
-    setSkip(toSkip);
-  };
-
-  // change date
-  const onDateChange = (pickupDate) => {
-    setState({ ...state, pickupDateLookup: moment(pickupDate).format('l') });
-    setShowSearch(!showSearch);
-    setLoadmeals(!loadMeals);
-  };
-  //  const defaultDate = (pickupDate) => {
-  //   setState({ ...state, pickupDateLookup: moment(pickupDate).format('l') });
-  //   setShowSearch(!showSearch);
+  //   setAllLinks([...allLinks, ...response.data]);
+  //   // console.log(...response.data);
+  //   // console.log('allLinks', allLinks);
+  //   // console.log('response.data.links.length', response.data.links.length);
+  //   setSize(response.data.length);
+  //   setSkip(toSkip);
   // };
-
-  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
-
-  let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
-
-  // const csvData = csvListOfLinks(state.pickupDateLookup);
-  // // console.log('csvdata',csvListOfLinks(state.pickupDateLookup))
 
   return (
     <Layout>
@@ -316,9 +292,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
               >
                 Select Date
               </button>
-              {/* <CSVLink className="float-right" data={csvData}>
+              <CSVLink className="float-right" data={csvData}>
                 Download csv
-              </CSVLink> */}
+              </CSVLink>
 
               <br />
               <br />
@@ -336,6 +312,10 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         </div>
       </div>
       <br />
+
+      <div className="row">
+        <div className="col-md-12">{listOfLinks(state.search)}</div>
+      </div>
 
       {/* i can probably remove loadmeals as each date should have lots of data there already to stop infinite scroll from overloading */}
       {loadmeals && (
@@ -359,27 +339,29 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   );
 };
 
-Links.getInitialProps = async ({ req }) => {
-  let skip = 0;
-  let limit = 2;
+// Requests.getInitialProps = async ({ req }) => {
 
-  const token = getCookie('token', req);
+//   let skip = 0;
+//   let limit = 2;
 
-  const response = await axios.post(
-    `${API}/links`,
-    {
-      skip,
-      limit,
-    },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return {
-    links: response.data,
-    totalLinks: response.data.length,
-    linksLimit: limit,
-    linkSkip: skip,
-    token,
-  };
-};
+//   const token = getCookie('token', req);
 
-export default withAdmin(Links);
+//   const response = await axios.post(
+//     `${API}/links`,
+//     {
+//       skip,
+//       limit,
+//     },
+//     { headers: { Authorization: `Bearer ${token}` } }
+//   );
+//   return {
+//     links: response.data,
+//     totalLinks: response.data.length,
+//     linksLimit: limit,
+//     linkSkip: skip,
+//     token,
+//   };
+
+// };
+
+export default withAdmin(Requests);

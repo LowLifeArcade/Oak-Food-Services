@@ -52,6 +52,7 @@ const Admin = ({ user, initialRequests }) => {
   const mealCounter = (meal) =>
     // state.meals.length
     state.meals.filter((m) => m == meal).length;
+
   const allMealCounter = (meal) => state.meals.length;
   // state.meals.filter((m) =>
   //   m == meal).length
@@ -62,12 +63,10 @@ const Admin = ({ user, initialRequests }) => {
   //     meal.standard === 'Standard'
   //     })
   //   );
-  const ref = useRef('chart')
+  const ref = useRef('chart');
   const renderChart = () => {
     // render the chart into a container
-    chart
-      .render(ref)
-      .catch(() => window.alert('Chart failed to initialise'));
+    chart.render(ref).catch(() => window.alert('Chart failed to initialise'));
   };
 
   // const allMealsArray = (mr, i) =>
@@ -99,13 +98,18 @@ const Admin = ({ user, initialRequests }) => {
           <div className="">
             <ul className="nav flex-column pt-1 ">
               <li className="nav-item">
-              <li className="nav-item">
-                <Link href="/admin/link/read">
-                  <a className="nav-link" href="">
-                    Meal Requests Page
-                  </a>
-                </Link>
-              </li>
+                <li className="nav-item">
+                  <Link href="/admin/link/read">
+                    <a className="nav-link" href="">
+                      Meal Requests Page
+                    </a>
+                  </Link>
+                  <Link href="/admin/link/list">
+                    <a className="nav-link" href="">
+                      Download CSV Page
+                    </a>
+                  </Link>
+                </li>
                 <Link href="/admin/category/create">
                   <a className="nav-link" href="">
                     Create Blog Post
@@ -127,7 +131,7 @@ const Admin = ({ user, initialRequests }) => {
                   </a>
                 </Link>
               </li>
-              
+
               <li className="nav-item">
                 <Link href="/admin/group/read">
                   <a className="nav-link" href="">
@@ -136,13 +140,29 @@ const Admin = ({ user, initialRequests }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link href="/user/link/create">
+                {/* potentially make Link an a tag if there are issues with css */}
+                <Link href="/admin/teacher/create">
+                  <a className="nav-link" href="">
+                    Create Teacher
+                  </a>
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link href="/admin/teacher/read">
+                  <a className="nav-link" href="">
+                    Edit Teacher
+                  </a>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link href="/user/link/mockCreate">
                   <a className="nav-link" href="">
                     Create Mock Order
                   </a>
                 </Link>
               </li>
-              
+
               <li className="nav-item">
                 <Link href="/user/profile/update">
                   <a className="nav-link" href="">
@@ -150,7 +170,14 @@ const Admin = ({ user, initialRequests }) => {
                   </a>
                 </Link>
               </li>
-              
+              <li className="nav-item">
+                <Link href="/user/profile/add">
+                  <a className="nav-link">
+                    Add students
+                    </a>
+                </Link>
+              </li>
+
               <div className="pt-2">
                 <hr />
 
@@ -179,25 +206,25 @@ const Admin = ({ user, initialRequests }) => {
       <hr />
       <h3>
         <b>{requests.length}</b> - Family Orders <p />
-        <b>{allMealCounter()* 5}</b> - Individual Meals
+        <b>{allMealCounter() * 5}</b> - Individual Meals
         <hr />
       </h3>
       <div className="p-2">
         <h5>
           {mealCounter('Standard') * 5} - Standard meal requests
           <hr />
-          {mealCounter('Vegetarian')* 5} - Vegetarian meal requests
+          {mealCounter('Vegetarian') * 5} - Vegetarian meal requests
           <hr />
-          {mealCounter('Vegan')* 5} - Vegan meal requests
+          {mealCounter('Vegan') * 5} - Vegan meal requests
           <hr />
-          {mealCounter('GlutenFree')* 5} - Gluten Free meal requests
+          {mealCounter('GlutenFree') * 5} - Gluten Free meal requests
           <hr />
         </h5>
       </div>
-        {/* {chart.render(ref)} */}
-        {/* {renderChart()} */}
+      {/* {chart.render(ref)} */}
+      {/* {renderChart()} */}
       {/* <div className="p-2 chart" ref={ref} id="chart"> */}
-        {/* {chart.render().catch(() => window.alert('Chart failed to initialise'))} */}
+      {/* {chart.render().catch(() => window.alert('Chart failed to initialise'))} */}
       {/* </div> */}
     </Layout>
   );

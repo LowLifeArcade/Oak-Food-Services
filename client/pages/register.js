@@ -106,6 +106,8 @@ const Register = () => {
     // console.log(e.target.getAttribute("data-index"))
   };
 
+  
+
   const addStudentGroup = (i) => (
     <>
       <div key={i} className="form-group">

@@ -19,6 +19,7 @@ const userRoutes = require('./routes/user');
 const categoryRoutes = require('./routes/category');
 const linkRoutes = require('./routes/link');
 const groupRoutes = require('./routes/group')
+const teacherRoutes = require('./routes/teacher')
 
 // apply middlewares
 app.use(morgan('dev'));
@@ -34,6 +35,7 @@ app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', linkRoutes);
 app.use('/api', groupRoutes)
+app.use('/api', teacherRoutes)
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`API is running on port ${port}`));

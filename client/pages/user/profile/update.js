@@ -25,6 +25,7 @@ const Profile = ({ user, token }) => {
     categories: user.categories, // categories selected by user for signup
     groups: [],
     loadedGroups: [],
+    loadedTeachers: []
   });
   // console.log(user)
 
@@ -47,11 +48,12 @@ const Profile = ({ user, token }) => {
     categories,
     groups,
     loadedGroups,
+    loadedTeachers
   } = state;
 
   // load categories when component mounts useing useEffect
   useEffect(() => {
-    loadCategories();
+    // loadCategories();
     loadGroups();
   }, []);
 
@@ -70,10 +72,14 @@ const Profile = ({ user, token }) => {
 
   const loadGroups = async () => {
     const response = await axios.get(`${API}/groups`);
+    const response2 = await axios.get(`${API}/teachers`);
     // console.log(response.data)
-    setState({ ...state, loadedGroups: response.data });
-    console.log('loaded groups', loadedGroups);
+    // setState({ ...state, loadedTeachers: response2.data });
+    // console.log(response.data)
+    setState({ ...state, loadedTeachers: response2.data, loadedGroups: response.data });
   };
+  console.log(loadedTeachers)
+  // console.log(loadedGroups)
 
   // student add select THIS is where things are going to be tricky
   const handleSelectChange = (e) => {
@@ -94,6 +100,54 @@ const Profile = ({ user, token }) => {
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
   };
+
+  // student add select THIS is where things are going to be tricky
+  const handleSelectTeacherChange = (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    oneStudent.teacher = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    students[i] = oneStudent; // puts meal[i] back into mealRequest array
+    setState({
+      ...state,
+      students: [...students],
+      buttonText: 'Register',
+      success: '',
+      error: '',
+    }); //puts ...mealRequest with new meal back into mealRequest: []
+    // setState({...state,
+    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
+    // console.log(e.target.getAttribute("data-index"))
+  };
+
+  const addTeacher = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            defaultValue={loadedTeachers.includes(students[i].teacher)}
+            value={students[i].teacher}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">Choose Teacher</option>
+            {state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
 
   // console.log(loadedGroups)
   const addStudentGroup = (i) => (
@@ -120,7 +174,7 @@ const Profile = ({ user, token }) => {
               return <option value={g._id}>{g.name}</option>;
             })}
           </select>
-          <div className="p-2"></div>
+          <div className=""></div>
         </div>
       </div>
     </>
@@ -131,7 +185,7 @@ const Profile = ({ user, token }) => {
     e.preventDefault();
     setState({
       ...state,
-      students: [...students, { name: '', schoolName: '', group: '' }],
+      students: [...students, { name: '', schoolName: '', group: '', teacher: '' }],
     });
   };
 
@@ -447,8 +501,11 @@ const Profile = ({ user, token }) => {
                         required
                       />
                     </div> */}
-                  <div key={i} className="">
+                  <div key={1} className="">
                     {addStudentGroup(i)}
+                  </div>
+                  <div key={2} className="">
+                    {addTeacher(i)}
                   </div>
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>

@@ -3,34 +3,41 @@ const router = express.Router();
 
 // import validators
 const {
-  groupCreateValidator,
-  groupUpdateValidator,
-} = require('../validators/group');
+  teacherCreateValidator,
+  teacherUpdateValidator,
+} = require('../validators/teacher');
 const { runValidation } = require('../validators');
 
 // import from controllers
 const { requireSignin, adminMiddleware } = require('../controllers/auth');
-const { create, list, read, update, remove } = require('../controllers/group');
+const {
+  create,
+  list,
+  read,
+  update,
+  remove,
+} = require('../controllers/teacher');
 
 // routes categoryCreateValidator, runValidation,
 router.post(
-  '/group',
-  groupCreateValidator,
+  '/teacher',
+  teacherCreateValidator,
   runValidation,
   requireSignin,
   adminMiddleware,
   create
 );
-router.get('/groups', list);
-router.post('/group/:slug', read);
+router.get('/teachers', list);
+router.post('/teacher/:slug', read);
 router.put(
-  '/group/:slug',
-  groupUpdateValidator,
+  '/teacher/:slug',
+  teacherUpdateValidator,
   runValidation,
   requireSignin,
   adminMiddleware,
   update
 );
-router.delete('/group/:slug', requireSignin, adminMiddleware, remove);
+router.delete('/teacher/:slug', requireSignin, adminMiddleware, remove);
 
 module.exports = router;
+

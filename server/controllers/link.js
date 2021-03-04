@@ -88,6 +88,37 @@ exports.create = (req, res) => {
   });
 };
 
+exports.mockCreate = (req, res) => {
+  const { mealRequest, pickupOption, pickupTime, pickupDate, pickupCode, pickupCodeAdd, orderStatus } = req.body;
+  // const { title, url, categories, type, medium } = req.body;
+  // console.table({ title, url, categories, type, medium });
+  // const slug = url;
+  let link = new Link({ mealRequest, pickupOption, pickupTime, pickupDate, pickupCode, pickupCodeAdd, orderStatus });
+  // posted by user. We save this for use in user dashboard etc
+  const postedBy = link.postedBy = req.user._id;
+  // const userCode = link.userCode = req.user.userCode;
+
+  link.save((err, data) => {
+    console.log('ERROR IN LINK CONTROLLER', err);
+    if (err) {
+      return res.status(400).json({
+        error: 'There was an error creating your request, but we are unsure why. Try submitting a new request or contact us about the issue',
+      });
+    }
+    // console.log('link controller', data)
+    res.json(data);
+  })
+  // this probably will look at all the orders so I need to make it so it only searches the users. Like Link.user or something
+  // Link.findOne({ pickupDate, postedBy }).exec((err, result) => {
+  //   if (result) {
+  //     console.log(err);
+  //     return res.status(400).json({
+  //       error: "You've already submitted a request for this date. You can delete or edit the existing request from your user dashboard.",
+  //     });
+  //   }
+  // });
+};
+
 exports.listAll = (req, res) => {
   // infinite scroll
   let limit = req.body.limit ? parseInt(req.body.limit) : 10;
@@ -134,6 +165,31 @@ exports.list = (req, res) => {
     });
 };
 
+exports.listByDate = (req, res) => {
+  // infinite scroll
+  // let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+  // let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+  let pickupDate2 = req.body.pickupDateLookup
+  console.log(req.body.pickupDateLookup)
+  // look for items and populate
+  Link.find({pickupDate: pickupDate2})
+    .populate('postedBy', 'name lastName email' )
+    // .populate('pickupCode', 'pickupCode')
+    // .populate('students.group', 'name slug')
+    .sort({ createdAt: -1 })
+    // .sort({ pickupDate: pickupDate })
+    // .skip(skip)
+    // .limit(limit)
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Could not list links by date',
+        });
+      }
+      res.json(data);
+    });
+};
+
 exports.read = (req, res) => {
   const { id } = req.params;
   Link.findOne({ _id: id }).exec((err, data) => {
@@ -148,7 +204,7 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { id } = req.params;
-  const updatedLink = ({ mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd, orderStatus} = req.body);
+  const updatedLink = ({ mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd} = req.body);
   // const updatedLink = {title, url, categories, type, medium}
 
   Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(

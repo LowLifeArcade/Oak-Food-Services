@@ -73,10 +73,10 @@ exports.linkUpdateValidator = [
   .not()
   .isEmpty()
   .withMessage('pick up time is required'),
-  check('orderStatus')
-  .not()
-  .isEmpty()
-  .withMessage('order status is required'),
+  // check('orderStatus')
+  // .not()
+  // .isEmpty()
+  // .withMessage('order status is required'),
 
   // check('title')
   //   .not()

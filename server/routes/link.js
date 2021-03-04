@@ -11,12 +11,14 @@ const { runValidation } = require('../validators');
 
 // import from controllers
 const { requireSignin, authMiddleware, adminMiddleware, canUpdateDeleteLink } = require('../controllers/auth');
-const {create, list, read, update, remove,all, clickCount, popular, popularInCategory, complete} = require('../controllers/link')
+const {create, mockCreate, list, read, update, remove,all, clickCount, popular, popularInCategory, complete, listByDate} = require('../controllers/link')
 
 // routes categoryCreateValidator, runValidation,
 // becareful with route orders 
 router.post('/link', linkCreateValidator, runValidation, requireSignin, authMiddleware, create);
+router.post('/mock-link', linkCreateValidator, runValidation, requireSignin, authMiddleware, mockCreate);
 router.post('/links', requireSignin, adminMiddleware, list);
+router.post('/links-by-date', requireSignin, adminMiddleware, listByDate);
 router.put('/click-count', clickCount)
 router.get('/link/popular', popular)
 router.get('/links/all', all)
