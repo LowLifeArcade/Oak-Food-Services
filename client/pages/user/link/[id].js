@@ -14,7 +14,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   // state
   // console.log('old link data from user[id]', oldLink);
   const [state, setState] = useState({
-    mealRequest: oldLink.mealRequest,
+    // mealRequest: oldLink.mealRequest,
     // mealRequest: [
     //   {
     //     meal: 'Standard',
@@ -22,6 +22,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     // ],
     // students: oldLink.students,
     mealRequest: oldLink.mealRequest,
+    orderStatus: false,
     pickupTime: oldLink.pickupTime,
     pickupOption: oldLink.pickupOption,
     pickupDate: oldLink.pickupDate,
@@ -37,6 +38,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   const {
     pickupOption,
     pickupTime,
+    orderStatus,
     mealRequest,
     pickupDate,
     pickupCode,
@@ -64,6 +66,19 @@ const Update = ({ oldLink, token, user, _id }) => {
   //     const response = await axios.get(`${API}/user/${oldLink.id}`);
   //     setState({ ...state, students: response.data.students });
   //   }
+
+  // useEffect(() => {
+  //   // const timer = setTimeout()
+  //   // loadCategories();
+  //   // loadStudents()
+  //   //  Router.push('user')
+  //   success === 'Request was updated'
+  //     ? setTimeout(() => {
+  //         Router.push('/user');
+  //       }, 2000)
+  //     : Router.push('');
+  //   return () => clearTimeout();
+  // }, [success]);
 
   useEffect(() => {
     // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
@@ -139,7 +154,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   // date.getDay() !== 2
 
   // meal request select
-  const handleSelectChange = (e) => {
+  const handleSelectChange = (e, student, studentName, schoolName, group, teacher) => {
     let i = e.target.getAttribute('data-index');
     {
       // console.log(i);
@@ -147,7 +162,12 @@ const Update = ({ oldLink, token, user, _id }) => {
 
     let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
     let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal.meal = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    meal.meal = e.target.value;
+    meal.student = student;
+    meal.studentName = studentName;
+    meal.group = group;
+    meal.teacher = teacher; 
+    meal.schoolName = schoolName // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     meals[i] = meal; // puts meal[i] back into mealRequest array
     // console.log(meal)
     // meal.meal === 'Vegetarian' ? console.log('vege') : console.log('standard')
@@ -213,7 +233,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   // console.log(state.pickupCodeAdd)
   // console.log(pickupCodeAdd);
 
-  const selectMealRequest = (i) => (
+  const selectMealRequest = (i, student, studentName, schoolName, group, teacher) => (
     <>
       <div key={i} className="form-group">
         <div className="">
@@ -223,7 +243,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             data-index={i}
             defaultValue={state.mealRequest[i].meal}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectChange(e)}
+            onChange={(e) => handleSelectChange(e, student, studentName, schoolName, group, teacher)}
             className="form-control"
           >
             {' '}
@@ -333,10 +353,21 @@ const Update = ({ oldLink, token, user, _id }) => {
   );
 
   // add meal button
-  const addMeal = () => {
+  const addMeal = (student, studentName, schoolName, group, teacher) => {
     setState({
       ...state,
-      mealRequest: [...mealRequest, { meal: 'Standard', glutenFree: false }],
+      mealRequest: [
+        ...mealRequest,
+        {
+          meal: 'Standard',
+          student: student,
+          studentName: studentName,
+          schoolName: schoolName,
+          group: group,
+          teacher: teacher,
+          complete: false,
+        },
+      ],
       pickupCodeAdd: [...pickupCodeAdd, ''],
     });
   };
@@ -597,17 +628,34 @@ const Update = ({ oldLink, token, user, _id }) => {
                     {console.log(mealRequest)} */}
 
                       <div key={i} className="">
-                        {selectMealRequest(i)}
+                      {selectMealRequest(
+                          i,
+                          state.students[i]._id,
+                          state.students[i].name,
+                          state.students[i].schoolName,
+                          state.students[i].group.slug,
+                          state.students[i].teacher.slug
+                        )}
                       </div>
                     </>
                   );
                 })}
 
                 <div className="">
-                  {state.mealRequest.length < user.students.length && (
+                  {state.mealRequest.length < state.students.length && (
                     <button
                       className="btn btn-warning"
-                      onClick={() => addMeal()}
+                      onClick={() =>
+                        state.mealRequest.map((x, i) =>
+                        addMeal(
+                          state.students[`${i + 1}`]._id,
+                          state.students[`${i + 1}`].name,
+                          state.students[`${i + 1}`].schoolName,
+                          state.students[`${i + 1}`].group.slug,
+                          state.students[`${i + 1}`].teacher.slug
+                        )
+                        )
+                      }
                     >
                       Add Meal
                     </button>

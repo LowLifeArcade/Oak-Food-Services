@@ -47,7 +47,7 @@ const User = ({ user, token, l, userLinks }) => {
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <>
-      {console.log(l)}
+      {console.log('links',l)}
       {<div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
 
         <h4>
@@ -70,9 +70,13 @@ const User = ({ user, token, l, userLinks }) => {
             {l.mealRequest.length} weekly meal
             {l.mealRequest.length > 1 && 's'}:<p></p>
             <div className="p-3">
-              {l.mealRequest.map((l, i) => (
+              {l.mealRequest.map((k, i) => (
                 <h6 className="">
-                  Meal {`${i + 1} `} - {l.meal} x 5 
+                  {/* Meal {`${i + 1} `} - for  */}
+                  {l.postedBy.students[i].group.name === 'A Group' || l.postedBy.students[i].group.name === 'B Group'  ? <b>2 onsite {k.meal} meals </b> : <b>5 pickup {k.meal} meals </b>}<br></br>
+                  {l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' - '+ l.postedBy.students[i].group.name} 
+                  {console.log(i,l.postedBy.students[i]._id)}
+                  {console.log('meal req',k.meal)}
                 </h6>
               ))}
             </div>

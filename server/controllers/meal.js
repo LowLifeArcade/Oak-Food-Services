@@ -1,4 +1,4 @@
-const Link = require('../models/link');
+const Meal = require('../models/meal');
 const User = require('../models/user');
 const Category = require('../models/category');
 const slugify = require('slugify');
@@ -20,24 +20,12 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 exports.create = (req, res) => {
   const {
     mealRequest,
-    pickupOption,
-    pickupTime,
-    pickupDate,
-    pickupCode,
-    pickupCodeAdd,
-    orderStatus,
   } = req.body;
   // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
   // const slug = url;
-  let link = new Link({
+  let meal = new Meal({
     mealRequest,
-    pickupOption,
-    pickupTime,
-    pickupDate,
-    pickupCode,
-    pickupCodeAdd,
-    orderStatus,
   });
   // posted by user. We save this for use in user dashboard etc
   const postedBy = (link.postedBy = req.user._id);
@@ -240,17 +228,7 @@ exports.listByDate = (req, res) => {
 
 exports.read = (req, res) => {
   const { id } = req.params;
-  Link.findOne({ _id: id })
-  .populate({
-    path: 'postedBy',
-    select:
-      '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
-    populate: {
-      path: 'students',
-      populate: { path: 'teacher group', select: '-_id name slug' },
-    },
-  })
-  .exec((err, data) => {
+  Link.findOne({ _id: id }).exec((err, data) => {
     if (err) {
       return res.status(400).json({
         error: 'Error finding link',
@@ -287,15 +265,14 @@ exports.update = (req, res) => {
 
 exports.complete = (req, res) => {
   const { id } = req.params;
-  const completedRequest = ({ orderStatus, mealRequest } = req.body);
+  const completedRequest = ({ orderStatus } = req.body);
   // const updatedLink = {title, url, categories, type, medium}
-  console.log('completed req', completedRequest);
-  // console.log('id req', id);
+  console.log(completedRequest);
   Link.findOneAndUpdate({ _id: id }, completedRequest, { new: true }).exec(
     (err, updated) => {
       if (err) {
         return res.status(400).json({
-          error: err,
+          error: 'Error updating link',
         });
       }
       res.json(updated);
@@ -352,15 +329,9 @@ exports.popular = (req, res) => {
 
 exports.all = (req, res) => {
   Link.find()
-  .populate({
-    path: 'postedBy',
-    select:
-      '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
-    populate: {
-      path: 'students',
-      populate: { path: 'teacher group', select: '-_id name slug' },
-    },
-  })
+    .populate('postedBy', 'name')
+    .populate('userCode', 'userCode')
+
     .sort({ clicks: -1 })
     // .limit(3)
     .exec((err, links) => {

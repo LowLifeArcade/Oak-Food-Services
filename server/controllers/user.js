@@ -2,7 +2,14 @@ const User = require('../models/user');
 const Link = require('../models/link');
 
 exports.read = (req, res) => {
-  User.findOne({ _id: req.user._id }).exec((err, user) => {
+  User.findOne({ _id: req.user._id })
+  .populate({
+    
+      path: 'students',
+      populate: { path: 'teacher group', select: '-_id name slug' },
+    
+  })
+  .exec((err, user) => {
     if (err) {
       return res.status(400).json({
         error: 'User not found',
@@ -10,8 +17,19 @@ exports.read = (req, res) => {
     }
     Link.find({ postedBy: user })
       // .populate('categories', 'name slug')
-      .populate('postedBy', 'name')
-      .populate('mealRequest', 'mealRequest')
+      .populate({
+        path: 'postedBy',
+        select:
+          '-salt -hashed_password -pickupCodeAdd -categories -role -username -updatedAt -__v -_id',
+        populate: {
+          path: 'students',
+          populate: { path: 'teacher group', select: '-_id name slug' },
+        },
+      })
+      // .populate({
+      //   path: 'mealRequest',
+      //   populate:  { path: 'student', select: 'name' },
+      // })
       .sort({ createdAt: -1 })
       .exec((err, mealRequest) => {
         if (err) {
@@ -23,12 +41,34 @@ exports.read = (req, res) => {
         user.salt = undefined;
         // console.log('user from user.js',user)
         res.json({ user, mealRequest });
-        console.log(user)
+        console.log(user);
       });
   });
 
   //   return res.json(req.profile);
 };
+
+exports.list = (req, res) => {
+  // look for users and populate
+  User.find({})
+    // .populate('postedBy', 'name lastName' )
+    // .populate('students', 'name school teacher group')
+    .populate({
+      path: 'mealRequest',
+      populate: { path: '0', populate: { path: 'student' } },
+    })
+    // .populate('categories', 'name slug')
+    .sort({ createdAt: -1 })
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Could not list users',
+        });
+      }
+      res.json(data);
+    });
+};
+
 // exports.read = (req, res) => {
 //   User.findOne({ _id: req.user._id }).exec((err, user) => {
 //     if (err) {
@@ -67,8 +107,6 @@ exports.update = (req, res) => {
   }
   // add code to generate new password via salt and hash
 
-  
-
   User.findOneAndUpdate(
     { _id: req.user._id },
     { name, password, categories, students },
@@ -95,8 +133,6 @@ exports.addStudents = (req, res) => {
   //     break;
   // }
   // add code to generate new password via salt and hash
-
-  
 
   User.findOneAndUpdate(
     { _id: req.user._id },

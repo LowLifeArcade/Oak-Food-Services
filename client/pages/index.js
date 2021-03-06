@@ -29,46 +29,46 @@ const Home = ({ categories }) => {
     !isAuth() ? Router.push('/login') : Router.push('/');
   }, [])
 
-  const handleClick = async (linkId) => {
-    // e.preventDefault();
-    const response = await axios.put(`${API}/click-count`, { linkId });
-    // loadPopular();
-  };
+  // const handleClick = async (linkId) => {
+  //   // e.preventDefault();
+  //   const response = await axios.put(`${API}/click-count`, { linkId });
+  //   // loadPopular();
+  // };
 
-  const listOfLinks = () =>
-    popular.map((l, i) => (
-      <div key={i} className="row alert alert-secondary p2">
-        {/* {console.log(l)} */}
-        <div className="col-md-8" onClick={() => handleClick(l._id)}>
-          <a href={l.url} target="_blank">
-            <h5 className="pt-2">{l.title}</h5>
-            <h6 className="pt-2 text-dnger" style={{ fontSize: '12px' }}>
-              {l.url}
-            </h6>
-          </a>
-          <div className="col-md-4 pt-2">
-            <span className="pull-right">
-              {moment(l.createdAt).fromNow()} by
-              {l.postedBy.name}
-              {/* {console.log('trying to find name', l)} */}
-            </span>
-          </div>
-          <div className="col-md-12">
-            <span className="badge text-dark">
-              {l.type} {l.medium}{' '}
-            </span>
-            {l.categories.map((c, i) => (
-              <span key={i} className="badge text-success">
-                {c.name}{' '}
-              </span>
-            ))}
-            <span className="badge text-secondary pull-right">
-              {l.clicks} clicks{' '}
-            </span>
-          </div>
-        </div>
-      </div>
-    ));
+  // const listOfLinks = () =>
+  //   popular.map((l, i) => (
+  //     <div key={i} className="row alert alert-secondary p2">
+  //       {/* {console.log(l)} */}
+  //       <div className="col-md-8" onClick={() => handleClick(l._id)}>
+  //         <a href={l.url} target="_blank">
+  //           <h5 className="pt-2">{l.title}</h5>
+  //           <h6 className="pt-2 text-dnger" style={{ fontSize: '12px' }}>
+  //             {l.url}
+  //           </h6>
+  //         </a>
+  //         <div className="col-md-4 pt-2">
+  //           <span className="pull-right">
+  //             {moment(l.createdAt).fromNow()} by
+  //             {l.postedBy.name}
+  //             {/* {console.log('trying to find name', l)} */}
+  //           </span>
+  //         </div>
+  //         <div className="col-md-12">
+  //           <span className="badge text-dark">
+  //             {l.type} {l.medium}{' '}
+  //           </span>
+  //           {l.categories.map((c, i) => (
+  //             <span  className="badge text-success">
+  //               {c.name}{' '}
+  //             </span>
+  //           ))}
+  //           <span className="badge text-secondary pull-right">
+  //             {l.clicks} clicks{' '}
+  //           </span>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   ));
   // CODE for admin /
 
   const listCategories = () =>
@@ -78,6 +78,7 @@ const Home = ({ categories }) => {
       .map((c, i) => (
         <>
           <div
+          key={i}
             className=""
             style={{
               // color: 'grey',
@@ -90,7 +91,7 @@ const Home = ({ categories }) => {
             className="bg-white"
           >
             <Link
-              key={i}
+            
               href={`/links/${c.slug}`}
               style={{ textDecoration: 'none' }}
             >
@@ -106,14 +107,7 @@ const Home = ({ categories }) => {
                 }}
               >
                 <div className="p-4">
-                  {/* <div className="col-md-4 p-3">
-              <img
-              src={c.image && c.image.url}
-              alt={c.name}
-              style={{ width: '100px', height: 'auto' }}
-              />
-            </div> */}
-
+              
                   <div className="">
                     <div className="">
                       <h3 className="font-weight-bold p-2">{c.name}</h3>
@@ -146,7 +140,7 @@ const Home = ({ categories }) => {
         </>
       ));
   return (
-    <div className={styles.background} >
+    <div key={2000} className={styles.background} >
 
     
     <Layout>
@@ -156,7 +150,7 @@ const Home = ({ categories }) => {
         </div>
       </div> */}
 
-      <div className=" row flex-column justify-content-center pt-3 ">
+      <div key={1000} className=" row flex-column justify-content-center pt-3 ">
         {listCategories()}
       </div>
 

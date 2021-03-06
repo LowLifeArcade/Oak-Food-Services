@@ -16,6 +16,29 @@ const linkSchema = new mongoose.Schema(
           required: true,
           max: 256,
         },
+        student: {
+          type: ObjectId,
+          ref: 'User'
+        },
+        complete: {
+          type: Boolean
+        },
+        studentName: {
+          type: String,
+        },
+        schoolName: {
+          type: String
+        },
+        group: {
+          type: String
+        },
+        teacher: {
+          type: String
+        },
+        postedBy: {
+          type: ObjectId,
+          ref: 'User',
+        },
       },
     ],
     orderStatus: {

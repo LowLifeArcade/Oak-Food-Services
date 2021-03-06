@@ -24,7 +24,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const [loadmeals, setLoadmeals] = useState(false);
   const [orderStatus, setOrderStatus] = useState(true);
   const [state, setState] = useState({
-    pickupDateLookup: new Date(),
+    pickupDateLookup: moment(new Date()).format('l'),
     // loadMeals: false,
     search: '',
     error: '',
@@ -34,7 +34,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   // useEffect(() => {
 
   //     setLoadmeals(!loadMeals)
-  // }, [pickupDateLookup])
+  // }, [])
 
   console.log('all links', allLinks);
 
@@ -170,16 +170,20 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             <div className="p-2">
               {/* <a href={l.url} target="_blank"> */}
               <h5 className="pb-1">
-                {l.mealRequest.length} weekly meal
-                {l.mealRequest.length > 1 && 's'}:<p></p>
-                <div className="p-3">
-                  {l.mealRequest.map((l, i) => (
-                    <h6 className="">
-                      Meal {`${i + 1} `} - {l.meal}{' '}
-                    </h6>
-                  ))}
-                </div>
-              </h5>
+            {l.mealRequest.length} weekly meal
+            {l.mealRequest.length > 1 && 's'}:<p></p>
+            <div className="p-2">
+              {l.mealRequest.map((k, i) => (
+                <h6 className="">
+                  {/* Meal {`${i + 1} `} - for  */}
+                  {l.postedBy.students[i].group.name === 'A Group' || l.postedBy.students[i].group.name === 'B Group'  ? <b>2 onsite meals </b> : <b>5 pickup meals </b>}
+                  {l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' in '+ l.postedBy.students[i].group.name} 
+                  {console.log(i,l.postedBy.students[i]._id)}
+                  {/* {console.log(i,k.student)} */}
+                </h6>
+              ))}
+            </div>
+          </h5>
               {/* order status {l.orderStatus === false ? <h4>incomplete</h4> : <h4>complete</h4>} */}
               <h2 className=" " style={{ fontSize: '16px' }}>
                 Pickup for your order is between <b>{l.pickupTime} </b> on

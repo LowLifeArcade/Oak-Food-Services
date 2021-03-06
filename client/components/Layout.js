@@ -57,7 +57,7 @@ const Layout = ({ children }) => {
         )}
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           // <li className="nav-item pointer-hand">
-          <Link href="/admin/link/read">
+          <Link href="/admin/link/list">
             <a
               className="nav-link text-white btn btn-success"
               style={{ borderRadius: '0px' }}

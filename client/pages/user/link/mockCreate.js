@@ -23,6 +23,12 @@ const Create = ({ token, user }) => {
     mealRequest: [
       {
         meal: 'Standard',
+        student: user.students[0]._id,
+        studentName: user.students[0].name,
+        schoolName: user.students[0].schoolName,
+        group: user.students[0].group.slug,
+        teacher: user.students[0].teacher.slug,
+        complete: false,
       },
     ],
     orderStatus: false,
@@ -83,12 +89,11 @@ const Create = ({ token, user }) => {
     setShowSearch(!showSearch);
   };
 
-  const handleDisabledDates = ({ date, view }) =>
-    date.getDay() !== 5;
-    // date.getDay() !== 2
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+  // date.getDay() !== 2
 
   // meal request select
-  const handleSelectChange = (e) => {
+  const handleSelectChange = (e, student, studentName, schoolName, group, teacher) => {
     let i = e.target.getAttribute('data-index');
     {
       // console.log(i);
@@ -96,61 +101,64 @@ const Create = ({ token, user }) => {
 
     let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
     let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal.meal = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    meal.meal = e.target.value;
+    meal.student = student;
+    meal.studentName = studentName;
+    meal.group = group;
+    meal.teacher = teacher; 
+    meal.schoolName = schoolName // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     meals[i] = meal; // puts meal[i] back into mealRequest array
-// console.log(meal)
+    // console.log(meal)
     // meal.meal === 'Vegetarian' ? console.log('vege') : console.log('standard')
 
     let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
     let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    
 
     // console.log(pickupCodeAdd)
 
-    let input = e.target.value
-    let frontCode = ''
+    let input = e.target.value;
+    let frontCode = '';
     switch (input) {
-      case 'Vegetarian' :
-        frontCode = 'Vt'
+      case 'Vegetarian':
+        frontCode = 'Vt';
         // console.log('vege')
         break;
-        case 'Vegan' :
-        frontCode = 'Vg'
+      case 'Vegan':
+        frontCode = 'Vg';
         // console.log('vegan')
         break;
-        case 'GlutenFree' :
-        frontCode = 'Gf'
+      case 'GlutenFree':
+        frontCode = 'Gf';
         // console.log('gf')
         break;
-        case 'Standard' :
-        frontCode =''
+      case 'Standard':
+        frontCode = '';
         // console.log('gf')
-        break;
-    
-      default:
         break;
 
+      default:
+        break;
     }
     // console.log(frontCode)
 
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
     // console.log(codes)
-    let length = codes.length
-    
+    let length = codes.length;
+
     // let newFrontCode = codes
-    let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length
+    let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
 
     // if(student[i]==='Group A') {
-      
+
     // }
 
     setState({
       ...state,
       mealRequest: [...meals],
       buttonText: 'Request',
-      pickupCode:  newPickupCode, 
-      pickupCodeAdd: codes, 
+      pickupCode: newPickupCode,
+      pickupCodeAdd: codes,
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
@@ -158,12 +166,12 @@ const Create = ({ token, user }) => {
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
     // setState({...state, pickupCode: user.userCode})
-    console.log(newPickupCode)
+    console.log(newPickupCode);
     // console.log(codes)
   };
   // console.log(state.pickupCodeAdd)
 
-  const selectMealRequest = (i) => (
+  const selectMealRequest = (i, student, studentName, schoolName, group, teacher) => (
     <>
       <div key={i} className="form-group">
         <div className="">
@@ -173,7 +181,7 @@ const Create = ({ token, user }) => {
             data-index={i}
             defaultValue={'Standard'}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectChange(e)}
+            onChange={(e) => handleSelectChange(e, student, studentName, schoolName, group, teacher)}
             className="form-control"
           >
             {' '}
@@ -186,9 +194,7 @@ const Create = ({ token, user }) => {
           <div className="p-2"></div>
         </div>
       </div>
-      
     </>
-
   );
 
   // pickup options(all, breakfast only, lunch only) select
@@ -200,7 +206,7 @@ const Create = ({ token, user }) => {
       success: '',
       error: '',
     });
-  }
+  };
 
   const selectPickupOption = (i) => (
     <>
@@ -262,11 +268,22 @@ const Create = ({ token, user }) => {
   );
 
   // add meal button
-  const addMeal = () => {
+  const addMeal = (student, studentName, schoolName, group, teacher) => {
     setState({
       ...state,
-      mealRequest: [...mealRequest, { meal: 'Standard', glutenFree: false }],
-      pickupCodeAdd: [...pickupCodeAdd, ',']
+      mealRequest: [
+        ...mealRequest,
+        {
+          meal: 'Standard',
+          student: student,
+          studentName: studentName,
+          schoolName: schoolName,
+          group: group,
+          teacher: teacher,
+          complete: false,
+        },
+      ],
+      pickupCodeAdd: [...pickupCodeAdd, ','],
     });
   };
   // console.log(pickupCodeAdd)
@@ -277,7 +294,7 @@ const Create = ({ token, user }) => {
     // console.log(list);
     list.splice(-1)[0];
     // list.splice(index, 1);
-    
+
     const list2 = [...state.pickupCodeAdd];
     // console.log(list);
     list2.splice(-1)[0];
@@ -308,23 +325,32 @@ const Create = ({ token, user }) => {
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
-// console.log(pickupCodeAdd)
+  // console.log(pickupCodeAdd)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.table({title, url, categories, type, medium})
     // const toAddCode = user.userCode
     // const newCode = user.userCode + '_0' + toString(mealRequest.length)
-  
+
     // let NewPickupCode = pickupCodeAdd + pickupCode
-    
+
     // pickupCode = NewPickupCode
     // newCodeMaker()
     // console.log(pickupCode)
     try {
       const response = await axios.post(
         `${API}/mock-link`,
-        { mealRequest, pickupOption, pickupTime, pickupDate, username, pickupCode, pickupCodeAdd, orderStatus },
+        {
+          mealRequest,
+          pickupOption,
+          pickupTime,
+          pickupDate,
+          username,
+          pickupCode,
+          pickupCodeAdd,
+          orderStatus,
+        },
         // { title, url, categories, type, medium },
         {
           headers: {
@@ -437,9 +463,8 @@ const Create = ({ token, user }) => {
     setState({ ...state, categories: all, success: '', error: '' });
   };
 
-
   // create form
-  const submitLinkForm = () => (
+  const submitLinkForm = (student) => (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="" className="text-muted">
@@ -469,109 +494,131 @@ const Create = ({ token, user }) => {
     </form>
   );
 
-  
-
   return (
-    <div className={styles.background} style={{ 
-      // background: '#eeeff0'
-     }}>
+    <div
+      className={styles.background}
+      style={
+        {
+          // background: '#eeeff0'
+        }
+      }
+    >
+      <Layout>
+        <div className="col-md-6 offset-md-3 pt-4">
+          <div className={styles.subcard}>
+            <div className="row">
+              <div className="col-md-12">
+                <h3>
+                  Meal Request for:{' '}
+                  {pickupDate && moment(state.pickupDate).format('MMM Do')}{' '}
+                </h3>
+                {showSearch && (
+                  <Calendar
+                    onChange={(e) => onDateChange(e)}
+                    tileDisabled={handleDisabledDates}
+                    // defaultValue={twoWeeksFromNow}
+                    // tileDisabled={(date, view) =>
+                    //   yesterday.some(date =>
+                    //      moment().isAfter(yesterday)
+                    //   )}
+                    // minDate={handlePastDate}
+                    // minDate={twoWeeksFromNow}
+                    // minDate={new Date().getDate() + 14}
 
-    <Layout>
-      <div className="col-md-6 offset-md-3 pt-4">
-        <div className={styles.subcard}>
-          <div className="row">
-            <div className="col-md-12">
-              <h3>
-                Meal Request for:{' '}
-                {pickupDate && moment(state.pickupDate).format('MMM Do')}{' '}
-              </h3>
-              {showSearch && (
-                <Calendar
-                onChange={(e) => onDateChange(e)}
-                tileDisabled={handleDisabledDates}
-                // defaultValue={twoWeeksFromNow}
-                // tileDisabled={(date, view) =>
-                //   yesterday.some(date =>
-                //      moment().isAfter(yesterday)
-                //   )}
-                // minDate={handlePastDate}
-                // minDate={twoWeeksFromNow}
-                // minDate={new Date().getDate() + 14}
-                
-                value={''}
-                />
+                    value={''}
+                  />
                 )}
-              <br />
-              {/* // <input
+                <br />
+                {/* // <input
                   // type="date"
                   // defaultValue={moment(state.pickupDate).format(
                     //   'dddd, MMMM Do '
                     //   )}
                   //   /> */}
 
-              <button
-                className="btn btn-outline-primary"
-                onClick={() => setShowSearch(!showSearch)}
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => setShowSearch(!showSearch)}
                 >
-                Select Date
-              </button>
+                  Select Date
+                </button>
 
-              <br />
-              {/* {`${moment(state.pickupDate).format('dddd, MMMM Do ')}`}{' '} */}
-              <br />
+                <br />
+                {/* {`${moment(state.pickupDate).format('dddd, MMMM Do ')}`}{' '} */}
+                <br />
+              </div>
             </div>
-          </div>
 
-          <div className="row">
-            <div className="col-md-12">
-              {state.mealRequest.map((x, i) => {
-                return (
-                  <>
-                    <h6 className="p-2">
-                      <label key={i} className="form-check-label text-muted">
-                        {/* Select Meal # {`${i + 1}`}  */}
-                        Select meal for {`${state.students[i].name}`}
-                      </label>
-                    </h6>
-                    {/* {console.log(x)}
+            <div className="row">
+              <div className="col-md-12">
+                {state.mealRequest.map((x, i) => {
+                  return (
+                    <>
+                      <h6 className="p-2">
+                        <label key={i} className="form-check-label text-muted">
+                          {/* Select Meal # {`${i + 1}`}  */}
+                          Select meal for {`${state.students[i].name}`}
+                        </label>
+                      </h6>
+                      {/* {console.log(x)}
                     {console.log(mealRequest)} */}
 
-                    <div key={i} className="">
-                      {selectMealRequest(i)}
-                    </div>
-                  </>
-                );
-              })}
+                      <div key={i} className="">
+                      {selectMealRequest(
+                          i,
+                          state.students[i]._id,
+                          state.students[i].name,
+                          state.students[i].schoolName,
+                          state.students[i].group.slug,
+                          state.students[i].teacher.slug
+                        )}
+                      </div>
+                    </>
+                  );
+                })}
 
-              <div className="">
-                {state.mealRequest.length < state.students.length && (
-                  <button className="btn btn-warning" onClick={() => addMeal()}>
-                    Add Meal
-                  </button>
-                )}
+                <div className="">
+                  {state.mealRequest.length < state.students.length && (
+                    <button
+                      className="btn btn-warning"
+                      onClick={() =>
+                        state.mealRequest.map((x, i) =>
+                        addMeal(
+                          state.students[`${i + 1}`]._id,
+                          state.students[`${i + 1}`].name,
+                          state.students[`${i + 1}`].schoolName,
+                          state.students[`${i + 1}`].group.slug,
+                          state.students[`${i + 1}`].teacher.slug
+                        )
+                        )
+                      }
+                    >
+                      Add Meal
+                    </button>
+                  )}
 
-                {state.mealRequest.length !== 1 && (
-                  <button
-                  className="btn btn-warning float-right"
-                  onClick={() => removeMeal()}
-                  >
-                    Remove Meal
-                  </button>
-                )}
+                  {state.mealRequest.length !== 1 && (
+                    <button
+                      className="btn btn-warning float-right"
+                      onClick={() => removeMeal()}
+                    >
+                      Remove Meal
+                    </button>
+                  )}
+                </div>
+
+                {/* {console.log(mealRequest)} */}
               </div>
-
-              {/* {console.log(mealRequest)} */}
-            </div>
-            <div className="col-md-6 p-3">
-              {/* {success && showSuccessMessage(success)}
+              <div className="col-md-6 p-3">
+                {/* {success && showSuccessMessage(success)}
               {error && showErrorMessage(error)} */}
-              {submitLinkForm()}
+                {submitLinkForm()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Layout>
-</div>
+      </Layout>
+    </div>
   );
 };
 
