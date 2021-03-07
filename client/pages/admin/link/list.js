@@ -25,6 +25,7 @@ const Requests = ({ token }) => {
   const [orderStatus, setOrderStatus] = useState(Boolean);
   const [state, setState] = useState({
     pickupDateLookup: moment(new Date()).format('l'),
+    // pickupDateLookup: moment(new Date()).format('l'),
     loadedUsers: [],
     orderStatusArray: [],
     // loadMeals: false,
@@ -36,7 +37,7 @@ const Requests = ({ token }) => {
   const { pickupDateLookup, loadedUsers, orderStatusArray } = state;
   // console.log('orders per date in array', orderStatusArray);
   useEffect(() => {
-    handleDateChange(pickupDateLookup);
+    // handleDateChange(pickupDateLookup);
     setLoadmeals(!loadmeals);
     loadUsers();
   }, []);
@@ -70,14 +71,15 @@ const Requests = ({ token }) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setLinksByDate(response.data);
-    compileOrderStatusArray();
+    compileOrderStatusArray(pickupDate);
   };
 
-  const compileOrderStatusArray = () => {
+  const compileOrderStatusArray = (pickupDate) => {
     let linkArray = [];
     linksByDate.map((l, i) => linkArray.push(l.orderStatus));
     setState({
       ...state,
+      pickupDateLookup: pickupDate,
       orderStatusArray: linkArray,
     });
   };
@@ -407,10 +409,10 @@ const Requests = ({ token }) => {
           <div className="lead alert alert-seconary pb-3">
             <div className="form-group">
               {showSearch && (
-                <Calendar
+                < Calendar
                   onChange={(e) => onDateChange(e)}
                   tileDisabled={handleDisabledDates}
-                  defaultValue={new Date()}
+                  // defaultValue={new Date()}
                   // selectedValue={defaultValue}
                   // tileDisabled={(date, view) =>
                   //   yesterday.some(date =>
@@ -420,7 +422,7 @@ const Requests = ({ token }) => {
                   // minDate={twoWeeksFromNow}
                   // minDate={new Date().getDate() + 14}
 
-                  value={''}
+                  // value={''}
                 />
               )}
               <button
