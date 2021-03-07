@@ -70,7 +70,7 @@ const linkSchema = new mongoose.Schema(
     pickupCodeAdd: [
       {
         type: String,
-        required: true,
+        // required: true,
         // unique: true
       },
     ],

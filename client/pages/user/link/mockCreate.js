@@ -32,11 +32,12 @@ const Create = ({ token, user }) => {
       },
     ],
     orderStatus: false,
-    pickupCode: user.userCode + '-01',
-    pickupCodeAdd: [','],
+    pickupCode: 'MOCK' + '-01',
+    pickupCodeInput: '',
+    pickupCodeAdd: [''],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupOption: 'Breakfast and Lunch',
-    pickUpTime: '',
+    pickupTime: '11am-1pm',
     mealWeek: '',
     buttonText: 'Request',
     // title: '',
@@ -52,6 +53,7 @@ const Create = ({ token, user }) => {
 
   const {
     pickupCode,
+    pickupCodeInput,
     orderStatus,
     students,
     pickupCodeAdd,
@@ -83,6 +85,8 @@ const Create = ({ token, user }) => {
     return () => clearTimeout();
   }, [success]);
 
+  // console.log('pickup time on load', pickupTime);
+
   // change date
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDate: moment(pickupDate).format('l') });
@@ -93,7 +97,14 @@ const Create = ({ token, user }) => {
   // date.getDay() !== 2
 
   // meal request select
-  const handleSelectChange = (e, student, studentName, schoolName, group, teacher) => {
+  const handleSelectChange = (
+    e,
+    student,
+    studentName,
+    schoolName,
+    group,
+    teacher
+  ) => {
     let i = e.target.getAttribute('data-index');
     {
       // console.log(i);
@@ -105,8 +116,8 @@ const Create = ({ token, user }) => {
     meal.student = student;
     meal.studentName = studentName;
     meal.group = group;
-    meal.teacher = teacher; 
-    meal.schoolName = schoolName // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    meal.teacher = teacher;
+    meal.schoolName = schoolName; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     meals[i] = meal; // puts meal[i] back into mealRequest array
     // console.log(meal)
     // meal.meal === 'Vegetarian' ? console.log('vege') : console.log('standard')
@@ -144,10 +155,10 @@ const Create = ({ token, user }) => {
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
     // console.log(codes)
-    let length = codes.length;
+    // let length = codes.length;
 
-    // let newFrontCode = codes
-    let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
+    // // let newFrontCode = codes
+    // let newPickupCode = codes.join('') + '-' + pickupCodeInput + '-0' + length;
 
     // if(student[i]==='Group A') {
 
@@ -157,7 +168,7 @@ const Create = ({ token, user }) => {
       ...state,
       mealRequest: [...meals],
       buttonText: 'Request',
-      pickupCode: newPickupCode,
+      // pickupCode: newPickupCode,
       pickupCodeAdd: codes,
       success: '',
       error: '',
@@ -166,12 +177,19 @@ const Create = ({ token, user }) => {
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
     // setState({...state, pickupCode: user.userCode})
-    console.log(newPickupCode);
+    // console.log(newPickupCode);
     // console.log(codes)
   };
   // console.log(state.pickupCodeAdd)
 
-  const selectMealRequest = (i, student, studentName, schoolName, group, teacher) => (
+  const selectMealRequest = (
+    i,
+    student,
+    studentName,
+    schoolName,
+    group,
+    teacher
+  ) => (
     <>
       <div key={i} className="form-group">
         <div className="">
@@ -181,7 +199,16 @@ const Create = ({ token, user }) => {
             data-index={i}
             defaultValue={'Standard'}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectChange(e, student, studentName, schoolName, group, teacher)}
+            onChange={(e) =>
+              handleSelectChange(
+                e,
+                student,
+                studentName,
+                schoolName,
+                group,
+                teacher
+              )
+            }
             className="form-control"
           >
             {' '}
@@ -214,7 +241,7 @@ const Create = ({ token, user }) => {
         <div className="">
           <select
             type="select"
-            defaultValue={state.pickupOption.value}
+            // defaultValue={state.pickupOption.value}
             // value='Breakfast and Lunch'
             data-index={i}
             onChange={(e) => handlePickupOption(e)}
@@ -250,6 +277,8 @@ const Create = ({ token, user }) => {
         <div className="">
           <select
             type="select"
+            // defaultValue={state.pickupTime.value}
+
             // value={state.value}
             data-index={i}
             onChange={(e) => handlePickupTimeChange(e)}
@@ -258,7 +287,9 @@ const Create = ({ token, user }) => {
             {' '}
             <option value="">Choose an option</option>
             <option value={'7am-9am'}>7am-9am</option>
-            <option value={'11am-1pm'}>11am-1pm</option>
+            <option selected value={'11am-1pm'}>
+              11am-1pm
+            </option>
             <option value={'4pm-6pm'}>4pm-6pm</option>
           </select>
           <div className="p-2"></div>
@@ -283,7 +314,7 @@ const Create = ({ token, user }) => {
           complete: false,
         },
       ],
-      pickupCodeAdd: [...pickupCodeAdd, ','],
+      pickupCodeAdd: [...pickupCodeAdd, ''],
     });
   };
   // console.log(pickupCodeAdd)
@@ -303,10 +334,10 @@ const Create = ({ token, user }) => {
     // setState({ ...state, pickupCodeAdd: list2 });
   };
 
-  const loadCategories = async () => {
-    const response = await axios.get(`${API}/categories`);
-    setState({ ...state, loadedCategories: response.data });
-  };
+  // const loadCategories = async () => {
+  //   const response = await axios.get(`${API}/categories`);
+  //   setState({ ...state, loadedCategories: response.data });
+  // };
 
   // const loadStudents = async () => {
   //   const response = await axios.get(`${API}/user`);
@@ -326,6 +357,18 @@ const Create = ({ token, user }) => {
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
   // console.log(pickupCodeAdd)
+  
+  const Submit = (e) => {
+    // console.log(pickupCodeAdd)
+    let length = pickupCodeAdd.length;
+    // let newFrontCode = codes
+    let newPickupCode = pickupCodeAdd.join('') + '-' + pickupCodeInput + '-0' + length;
+    // handleSubmit(e)
+    setState({...state,
+      pickupCode: newPickupCode
+    })
+    // (console.log('pickupcode on submit', pickupCode))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -337,7 +380,7 @@ const Create = ({ token, user }) => {
 
     // pickupCode = NewPickupCode
     // newCodeMaker()
-    // console.log(pickupCode)
+    console.log(pickupCode);
     try {
       const response = await axios.post(
         `${API}/mock-link`,
@@ -463,6 +506,14 @@ const Create = ({ token, user }) => {
     setState({ ...state, categories: all, success: '', error: '' });
   };
 
+  const handleCodeChange = (e) => {
+      e.preventDefault
+      setState({
+        ...state,
+        pickupCodeInput: e.target.value.toUpperCase()
+      })
+  }
+
   // create form
   const submitLinkForm = (student) => (
     <form onSubmit={handleSubmit}>
@@ -486,6 +537,7 @@ const Create = ({ token, user }) => {
         <button
           disabled={!token}
           className="btn btn-outline-warning"
+          onClick={Submit}
           type="submit"
         >
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
@@ -549,6 +601,9 @@ const Create = ({ token, user }) => {
               </div>
             </div>
 
+            <div className=" form-group">
+              <input type="text" className=" form-control" placeholder='Enter a 4 digit User Code' onChange={e => handleCodeChange(e)}/>
+            </div>
             <div className="row">
               <div className="col-md-12">
                 {state.mealRequest.map((x, i) => {
@@ -564,7 +619,7 @@ const Create = ({ token, user }) => {
                     {console.log(mealRequest)} */}
 
                       <div key={i} className="">
-                      {selectMealRequest(
+                        {selectMealRequest(
                           i,
                           state.students[i]._id,
                           state.students[i].name,
@@ -583,13 +638,13 @@ const Create = ({ token, user }) => {
                       className="btn btn-warning"
                       onClick={() =>
                         state.mealRequest.map((x, i) =>
-                        addMeal(
-                          state.students[`${i + 1}`]._id,
-                          state.students[`${i + 1}`].name,
-                          state.students[`${i + 1}`].schoolName,
-                          state.students[`${i + 1}`].group.slug,
-                          state.students[`${i + 1}`].teacher.slug
-                        )
+                          addMeal(
+                            state.students[`${i + 1}`]._id,
+                            state.students[`${i + 1}`].name,
+                            state.students[`${i + 1}`].schoolName,
+                            state.students[`${i + 1}`].group.slug,
+                            state.students[`${i + 1}`].teacher.slug
+                          )
                         )
                       }
                     >

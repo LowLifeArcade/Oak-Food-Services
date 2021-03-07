@@ -33,7 +33,7 @@ const Create = ({ token, user }) => {
     ],
     orderStatus: false,
     pickupCode: user.userCode + '-01',
-    pickupCodeAdd: [','],
+    pickupCodeAdd: [''],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupOption: 'Breakfast and Lunch',
     pickUpTime: '',
@@ -154,10 +154,10 @@ const Create = ({ token, user }) => {
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
     // console.log(codes)
-    let length = codes.length;
+    // let length = codes.length;
 
-    // let newFrontCode = codes
-    let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
+    // // let newFrontCode = codes
+    // let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
 
     // if(student[i]==='Group A') {
 
@@ -167,7 +167,7 @@ const Create = ({ token, user }) => {
       ...state,
       mealRequest: [...meals],
       buttonText: 'Request',
-      pickupCode: newPickupCode,
+      // pickupCode: newPickupCode,
       pickupCodeAdd: codes,
       success: '',
       error: '',
@@ -176,11 +176,11 @@ const Create = ({ token, user }) => {
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
     // setState({...state, pickupCode: user.userCode})
-    console.log(mealRequest);
     // console.log(codes)
   };
+  console.log('code add', pickupCodeAdd);
   // console.log(state.pickupCodeAdd)
-console.log(user)
+// console.log(user)
   const selectMealRequest = (i, student, studentName, schoolName, group, teacher) => (
     <>
       <div key={i} className="form-group">
@@ -295,7 +295,7 @@ console.log(user)
           complete: false,
         },
       ],
-      pickupCodeAdd: [...pickupCodeAdd, ','],
+      pickupCodeAdd: [...pickupCodeAdd, ''],
     });
   };
   // console.log(pickupCodeAdd)
@@ -338,6 +338,17 @@ console.log(user)
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
   // console.log(pickupCodeAdd)
+
+  const submit = () => {
+    let length = pickupCodeAdd.length;
+
+    // let newFrontCode = codes
+    let newPickupCode = pickupCodeAdd.join('') + '-' + user.userCode + '-0' + length;
+
+    setState({...state,
+      pickupCode: newPickupCode
+    })
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -473,6 +484,7 @@ console.log(user)
         <button
           disabled={!token}
           className="btn btn-outline-warning"
+          onClick={submit}
           type="submit"
         >
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
@@ -573,7 +585,7 @@ console.log(user)
                           state.students[i].teacher.slug
                         )}
                       </div>
-                      {console.log('student info', state.students[i])}
+                      {/* {console.log('student info', state.students[i])} */}
                     </>
                   );
                 })}
@@ -605,7 +617,7 @@ console.log(user)
                       Remove Meal
                     </button>
                   )}
-                  {console.log(mealRequest)}
+                  {/* {console.log(mealRequest)} */}
                 </div>
                 {/* {console.log(mealRequest)} */}
               </div>

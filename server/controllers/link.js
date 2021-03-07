@@ -205,7 +205,7 @@ exports.listByDate = (req, res) => {
   // let limit = req.body.limit ? parseInt(req.body.limit) : 10;
   // let skip = req.body.skip ? parseInt(req.body.skip) : 0;
   let pickupDate2 = req.body.pickupDateLookup;
-  console.log(req.body.pickupDateLookup);
+  // console.log(req.body.pickupDateLookup);
   // look for items and populate
   Link.find({ pickupDate: pickupDate2 })
     .populate({
@@ -289,7 +289,7 @@ exports.complete = (req, res) => {
   const { id } = req.params;
   const completedRequest = ({ orderStatus, mealRequest } = req.body);
   // const updatedLink = {title, url, categories, type, medium}
-  console.log('completed req', completedRequest);
+  // console.log('completed req', completedRequest);
   // console.log('id req', id);
   Link.findOneAndUpdate({ _id: id }, completedRequest, { new: true }).exec(
     (err, updated) => {
@@ -306,7 +306,7 @@ exports.complete = (req, res) => {
 exports.remove = (req, res) => {
   const { id } = req.params;
   Link.findOneAndRemove({ _id: id }).exec((err, data) => {
-    console.log(data);
+    // console.log(data);
     if (err) {
       return res.status(400).json({
         error: 'Error removing link',

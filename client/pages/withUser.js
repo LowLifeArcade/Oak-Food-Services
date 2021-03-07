@@ -32,7 +32,7 @@ const withUser = (Page) => {
     if (user === null) {
       // redirect
       context.res.writeHead(302, {
-        Location: '/user',
+        Location: '/',
       });
       context.res.end();
     } else {

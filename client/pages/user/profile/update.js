@@ -25,9 +25,9 @@ const Profile = ({ user, token }) => {
     categories: user.categories, // categories selected by user for signup
     groups: [],
     loadedGroups: [],
-    loadedTeachers: []
+    loadedTeachers: [],
   });
-  // console.log(user)
+  console.log('on load', user.students);
 
   // useEffect(() => {
   //   isAuth() && Router.push('/');
@@ -48,7 +48,7 @@ const Profile = ({ user, token }) => {
     categories,
     groups,
     loadedGroups,
-    loadedTeachers
+    loadedTeachers,
   } = state;
 
   // load categories when component mounts useing useEffect
@@ -59,16 +59,16 @@ const Profile = ({ user, token }) => {
 
   useEffect(() => {
     success === "You've successfully updated your profile"
-    ? setTimeout(() => {
-      Router.push('/user') 
-    }, 2000)
-    : console.log('add students')
-}, [success])
+      ? setTimeout(() => {
+          Router.push('/user');
+        }, 2000)
+      : null;
+  }, [success]);
 
-  const loadCategories = async () => {
-    const response = await axios.get(`${API}/categories`);
-    setState({ ...state, loadedCategories: response.data });
-  };
+  // const loadCategories = async () => {
+  //   const response = await axios.get(`${API}/categories`);
+  //   setState({ ...state, loadedCategories: response.data });
+  // };
 
   const loadGroups = async () => {
     const response = await axios.get(`${API}/groups`);
@@ -76,9 +76,13 @@ const Profile = ({ user, token }) => {
     // console.log(response.data)
     // setState({ ...state, loadedTeachers: response2.data });
     // console.log(response.data)
-    setState({ ...state, loadedTeachers: response2.data, loadedGroups: response.data });
+    setState({
+      ...state,
+      loadedTeachers: response2.data,
+      loadedGroups: response.data,
+    });
   };
-  console.log(loadedTeachers)
+  // console.log(loadedTeachers)
   // console.log(loadedGroups)
 
   // student add select THIS is where things are going to be tricky
@@ -112,7 +116,7 @@ const Profile = ({ user, token }) => {
     setState({
       ...state,
       students: [...students],
-      buttonText: 'Register',
+      buttonText: 'Update',
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
@@ -121,23 +125,25 @@ const Profile = ({ user, token }) => {
     // console.log(e.target.getAttribute("data-index"))
   };
 
-  const addTeacher = (i) => (
+  const addTeacher = (i, x) => (
     <>
       <div key={i} className="form-group">
         <div className="">
           <select
-            type="select"
-            // value={state.value}
+            value={x.teacher._id}
             data-index={i}
-            // defaultValue={''}
-            defaultValue={loadedTeachers.includes(students[i].teacher)}
-            value={students[i].teacher}
+            type="select"
             onChange={(e) => handleSelectTeacherChange(e)}
+            // value={state.value}
+            // defaultValue={''}
+            defaultValue={x.teacher._id}
             className="form-control"
             required
           >
             {' '}
-            <option selected disabled value="">Choose Teacher</option>
+            <option selected disabled value="">
+              Choose Teacher
+            </option>
             {state.loadedTeachers.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
@@ -150,25 +156,25 @@ const Profile = ({ user, token }) => {
   );
 
   // console.log(loadedGroups)
-  const addStudentGroup = (i) => (
+  const addStudentGroup = (i, x) => (
     <>
       <div key={i} className="form-group">
         <div className="">
           <select
+            value={x.group}
+            data-index={i}
+            onChange={(e) => handleSelectChange(e)}
             type="select"
             // value={state.value}
-            data-index={i}
-            defaultValue={loadedGroups.includes(students[i].group)}
-            value={students[i].group}
+            defaultValue={x.group}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectChange(e)}
             className="form-control"
             required
           >
             {/* if statement in loaded groups value bellow where if there's a value in default value then select that. Otherwise display options */}
-            {console.log('add', loadedGroups.includes(students[i].group))}{' '}
+            {/* {console.log('add', loadedGroups.includes(students[i].group))}{' '} */}
             <option selected disabled value="">
-              Choose A Student Group
+              Choose Student Group
             </option>
             {state.loadedGroups.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
@@ -185,7 +191,10 @@ const Profile = ({ user, token }) => {
     e.preventDefault();
     setState({
       ...state,
-      students: [...students, { name: '', schoolName: '', group: '', teacher: '' }],
+      students: [
+        ...students,
+        { name: '', schoolName: '', group: '', teacher: '' },
+      ],
     });
   };
 
@@ -325,12 +334,14 @@ const Profile = ({ user, token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('submit', students);
+    // console.log('submit', students);
     setState({ ...state, buttonText: 'Updating...' });
     // if (password !== confirmPassword) {
     //   setState({ ...state, error: "Passwords don't match" });
     //   // alert('passwords dont match')
     // } else {
+      console.log('submit',user.students);
+
     try {
       const response = await axios.put(
         `${API}/user`,
@@ -338,7 +349,6 @@ const Profile = ({ user, token }) => {
           name,
           lastName,
           email,
-          // password,
           students,
         },
         {
@@ -483,10 +493,13 @@ const Profile = ({ user, token }) => {
                       placeholder="School student attends"
                       required
                     >
-                      <option value="">Choose A School</option>
-                      <option value="OPMS">Oak Park Middle School</option>
+                      <option value="">Choose School</option>
+                      <option value="BES">Brookside Elementary School</option>
+                      <option value="OHES">Oak Hills Elementary School</option>
+                      <option value="ROES">Red Oak Elementary School</option>
+                      <option value="MCMS">Medea Creek Middle School</option>
                       <option value="OPHS">Oak Park High School</option>
-                      <option value="OPES">Oak Park Elementary School</option>
+                      <option value="OVHS">Oak View High School</option>
                     </select>
                   </div>
                   {/* <div className="form-group pt-1">
@@ -501,11 +514,38 @@ const Profile = ({ user, token }) => {
                         required
                       />
                     </div> */}
-                  <div key={1} className="">
-                    {addStudentGroup(i)}
+
+                  <div key={i} className="form-group">
+                    <div className="">
+                      {console.log('group',x.group)}
+                      <select
+                        value={x.group._id}
+                        data-index={i}
+                        onChange={(e) => handleSelectChange(e)}
+                        type="select"
+                        // value={state.value}
+                        defaultValue={x.group._id}
+                        // defaultValue={state.mealRequest[0].meal}
+                        className="form-control"
+                        required
+                      >
+                        {/* if statement in loaded groups value bellow where if there's a value in default value then select that. Otherwise display options */}
+                        {/* {console.log('add', loadedGroups.includes(students[i].group))}{' '} */}
+                        <option selected disabled value="">
+                          Choose Student Group
+                        </option>
+                        {state.loadedGroups.map((g, i) => {
+                          return <option value={g._id}>{g.name}</option>;
+                        })}
+                      </select>
+                      <div className=""></div>
+                    </div>
                   </div>
-                  <div key={2} className="">
-                    {addTeacher(i)}
+                  {/* <div key={i} className="">
+                    {addStudentGroup(i, x)}
+                  </div> */}
+                  <div key={i} className="">
+                    {addTeacher(i, x)}
                   </div>
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>

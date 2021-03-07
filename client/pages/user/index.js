@@ -73,10 +73,11 @@ const User = ({ user, token, l, userLinks }) => {
               {l.mealRequest.map((k, i) => (
                 <h6 className="">
                   {/* Meal {`${i + 1} `} - for  */}
-                  {l.postedBy.students[i].group.name === 'A Group' || l.postedBy.students[i].group.name === 'B Group'  ? <b>2 onsite {k.meal} meals </b> : <b>5 pickup {k.meal} meals </b>}<br></br>
-                  {l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' - '+ l.postedBy.students[i].group.name} 
-                  {console.log(i,l.postedBy.students[i]._id)}
-                  {console.log('meal req',k.meal)}
+                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i].group.name === 'A Group' || l.postedBy.students[i].group.name === 'B Group'  ? <b>2 onsite {k.meal} meals </b> : <b>5 pickup {k.meal} meals </b>}
+                  <br></br>
+                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' - '+ l.postedBy.students[i].group.name} 
+                  {/* {console.log(i,l.postedBy.students[i]._id)} */}
+                  {/* {console.log('meal req',k.meal)} */}
                 </h6>
               ))}
             </div>
@@ -95,11 +96,11 @@ const User = ({ user, token, l, userLinks }) => {
         </div>
 
         <div className=" pb-3 pt-3">
-          <Link href={`/user/link/${l._id}`}>
+          {l.postedBy.students ? null : <Link href={`/user/link/${l._id}`}>
             <button className="badge btn btn-outline-warning text float-left">
               Edit Request
             </button>
-          </Link>
+          </Link>}
           <Link href="">
             <button
               onClick={(e) => confirmDelete(e, l._id)}

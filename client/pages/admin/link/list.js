@@ -26,14 +26,15 @@ const Requests = ({ token }) => {
   const [state, setState] = useState({
     pickupDateLookup: moment(new Date()).format('l'),
     loadedUsers: [],
+    orderStatusArray: [],
     // loadMeals: false,
     search: '',
     error: '',
     success: '',
   });
   const [linksByDate, setLinksByDate] = useState([]);
-  const { pickupDateLookup, loadedUsers } = state;
-
+  const { pickupDateLookup, loadedUsers, orderStatusArray } = state;
+  // console.log('orders per date in array', orderStatusArray);
   useEffect(() => {
     handleDateChange(pickupDateLookup);
     setLoadmeals(!loadmeals);
@@ -69,8 +70,18 @@ const Requests = ({ token }) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setLinksByDate(response.data);
+    compileOrderStatusArray();
   };
-  // console.log('linksbydate', linksByDate);
+
+  const compileOrderStatusArray = () => {
+    let linkArray = [];
+    linksByDate.map((l, i) => linkArray.push(l.orderStatus));
+    setState({
+      ...state,
+      orderStatusArray: linkArray,
+    });
+  };
+  console.log('compiled array', orderStatusArray);
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
 
@@ -186,6 +197,7 @@ const Requests = ({ token }) => {
 
     requests[i] = request;
 
+    // order marks as complete even if i cancel which i need to fix
     request.orderStatus === false
       ? (answer = window.confirm('Mark this order as completed?'))
       : (answer = window.confirm('Mark this order as not completed?'));
@@ -194,6 +206,16 @@ const Requests = ({ token }) => {
         e.target.type === 'checkbox' ? e.target.checked : e.target.value;
       // handleIndividualOrderStatusChange(e, request);
       // let orders = [...request.mealRequest]
+
+      let statuses = [...state.orderStatusArray];
+      let status = { ...statuses[i] };
+      status = request.orderStatus;
+
+      statuses[i] = status;
+
+      setState({ ...state, orderStatusArray: statuses });
+      // console.log('change order status', orderStatusArray)
+      // console.log('change order status meal', mealRequest)
 
       request.mealRequest.forEach((mealRequest) => {
         if (mealRequest.group === 'distant-learning') {
@@ -210,6 +232,13 @@ const Requests = ({ token }) => {
   };
 
   const listOfLinks = (search) =>
+    // linksByDate
+    //   .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+    //   // .filter((l) => l.pickupDate === pickupDateLookup)
+    //   .map((l, i) =>
+    //     setState({ ...state, orderStatusArray: [...l.orderStatus] })
+    //   );
+
     linksByDate
       .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
       // .filter((l) => l.pickupDate === pickupDateLookup)
@@ -232,12 +261,19 @@ const Requests = ({ token }) => {
                 type="checkbox"
                 onChange={(e) => changeOrderStatus(e, l)}
                 defaultChecked={l.orderStatus}
-                //  checked={linksByDate[i]}
+                checked={orderStatusArray[i]}
               ></input>
             </td>
           </tr>
+          {/* {setState({ ...state, orderStatusArray: [...l.orderStatus] })} */}
+
+          {/* {setState({...state, orderStatusArray: [...orderStatusArray, l.orderStatus]})} */}
         </>
       ));
+  // linksByDate
+  // .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+  // // .filter((l) => l.pickupDate === pickupDateLookup)
+  // .map((l, i) => setState({...state, orderStatusArray: [...l.orderStatus]}))
 
   // const listOfLinks = (search) =>
   //   linksByDate

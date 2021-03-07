@@ -6,7 +6,7 @@ exports.read = (req, res) => {
   .populate({
     
       path: 'students',
-      populate: { path: 'teacher group', select: '-_id name slug' },
+      populate: { path: 'teacher group', select: '_id name slug' },
     
   })
   .exec((err, user) => {
@@ -97,26 +97,27 @@ exports.list = (req, res) => {
 // };
 
 exports.update = (req, res) => {
-  const { name, password, categories, students } = req.body;
-  switch (true) {
-    case password && password.length < 8:
-      return res
-        .status(400)
-        .json({ error: 'Password must be at least 8 characters long' });
-      break;
-  }
+  const { name, lastName, email, students } = req.body;
+  // switch (true) {
+  //   case password && password.length < 8:
+  //     return res
+  //       .status(400)
+  //       .json({ error: 'Password must be at least 8 characters long' });
+  //     break;
+  // }
   // add code to generate new password via salt and hash
 
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { name, password, categories, students },
+    { name, lastName, email, students },
     { new: true }
   ).exec((err, updated) => {
     if (err) {
       return res.status(400).json({
-        error: 'Could not find user to update',
-      });
+        error: 'problem updating user',
+      }); 
     }
+    console.log('update error', err)
     updated.hashed_password = undefined;
     updated.salt = undefined;
     res.json(updated);
