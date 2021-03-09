@@ -1,148 +1,97 @@
-// imports
 import styles from '../../../styles/Home.module.css';
-import moment from 'moment';
-import Router from 'next/router';
 import { useState, useEffect } from 'react';
 import Layout from '../../../components/Layout';
-import withUser from '../../withUser';
 import { getCookie, isAuth } from '../../../helpers/auth';
 import { API } from '../../../config';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import axios from 'axios';
+import withUser from '../../withUser';
+import moment from 'moment';
+import Router from 'next/router';
+// import Datepicker from '../../../components/Datepicker';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
-const Update = ({ oldLink, token, user, _id }) => {
+const Create = ({ token, user }) => {
+  const username = user.username;
+  // const userCode = user.userCode
+  const [showSearch, setShowSearch] = useState(false);
+  // const [orderStatus, setOrderStatus] = useState(true)
+
   // state
-  // console.log('old link data from user[id]', oldLink);
   const [state, setState] = useState({
-    // mealRequest: oldLink.mealRequest,
-    // mealRequest: [
-    //   {
-    //     meal: 'Standard',
-    //   },
-    // ],
-    // students: oldLink.students,
-    mealRequest: oldLink.mealRequest,
+    mealRequest: [
+      {
+        meal: 'Standard',
+        student: user.students[0]._id,
+        studentName: user.students[0].name,
+        schoolName: user.students[0].schoolName,
+        group: user.students[0].group.slug,
+        teacher: user.students[0].teacher.slug,
+        complete: false,
+      },
+    ],
     orderStatus: false,
-    pickupTime: oldLink.pickupTime,
-    pickupOption: oldLink.pickupOption,
-    pickupDate: oldLink.pickupDate,
-    buttonText: 'Update',
     pickupCode: user.userCode + '-01',
-    pickupCodeAdd: oldLink.pickupCodeAdd,
-    mealWeek: oldLink.pickupWeek,
+    pickupCodeAdd: [''],
+    pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
+    pickupOption: 'Breakfast and Lunch',
+    pickUpTime: '',
+    mealWeek: '',
+    buttonText: 'Request',
+    // title: '',
+    // url: '',
+    // categories: [],
+    // loadedCategories: [],
     success: '',
     error: '',
     students: user.students,
+    // type: '',
+    // medium: '',
   });
 
   const {
-    pickupOption,
-    pickupTime,
-    orderStatus,
-    mealRequest,
-    pickupDate,
+    studentName,
+    onsiteMealRequest,
     pickupCode,
+    orderStatus,
     students,
     pickupCodeAdd,
+    pickupDate,
+    mealRequest,
+    pickupOption,
+    pickupTime,
     title,
     url,
+    // categories,
+    // loadedCategories,
     success,
     error,
     type,
     medium,
   } = state;
-
-  // const username = user.username;
-  // const userCode = user.userCode
-  const [showSearch, setShowSearch] = useState(false);
-  // console.log(oldLink)
-
-  //   useEffect(() => {
-  //    getUser()
-
-  //   }, []);
-  // console.log(state.students)
-  //   const getUser = async () => {
-  //     const response = await axios.get(`${API}/user/${oldLink.id}`);
-  //     setState({ ...state, students: response.data.students });
-  //   }
-
-  // useEffect(() => {
-  //   // const timer = setTimeout()
-  //   // loadCategories();
-  //   // loadStudents()
-  //   //  Router.push('user')
-  //   success === 'Request was updated'
-  //     ? setTimeout(() => {
-  //         Router.push('/user');
-  //       }, 2000)
-  //     : Router.push('');
-  //   return () => clearTimeout();
-  // }, [success]);
-
-  useEffect(() => {
-    // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
-    // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    let frontCode = [];
-    // let mereq = [{ meal: 'Vegetarian' }];
-    // for (const mealObj in mereq) {
-    // for (const meal of mealObj) {
-    // console.log(mealObj);
-    mealRequest.forEach((item) => {
-      switch (item.meal) {
-        case 'Vegetarian':
-          frontCode.push('Vt');
-          // console.log('vege')
-          break;
-        case 'Vegan':
-          frontCode.push('Vg');
-          // console.log('vegan')
-          break;
-        case 'GlutenFree':
-          frontCode.push('Gf');
-          // console.log('gf')
-          break;
-        case 'Standard':
-          frontCode.push('');
-          // console.log('gf')
-          break;
-
-        default:
-          break;
-      }
-      // }
-    });
-    // }
-    // console.log(frontCode);
-    // code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
-    // codes[i] = code;
-
-    let newPickupCode =
-      frontCode.join('') + '-' + user.userCode + '-0' + mealRequest.length;
-
-    setState({
-      ...state,
-      buttonText: 'Update',
-      pickupCode: newPickupCode,
-      pickupCodeAdd: frontCode,
-      success: '',
-      error: '',
-    }); //puts ...mealRequest with new meal back into mealRequest: []
-  }, [mealRequest]);
-
   // console.log(user.students);
   // load categories when component mounts useing useEffect
-  // load categories when component mounts useing useEffect
   useEffect(() => {
-    loadCategories();
-    success === 'Your request was updated'
+    // const timer = setTimeout()
+    // loadCategories();
+    // loadStudents()
+    //  Router.push('user')
+    success === 'Request was created'
       ? setTimeout(() => {
           Router.push('/user');
         }, 2000)
-      : loadCategories();
-    // : Router.push('');
+      : Router.push('');
     return () => clearTimeout();
   }, [success]);
+
+  // useEffect(() => {
+  //     // if mealRequest.student.id === cohort a || cohort b
+  //     // const onsiteMealRequest =  {mealRequest: mealRequest.meal, student: mealRequest.student, complete: false }
+  //     setState({...state,
+  //       mealRequest1: {mealRequest: mealRequest[0].meal, student: mealRequest[0].student, complete: false },
+  //     })
+  // }, [mealRequest[0]])
 
   // change date
   const onDateChange = (pickupDate) => {
@@ -154,14 +103,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   // date.getDay() !== 2
 
   // meal request select
-  const handleSelectChange = (
-    e,
-    student,
-    studentName,
-    schoolName,
-    group,
-    teacher
-  ) => {
+  const handleSelectChange = (e, student, studentName, schoolName, group, teacher) => {
     let i = e.target.getAttribute('data-index');
     {
       // console.log(i);
@@ -173,12 +115,12 @@ const Update = ({ oldLink, token, user, _id }) => {
     meal.student = student;
     meal.studentName = studentName;
     meal.group = group;
-    meal.teacher = teacher;
-    meal.schoolName = schoolName; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    meal.teacher = teacher; 
+    meal.schoolName = schoolName// let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     meals[i] = meal; // puts meal[i] back into mealRequest array
     // console.log(meal)
     // meal.meal === 'Vegetarian' ? console.log('vege') : console.log('standard')
-
+    // console.log(meals[i])
     let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
     let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
 
@@ -202,9 +144,6 @@ const Update = ({ oldLink, token, user, _id }) => {
       case 'Standard':
         frontCode = '';
         // console.log('gf')
-      case 'None':
-        frontCode = 'None';
-        // console.log('gf')
         break;
 
       default:
@@ -215,11 +154,10 @@ const Update = ({ oldLink, token, user, _id }) => {
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
     // console.log(codes)
-    let length = mealRequest.length;
+    // let length = codes.length;
 
-    // move some of this code somewhere else where it doesn't have to change only when user does a meal name change
-    // let newFrontCode = codes
-    let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
+    // // let newFrontCode = codes
+    // let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
 
     // if(student[i]==='Group A') {
 
@@ -228,8 +166,8 @@ const Update = ({ oldLink, token, user, _id }) => {
     setState({
       ...state,
       mealRequest: [...meals],
-      buttonText: 'Update',
-      pickupCode: newPickupCode,
+      buttonText: 'Request',
+      // pickupCode: newPickupCode,
       pickupCodeAdd: codes,
       success: '',
       error: '',
@@ -240,17 +178,10 @@ const Update = ({ oldLink, token, user, _id }) => {
     // setState({...state, pickupCode: user.userCode})
     // console.log(codes)
   };
+  console.log('code add', pickupCodeAdd);
   // console.log(state.pickupCodeAdd)
-  // console.log(pickupCodeAdd);
-
-  const selectMealRequest = (
-    i,
-    student,
-    studentName,
-    schoolName,
-    group,
-    teacher
-  ) => (
+// console.log(user)
+  const selectMealRequest = (i, student, studentName, schoolName, group, teacher) => (
     <>
       <div key={i} className="form-group">
         <div className="">
@@ -258,17 +189,10 @@ const Update = ({ oldLink, token, user, _id }) => {
             type="select"
             // value={state.value}
             data-index={i}
-            defaultValue={state.mealRequest[i].meal}
+            defaultValue={'Standard'}
             // defaultValue={state.mealRequest[0].meal}
             onChange={(e) =>
-              handleSelectChange(
-                e,
-                student,
-                studentName,
-                schoolName,
-                group,
-                teacher
-              )
+              handleSelectChange(e, student, studentName, schoolName, group, teacher)
             }
             className="form-control"
           >
@@ -278,7 +202,6 @@ const Update = ({ oldLink, token, user, _id }) => {
             <option value={'Vegetarian'}>Vegetarian</option>
             <option value={'Vegan'}>Vegan (lunch only)</option>
             <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
-            <option value={'None'}>None</option>
           </select>
           <div className="p-2"></div>
         </div>
@@ -291,33 +214,10 @@ const Update = ({ oldLink, token, user, _id }) => {
     setState({
       ...state,
       pickupOption: e.target.value,
-      buttonText: 'Update',
+      buttonText: 'Request',
       success: '',
       error: '',
     });
-  };
-
-  const confirmDelete = (e, id) => {
-    e.preventDefault();
-    // console.log('delete >', slug);
-    let answer = window.confirm('WARNING! Delete this order?');
-    if (answer) {
-      handleDelete(id);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(`${API}/link/admin/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('LINK DELETE SUCCESS', response);
-      process.browser && window.location.reload();
-    } catch (error) {
-      console.log('ERROR LINK CATEGORY', error);
-    }
   };
 
   const selectPickupOption = (i) => (
@@ -350,7 +250,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     setState({
       ...state,
       pickupTime: e.target.value,
-      buttonText: 'Update',
+      buttonText: 'Request',
       success: '',
       error: '',
     });
@@ -362,7 +262,7 @@ const Update = ({ oldLink, token, user, _id }) => {
         <div className="">
           <select
             type="select"
-            defaultValue={state.pickupTime}
+            // value={state.value}
             data-index={i}
             onChange={(e) => handlePickupTimeChange(e)}
             className="form-control"
@@ -437,6 +337,18 @@ const Update = ({ oldLink, token, user, _id }) => {
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+  // console.log(pickupCodeAdd)
+
+  const submit = () => {
+    let length = pickupCodeAdd.length;
+
+    // let newFrontCode = codes
+    let newPickupCode = pickupCodeAdd.join('') + '-' + user.userCode + '-0' + length;
+
+    setState({...state,
+      pickupCode: newPickupCode
+    })
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -449,19 +361,19 @@ const Update = ({ oldLink, token, user, _id }) => {
     // pickupCode = NewPickupCode
     // newCodeMaker()
     // console.log(pickupCode)
-
-    // console.table({title, url, categories, type, medium})
-    // use update link based on admin user roll
-    let dynamicUpdateUrl;
-    if (isAuth() && isAuth().role === 'admin') {
-      dynamicUpdateUrl = `${API}/link/admin/${oldLink._id}`;
-    } else {
-      dynamicUpdateUrl = `${API}/link/${oldLink._id}`;
-    }
     try {
-      const response = await axios.put(
-        dynamicUpdateUrl,
-        { mealRequest, pickupOption, pickupTime, pickupDate, pickupCode },
+      const response = await axios.post(
+        `${API}/link`,
+        {
+          mealRequest,
+          pickupOption,
+          pickupTime,
+          pickupDate,
+          username,
+          pickupCode,
+          pickupCodeAdd,
+          orderStatus,
+        },
         // { title, url, categories, type, medium },
         {
           headers: {
@@ -469,20 +381,25 @@ const Update = ({ oldLink, token, user, _id }) => {
           },
         }
       );
+      // const response2 = await axios.post(
+      //   `${API}/individual-link`,
+      //   {mealRequest},
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
       // reset state
       setState({
         ...state,
-        success: 'Your request was updated',
-        buttonText: 'Updated',
+        success: 'Request was created',
+        error: '',
       });
       // .then(Router.push('/user'))
     } catch (error) {
       // console.log('LINK SUBMIT ERROR', error);
-      setState({
-        ...state,
-        // error: error.response.data.error
-        error: 'some error',
-      });
+      setState({ ...state, error: error.response.data.error });
     }
   };
 
@@ -534,8 +451,19 @@ const Update = ({ oldLink, token, user, _id }) => {
   };
 
   // create form
-  const submitLinkForm = () => (
+  const submitLinkForm = (student) => (
     <form onSubmit={handleSubmit}>
+      {/* <div className="form-group">
+        <label htmlFor="" className="text-muted">
+          Title
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          onChange={handleTitleChange}
+          value={title}
+        />
+      </div> */}
       <div className="form-group">
         <label htmlFor="" className="text-muted">
           Meal Options
@@ -556,17 +484,10 @@ const Update = ({ oldLink, token, user, _id }) => {
         <button
           disabled={!token}
           className="btn btn-outline-warning"
+          onClick={submit}
           type="submit"
         >
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
-        </button>
-
-        <button
-          disabled={!token}
-          className="btn btn-outline-danger float-right"
-          onClick={(e) => confirmDelete(e, oldLink._id)}
-        >
-          {isAuth() || token ? 'Delete' : 'Login to Make Request'}
         </button>
       </div>
 
@@ -601,7 +522,7 @@ const Update = ({ oldLink, token, user, _id }) => {
               <div className="col-md-12">
                 <h3>
                   Meal Request for:{' '}
-                  {pickupDate && moment(oldLink.pickupDate).format('MMM Do')}{' '}
+                  {pickupDate && moment(state.pickupDate).format('MMM Do')}{' '}
                 </h3>
                 {showSearch && (
                   <Calendar
@@ -648,7 +569,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       <h6 className="p-2">
                         <label key={i} className="form-check-label text-muted">
                           {/* Select Meal # {`${i + 1}`}  */}
-                          Select meal for {`${user.students[i].name}`}
+                          Select meal for {`${state.students[i].name}`}
                         </label>
                       </h6>
                       {/* {console.log(x)}
@@ -660,14 +581,14 @@ const Update = ({ oldLink, token, user, _id }) => {
                           state.students[i]._id,
                           state.students[i].name,
                           state.students[i].schoolName,
-                          state.students[i].group,
-                          state.students[i].teacher
+                          state.students[i].group.slug,
+                          state.students[i].teacher.slug
                         )}
                       </div>
+                      {/* {console.log('student info', state.students[i])} */}
                     </>
                   );
                 })}
-
                 <div className="">
                   {state.mealRequest.length < state.students.length && (
                     <button
@@ -678,8 +599,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                             state.students[`${i + 1}`]._id,
                             state.students[`${i + 1}`].name,
                             state.students[`${i + 1}`].schoolName,
-                            state.students[`${i + 1}`].group,
-                            state.students[`${i + 1}`].teacher
+                            state.students[`${i + 1}`].group.slug,
+                            state.students[`${i + 1}`].teacher.slug
                           )
                         )
                       }
@@ -696,8 +617,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                       Remove Meal
                     </button>
                   )}
+                  {/* {console.log(mealRequest)} */}
                 </div>
-
                 {/* {console.log(mealRequest)} */}
               </div>
               <div className="col-md-6 p-3">
@@ -713,16 +634,10 @@ const Update = ({ oldLink, token, user, _id }) => {
   );
 };
 
-Update.getInitialProps = async ({ req, token, query, user }) => {
-  const response = await axios.get(`${API}/link/${query.id}`);
-  return { oldLink: response.data, token, user };
-  // const token = getCookie('token', req);
-  // return { token, user };
-  // const response = await axios.get(`${API}/link/${query.id}`);
-  // // const token = getCookie('token', req);
-  // return { oldLink: response.data, token, user};
-  // // return { token, user };
+Create.getInitialProps = ({ req, user }) => {
+  const token = getCookie('token', req);
+  return { token, user };
 };
 
-export default withUser(Update);
+export default withUser(Create);
 // export default withUser(Create)

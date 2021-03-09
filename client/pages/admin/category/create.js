@@ -29,6 +29,7 @@ const Create = ({ user, username, token }) => {
   
 
   const [content, setContent] = useState('');
+  const [group, setGroup] = useState('');
 
   const [imageUploadButtonName, setImageUploadButtonName] = useState(
     'Upload image'
@@ -53,6 +54,59 @@ const Create = ({ user, username, token }) => {
       : console.log('none')
     // : Router.push('');
   }, [buttonText])
+
+   // student add select THIS is where things are going to be tricky
+  //  const handleSelectGroupChange = (e) => {
+  //   let i = e.target.getAttribute('data-index');
+
+  //   let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+  //   let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   oneStudent.group = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+  //   students[i] = oneStudent; // puts meal[i] back into mealRequest array
+  //   setState({
+  //     ...state,
+  //     students: [...students],
+  //     buttonText: 'Register',
+  //     success: '',
+  //     error: '',
+  //   }); //puts ...mealRequest with new meal back into mealRequest: []
+  //   // setState({...state,
+  //   //   mealRequest: [...mealRequest, {meal: e.target.value}]});
+  //   // console.log(e.target.getAttribute("data-index"))
+  // };
+
+  const chooseEmailGroup = () => (
+    <>
+      <div className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            // data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => setGroup(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Student Group
+            </option>
+            <option value="all-students">All Students</option>
+            <option value="distance-learning">Distance Learning</option>
+            <option value="a-group">A - Group</option>
+            <option value="b-group">B - Group</option>
+            {/* {state.loadedGroups.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className=""></div>
+        </div>
+      </div>
+    </>
+  );
 
   // maybe add a className that makes the div go away with transform translateY
   const handleChange = (name) => (e) => {
@@ -114,7 +168,7 @@ const Create = ({ user, username, token }) => {
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, image, postedBy },
+        { name, content, image, group, postedBy },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -202,6 +256,7 @@ const Create = ({ user, username, token }) => {
           required
         /> */}
       </div>
+      {chooseEmailGroup()}
       {/* <div className="form-group">
         <label className="btn btn-outline-secondary">
           Add Table

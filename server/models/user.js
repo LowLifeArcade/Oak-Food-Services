@@ -65,14 +65,20 @@ const userSchema = new mongoose.Schema(
           required: true
         },
         group:{
-          type: ObjectId,
-          ref: 'Group',
+          type: String,
           required: true
         },
+        // teacher:{
+        //   type: ObjectId,
+        //   ref: 'Teacher',
+        //   required: true
+        // },
         teacher:{
-          type: ObjectId,
-          ref: 'Teacher',
+          type: String,
           required: true
+        },
+        age: {
+          type: String
         }
       }
     ],

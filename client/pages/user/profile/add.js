@@ -7,7 +7,7 @@ import styles from '../../../styles/Home.module.css';
 import { isAuth, updateUser } from '../../../helpers/auth';
 import withUser from '../../withUser';
 import Link from 'next/link';
-import  Router  from 'next/router';
+import Router from 'next/router';
 
 const Profile = ({ user, token }) => {
   const [state, setState] = useState({
@@ -20,13 +20,14 @@ const Profile = ({ user, token }) => {
     success: '',
     buttonText: 'Register',
     addButtonText: 'Add Student',
-    students: [{ name: '', schoolName: '', group: '', teacher: '' }],
+    students: [{ name: '', schoolName: '', group: '', teacher: '', age: '' }],
     loadedCategories: [],
-    categories: user.categories, // categories selected by user for signup
+    categories: [], // categories selected by user for signup
+    // categories: user.categories, // categories selected by user for signup
     groups: [],
     teachers: [],
     loadedGroups: [],
-    loadedTeachers: []
+    loadedTeachers: [],
   });
   // console.log(user)
 
@@ -50,7 +51,7 @@ const Profile = ({ user, token }) => {
     groups,
     teachers,
     loadedGroups,
-    loadedTeachers
+    loadedTeachers,
   } = state;
 
   // load categories when component mounts useing useEffect
@@ -69,12 +70,12 @@ const Profile = ({ user, token }) => {
   // }, []);
 
   useEffect(() => {
-      success === "You've successfully registered your students"
+    success === "You've successfully registered your students"
       ? setTimeout(() => {
-        Router.push('/user') 
-      }, 2000)
-      : console.log('add students')
-  }, [success])
+          Router.push('/user');
+        }, 2000)
+      : console.log('add students');
+  }, [success]);
 
   // useEffect(() => {
   //   // isAuth() && Router.push('/user');
@@ -91,14 +92,17 @@ const Profile = ({ user, token }) => {
     // console.log(response.data)
     // setState({ ...state, loadedTeachers: response2.data });
     // console.log(response.data)
-    setState({ ...state, loadedTeachers: response2.data, loadedGroups: response.data });
+    setState({
+      ...state,
+      loadedTeachers: response2.data,
+      loadedGroups: response.data,
+    });
   };
 
   // const loadCategories = async () => {
   //   const response = await axios.get(`${API}/categories`);
   //   setState({ ...state, loadedCategories: response.data });
   // };
-
 
   console.log('loaded groups', loadedGroups);
   // const loadTeachers = async () => {
@@ -119,6 +123,7 @@ const Profile = ({ user, token }) => {
     setState({
       ...state,
       students: [...students],
+      categories: [...categories, e.target.value],
       buttonText: 'Register',
       success: '',
       error: '',
@@ -127,6 +132,7 @@ const Profile = ({ user, token }) => {
     //   mealRequest: [...mealRequest, {meal: e.target.value}]});
     // console.log(e.target.getAttribute("data-index"))
   };
+  // console.log('categories added',categories)
 
   const addStudentGroup = (i) => (
     <>
@@ -143,11 +149,16 @@ const Profile = ({ user, token }) => {
             required
           >
             {' '}
-            <option selected disabled value="">Choose Student Group</option>
-            {state.loadedGroups.map((g, i) => {
+            <option selected disabled value="">
+              Choose Student Group
+            </option>
+            <option value="distance-learning">Distance Learning</option>
+            <option value="a-group">A - Group</option>
+            <option value="b-group">B - Group</option>
+            {/* {state.loadedGroups.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
-            })}
+            })} */}
           </select>
           <div className=""></div>
         </div>
@@ -155,8 +166,8 @@ const Profile = ({ user, token }) => {
     </>
   );
 
-   // student add select THIS is where things are going to be tricky
-   const handleSelectTeacherChange = (e) => {
+  // student add select THIS is where things are going to be tricky
+  const handleSelectTeacherChange = (e) => {
     let i = e.target.getAttribute('data-index');
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
@@ -175,7 +186,7 @@ const Profile = ({ user, token }) => {
     // console.log(e.target.getAttribute("data-index"))
   };
 
-  const addTeacher = (i) => (
+  const addBESTeacher = (i, x) => (
     <>
       <div key={i} className="form-group">
         <div className="">
@@ -190,11 +201,205 @@ const Profile = ({ user, token }) => {
             required
           >
             {' '}
-            <option selected disabled value="">Choose Teacher</option>
-            {state.loadedTeachers.map((g, i) => {
+            <option selected disabled value="">
+              Choose Teacher
+            </option>
+            ,<option value="k-annino/lee">K - Annino/Lee</option>
+            <option value="k-milbourn">K - Milbourn</option>
+            <option value="1st-hirano">1st - Hirano</option>
+            <option value="1st-morrow">1st - Morrow</option>
+            <option value="2nd-watson">2nd - Watson</option>
+            <option value="2nd-gerin">2nd - Gerin</option>
+            <option value="3rd-squire">3rd - Squire</option>
+            <option value="3rd-altman">3rd - Altman</option>
+            <option value="3rd-rosenblum">3rd - Rosenblum</option>
+            <option value="4th-keane">4th - Keane</option>
+            <option value="4th-farlow">4th - Farlow</option>
+            <option value="5th-stephens">5th - Stephens</option>
+            <option value="5th-becker">5th - Becker</option>
+            <option value="5th-powers">5th - Powers</option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
-            })}
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addOHESTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Teacher
+            </option>
+            ,<option value="k-sloan">K - Sloan</option>
+            <option value="k-foy">K - Foy</option>
+            <option value="1st-aaronson">1st - Aaronson</option>
+            <option value="1st-bretzing">1st - Bretzing</option>
+            <option value="2nd-lieberman">2nd - Lieberman</option>
+            <option value="2nd-ruben">2nd - Ruben</option>
+            <option value="3rd-arnold">3rd - Arnold</option>
+            <option value="4th-lockrey">4th - Lockrey</option>
+            <option value="4th-farlow">4th - Farlow</option>
+            <option value="4th-chobanian">4th - Chobanian</option>
+            <option value="5th-bailey">5th - Bailey</option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addROESTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Teacher
+            </option>
+            ,<option value="k-lobianco">K - LoBianco</option>
+            <option value="1st-bird">1st - Bird</option>
+            <option value="1st-ewing">1st - Ewing</option>
+            <option value="1st-holland">1st - Holland</option>
+            <option value="2nd-mcdowell">2nd - McDowell</option>
+            <option value="2nd-share">2nd - Share</option>
+            <option value="3rd-cantillon">3rd - Cantillon</option>
+            <option value="3rd-strong">3rd - Strong</option>
+            <option value="4th-duffy">4th - Duffy</option>
+            <option value="4th-matthews">4th - Matthews</option>
+            <option value="5th-bodily">5th - Bodily</option>
+            <option value="5th-cass">5th - Cass</option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+  const addMCMSTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="6th-grade">6th grade </option>
+            <option value="7th-grade">7th grade </option>
+            <option value="8th-grade">8th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addOPHSTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="9th-grade">9th grade</option>
+            <option value="10th-grade">10th grade </option>
+            <option value="11th-grade">11th grade </option>
+            <option value="12th-grade">12th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addOODTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="9th-grade">9th grade</option>
+            <option value="10th-grade">10th grade </option>
+            <option value="11th-grade">11th grade </option>
+            <option value="12th-grade">12th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
           </select>
           <div className="p-2"></div>
         </div>
@@ -207,7 +412,10 @@ const Profile = ({ user, token }) => {
     e.preventDefault();
     setState({
       ...state,
-      students: [...students, { name: '', schoolName: '', group: '', teacher: '' }],
+      students: [
+        ...students,
+        { name: '', schoolName: '', group: '', teacher: '' },
+      ],
     });
   };
 
@@ -316,6 +524,36 @@ const Profile = ({ user, token }) => {
       buttonText: 'Register',
     });
   };
+  
+  const handleObjectAgeChange = (age) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    oneStudent.age = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    students[i] = oneStudent; // puts meal[i] back into mealRequest array
+
+    // setState({
+    //   ...state,
+    //   student: [...students],
+    //   buttonText: 'Register',
+    //   success: '',
+    //   error: '',
+    // });
+
+    setState({
+      ...state,
+      students: [
+        ...students,
+        // {
+        //   name: e.target.value,
+        // },
+      ],
+      error: '',
+      success: '',
+      buttonText: 'Register',
+    });
+  };
 
   const handleObjectSchoolChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
@@ -362,6 +600,7 @@ const Profile = ({ user, token }) => {
           // email,
           // password,
           students,
+          categories
         },
         {
           headers: {
@@ -482,6 +721,11 @@ const Profile = ({ user, token }) => {
                   {/* {console.log(x)} */}
 
                   <div className="form-group pt-1">
+                    {/* <div className="form-group">
+                      <label htmlFor="" className="form-check-label text-muted">
+                        Student's Full Name
+                      </label>
+                    </div> */}
                     <input
                       value={x.name}
                       data-index={i}
@@ -489,10 +733,25 @@ const Profile = ({ user, token }) => {
                       // onChange={handleChange({student: 'name'})}
                       type="text"
                       className="form-control"
-                      placeholder="Student Name"
+                      placeholder="Student's Full Name"
                       required
                     />
                   </div>
+                  {/* <label htmlFor="" className="form-check-label text-muted">
+                        Food Allergies (Only)
+                      </label> */}
+                  <div className="form-group pt-1">
+                    <input
+                      value={x.foodAllergy}
+                      data-index={i}
+                      onChange={handleObjectNameChange()}
+                      // onChange={handleChange({student: 'name'})}
+                      type="text"
+                      className="form-control"
+                      placeholder="Food Allergies (Only)"
+                    />
+                  </div>
+                  {/* <hr /> */}
                   <div className="form-group pt-1">
                     <select
                       value={x.schoolName}
@@ -512,8 +771,10 @@ const Profile = ({ user, token }) => {
                       <option value="MCMS">Medea Creek Middle School</option>
                       <option value="OPHS">Oak Park High School</option>
                       <option value="OVHS">Oak View High School</option>
+                      <option value="NON">Non OPUSD</option>
                     </select>
                   </div>
+
                   {/* <div className="form-group pt-1">
                       <input
                         value={students.student}
@@ -530,7 +791,24 @@ const Profile = ({ user, token }) => {
                     {addStudentGroup(i)}
                   </div>
                   <div key={2} className="">
-                    {addTeacher(i)}
+                    {x.schoolName === 'BES' && addBESTeacher(i, x)}
+                    {x.schoolName === 'OHES' && addOHESTeacher(i, x)}
+                    {x.schoolName === 'ROES' && addROESTeacher(i, x)}
+                    {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
+                    {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
+                    {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
+                    {x.schoolName === 'NON' &&  <div className="form-group pt-1">
+                    <input
+                      value={x.age}
+                      data-index={i}
+                      onChange={handleObjectAgeChange()}
+                      // onChange={handleChange({student: 'name'})}
+                      type="text"
+                      className="form-control"
+                      placeholder="Age"
+                      required={true}
+                    />
+                  </div> }
                   </div>
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>
@@ -610,7 +888,9 @@ const Profile = ({ user, token }) => {
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
               {/* + "col-md-6 offset-md-3 subcard" */}
-              <h4 className={'text-muted ' + styles.title}>Register Students for Meal Requests</h4>
+              <h4 className={'text-muted ' + styles.title}>
+                Register Students for Meal Requests
+              </h4>
               <br />
               {registerForm()}
               {/* {success && showSuccessMessage(success)}

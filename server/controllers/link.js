@@ -73,6 +73,30 @@ exports.create = (req, res) => {
 
     // if new link posted has a category the user has in profile we send an email. Change to categories posted where categories will be weekly menu.
 
+    // // if new blog post with a-group is posted this will email users in a group (i think)
+    // User.find({ students: { group: 'a-group' } }).exec((err, users) => {
+    //   if (err) {
+    //     throw new Error(err);
+    //   } else {
+    //     data.categories = result;
+
+    //     for (let i = 0; i < users.length; i++) {
+    //       const params = linkPublishedParams(users[i].email, data); // email mod
+    //       const sendEmail = ses.sendEmail(params).promise();
+
+    //       sendEmail
+    //         .then((success) => {
+    //           console.log('email submitted to SES', success);
+    //           return;
+    //         })
+    //         .catch((failure) => {
+    //           console.log('error on email submitted to SES', failure);
+    //           return;
+    //         });
+    //     }
+    //   }
+    // });
+
     // User.find({ categories: { $in: categories } }).exec((err, users) => {
     //   if (err) {
     //     throw new Error(err);
@@ -241,23 +265,22 @@ exports.listByDate = (req, res) => {
 exports.read = (req, res) => {
   const { id } = req.params;
   Link.findOne({ _id: id })
-  .populate({
-    path: 'postedBy',
-    select:
-      '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
-    populate: {
-      path: 'students',
-      populate: { path: 'teacher group', select: '-_id name slug' },
-    },
-  })
-  .exec((err, data) => {
-    if (err) {
-      return res.status(400).json({
-        error: 'Error finding link',
-      });
-    }
-    res.json(data);
-  });
+    .populate({
+      path: 'postedBy',
+      select:
+        '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
+      populate: {
+        path: 'students',
+      },
+    })
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Error finding link',
+        });
+      }
+      res.json(data);
+    });
 };
 
 exports.update = (req, res) => {
@@ -352,15 +375,15 @@ exports.popular = (req, res) => {
 
 exports.all = (req, res) => {
   Link.find()
-  .populate({
-    path: 'postedBy',
-    select:
-      '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
-    populate: {
-      path: 'students',
-      populate: { path: 'teacher group', select: '-_id name slug' },
-    },
-  })
+    .populate({
+      path: 'postedBy',
+      select:
+        '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
+      populate: {
+        path: 'students',
+        populate: { path: 'teacher group', select: '-_id name slug' },
+      },
+    })
     .sort({ clicks: -1 })
     // .limit(3)
     .exec((err, links) => {

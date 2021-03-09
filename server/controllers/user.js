@@ -6,7 +6,7 @@ exports.read = (req, res) => {
   .populate({
     
       path: 'students',
-      populate: { path: 'teacher group', select: '_id name slug' },
+      // populate: { path: 'group', select: '_id name slug' },
     
   })
   .exec((err, user) => {
@@ -23,7 +23,9 @@ exports.read = (req, res) => {
           '-salt -hashed_password -pickupCodeAdd -categories -role -username -updatedAt -__v -_id',
         populate: {
           path: 'students',
-          populate: { path: 'teacher group', select: '-_id name slug' },
+          // populate: { path: 'teacher' },
+          // populate: { path: 'group teacher', select: '-_id name slug' },
+          // populate: { path: 'teacher'},
         },
       })
       // .populate({

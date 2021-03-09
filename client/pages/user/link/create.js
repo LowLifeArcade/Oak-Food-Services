@@ -26,8 +26,10 @@ const Create = ({ token, user }) => {
         student: user.students[0]._id,
         studentName: user.students[0].name,
         schoolName: user.students[0].schoolName,
-        group: user.students[0].group.slug,
-        teacher: user.students[0].teacher.slug,
+        group: user.students[0].group,
+        teacher: user.students[0].teacher,
+        pickupOption: 'Breakfast and Lunch',
+        foodAllergy: user.students[0].foodAllergy,
         complete: false,
       },
     ],
@@ -59,7 +61,7 @@ const Create = ({ token, user }) => {
     pickupCodeAdd,
     pickupDate,
     mealRequest,
-    pickupOption,
+    // pickupOption,
     pickupTime,
     title,
     url,
@@ -93,6 +95,8 @@ const Create = ({ token, user }) => {
   //     })
   // }, [mealRequest[0]])
 
+  console.log(user.students[0].group);
+
   // change date
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDate: moment(pickupDate).format('l') });
@@ -103,24 +107,16 @@ const Create = ({ token, user }) => {
   // date.getDay() !== 2
 
   // meal request select
-  const handleSelectChange = (e, student, studentName, schoolName, group, teacher) => {
+  const handleSelectChange = (
+    e,
+    student,
+    studentName,
+    schoolName,
+    group,
+    teacher
+  ) => {
     let i = e.target.getAttribute('data-index');
-    {
-      // console.log(i);
-    }
 
-    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
-    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal.meal = e.target.value;
-    meal.student = student;
-    meal.studentName = studentName;
-    meal.group = group;
-    meal.teacher = teacher; 
-    meal.schoolName = schoolName// let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
-    meals[i] = meal; // puts meal[i] back into mealRequest array
-    // console.log(meal)
-    // meal.meal === 'Vegetarian' ? console.log('vege') : console.log('standard')
-    // console.log(meals[i])
     let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
     let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
 
@@ -128,21 +124,26 @@ const Create = ({ token, user }) => {
 
     let input = e.target.value;
     let frontCode = '';
+    let pickupOptionLO = '';
     switch (input) {
       case 'Vegetarian':
         frontCode = 'Vt';
-        // console.log('vege')
+        pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
       case 'Vegan':
         frontCode = 'Vg';
-        // console.log('vegan')
+        pickupOptionLO = 'Lunch Only';
         break;
       case 'GlutenFree':
         frontCode = 'Gf';
-        // console.log('gf')
+        pickupOptionLO = 'Lunch Only';
         break;
       case 'Standard':
         frontCode = '';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'None':
+        frontCode = 'None';
         // console.log('gf')
         break;
 
@@ -153,15 +154,17 @@ const Create = ({ token, user }) => {
 
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
-    // console.log(codes)
-    // let length = codes.length;
 
-    // // let newFrontCode = codes
-    // let newPickupCode = codes.join('') + '-' + user.userCode + '-0' + length;
+    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    meal.meal = e.target.value;
+    meal.student = student;
+    meal.studentName = studentName;
+    meal.group = group;
+    meal.teacher = teacher;
+    meal.pickupOption = pickupOptionLO;
 
-    // if(student[i]==='Group A') {
-
-    // }
+    meals[i] = meal; // puts meal[i] back into mealRequest array
 
     setState({
       ...state,
@@ -180,8 +183,15 @@ const Create = ({ token, user }) => {
   };
   console.log('code add', pickupCodeAdd);
   // console.log(state.pickupCodeAdd)
-// console.log(user)
-  const selectMealRequest = (i, student, studentName, schoolName, group, teacher) => (
+  // console.log(user)
+  const selectMealRequest = (
+    i,
+    student,
+    studentName,
+    schoolName,
+    group,
+    teacher
+  ) => (
     <>
       <div key={i} className="form-group">
         <div className="">
@@ -192,7 +202,14 @@ const Create = ({ token, user }) => {
             defaultValue={'Standard'}
             // defaultValue={state.mealRequest[0].meal}
             onChange={(e) =>
-              handleSelectChange(e, student, studentName, schoolName, group, teacher)
+              handleSelectChange(
+                e,
+                student,
+                studentName,
+                schoolName,
+                group,
+                teacher
+              )
             }
             className="form-control"
           >
@@ -202,6 +219,7 @@ const Create = ({ token, user }) => {
             <option value={'Vegetarian'}>Vegetarian</option>
             <option value={'Vegan'}>Vegan (lunch only)</option>
             <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+            <option value={'None'}>None</option>
           </select>
           <div className="p-2"></div>
         </div>
@@ -210,37 +228,70 @@ const Create = ({ token, user }) => {
   );
 
   // pickup options(all, breakfast only, lunch only) select
-  const handlePickupOption = (e) => {
+  const handlePickupOption = (i, e) => {
+    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    meal.pickupOption = e.target.value;
+
+    meals[i] = meal;
+
     setState({
       ...state,
-      pickupOption: e.target.value,
+      mealRequest: [...meals],
       buttonText: 'Request',
       success: '',
       error: '',
     });
   };
 
+  console.log('pickup option', mealRequest[0].pickupOption);
   const selectPickupOption = (i) => (
     <>
       <div key={i} className="form-group">
-        <div className="">
-          <select
-            type="select"
-            defaultValue={state.pickupOption.value}
-            // value='Breakfast and Lunch'
-            data-index={i}
-            onChange={(e) => handlePickupOption(e)}
-            className="form-control"
-          >
-            {' '}
-            <option selected value={'Breakfast and Lunch'}>
-              Breakfast and Lunch
-            </option>
-            <option value={'Breakfast Only'}>Breakfast Only</option>
-            <option value={'Lunch Only'}>Lunch Only</option>
-          </select>
-          <div className="p-2"></div>
-        </div>
+        {/* <div className=""> */}
+        <select
+          type="select"
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
+          // value='Breakfast and Lunch'
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {' '}
+          <option selected value={'Breakfast and Lunch'}>
+            Breakfast and Lunch
+          </option>
+          <option value={'Breakfast Only'}>Breakfast Only</option>
+          <option value={'Lunch Only'}>Lunch Only</option>
+          <option value={'Breakfast Distance Lunch Onsite'}>
+            Breakfast (Distance)/Lunch (Onsite)
+          </option>
+        </select>
+        <div className="p-2"></div>
+        {/* </div> */}
+      </div>
+    </>
+  );
+  const selectPickupLunchOnlyOption = (i) => (
+    <>
+      <div key={i} className="form-group">
+        {/* <div className=""> */}
+        <select
+          type="select"
+          defaultValue={state.mealRequest[i].pickupOption}
+          value="Breakfast and Lunch"
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {' '}
+          <option selected value={'Lunch Only'}>
+            Lunch Only
+          </option>
+        </select>
+        <div className="p-2"></div>
+        {/* </div> */}
       </div>
     </>
   );
@@ -340,15 +391,39 @@ const Create = ({ token, user }) => {
   // console.log(pickupCodeAdd)
 
   const submit = () => {
-    let length = pickupCodeAdd.length;
+    // mealRequest.forEach((meal) => {
+    //     if(meal.meal === 'None'){
+    //       // delete meal
+    //       console.log(meal)
+    //       mealRequest.splice(meal,1)
+    //     }
+    // })
+
+    const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
+    const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
+    console.log(mealRequestNew);
+    console.log('code to add array', newPickupCodeAdd);
+    // pickupCodeAdd.forEach((code) => {
+    //     if(code === 'None'){
+    //       // delete meal
+    //       console.log(code)
+    //       pickupCodeAdd.splice(code,1)
+    //     }
+    // })
+
+    let length = newPickupCodeAdd.length;
 
     // let newFrontCode = codes
-    let newPickupCode = pickupCodeAdd.join('') + '-' + user.userCode + '-0' + length;
+    let newPickupCode =
+      newPickupCodeAdd.join('') + '-' + user.userCode + '-0' + length;
 
-    setState({...state,
-      pickupCode: newPickupCode
-    })
-  }
+    setState({
+      ...state,
+      pickupCode: newPickupCode,
+      mealRequest: mealRequestNew,
+      pickupCodeAdd: newPickupCodeAdd,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -464,12 +539,12 @@ const Create = ({ token, user }) => {
           value={title}
         />
       </div> */}
-      <div className="form-group">
+      {/* <div className="form-group">
         <label htmlFor="" className="text-muted">
           Meal Options
         </label>
         {selectPickupOption()}
-      </div>
+      </div> */}
 
       <div className="form-group">
         <label htmlFor="" className="text-muted">
@@ -566,25 +641,29 @@ const Create = ({ token, user }) => {
                 {state.mealRequest.map((x, i) => {
                   return (
                     <>
-                      <h6 className="p-2">
-                        <label key={i} className="form-check-label text-muted">
-                          {/* Select Meal # {`${i + 1}`}  */}
+                      <div>
+                        <label key={i} className="text-muted">
                           Select meal for {`${state.students[i].name}`}
                         </label>
-                      </h6>
-                      {/* {console.log(x)}
-                    {console.log(mealRequest)} */}
-
+                      </div>
                       <div key={i} className="">
                         {selectMealRequest(
                           i,
                           state.students[i]._id,
                           state.students[i].name,
                           state.students[i].schoolName,
-                          state.students[i].group.slug,
-                          state.students[i].teacher.slug
+                          state.students[i].group,
+                          state.students[i].teacher
                         )}
                       </div>
+                      {x.meal === 'GlutenFree' || x.meal === 'Vegan'
+                        ? selectPickupLunchOnlyOption(i)
+                        : selectPickupOption(i)}
+                      {/* <div className="form-group"> */}
+                      {/* <label htmlFor="" className="text-muted">
+                          Meal Options
+                        </label> */}
+                      {/* </div> */}
                       {/* {console.log('student info', state.students[i])} */}
                     </>
                   );
@@ -599,8 +678,8 @@ const Create = ({ token, user }) => {
                             state.students[`${i + 1}`]._id,
                             state.students[`${i + 1}`].name,
                             state.students[`${i + 1}`].schoolName,
-                            state.students[`${i + 1}`].group.slug,
-                            state.students[`${i + 1}`].teacher.slug
+                            state.students[`${i + 1}`].group,
+                            state.students[`${i + 1}`].teacher
                           )
                         )
                       }

@@ -23,6 +23,10 @@ const categorySchema = new mongoose.Schema({
     min: 20,
     max: 2000000
   },
+  group: {
+    type: String,
+    required: true
+  },
   postedBy: {
     type: ObjectId,
     ref: 'User'

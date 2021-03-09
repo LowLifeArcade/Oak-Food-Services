@@ -73,9 +73,9 @@ const User = ({ user, token, l, userLinks }) => {
               {l.mealRequest.map((k, i) => (
                 <h6 className="">
                   {/* Meal {`${i + 1} `} - for  */}
-                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i].group.name === 'A Group' || l.postedBy.students[i].group.name === 'B Group'  ? <b>2 onsite {k.meal} meals </b> : <b>5 pickup {k.meal} meals </b>}
+                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i].group.name === 'a-group' || l.postedBy.students[i].group.name === 'b-group'  ? <b>2 onsite {k.meal} meals </b> : <b>5 pickup {k.meal} meals </b>}
                   <br></br>
-                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' - '+ l.postedBy.students[i].group.name} 
+                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' - '+ l.postedBy.students[i].group} 
                   {/* {console.log(i,l.postedBy.students[i]._id)} */}
                   {/* {console.log('meal req',k.meal)} */}
                 </h6>
@@ -96,7 +96,7 @@ const User = ({ user, token, l, userLinks }) => {
         </div>
 
         <div className=" pb-3 pt-3">
-          {l.postedBy.students ? null : <Link href={`/user/link/${l._id}`}>
+          {l.postedBy.students[i] === undefined  ? null : <Link href={`/user/link/${l._id}`}>
             <button className="badge btn btn-outline-warning text float-left">
               Edit Request
             </button>

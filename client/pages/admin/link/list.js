@@ -24,6 +24,7 @@ const Requests = ({ token }) => {
   const [loadmeals, setLoadmeals] = useState(false);
   const [orderStatus, setOrderStatus] = useState(Boolean);
   const [state, setState] = useState({
+
     pickupDateLookup: moment(new Date()).format('l'),
     // pickupDateLookup: moment(new Date()).format('l'),
     loadedUsers: [],
@@ -37,10 +38,11 @@ const Requests = ({ token }) => {
   const { pickupDateLookup, loadedUsers, orderStatusArray } = state;
   // console.log('orders per date in array', orderStatusArray);
   useEffect(() => {
-    // handleDateChange(pickupDateLookup);
-    setLoadmeals(!loadmeals);
+    // setLoadmeals(!loadmeals);
     loadUsers();
+    handleDateChange(pickupDateLookup);
   }, []);
+  console.log(pickupDateLookup)
 
   const loadUsers = async () => {
     const response = await axios.get(`${API}/user-list`, {
@@ -134,7 +136,7 @@ const Requests = ({ token }) => {
     { label: 'Last Name', key: 'postedBy.lastName' },
     { label: 'Email', key: 'postedBy.email' },
     { label: 'Students', key: 'postedBy.students[0].name' },
-    { label: 'Teacher', key: 'postedBy.students[0].teacher.name' },
+    // { label: 'Teacher', key: 'postedBy.students[0].teacher.name' },
   ];
   // console.log('requests by date', linksByDate);
   // const csvData = csvListOfLinks(state.pickupDateLookup);
@@ -412,7 +414,8 @@ const Requests = ({ token }) => {
                 < Calendar
                   onChange={(e) => onDateChange(e)}
                   tileDisabled={handleDisabledDates}
-                  // defaultValue={new Date()}
+                  // defaultValue={moment(new Date()).format('l')}
+                  value={new Date()}
                   // selectedValue={defaultValue}
                   // tileDisabled={(date, view) =>
                   //   yesterday.some(date =>

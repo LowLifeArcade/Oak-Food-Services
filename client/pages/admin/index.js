@@ -172,25 +172,25 @@ const Admin = ({ token, user }) => {
                   </a>
                 </Link>
               </li>
-              <li className="nav-item">
-                {/* potentially make Link an a tag if there are issues with css */}
+              {/* <li className="nav-item">
+
                 <Link href="/admin/group/create">
                   <a className="nav-link" href="">
                     Create Student Group
                   </a>
                 </Link>
-              </li>
+              </li> */}
               </li>
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link href="/admin/group/read">
                   <a className="nav-link" href="">
                     Edit Student Groups
                   </a>
                 </Link>
-              </li>
+              </li> */}
+              {/* 
               <li className="nav-item">
-                {/* potentially make Link an a tag if there are issues with css */}
                 <Link href="/admin/teacher/create">
                   <a className="nav-link" href="">
                     Create Teacher
@@ -204,7 +204,8 @@ const Admin = ({ token, user }) => {
                     Edit Teacher
                   </a>
                 </Link>
-              </li>
+              </li> 
+              */}
               <li className="nav-item">
                 <Link href="/user/link/mockCreate">
                   <a className="nav-link" href="">

@@ -65,7 +65,7 @@ exports.create = (req, res) => {
 
   // taking req.body name and making a slug for image name url i think
   const slug = slugify(name);
-  let category = new Category({ name, content, slug, postedBy });
+  let category = new Category({ name, content, slug, group, postedBy });
 
   if (image) {
     // image data
@@ -112,6 +112,30 @@ exports.create = (req, res) => {
       return res.json(success);
     });
   }
+
+   // if new blog post with a-group is posted this will email users in a group (i think)
+   User.find({ categories: { $in: group } }).exec((err, users) => {
+    if (err) {
+      throw new Error(err);
+    } else {
+      data.categories = result;
+
+      for (let i = 0; i < users.length; i++) {
+        const params = linkPublishedParams(users[i].email, data); // email mod
+        const sendEmail = ses.sendEmail(params).promise();
+
+        sendEmail
+          .then((success) => {
+            console.log('email submitted to SES', success);
+            return;
+          })
+          .catch((failure) => {
+            console.log('error on email submitted to SES', failure);
+            return;
+          });
+      }
+    }
+  });
 };
 
 // exports.create = (req, res) => {
