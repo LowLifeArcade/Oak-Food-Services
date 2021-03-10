@@ -33,10 +33,10 @@ exports.linkCreateValidator = [
   .not()
   .isEmpty()
   .withMessage('At least one meal required'),
-  check('pickupOption')
-  .not()
-  .isEmpty()
-  .withMessage('pick up option is required'),
+  // check('pickupOption')
+  // .not()
+  // .isEmpty()
+  // .withMessage('pick up option is required'),
   check('pickupTime')
   .not()
   .isEmpty()

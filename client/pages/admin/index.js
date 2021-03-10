@@ -213,6 +213,13 @@ const Admin = ({ token, user }) => {
                   </a>
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link href="/user/link/create">
+                  <a className="nav-link" href="">
+                    Create Order
+                  </a>
+                </Link>
+              </li>
 
               <li className="nav-item">
                 <Link href="/user/profile/update">

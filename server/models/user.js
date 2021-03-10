@@ -73,6 +73,9 @@ const userSchema = new mongoose.Schema(
         //   ref: 'Teacher',
         //   required: true
         // },
+        foodAllergy: {
+          type: String
+        },
         teacher:{
           type: String,
           required: true

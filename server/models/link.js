@@ -29,10 +29,19 @@ const linkSchema = new mongoose.Schema(
         schoolName: {
           type: String
         },
+        lastName: {
+          type: String
+        },
         group: {
           type: String
         },
         teacher: {
+          type: String
+        },
+        pickupOption: {
+          type: String
+        },
+        foodAllergy: {
           type: String
         },
         postedBy: {
@@ -45,12 +54,12 @@ const linkSchema = new mongoose.Schema(
       type: Boolean,
       required: false
     },
-    pickupOption: {
-      type: String,
-      trim: true,
-      required: true,
-      max: 256,
-    },
+    // pickupOption: {
+    //   type: String,
+    //   trim: true,
+    //   required: true,
+    //   max: 256,
+    // },
     pickupTime: {
       type: String,
       trim: true,

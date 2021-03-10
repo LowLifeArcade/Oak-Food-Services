@@ -13,7 +13,7 @@ import { isAuth } from '../helpers/auth';
 // refactor this into the admin only view
 const Home = ({ categories }) => {
   // move all of this CODE to admin page
-  const [popular, setPopular] = useState([]);
+  // const [popular, setPopular] = useState([]);
 
   // useEffect(() => {
   //   loadPopular();
@@ -91,7 +91,7 @@ const Home = ({ categories }) => {
             className="bg-white"
           >
             <Link
-            
+              
               href={`/links/${c.slug}`}
               style={{ textDecoration: 'none' }}
             >

@@ -22,9 +22,10 @@ const Create = ({ token, user }) => {
   const [state, setState] = useState({
     mealRequest: [
       {
-        meal: 'Standard',
+        meal: user.students[0].group === 'a-group' || user.students[0].group === 'b-group'  ? 'Onsite' :'Standard',
         student: user.students[0]._id,
         studentName: user.students[0].name,
+        lastName: user.lastName,
         schoolName: user.students[0].schoolName,
         group: user.students[0].group,
         teacher: user.students[0].teacher,
@@ -35,10 +36,11 @@ const Create = ({ token, user }) => {
     ],
     orderStatus: false,
     pickupCode: user.userCode + '-01',
+    pickupCodeInput: '',
     pickupCodeAdd: [''],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
-    pickupOption: 'Breakfast and Lunch',
-    pickUpTime: '',
+    // pickupOption: 'Breakfast and Lunch',
+    pickupTime: isAuth().role === 'admin' ? '11am-1pm' : '',
     mealWeek: '',
     buttonText: 'Request',
     // title: '',
@@ -51,12 +53,13 @@ const Create = ({ token, user }) => {
     // type: '',
     // medium: '',
   });
-
   const {
     studentName,
     onsiteMealRequest,
     pickupCode,
+    foodAllergy,
     orderStatus,
+    pickupCodeInput,
     students,
     pickupCodeAdd,
     pickupDate,
@@ -72,14 +75,21 @@ const Create = ({ token, user }) => {
     type,
     medium,
   } = state;
-  // console.log(user.students);
+
+  console.log('food allergy',mealRequest[0].foodAllergy);
   // load categories when component mounts useing useEffect
   useEffect(() => {
     // const timer = setTimeout()
     // loadCategories();
     // loadStudents()
     //  Router.push('user')
-    success === 'Request was created'
+    isAuth().role === 'admin'
+      ? success === 'Request was created'
+        ? setTimeout(() => {
+            Router.push('/admin');
+          }, 2000)
+        : Router.push('')
+      : success === 'Request was created'
       ? setTimeout(() => {
           Router.push('/user');
         }, 2000)
@@ -94,8 +104,6 @@ const Create = ({ token, user }) => {
   //       mealRequest1: {mealRequest: mealRequest[0].meal, student: mealRequest[0].student, complete: false },
   //     })
   // }, [mealRequest[0]])
-
-  console.log(user.students[0].group);
 
   // change date
   const onDateChange = (pickupDate) => {
@@ -113,7 +121,9 @@ const Create = ({ token, user }) => {
     studentName,
     schoolName,
     group,
-    teacher
+    teacher,
+    pickupOption,
+    foodAllergy
   ) => {
     let i = e.target.getAttribute('data-index');
 
@@ -142,6 +152,10 @@ const Create = ({ token, user }) => {
         frontCode = '';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
+      case 'Standard Onsite':
+        frontCode = 'Onsite';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
       case 'None':
         frontCode = 'None';
         // console.log('gf')
@@ -163,6 +177,7 @@ const Create = ({ token, user }) => {
     meal.group = group;
     meal.teacher = teacher;
     meal.pickupOption = pickupOptionLO;
+    meal.foodAllergy = foodAllergy;
 
     meals[i] = meal; // puts meal[i] back into mealRequest array
 
@@ -181,7 +196,7 @@ const Create = ({ token, user }) => {
     // setState({...state, pickupCode: user.userCode})
     // console.log(codes)
   };
-  console.log('code add', pickupCodeAdd);
+
   // console.log(state.pickupCodeAdd)
   // console.log(user)
   const selectMealRequest = (
@@ -190,7 +205,9 @@ const Create = ({ token, user }) => {
     studentName,
     schoolName,
     group,
-    teacher
+    teacher,
+    pickupOption,
+    foodAllergy
   ) => (
     <>
       <div key={i} className="form-group">
@@ -208,18 +225,65 @@ const Create = ({ token, user }) => {
                 studentName,
                 schoolName,
                 group,
-                teacher
+                teacher,
+                pickupOption,
+                foodAllergy
               )
             }
             className="form-control"
           >
             {' '}
-            <option value="">Choose an option</option>
+            <option disabled value="">Choose an option</option>
             <option value={'Standard'}>Standard</option>
             <option value={'Vegetarian'}>Vegetarian</option>
             <option value={'Vegan'}>Vegan (lunch only)</option>
             <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
             <option value={'None'}>None</option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+  const selectOnsiteMealRequest = (
+    i,
+    student,
+    studentName,
+    schoolName,
+    group,
+    teacher,
+    pickupOption,
+    foodAllergy
+  ) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            defaultValue={'Standard Onsite'}
+            value={'Standard Onsite'}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) =>
+              handleSelectChange(
+                e,
+                student,
+                studentName,
+                schoolName,
+                group,
+                teacher,
+                pickupOption,
+                foodAllergy
+              )
+            }
+            className="form-control"
+          >
+            {' '}
+            {/* <option value="">Choose an option</option> */}
+            <option value={'Standard Onsite'}>Standard (Onsite)</option>
+            <option value={'None'}>None</option>
+
           </select>
           <div className="p-2"></div>
         </div>
@@ -244,7 +308,6 @@ const Create = ({ token, user }) => {
     });
   };
 
-  console.log('pickup option', mealRequest[0].pickupOption);
   const selectPickupOption = (i) => (
     <>
       <div key={i} className="form-group">
@@ -264,15 +327,16 @@ const Create = ({ token, user }) => {
           </option>
           <option value={'Breakfast Only'}>Breakfast Only</option>
           <option value={'Lunch Only'}>Lunch Only</option>
-          <option value={'Breakfast Distance Lunch Onsite'}>
+          {/* <option value={'Breakfast Distance Lunch Onsite'}>
             Breakfast (Distance)/Lunch (Onsite)
-          </option>
+          </option> */}
         </select>
         <div className="p-2"></div>
         {/* </div> */}
       </div>
     </>
   );
+
   const selectPickupLunchOnlyOption = (i) => (
     <>
       <div key={i} className="form-group">
@@ -280,7 +344,7 @@ const Create = ({ token, user }) => {
         <select
           type="select"
           defaultValue={state.mealRequest[i].pickupOption}
-          value="Breakfast and Lunch"
+          value={state.mealRequest[i].pickupOption}
           data-index={i}
           onChange={(e) => handlePickupOption(i, e)}
           className="form-control"
@@ -288,6 +352,31 @@ const Create = ({ token, user }) => {
           {' '}
           <option selected value={'Lunch Only'}>
             Lunch Only
+          </option>
+        </select>
+        <div className="p-2"></div>
+        {/* </div> */}
+      </div>
+    </>
+  );
+  const selectPickupLunchOnsiteBreakfastOffsiteOption = (i) => (
+    <>
+      <div key={i} className="form-group">
+        {/* <div className=""> */}
+        <select
+          type="select"
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {' '}
+          <option selected value={'Lunch Only'}>
+            Lunch Only
+          </option>
+          <option value={'Lunch Onsite / Breakfast Pickup'}>
+            Lunch Onsite / Breakfast Pickup
           </option>
         </select>
         <div className="p-2"></div>
@@ -313,16 +402,17 @@ const Create = ({ token, user }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
+            value={pickupTime}
             data-index={i}
             onChange={(e) => handlePickupTimeChange(e)}
             className="form-control"
           >
             {' '}
-            <option value="">Choose an option</option>
+            <option disabled value="">Choose an option</option>
             <option value={'7am-9am'}>7am-9am</option>
             <option value={'11am-1pm'}>11am-1pm</option>
             <option value={'4pm-6pm'}>4pm-6pm</option>
+            <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
           </select>
           <div className="p-2"></div>
         </div>
@@ -331,18 +421,29 @@ const Create = ({ token, user }) => {
   );
 
   // add meal button
-  const addMeal = (student, studentName, schoolName, group, teacher) => {
+  const addMeal = (
+    student,
+    studentName,
+    schoolName,
+    group,
+    teacher,
+    pickupOption,
+    foodAllergy
+  ) => {
     setState({
       ...state,
       mealRequest: [
         ...mealRequest,
         {
-          meal: 'Standard',
+          meal: group === 'a-group' || group === 'b-group'  ? 'Onsite' :'Standard',
           student: student,
           studentName: studentName,
+          lastName: user.lastName,
           schoolName: schoolName,
           group: group,
           teacher: teacher,
+          pickupOption: pickupOption,
+          foodAllergy: foodAllergy,
           complete: false,
         },
       ],
@@ -400,22 +501,18 @@ const Create = ({ token, user }) => {
     // })
 
     const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
-    const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
-    console.log(mealRequestNew);
-    console.log('code to add array', newPickupCodeAdd);
-    // pickupCodeAdd.forEach((code) => {
-    //     if(code === 'None'){
-    //       // delete meal
-    //       console.log(code)
-    //       pickupCodeAdd.splice(code,1)
-    //     }
-    // })
+    const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None') ;
 
-    let length = newPickupCodeAdd.length;
+    let length = newPickupCodeAdd.length - mealRequest.filter((meal) => meal.meal === 'Onsite').length + mealRequest.filter((meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup').length;
 
     // let newFrontCode = codes
-    let newPickupCode =
-      newPickupCodeAdd.join('') + '-' + user.userCode + '-0' + length;
+    let newPickupCode = '';
+
+    isAuth().role === 'admin'
+      ? (newPickupCode =
+          newPickupCodeAdd.join('') + '-' + pickupCodeInput + '-0' + length)
+      : (newPickupCode =
+          newPickupCodeAdd.join('') + '-' + user.userCode + '-0' + length);
 
     setState({
       ...state,
@@ -425,23 +522,16 @@ const Create = ({ token, user }) => {
     });
   };
 
+  console.log(mealRequest)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.table({title, url, categories, type, medium})
-    // const toAddCode = user.userCode
-    // const newCode = user.userCode + '_0' + toString(mealRequest.length)
 
-    // let NewPickupCode = pickupCodeAdd + pickupCode
-
-    // pickupCode = NewPickupCode
-    // newCodeMaker()
-    // console.log(pickupCode)
     try {
       const response = await axios.post(
         `${API}/link`,
         {
           mealRequest,
-          pickupOption,
+          // pickupOption,
           pickupTime,
           pickupDate,
           username,
@@ -456,15 +546,49 @@ const Create = ({ token, user }) => {
           },
         }
       );
-      // const response2 = await axios.post(
-      //   `${API}/individual-link`,
-      //   {mealRequest},
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
+
+      setState({
+        ...state,
+        success: 'Request was created',
+        error: '',
+      });
+      // .then(Router.push('/user'))
+    } catch (error) {
+      console.log('LINK SUBMIT ERROR', error);
+      setState({ ...state, error: error.response.data.error });
+    }
+  };
+  const handleAdminSubmit = async (e) => {
+    e.preventDefault();
+    // console.table({title, url, categories, type, medium})
+    // const toAddCode = user.userCode
+    // const newCode = user.userCode + '_0' + toString(mealRequest.length)
+
+    // let NewPickupCode = pickupCodeAdd + pickupCode
+
+    // pickupCode = NewPickupCode
+    // newCodeMaker()
+    console.log(pickupCode);
+    try {
+      const response = await axios.post(
+        `${API}/mock-link`,
+        {
+          mealRequest,
+          // pickupOption,
+          pickupTime,
+          pickupDate,
+          username,
+          pickupCode,
+          pickupCodeAdd,
+          orderStatus,
+        },
+        // { title, url, categories, type, medium },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // reset state
       setState({
         ...state,
@@ -525,9 +649,20 @@ const Create = ({ token, user }) => {
     );
   };
 
+  const handleCodeChange = (e) => {
+    e.preventDefault;
+    setState({
+      ...state,
+      pickupCodeInput: e.target.value.toUpperCase(),
+    });
+  };
+  console.log(pickupCodeInput)
+
   // create form
   const submitLinkForm = (student) => (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
+    >
       {/* <div className="form-group">
         <label htmlFor="" className="text-muted">
           Title
@@ -599,22 +734,39 @@ const Create = ({ token, user }) => {
                   Meal Request for:{' '}
                   {pickupDate && moment(state.pickupDate).format('MMM Do')}{' '}
                 </h3>
-                {showSearch && (
-                  <Calendar
-                    onChange={(e) => onDateChange(e)}
-                    tileDisabled={handleDisabledDates}
-                    defaultValue={twoWeeksFromNow}
-                    // tileDisabled={(date, view) =>
-                    //   yesterday.some(date =>
-                    //      moment().isAfter(yesterday)
-                    //   )}
-                    // minDate={handlePastDate}
-                    minDate={twoWeeksFromNow}
-                    // minDate={new Date().getDate() + 14}
+                {isAuth().role === 'admin'
+                  ? showSearch && (
+                      <Calendar
+                        onChange={(e) => onDateChange(e)}
+                        tileDisabled={handleDisabledDates}
+                        // defaultValue={twoWeeksFromNow}
+                        // tileDisabled={(date, view) =>
+                        //   yesterday.some(date =>
+                        //      moment().isAfter(yesterday)
+                        //   )}
+                        // minDate={handlePastDate}
+                        // minDate={twoWeeksFromNow}
+                        // minDate={new Date().getDate() + 14}
 
-                    value={''}
-                  />
-                )}
+                        value={''}
+                      />
+                    )
+                  : showSearch && (
+                      <Calendar
+                        onChange={(e) => onDateChange(e)}
+                        tileDisabled={handleDisabledDates}
+                        defaultValue={twoWeeksFromNow}
+                        // tileDisabled={(date, view) =>
+                        //   yesterday.some(date =>
+                        //      moment().isAfter(yesterday)
+                        //   )}
+                        // minDate={handlePastDate}
+                        minDate={twoWeeksFromNow}
+                        // minDate={new Date().getDate() + 14}
+
+                        value={''}
+                      />
+                    )}
                 <br />
                 {/* // <input
                   // type="date"
@@ -636,6 +788,17 @@ const Create = ({ token, user }) => {
               </div>
             </div>
 
+            {isAuth().role === 'admin' && (
+              <div className=" form-group">
+                <input
+                  type="text"
+                  className=" form-control"
+                  placeholder="Enter a 4 digit User Code"
+                  onChange={(e) => handleCodeChange(e)}
+                />
+              </div>
+            )}
+
             <div className="row">
               <div className="col-md-12">
                 {state.mealRequest.map((x, i) => {
@@ -647,18 +810,47 @@ const Create = ({ token, user }) => {
                         </label>
                       </div>
                       <div key={i} className="">
-                        {selectMealRequest(
+                        {state.students[i].group === 'a-group' && selectOnsiteMealRequest(
                           i,
                           state.students[i]._id,
                           state.students[i].name,
                           state.students[i].schoolName,
                           state.students[i].group,
-                          state.students[i].teacher
+                          state.students[i].teacher,
+                          state.students[i].pickupOption,
+                          state.students[i].foodAllergy
                         )}
+                        {state.students[i].group === 'b-group' && selectOnsiteMealRequest(
+                          i,
+                          state.students[i]._id,
+                          state.students[i].name,
+                          state.students[i].schoolName,
+                          state.students[i].group,
+                          state.students[i].teacher,
+                          state.students[i].pickupOption,
+                          state.students[i].foodAllergy
+                        )}
+                        {state.students[i].group === 'distance-learning' && selectMealRequest(
+                          i,
+                          state.students[i]._id,
+                          state.students[i].name,
+                          state.students[i].schoolName,
+                          state.students[i].group,
+                          state.students[i].teacher,
+                          state.students[i].pickupOption,
+                          state.students[i].foodAllergy
+                        )
+                        }
                       </div>
-                      {x.meal === 'GlutenFree' || x.meal === 'Vegan'
+                      {state.students[i].group === 'distance-learning'?
+                      x.meal === 'GlutenFree' || x.meal === 'Vegan'
                         ? selectPickupLunchOnlyOption(i)
-                        : selectPickupOption(i)}
+                        : selectPickupOption(i)
+                        :
+                        selectPickupLunchOnsiteBreakfastOffsiteOption(i)
+                        
+                        
+                        }
                       {/* <div className="form-group"> */}
                       {/* <label htmlFor="" className="text-muted">
                           Meal Options
@@ -679,7 +871,9 @@ const Create = ({ token, user }) => {
                             state.students[`${i + 1}`].name,
                             state.students[`${i + 1}`].schoolName,
                             state.students[`${i + 1}`].group,
-                            state.students[`${i + 1}`].teacher
+                            state.students[`${i + 1}`].teacher,
+                            state.students[`${i + 1}`].pickupOption,
+                            state.students[`${i + 1}`].foodAllergy
                           )
                         )
                       }

@@ -20,7 +20,7 @@ const Profile = ({ user, token }) => {
     success: '',
     buttonText: 'Register',
     addButtonText: 'Add Student',
-    students: [{ name: '', schoolName: '', group: '', teacher: '', age: '' }],
+    students: [{ name: '', schoolName: '', group: '', teacher: '', foodAllergy: '', age: '' }],
     loadedCategories: [],
     categories: [], // categories selected by user for signup
     // categories: user.categories, // categories selected by user for signup
@@ -386,7 +386,6 @@ const Profile = ({ user, token }) => {
             // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
-
           >
             {' '}
             <option selected disabled value="">
@@ -414,7 +413,7 @@ const Profile = ({ user, token }) => {
       ...state,
       students: [
         ...students,
-        { name: '', schoolName: '', group: '', teacher: '' },
+        { name: '', schoolName: '', group: '', teacher: '', foodAllergy: '', age: '' },
       ],
     });
   };
@@ -524,7 +523,32 @@ const Profile = ({ user, token }) => {
       buttonText: 'Register',
     });
   };
-  
+
+  const handleObjectAllergyChange = (name) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    oneStudent.foodAllergy = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    students[i] = oneStudent; // puts meal[i] back into mealRequest array
+
+    // setState({
+    //   ...state,
+    //   student: [...students],
+    //   buttonText: 'Register',
+    //   success: '',
+    //   error: '',
+    // });
+
+    setState({
+      ...state,
+      students: [...students],
+      error: '',
+      success: '',
+      buttonText: 'Register',
+    });
+  };
+
   const handleObjectAgeChange = (age) => (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -600,7 +624,7 @@ const Profile = ({ user, token }) => {
           // email,
           // password,
           students,
-          categories
+          categories,
         },
         {
           headers: {
@@ -727,7 +751,7 @@ const Profile = ({ user, token }) => {
                       </label>
                     </div> */}
                     <input
-                      value={x.name}
+                      value={x.all}
                       data-index={i}
                       onChange={handleObjectNameChange()}
                       // onChange={handleChange({student: 'name'})}
@@ -744,7 +768,7 @@ const Profile = ({ user, token }) => {
                     <input
                       value={x.foodAllergy}
                       data-index={i}
-                      onChange={handleObjectNameChange()}
+                      onChange={handleObjectAllergyChange()}
                       // onChange={handleChange({student: 'name'})}
                       type="text"
                       className="form-control"
@@ -797,18 +821,20 @@ const Profile = ({ user, token }) => {
                     {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
                     {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
                     {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
-                    {x.schoolName === 'NON' &&  <div className="form-group pt-1">
-                    <input
-                      value={x.age}
-                      data-index={i}
-                      onChange={handleObjectAgeChange()}
-                      // onChange={handleChange({student: 'name'})}
-                      type="text"
-                      className="form-control"
-                      placeholder="Age"
-                      required={true}
-                    />
-                  </div> }
+                    {x.schoolName === 'NON' && (
+                      <div className="form-group pt-1">
+                        <input
+                          value={x.age}
+                          data-index={i}
+                          onChange={handleObjectAgeChange()}
+                          // onChange={handleChange({student: 'name'})}
+                          type="text"
+                          className="form-control"
+                          placeholder="Age"
+                          required={true}
+                        />
+                      </div>
+                    )}
                   </div>
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>

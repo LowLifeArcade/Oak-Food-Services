@@ -20,7 +20,7 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 exports.create = (req, res) => {
   const {
     mealRequest,
-    pickupOption,
+    // pickupOption,
     pickupTime,
     pickupDate,
     pickupCode,
@@ -32,7 +32,7 @@ exports.create = (req, res) => {
   // const slug = url;
   let link = new Link({
     mealRequest,
-    pickupOption,
+    // pickupOption,
     pickupTime,
     pickupDate,
     pickupCode,
@@ -238,7 +238,7 @@ exports.listByDate = (req, res) => {
         '-salt -hashed_password -categories -role -username -updatedAt -__v -_id',
       populate: {
         path: 'students',
-        populate: { path: 'teacher group', select: '-_id name slug' },
+        
       },
     })
     .select('-pickupCodeAdd -updatedAt')

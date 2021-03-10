@@ -18,31 +18,60 @@ const Requests = ({ token }) => {
   // const [allLinks, setAllLinks] = useState(links);
   const [completeDate, setCompleteDate] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [showStatus, setShowStatus] = useState(true);
+  // const [orderType, setOrderType] = useState(false)
   // const [limit, setLimit] = useState(linksLimit);
   const [skip, setSkip] = useState(0);
   // const [size, setSize] = useState(totalLinks);
   const [loadmeals, setLoadmeals] = useState(false);
   const [orderStatus, setOrderStatus] = useState(Boolean);
   const [state, setState] = useState({
-
     pickupDateLookup: moment(new Date()).format('l'),
     // pickupDateLookup: moment(new Date()).format('l'),
     loadedUsers: [],
     orderStatusArray: [],
+    allMealsArray: [],
     // loadMeals: false,
     search: '',
+    orderType: 'Pickup',
+    searchPickupTime: '',
+    linksByDateFiltered: [],
+    searchByStatus: '',
+    searchBySchool: '',
+    searchByGroup: '',
     error: '',
     success: '',
   });
   const [linksByDate, setLinksByDate] = useState([]);
-  const { pickupDateLookup, loadedUsers, orderStatusArray } = state;
-  // console.log('orders per date in array', orderStatusArray);
+  const [allMealsArray, setAllMealsArray] = useState([]);
+  // const [linksByDateFiltered, setLinksByDateFiltered] = useState([]);
+  const {
+    orderType,
+    // allMealsArray,
+    searchBySchool,
+    searchByGroup,
+    linksByDateFiltered,
+    pickupDateLookup,
+    loadedUsers,
+    searchByStatus,
+    orderStatusArray,
+    searchPickupTime,
+    search,
+  } = state;
+
   useEffect(() => {
     // setLoadmeals(!loadmeals);
     loadUsers();
     handleDateChange(pickupDateLookup);
   }, []);
-  console.log(pickupDateLookup)
+
+  useEffect(() => {
+    let allMealsArray2 = []
+    linksByDate.map((r, i) =>
+    r.mealRequest.map((meal) => allMealsArray2.push(meal)))
+    setAllMealsArray(allMealsArray2);
+
+  }, [linksByDate])
 
   const loadUsers = async () => {
     const response = await axios.get(`${API}/user-list`, {
@@ -53,17 +82,22 @@ const Requests = ({ token }) => {
   // change date
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDateLookup: moment(pickupDate).format('l') });
-    // console.log(pickupDateLookup);
     handleDateChange(pickupDate);
     setShowSearch(!showSearch);
-    // setLoadmeals(!loadMeals);
-    // return {
-    //   linksByDate: response.data,
-    //   // links: response.data,
-    //   totalLinksByDate: response.data.length,
-    //   // token,
-    // };
   };
+
+  // useEffect(() => {
+  //   setLinksByDateFiltered(
+  //     linksByDate
+  //     .filter((l) => l.pickupTime.includes(searchPickupTime))
+  //     .filter((l) => l.pickupTime != 'Cafeteria')
+  //     .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //     .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+  //     );
+  //     compileOrderStatusArray(pickupDateLookup);
+  // }, [searchByStatus, searchPickupTime, search])
+
+  
 
   const handleDateChange = async (pickupDate) => {
     const pickupDateLookup = moment(pickupDate).format('l');
@@ -73,26 +107,66 @@ const Requests = ({ token }) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setLinksByDate(response.data);
+    
     compileOrderStatusArray(pickupDate);
   };
 
   const compileOrderStatusArray = (pickupDate) => {
-    let linkArray = [];
-    linksByDate.map((l, i) => linkArray.push(l.orderStatus));
+    // let linkArray = [];
+    // linksByDate.map((l, i) => linkArray.push(l.orderStatus));
+    
     setState({
       ...state,
+      // searchPickupTime: '',
+      linksByDateFiltered: linksByDate,
       pickupDateLookup: pickupDate,
-      orderStatusArray: linkArray,
+      // orderStatusArray: linkArray,
     });
   };
-  console.log('compiled array', orderStatusArray);
+
+  // const pushAllMeals = () => {
+  //   // let allMealsArray = [];
+  //   // linksByDate.map((r, i) =>
+  //   //   r.mealRequest.map((meal) => allMealsArray.push(meal))
+  //   // );
+  //   setState({...state, allMealsArray: linksByDate.map((r, i) =>
+  //     r.mealRequest.map((meal) => allMealsArray.push(meal))
+  //   )})
+  // };
+  console.log('individual meals array',allMealsArray)
+  console.log('linksbydate meals array',linksByDate)
+
+  // const compileOrderStatusArrayOnSearch = () => {
+  //   let linkArray = [];
+  //   linksByDate
+  //     .filter((l) => l.pickupTime.includes(searchPickupTime))
+  //     .filter((l) => l.pickupTime != 'Cafeteria')
+  //     .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //     .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+  //     .map((l, i) => linkArray.push(l.orderStatus));
+  //   setState({
+  //     ...state,
+  //     // searchPickupTime: '',
+
+  //     orderStatusArray: linkArray,
+  //   });
+  // };
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
 
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
-  const handleSearch = (name) => (e) => {
+  // useEffect(() => {
+  //   compileOrderStatusArrayOnSearch()
+
+  // }, [search, searchByStatus, searchPickupTime])
+
+  const handleSearch = (name, search, searchPickupTime, searchByStatus) => (
+    e
+  ) => {
+    // handleLinksByDateFiltered(search, searchPickupTime, searchByStatus)
+    // listOfLinksSearch(search, searchPickupTime, searchByStatus)
     setState({
       ...state,
       [name]: e.target.value,
@@ -129,34 +203,59 @@ const Requests = ({ token }) => {
       // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
       .filter((l) => l.pickupDate === pickupDateLookup);
 
-  const csvData = linksByDate;
+  const csvOnsiteData = linksByDate;
+  const csvOffsiteData = allMealsArray;
+
   const headers = [
     { label: 'Code', key: 'pickupCode' },
-    { label: 'First Name', key: 'postedBy.name' },
-    { label: 'Last Name', key: 'postedBy.lastName' },
-    { label: 'Email', key: 'postedBy.email' },
-    { label: 'Students', key: 'postedBy.students[0].name' },
+    // { label: 'First Name', key: 'postedBy.name' },
+    // { label: 'Last Name', key: 'postedBy.lastName' },
+    // { label: 'Email', key: 'postedBy.email' },
+    // { label: 'Students', key: 'postedBy.students[0].name' },
     // { label: 'Teacher', key: 'postedBy.students[0].teacher.name' },
   ];
   // console.log('requests by date', linksByDate);
   // const csvData = csvListOfLinks(state.pickupDateLookup);
   // console.log('csvdata',csvListOfLinks(state.pickupDateLookup))
 
-  const confirmComplete = (e, l) => {
-    e.preventDefault();
-    // console.log('delete >', slug);
-    let answer = '';
-    l.orderStatus === 'false'
-      ? (answer = window.confirm('Mark this order as not completed?'))
-      : (answer = window.confirm('Mark this order as not completed?'));
-    if (answer) {
-      changeOrderStatus(e, l);
-      // console.log(orderStatus);
-      handleComplete(id, orderStatus);
+  // const confirmComplete = (e, l) => {
+  //   e.preventDefault();
+  //   // console.log('delete >', slug);
+  //   let answer = '';
+  //   l.orderStatus === 'false'
+  //     ? (answer = window.confirm('Mark this order as not completed?'))
+  //     : (answer = window.confirm('Mark this order as not completed?'));
+  //   if (answer) {
+  //     changeOrderStatus(e, l);
+  //     // console.log(orderStatus);
+  //     handleComplete(id, orderStatus);
+  //   }
+  // };
+
+  const handleComplete = async (id, orderStatus, mealRequest) => {
+    // console.log('order status', orderStatus);
+    // console.log('id', id);
+
+    try {
+      const response = await axios.put(
+        `${API}/link/admin/complete/${id}`,
+        { orderStatus, mealRequest },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log('MEAL COMPLETE SUCCESS', response);
+      // process.browser
+      // orderStatus === true ? process.browser && window.confirm('Order is complete') : null;
+      // setState({...state, })
+    } catch (error) {
+      console.log('ERROR MEAL CATEGORY', error.response.data.error);
     }
   };
 
-  const handleComplete = async (id, orderStatus, mealRequest) => {
+  const handleIndividualComplete = async (id, orderStatus, mealRequest) => {
     // console.log('order status', orderStatus);
     // console.log('id', id);
 
@@ -193,87 +292,286 @@ const Requests = ({ token }) => {
 
   const changeOrderStatus = (e, mealRequest) => {
     // e.preventDefault();
-    let i = e.target.getAttribute('data-index');
+    const id = e.target.getAttribute('data-index');
+    // const i = e.target.getAttribute('data-index')
 
     let requests = [...linksByDate];
-    let request = { ...requests[i] };
+    let requestById = '';
+    for (let i = 0; i < requests.length; i++) {
+      if (requests[i]._id === id) requestById = requests[i];
+    }
+
+    let request = { ...requestById };
+    // let request = { ...requests[i] };
     let answer = '';
+    // console.log('request',requestById)
+    // requests[i] = request;
 
-    requests[i] = request;
-
-    // order marks as complete even if i cancel which i need to fix
     request.orderStatus === false
       ? (answer = window.confirm('Mark this order as completed?'))
       : (answer = window.confirm('Mark this order as not completed?'));
     if (answer) {
       request.orderStatus =
         e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-      // handleIndividualOrderStatusChange(e, request);
-      // let orders = [...request.mealRequest]
 
-      let statuses = [...state.orderStatusArray];
-      let status = { ...statuses[i] };
-      status = request.orderStatus;
+      //         // handles orderStatusArray
+      //       let statuses = [...state.orderStatusArray];
+      //       let status = { ...statuses[id] };
+      //       status = request.orderStatus;
+      // console.log(answer)
+      //       statuses[id] = status;
 
-      statuses[i] = status;
+      // handle mealRequest status
+      // request.orderStatus = answer
+      for (let i = 0; i < requests.length; i++) {
+        if (requests[i]._id === id) requests[i] = request;
+      }
+      console.log(requests);
+      // requests[id] = request;
 
-      setState({ ...state, orderStatusArray: statuses });
-      // console.log('change order status', orderStatusArray)
-      // console.log('change order status meal', mealRequest)
-
-      request.mealRequest.forEach((mealRequest) => {
-        if (mealRequest.group === 'distant-learning') {
+      // handles individual meals orderstatus for every mealrequest
+      requests.forEach((mealRequest) => {
+        if (mealRequest.group === 'distance-learning') {
           mealRequest.complete = request.orderStatus;
         }
       });
-      // console.log(request.mealRequest.complete)
-      // console.log('request indvidual', mealRequest.group);
-      // request.mealRequest = orders
-      handleComplete(request._id, request.orderStatus, request.mealRequest);
+      console.log(request);
+      handleIndividualComplete(request._id, request.orderStatus, request.mealRequest);
       setLinksByDate(requests);
-      // console.log('request check', request.orderStatus);
+      // setState({ ...state, orderStatusArray: statuses });
     }
   };
 
-  const listOfLinks = (search) =>
+  
+  const changeIndividualOrderStatus = (e, mealRequest) => {
+    // e.preventDefault();
+    const id = e.target.getAttribute('data-index');
+    // const i = e.target.getAttribute('data-index')
+
+    let requests = [...allMealsArray];
+    let requestById = '';
+    for (let i = 0; i < requests.length; i++) {
+      if (requests[i]._id === id) requestById = requests[i];
+    }
+
+    let request = { ...requestById };
+    // let request = { ...requests[i] };
+    let answer = '';
+    // console.log('request',requestById)
+    // requests[i] = request;
+
+    request.complete === false
+      ? (answer = window.confirm('Mark this order as completed?'))
+      : (answer = window.confirm('Mark this order as not completed?'));
+    if (answer) {
+      request.complete =
+        e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+      //         // handles orderStatusArray
+      //       let statuses = [...state.orderStatusArray];
+      //       let status = { ...statuses[id] };
+      //       status = request.orderStatus;
+      // console.log(answer)
+      //       statuses[id] = status;
+
+      // handle mealRequest status
+      // request.orderStatus = answer
+
+      // putting request back into shallow copy
+      for (let i = 0; i < requests.length; i++) {
+        if (requests[i]._id === id) requests[i] = request;
+      }
+      // console.log(requests);
+      // requests[id] = request;
+
+      // handles individual meals orderstatus for every mealrequest
+      requests.forEach((mealRequest) => {
+        if (mealRequest.group === 'distance-learning') {
+          mealRequest.complete = request.orderStatus;
+        }
+      });
+      console.log(request);
+      handleComplete(request._id, request.complete, request.mealRequest);
+      setAllMealsArray(requests);
+      // setState({ ...state, orderStatusArray: statuses });
+    }
+  };
+
+
+  // const pickupTimeChecker = (l) => (
+  //   l.pickupTime.includes(searchPickupTime)
+  // )
+  // console.log(searchByStatus)
+
+  // const listOfLinksSearch = (search, searchPickupTime, searchByStatus) => {
+  //   let linkArray = [];
+  //   linksByDate
+  //     .filter((l) => l.pickupTime.includes(searchPickupTime))
+  //     .filter((l) => l.pickupTime != 'Cafeteria')
+  //     .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //     .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+  //     .map((l, i) => linkArray.push(l.orderStatus),
+
+  //     // console.log('array search',i)
+  //     )
+  //     ;
+  //   setState({
+  //     ...state,
+  //     // searchPickupTime: '',
+
+  //     orderStatusArray: linkArray,
+  //   });
+  // }
+  // console.log('after search', orderStatusArray)
+
+  // const handleLinksByDateFiltered = (search, searchPickupTime, searchByStatus) => {
+  //   let linkArray = []
+  //   linksByDate
+  //   .filter((l) => l.pickupTime.includes(searchPickupTime))
+  //   .filter((l) => l.pickupTime != 'Cafeteria')
+  //   .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //   .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+  //   .map((l,i) => linkArray.push(l))
+  //   setState({
+  //     ...state,
+  //     // searchPickupTime: '',
+
+  //     linksByDateFiltered: linkArray,
+  //   });
+  // }
+
+  const listOfLinks = (search, searchPickupTime, searchByStatus) => (
     // linksByDate
     //   .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
     //   // .filter((l) => l.pickupDate === pickupDateLookup)
     //   .map((l, i) =>
     //     setState({ ...state, orderStatusArray: [...l.orderStatus] })
     //   );
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          {/* <th scope="col">#</th> */}
+          <th scope="col">Code</th>
+          <th scope="col">Student Info</th>
+          {/* <th scope="col">date</th> */}
+          {showStatus && <th scope="col">Status</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {linksByDate
+          .filter((l) => l.pickupTime.includes(searchPickupTime))
+          .filter((l) => l.pickupTime != 'Cafeteria')
+          .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+          .filter((l) =>
+            l.pickupCode.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((l, i) => (
+            <>
+              <tr key={i}>
+                {/* <th scope="col">1</th> */}
+                <td>{l.pickupCode}</td>
+                <td>
+                  {/* {console.log('order status', l.orderStatus)} */}
+                  {l.postedBy === null
+                    ? 'user deleted'
+                    : l.postedBy.students.map((s) => (
+                        <>
+                          {s.name} {s.schoolName} {','}{' '}
+                        </>
+                      ))}
+                </td>
+                {showStatus && (
+                  <td>
+                    <input
+                      data-index={l._id}
+                      type="checkbox"
+                      onChange={(e) => changeOrderStatus(e, l)}
+                      // checked={orderStatusArray[i]}
+                      checked={l.orderStatus}
+                    ></input>
+                    {/* {console.log('l',l)} */}
+                  </td>
+                )}
+              </tr>
+            </>
+          ))}
+      </tbody>
+    </table>
+  );
 
-    linksByDate
-      .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
-      // .filter((l) => l.pickupDate === pickupDateLookup)
-      .map((l, i) => (
-        <>
-          <tr key={i}>
-            {/* <th scope="col">1</th> */}
-            <td>{l.pickupCode}</td>
-            <td>
-              {l.postedBy.students.map((s) => (
-                <>
-                  {s.name} {s.schoolName} {','}{' '}
-                </>
-              ))}
-            </td>
-            {/* <td>{moment(l.pickupDate).format('MMM Do')}</td> */}
-            <td>
-              <input
-                data-index={i}
-                type="checkbox"
-                onChange={(e) => changeOrderStatus(e, l)}
-                defaultChecked={l.orderStatus}
-                checked={orderStatusArray[i]}
-              ></input>
-            </td>
-          </tr>
-          {/* {setState({ ...state, orderStatusArray: [...l.orderStatus] })} */}
+  
 
-          {/* {setState({...state, orderStatusArray: [...orderStatusArray, l.orderStatus]})} */}
-        </>
-      ));
+  const listOfOnsiteLinks = (search, searchPickupTime, searchByStatus) => (
+    // linksByDate
+    //   .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+    //   // .filter((l) => l.pickupDate === pickupDateLookup)
+    //   .map((l, i) =>
+    //     setState({ ...state, orderStatusArray: [...l.orderStatus] })
+    //   );
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          {/* <th scope="col">#</th> */}
+          {/* <th scope="col">Code</th> */}
+          <th scope="col">Student</th>
+          <th scope="col">Teacher</th>
+          <th scope="col">Group</th>
+          {showStatus && <th scope="col">Status</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {/* {console.log('before filters array',allMealsArray[0].schoolName)} */}
+        {allMealsArray
+          // .filter((l) => l.pickupTime.includes(searchPickupTime))
+          // filter by schoolName
+          // filter by group
+          // filter by teacher
+          .filter((l,i) => l.group.includes(searchByGroup))
+          .filter((l,i) => l.schoolName.includes(searchBySchool))
+          // .filter((l) => l.complete.toString().includes(searchByStatus))
+          
+          .map((l, i) => (
+            <>
+            {/* {console.log(l.schoolName)} */}
+              <tr key={i}>
+                {/* <th scope="col">1</th> */}
+                <td>
+                  {/* {console.log('order status', l.orderStatus)} */}
+                  {l.postedBy === null
+                    ? 'user deleted'
+                    : l.studentName +
+                      ' ' +
+                      l.lastName}
+                </td>
+                <td>
+                  {l.postedBy === null
+                    ? 'user deleted'
+                    : l.teacher}
+                </td>
+                <td>
+                  {l.postedBy === null
+                    ? 'none'
+                    : l.group === 'a-group'
+                    ? 'A'
+                    : l.group === 'b-group' ? 'B' : 'Distance'}
+                </td>
+                {showStatus && (
+                  <td>
+                    <input
+                      data-index={l._id}
+                      type="checkbox"
+                      onChange={(e) => changeIndividualOrderStatus(e, l)}
+                      checked={l.complete}
+                    ></input>
+                  </td>
+                )}
+              </tr>
+            </>
+          ))}
+      </tbody>
+    </table>
+  );
+
   // linksByDate
   // .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
   // // .filter((l) => l.pickupDate === pickupDateLookup)
@@ -411,11 +709,12 @@ const Requests = ({ token }) => {
           <div className="lead alert alert-seconary pb-3">
             <div className="form-group">
               {showSearch && (
-                < Calendar
+                <Calendar
                   onChange={(e) => onDateChange(e)}
                   tileDisabled={handleDisabledDates}
                   // defaultValue={moment(new Date()).format('l')}
                   value={new Date()}
+                  // value={state.pickupDateLookup}
                   // selectedValue={defaultValue}
                   // tileDisabled={(date, view) =>
                   //   yesterday.some(date =>
@@ -434,39 +733,157 @@ const Requests = ({ token }) => {
               >
                 Select Date
               </button>
-              <CSVLink className="float-right" data={csvData} headers={headers}>
+
+              {orderType === 'Onsite' && <CSVLink className="float-right" data={csvOnsiteData}>
                 Download csv
-              </CSVLink>
+              </CSVLink>}
+              {orderType === 'Onsite' && <CSVLink className="float-right" data={csvOffsiteData}>
+                Download csv
+              </CSVLink>}
+              {/* <CSVLink className="float-right" data={csvData} headers={headers}>
+                Download csv
+              </CSVLink> */}
 
               <br />
               <br />
               <input
-                className="form-control"
-                onChange={handleSearch('search')}
+                className="form-control pb-4"
+                onChange={handleSearch(
+                  'search',
+                  state.search,
+                  searchPickupTime,
+                  searchByStatus
+                )}
                 value={state.search}
                 type="text"
                 className="form-control"
                 placeholder="Search requests by pickup code"
               ></input>
-              {/* {renderHTML(category.content || '')} */}
+              <br />
+              <select
+                className="btn btn-outline-primary"
+                onChange={handleSearch('orderType')}
+              >
+                <option value="Pickup">Pickup</option>
+                <option value="Onsite">Onsite</option>
+              </select>
+              {orderType === 'Pickup' && (
+                <select
+                  className="btn btn-outline-primary"
+                  onChange={handleSearch(
+                    'searchPickupTime',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.searchPickupTime}
+                  type="text"
+                  // className="form-control"
+                  id=""
+                >
+                  <option disabled value="">
+                    Time
+                  </option>
+                  <option value="7am-9am">7-9am</option>
+                  <option value="11am-1pm">11-1pm</option>
+                  <option value="4pm-6pm">4-6pm</option>
+                  {/* <option value="Cafeteria">Onsite</option> */}
+                </select>
+              )}
+              {orderType === 'Onsite' && (
+                <select
+                  className="btn btn-outline-primary"
+                  onChange={handleSearch(
+                    'searchBySchool',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.searchBySchool}
+                  type="text"
+                  // className="form-control"
+                  id=""
+                >
+                  <option value="">Choose School</option>
+                  <option value="BES">Brookside Elementary School</option>
+                  <option value="OHES">Oak Hills Elementary School</option>
+                  <option value="ROES">Red Oak Elementary School</option>
+                  <option value="MCMS">Medea Creek Middle School</option>
+                  <option value="OPHS">Oak Park High School</option>
+                  <option value="OVHS">Oak View High School</option>
+                  <option value="NON">Non OPUSD</option>
+                </select>
+              )}
+              {orderType === 'Onsite' && (
+                <select
+                  className="btn btn-outline-primary"
+                  onChange={handleSearch(
+                    'searchByGroup',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.searchByGroup}
+                  type="text"
+                  // className="form-control"
+                  id=""
+                >
+                  <option value="">All</option>
+                  <option value="a-group">A</option>
+                  <option value="b-group">B</option>
+                </select>
+              )}
+              <div className="p-2"></div>
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => setShowStatus(!showStatus)}
+              >
+                Status
+              </button>
+              {showStatus && (
+                <select
+                  className="btn btn-outline-primary"
+                  onChange={handleSearch(
+                    'searchByStatus',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.searchByStatus}
+                  type="text"
+                  // className="form-control"
+                  id=""
+                >
+                  <option disabled value="0">
+                    Status
+                  </option>
+                  <option value="">All</option>
+                  <option value={false}>Open</option>
+                  <option value={true}>Closed</option>
+                </select>
+              )}
             </div>
           </div>
         </div>
       </div>
       <br />
 
-      <table className="table table-striped">
+      {/* <table className="table table-striped">
         <thead>
           <tr>
-            {/* <th scope="col">#</th> */}
             <th scope="col">Code</th>
             <th scope="col">Student Info</th>
-            {/* <th scope="col">date</th> */}
             <th scope="col">Status</th>
           </tr>
         </thead>
-        <tbody>{listOfLinks(state.search)}</tbody>
-      </table>
+        <tbody> */}
+
+      {/* {listOfLinksSearch(state.search, searchPickupTime, searchByStatus)} */}
+      {orderType === 'Pickup'
+        ? listOfLinks(state.search, searchPickupTime, searchByStatus)
+        : listOfOnsiteLinks(state.search, searchPickupTime, searchByStatus)}
+      {/* </tbody>
+      </table> */}
       {/* <div className="row">
         <div className="col-md-12">{listOfLinks(state.search)}</div>
       </div> */}

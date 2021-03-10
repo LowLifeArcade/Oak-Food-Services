@@ -24,7 +24,7 @@ const User = ({ user, token, l, userLinks }) => {
     // console.log('students!', user.students);
     user.students.length === 0
       ? Router.push('/user/profile/add')
-      : console.log("useEffect not active");
+      : console.log('useEffect not active');
   }, []);
 
   const handleDelete = async (id) => {
@@ -47,70 +47,100 @@ const User = ({ user, token, l, userLinks }) => {
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <>
-      {console.log('links',l)}
-      {<div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+        {console.log('links', l)}
+        {
+          <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+            <h4>
+              {l.orderStatus && (
+                <b className="text-danger">
+                  picked up on {moment(l.updatedAt).format('MMM Do')}
+                </b>
+              )}
+            </h4>
 
-        <h4>
-          {l.orderStatus && (
-            <b className="text-danger">
-              picked up on {moment(l.updatedAt).format('MMM Do')}
-            </b>
-          )}
-        </h4>
-
-        <h4 className="pt-1 pb-1">
-          Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
-        </h4>
-        <h4>
-          <b>Code: {l.pickupCode}</b>
-        </h4>
-        <p></p>
-        <div className="p-2">
-          <h5 className="pb-1">
-            {l.mealRequest.length} weekly meal
-            {l.mealRequest.length > 1 && 's'}:<p></p>
-            <div className="p-3">
-              {l.mealRequest.map((k, i) => (
-                <h6 className="">
-                  {/* Meal {`${i + 1} `} - for  */}
-                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i].group.name === 'a-group' || l.postedBy.students[i].group.name === 'b-group'  ? <b>2 onsite {k.meal} meals </b> : <b>5 pickup {k.meal} meals </b>}
-                  <br></br>
-                  {l.postedBy.students[i] === undefined ? 'user deleted' : l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' - '+ l.postedBy.students[i].group} 
-                  {/* {console.log(i,l.postedBy.students[i]._id)} */}
-                  {/* {console.log('meal req',k.meal)} */}
-                </h6>
-              ))}
+            <h4 className="pt-1 pb-1">
+              Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
+            </h4>
+            <h4>
+              <b>Code: {l.pickupCode}</b>
+            </h4>
+            <p></p>
+            <div className="p-2">
+              <h5 className="pb-1">
+                {l.mealRequest.length} weekly meal
+                {l.mealRequest.length > 1 && 's'}:<p></p>
+                <div className="p-3">
+                  {l.mealRequest.map((k, i) => (
+                    <h6 className="">
+                      {console.log(k)}
+                      {/* Meal {`${i + 1} `} - for  */}
+                      {k.student === undefined ? (
+                        'user deleted'
+                      ) : k.group === 'a-group' ||
+                        k.group === 'b-group' ? (
+                        k.pickupOption === 'Lunch Onsite / Breakfast Pickup' ? (
+                          <>
+                            <b>2 onsite meals and </b>
+                            <br />
+                            <b>5 pickup breakfast meals</b>{' '}
+                          </>
+                        ) : (
+                          <b>2 onsite meals </b>
+                        )
+                      ) : (
+                        <b>5 pickup {k.meal} meals </b>
+                      )}
+                      <br></br>
+                      {k.student === undefined
+                        ? 'user deleted'
+                        : l.postedBy.students.filter((student) =>
+                            student._id.includes(k.student)
+                          ) &&
+                          k.studentName +
+                            ' - ' +
+                            k.group}
+                      {/* {console.log(i,l.postedBy.students[i]._id)} */}
+                      {/* {console.log('meal req',k.meal)} */}
+                      <hr />
+                    </h6>
+                  ))}
+                </div>
+              </h5>
+              {/* {console.log(l.mealRequest)} */}
+              {l.pickupTime === 'Cafeteria' ?  <h2 className=" " style={{ fontSize: '16px' }}>
+                Pickup is on campus at the student <b>{l.pickupTime} </b> during school hours
+              </h2> : <h2 className=" " style={{ fontSize: '16px' }}>
+                Pickup for your order is between <b>{l.pickupTime} </b> on
+                Friday 
+              </h2>}
             </div>
-          </h5>
-          {/* {console.log(l.mealRequest)} */}
-          <h2 className=" " style={{ fontSize: '16px' }}>
-            Pickup for your order is between <b>{l.pickupTime} </b> on Friday
-          </h2>
-        </div>
-        <div className="pt-1 ">
-          <span className="">
-            {' '}
-            {moment(l.createdAt).fromNow()} by{' '}
-            {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
-          </span>
-        </div>
+            <div className="pt-1 ">
+              <span className="">
+                {' '}
+                {moment(l.createdAt).fromNow()} by{' '}
+                {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
+              </span>
+            </div>
 
-        <div className=" pb-3 pt-3">
-          {l.postedBy.students[i] === undefined  ? null : <Link href={`/user/link/${l._id}`}>
-            <button className="badge btn btn-outline-warning text float-left">
-              Edit Request
-            </button>
-          </Link>}
-          <Link href="">
-            <button
-              onClick={(e) => confirmDelete(e, l._id)}
-              className="badge text-danger btn btn-outline-warning float-right"
-            >
-              Delete
-            </button>
-          </Link>
-        </div>
-      </div>}
+            <div className=" pb-3 pt-3">
+              {l.postedBy.students[i] === undefined ? null : (
+                <Link href={`/user/link/${l._id}`}>
+                  <button className="badge btn btn-outline-warning text float-left">
+                    Edit Request
+                  </button>
+                </Link>
+              )}
+              <Link href="">
+                <button
+                  onClick={(e) => confirmDelete(e, l._id)}
+                  className="badge text-danger btn btn-outline-warning float-right"
+                >
+                  Delete
+                </button>
+              </Link>
+            </div>
+          </div>
+        }
       </>
     ));
 
