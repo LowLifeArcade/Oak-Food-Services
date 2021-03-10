@@ -198,16 +198,35 @@ const Requests = ({ token }) => {
     }
   };
 
-  const csvListOfLinks = (search) =>
-    linksByDate
-      // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
-      .filter((l) => l.pickupDate === pickupDateLookup);
+  // const csvListOfLinks = (search) =>
+  //   linksByDate
+  //     // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+  //     // .filter((l) => l.pickupDate === pickupDateLookup);
 
-  const csvOnsiteData = linksByDate;
-  const csvOffsiteData = allMealsArray;
+  // const csvOnsiteData = linksByDate;
+  // const csvOffsiteData = allMealsArray;
 
-  const headers = [
+  const onsiteHeaders = [
+    { label: 'School Name', key: 'schoolName' },
+    { label: 'Student Name', key: 'studentName' },
+    { label: 'Last Name', key: 'lastName' },
+    { label: 'Teacher', key: 'teacher' },
+    { label: 'Group', key: 'group' },
+    { label: 'Food Allergy', key: 'foodAllergy' },
+    { label: 'Complete', key: 'complete' },
+    // { label: 'First Name', key: 'postedBy.name' },
+    // { label: 'Last Name', key: 'postedBy.lastName' },
+    // { label: 'Email', key: 'postedBy.email' },
+    // { label: 'Students', key: 'postedBy.students[0].name' },
+    // { label: 'Teacher', key: 'postedBy.students[0].teacher.name' },
+  ];
+
+  const pickupHeaders = [
     { label: 'Code', key: 'pickupCode' },
+    { label: 'Pickup Time', key: 'pickupTime' },
+    { label: 'Pickup Date', key: 'pickupDate' },
+    { label: 'First Name', key: 'postedBy.name' },
+    { label: 'Last Name', key: 'postedBy.lastName' },
     // { label: 'First Name', key: 'postedBy.name' },
     // { label: 'Last Name', key: 'postedBy.lastName' },
     // { label: 'Email', key: 'postedBy.email' },
@@ -734,10 +753,11 @@ const Requests = ({ token }) => {
                 Select Date
               </button>
 
-              {orderType === 'Onsite' && <CSVLink className="float-right" data={csvOnsiteData}>
+              {orderType === 'Onsite' ? <CSVLink className="float-right" headers={onsiteHeaders} data={allMealsArray}>
                 Download csv
-              </CSVLink>}
-              {orderType === 'Onsite' && <CSVLink className="float-right" data={csvOffsiteData}>
+              </CSVLink>
+              :
+              <CSVLink className="float-right" headers={pickupHeaders}data={linksByDate}>
                 Download csv
               </CSVLink>}
               {/* <CSVLink className="float-right" data={csvData} headers={headers}>

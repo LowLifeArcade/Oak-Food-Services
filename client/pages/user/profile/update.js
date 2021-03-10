@@ -24,19 +24,17 @@ const Profile = ({ user, token }) => {
     loadedCategories: [],
     categories: user.categories, // categories selected by user for signup
     groups: [],
+    teachers: [],
     loadedGroups: [],
     loadedTeachers: [],
   });
   console.log('on load', user.students);
 
-  // useEffect(() => {
-  //   isAuth() && Router.push('/');
-  // }, []);
-
   const {
     addButtonText,
     students,
     name,
+    teachers,
     lastName,
     email,
     password,
@@ -65,17 +63,12 @@ const Profile = ({ user, token }) => {
       : null;
   }, [success]);
 
-  // const loadCategories = async () => {
-  //   const response = await axios.get(`${API}/categories`);
-  //   setState({ ...state, loadedCategories: response.data });
-  // };
+  
 
   const loadGroups = async () => {
     const response = await axios.get(`${API}/groups`);
     const response2 = await axios.get(`${API}/teachers`);
-    // console.log(response.data)
-    // setState({ ...state, loadedTeachers: response2.data });
-    // console.log(response.data)
+    
     setState({
       ...state,
       loadedTeachers: response2.data,
@@ -83,7 +76,7 @@ const Profile = ({ user, token }) => {
     });
   };
   // console.log(loadedTeachers)
-  // console.log(loadedGroups)
+  console.log('loaded groups', loadedGroups);
 
   // student add select THIS is where things are going to be tricky
   const handleSelectChange = (e) => {
@@ -100,9 +93,7 @@ const Profile = ({ user, token }) => {
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
-    // setState({...state,
-    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
-    // console.log(e.target.getAttribute("data-index"))
+   
   };
 
   // student add select THIS is where things are going to be tricky
@@ -120,23 +111,81 @@ const Profile = ({ user, token }) => {
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
-    // setState({...state,
-    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
-    // console.log(e.target.getAttribute("data-index"))
+  
   };
 
-  const addTeacher = (i, x) => (
+  // const addTeacher = (i, x) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <div className="">
+  //         <select
+  //           value={x.teacher}
+  //           data-index={i}
+  //           type="select"
+  //           onChange={(e) => handleSelectTeacherChange(e)}
+  //           // value={state.value}
+  //           // defaultValue={''}
+  //           defaultValue={x.teacher}
+  //           className="form-control"
+  //           required
+  //         >
+  //           {' '}
+  //           <option selected disabled value="">
+  //             Choose Teacher
+  //           </option>
+  //           {state.loadedTeachers.map((g, i) => {
+  //             return <option value={g._id}>{g.name}</option>;
+  //             // return <option value={g._id}>{g.name}</option>;
+  //           })}
+  //         </select>
+  //         <div className="p-2"></div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
+
+  const handleObjectAgeChange = (age) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    oneStudent.age = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    students[i] = oneStudent; // puts meal[i] back into mealRequest array
+
+    // setState({
+    //   ...state,
+    //   student: [...students],
+    //   buttonText: 'Register',
+    //   success: '',
+    //   error: '',
+    // });
+
+    setState({
+      ...state,
+      students: [
+        ...students,
+        // {
+        //   name: e.target.value,
+        // },
+      ],
+      error: '',
+      success: '',
+      buttonText: 'Register',
+    });
+  };
+
+
+  const addBESTeacher = (i, x) => (
     <>
       <div key={i} className="form-group">
         <div className="">
           <select
-            value={x.teacher._id}
-            data-index={i}
             type="select"
-            onChange={(e) => handleSelectTeacherChange(e)}
-            // value={state.value}
+            value={x.teacher}
+            data-index={i}
             // defaultValue={''}
-            defaultValue={x.teacher._id}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
           >
@@ -144,10 +193,206 @@ const Profile = ({ user, token }) => {
             <option selected disabled value="">
               Choose Teacher
             </option>
-            {state.loadedTeachers.map((g, i) => {
+            ,<option value="k-annino/lee">K - Annino/Lee</option>
+            <option value="k-milbourn">K - Milbourn</option>
+            <option value="1st-hirano">1st - Hirano</option>
+            <option value="1st-morrow">1st - Morrow</option>
+            <option value="2nd-watson">2nd - Watson</option>
+            <option value="2nd-gerin">2nd - Gerin</option>
+            <option value="3rd-squire">3rd - Squire</option>
+            <option value="3rd-altman">3rd - Altman</option>
+            <option value="3rd-rosenblum">3rd - Rosenblum</option>
+            <option value="4th-keane">4th - Keane</option>
+            <option value="4th-farlow">4th - Farlow</option>
+            <option value="5th-stephens">5th - Stephens</option>
+            <option value="5th-becker">5th - Becker</option>
+            <option value="5th-powers">5th - Powers</option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
-            })}
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addOHESTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            value={x.teacher}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Teacher
+            </option>
+            ,<option value="k-sloan">K - Sloan</option>
+            <option value="k-foy">K - Foy</option>
+            <option value="1st-aaronson">1st - Aaronson</option>
+            <option value="1st-bretzing">1st - Bretzing</option>
+            <option value="2nd-lieberman">2nd - Lieberman</option>
+            <option value="2nd-ruben">2nd - Ruben</option>
+            <option value="3rd-arnold">3rd - Arnold</option>
+            <option value="4th-lockrey">4th - Lockrey</option>
+            <option value="4th-farlow">4th - Farlow</option>
+            <option value="4th-chobanian">4th - Chobanian</option>
+            <option value="5th-bailey">5th - Bailey</option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addROESTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            value={x.teacher}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Teacher
+            </option>
+            ,<option value="k-lobianco">K - LoBianco</option>
+            <option value="1st-bird">1st - Bird</option>
+            <option value="1st-ewing">1st - Ewing</option>
+            <option value="1st-holland">1st - Holland</option>
+            <option value="2nd-mcdowell">2nd - McDowell</option>
+            <option value="2nd-share">2nd - Share</option>
+            <option value="3rd-cantillon">3rd - Cantillon</option>
+            <option value="3rd-strong">3rd - Strong</option>
+            <option value="4th-duffy">4th - Duffy</option>
+            <option value="4th-matthews">4th - Matthews</option>
+            <option value="5th-bodily">5th - Bodily</option>
+            <option value="5th-cass">5th - Cass</option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+  const addMCMSTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            value={x.teacher}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="6th-grade">6th grade </option>
+            <option value="7th-grade">7th grade </option>
+            <option value="8th-grade">8th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addOPHSTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            data-index={i}
+            value={x.teacher}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="9th-grade">9th grade</option>
+            <option value="10th-grade">10th grade </option>
+            <option value="11th-grade">11th grade </option>
+            <option value="12th-grade">12th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
+  const addOODTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            value={x.teacher}
+            data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="9th-grade">9th grade</option>
+            <option value="10th-grade">10th grade </option>
+            <option value="11th-grade">11th grade </option>
+            <option value="12th-grade">12th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
           </select>
           <div className="p-2"></div>
         </div>
@@ -156,35 +401,35 @@ const Profile = ({ user, token }) => {
   );
 
   // console.log(loadedGroups)
-  const addStudentGroup = (i, x) => (
-    <>
-      <div key={i} className="form-group">
-        <div className="">
-          <select
-            value={x.group}
-            data-index={i}
-            onChange={(e) => handleSelectChange(e)}
-            type="select"
-            // value={state.value}
-            defaultValue={x.group}
-            // defaultValue={state.mealRequest[0].meal}
-            className="form-control"
-            required
-          >
-            {/* if statement in loaded groups value bellow where if there's a value in default value then select that. Otherwise display options */}
-            {/* {console.log('add', loadedGroups.includes(students[i].group))}{' '} */}
-            <option selected disabled value="">
-              Choose Student Group
-            </option>
-            {state.loadedGroups.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-            })}
-          </select>
-          <div className=""></div>
-        </div>
-      </div>
-    </>
-  );
+  // const addStudentGroup = (i, x) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <div className="">
+  //         <select
+  //           value={x.group}
+  //           data-index={i}
+  //           onChange={(e) => handleSelectChange(e)}
+  //           type="select"
+  //           // value={state.value}
+  //           defaultValue={x.group}
+  //           // defaultValue={state.mealRequest[0].meal}
+  //           className="form-control"
+  //           required
+  //         >
+  //           {/* if statement in loaded groups value bellow where if there's a value in default value then select that. Otherwise display options */}
+  //           {/* {console.log('add', loadedGroups.includes(students[i].group))}{' '} */}
+  //           <option selected disabled value="">
+  //             Choose Student Group
+  //           </option>
+  //           {state.loadedGroups.map((g, i) => {
+  //             return <option value={g._id}>{g.name}</option>;
+  //           })}
+  //         </select>
+  //         <div className=""></div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
   // adding a student to fields
   const addStudent = (e) => {
@@ -193,8 +438,33 @@ const Profile = ({ user, token }) => {
       ...state,
       students: [
         ...students,
-        { name: '', schoolName: '', group: '', teacher: '' },
+        { name: '', schoolName: '', group: '', teacher: '', foodAllergy: '', age: '' },
       ],
+    });
+  };
+
+  const handleObjectAllergyChange = (name) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    oneStudent.foodAllergy = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    students[i] = oneStudent; // puts meal[i] back into mealRequest array
+
+    // setState({
+    //   ...state,
+    //   student: [...students],
+    //   buttonText: 'Register',
+    //   success: '',
+    //   error: '',
+    // });
+
+    setState({
+      ...state,
+      students: [...students],
+      error: '',
+      success: '',
+      buttonText: 'Register',
     });
   };
 
@@ -225,43 +495,43 @@ const Profile = ({ user, token }) => {
   };
 
   // category checkboxes turn into select
-  const showGroups = () => {
-    return (
-      loadedGroups &&
-      loadedGroups.map((c, i) => (
-        <li className="list-unstyled" key={c._id}>
-          <input
-            type="checkbox"
-            onChange={handleToggle(c._id)}
-            className="mr-2 "
-          />
-          <label htmlFor="" className="form-check-label">
-            {c.name}
-          </label>
-        </li>
-      ))
-    );
-  };
+  // const showGroups = () => {
+  //   return (
+  //     loadedGroups &&
+  //     loadedGroups.map((c, i) => (
+  //       <li className="list-unstyled" key={c._id}>
+  //         <input
+  //           type="checkbox"
+  //           onChange={handleToggle(c._id)}
+  //           className="mr-2 "
+  //         />
+  //         <label htmlFor="" className="form-check-label">
+  //           {c.name}
+  //         </label>
+  //       </li>
+  //     ))
+  //   );
+  // };
 
   // category checkboxes
-  const showCategories = () => {
-    return (
-      loadedCategories &&
-      loadedCategories.map((c, i) => (
-        <li className="list-unstyled" key={c._id}>
-          <input
-            checked={categories.includes(c._id)} // populates checked categories from registration
-            type="checkbox"
-            onChange={handleToggle(c._id)}
-            className="mr-2"
-          />
-          <label htmlFor="" className="form-check-label">
-            {c.name}
-          </label>
-        </li>
-      ))
-    );
-  };
+  // const showCategories = () => {
+  //   return (
+  //     loadedCategories &&
+  //     loadedCategories.map((c, i) => (
+  //       <li className="list-unstyled" key={c._id}>
+  //         <input
+  //           checked={categories.includes(c._id)} // populates checked categories from registration
+  //           type="checkbox"
+  //           onChange={handleToggle(c._id)}
+  //           className="mr-2"
+  //         />
+  //         <label htmlFor="" className="form-check-label">
+  //           {c.name}
+  //         </label>
+  //       </li>
+  //     ))
+  //   );
+  // };
 
   const handleChange = (name, student) => (e) => {
     setState({
@@ -282,13 +552,6 @@ const Profile = ({ user, token }) => {
     oneStudent.name = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
-    // setState({
-    //   ...state,
-    //   student: [...students],
-    //   buttonText: 'Register',
-    //   success: '',
-    //   error: '',
-    // });
 
     setState({
       ...state,
@@ -312,13 +575,6 @@ const Profile = ({ user, token }) => {
     oneStudent.schoolName = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
-    // setState({
-    //   ...state,
-    //   student: [...students],
-    //   buttonText: 'Register',
-    //   success: '',
-    //   error: '',
-    // });
 
     setState({
       ...state,
@@ -340,7 +596,7 @@ const Profile = ({ user, token }) => {
     //   setState({ ...state, error: "Passwords don't match" });
     //   // alert('passwords dont match')
     // } else {
-      console.log('submit',user.students);
+    console.log('submit', user.students);
 
     try {
       const response = await axios.put(
@@ -456,7 +712,7 @@ const Profile = ({ user, token }) => {
 
       <div className="row">
         <div className="col-md-12 pt-2">
-          {state.students
+          {students
             .slice(0)
             // .reverse()
             .map((x, i) => {
@@ -482,13 +738,24 @@ const Profile = ({ user, token }) => {
                     />
                   </div>
                   <div className="form-group pt-1">
+                    <input
+                      value={x.foodAllergy}
+                      data-index={i}
+                      onChange={handleObjectAllergyChange()}
+                      // onChange={handleChange({student: 'name'})}
+                      type="text"
+                      className="form-control"
+                      placeholder="Food Allergies (Only)"
+                    />
+                  </div>
+                  <div className="form-group pt-1">
                     <select
                       value={x.schoolName}
                       data-index={i}
                       onChange={handleObjectSchoolChange()}
                       // onChange={handleChange({student: 'name'})}
                       type="text"
-                      defaultValue={x.schoolName}
+                      // defaultValue={x.schoolName}
                       className="form-control"
                       placeholder="School student attends"
                       required
@@ -500,53 +767,72 @@ const Profile = ({ user, token }) => {
                       <option value="MCMS">Medea Creek Middle School</option>
                       <option value="OPHS">Oak Park High School</option>
                       <option value="OVHS">Oak View High School</option>
+                      <option value="NON">Non OPUSD</option>
                     </select>
                   </div>
-                  {/* <div className="form-group pt-1">
-                      <input
-                        value={students.student}
-                        data-index={i}
-                        onChange={handleObjectSchoolChange()}
-                        // onChange={handleChange({student: 'name'})}
-                        type="text"
-                        className="form-control"
-                        placeholder="School student attends"
-                        required
-                      />
-                    </div> */}
 
                   <div key={i} className="form-group">
                     <div className="">
-                      {console.log('group',x.group)}
+                      {/* {console.log('group',x.group)} */}
                       <select
-                        value={x.group._id}
+                        value={x.group}
                         data-index={i}
                         onChange={(e) => handleSelectChange(e)}
-                        type="select"
+                        type="text"
                         // value={state.value}
-                        defaultValue={x.group._id}
+                        // defaultValue={x.group}
                         // defaultValue={state.mealRequest[0].meal}
                         className="form-control"
                         required
                       >
-                        {/* if statement in loaded groups value bellow where if there's a value in default value then select that. Otherwise display options */}
-                        {/* {console.log('add', loadedGroups.includes(students[i].group))}{' '} */}
-                        <option selected disabled value="">
+                        <option disabled value="">
                           Choose Student Group
                         </option>
-                        {state.loadedGroups.map((g, i) => {
-                          return <option value={g._id}>{g.name}</option>;
-                        })}
+                        <option value="a-group">A group</option>
+                        <option value="b-group">B group</option>
+                        <option value="distance-learning">Distance Learning</option>
+                        {/* {state.loadedGroups.map((g, i) => {
+                          return (
+                            <option
+                              value={(g.slug)}
+                            >
+                              {g.name}
+                            </option>
+                          );
+                        })} */}
                       </select>
                       <div className=""></div>
                     </div>
                   </div>
+                  <div key={2} className="">
+                    {x.schoolName === 'BES' && addBESTeacher(i, x)}
+                    {x.schoolName === 'OHES' && addOHESTeacher(i, x)}
+                    {x.schoolName === 'ROES' && addROESTeacher(i, x)}
+                    {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
+                    {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
+                    {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
+                    {x.schoolName === 'NON' && (
+                      <div className="form-group pt-1">
+                        <input
+                          value={x.age}
+                          data-index={i}
+                          onChange={handleObjectAgeChange()}
+                          // onChange={handleChange({student: 'name'})}
+                          type="text"
+                          className="form-control"
+                          placeholder="Age"
+                          required={true}
+                        />
+                      </div>
+                    )}
+                  </div>
+
                   {/* <div key={i} className="">
                     {addStudentGroup(i, x)}
                   </div> */}
-                  <div key={i} className="">
+                  {/* <div key={i} className="">
                     {addTeacher(i, x)}
-                  </div>
+                  </div> */}
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>
 
