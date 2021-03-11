@@ -14,8 +14,9 @@ const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm('WARNING! Confirm delete.');
+    let answer = window.confirm('WARNING! Please cancel at least a week in advance of pickup date if possible.');
     if (answer) {
+      window.confirm('Request is cancelled. No further action required.')
       handleDelete(id);
     }
   };
@@ -67,10 +68,10 @@ const User = ({ user, token, l, userLinks }) => {
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
-                {l.mealRequest.length} weekly meal
-                {l.mealRequest.length > 1 && 's'}:<p></p>
+                {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal
+                {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p>
                 <div className="p-3">
-                  {l.mealRequest.map((k, i) => (
+                  {l.mealRequest.filter((l)=> l.meal !== 'None').map((k, i) => (
                     <h6 className="">
                       {console.log(k)}
                       {/* Meal {`${i + 1} `} - for  */}
@@ -133,11 +134,12 @@ const User = ({ user, token, l, userLinks }) => {
               <Link href="">
                 <button
                   onClick={(e) => confirmDelete(e, l._id)}
-                  className="badge text-danger btn btn-outline-warning float-right"
+                  className="text-warning btn btn-danger float-right"
                 >
-                  Delete
+                  Cancel Request
                 </button>
               </Link>
+              <div className="pb-2"></div>
             </div>
           </div>
         }

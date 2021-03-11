@@ -118,8 +118,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm('WARNING! Confirm delete.');
+    let answer = window.confirm('WARNING! Confirm delete of food request as admin.');
     if (answer) {
+      window.confirm('Food request has been deleted' )
       handleDelete(id);
     }
   };
@@ -168,28 +169,53 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             </h4>
             <p></p>
             <div className="p-2">
-              {/* <a href={l.url} target="_blank"> */}
               <h5 className="pb-1">
-            {l.mealRequest.length} weekly meal
-            {l.mealRequest.length > 1 && 's'}:<p></p>
-            <div className="p-2">
-              {l.mealRequest.map((k, i) => (
-                <h6 className="">
-                  {/* Meal {`${i + 1} `} - for  */}
-                  {l.postedBy.students[i].group.name === 'A Group' || l.postedBy.students[i].group.name === 'B Group'  ? <b>2 onsite meals </b> : <b>5 pickup meals </b>}
-                  {l.postedBy.students[i]._id.includes(k.student) && l.postedBy.students[i].name +' in '+ l.postedBy.students[i].group.name} 
-                  {console.log(i,l.postedBy.students[i]._id)}
-                  {/* {console.log(i,k.student)} */}
-                </h6>
-              ))}
-            </div>
-          </h5>
-              {/* order status {l.orderStatus === false ? <h4>incomplete</h4> : <h4>complete</h4>} */}
-              <h2 className=" " style={{ fontSize: '16px' }}>
+                {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal
+                {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p>
+                <div className="p-3">
+                  {l.mealRequest.filter((l)=> l.meal !== 'None').map((k, i) => (
+                    <h6 className="">
+                      {console.log(k)}
+                      {/* Meal {`${i + 1} `} - for  */}
+                      {k.student === undefined ? (
+                        'user deleted'
+                      ) : k.group === 'a-group' ||
+                        k.group === 'b-group' ? (
+                        k.pickupOption === 'Lunch Onsite / Breakfast Pickup' ? (
+                          <>
+                            <b>2 onsite meals and </b>
+                            <br />
+                            <b>5 pickup breakfast meals</b>{' '}
+                          </>
+                        ) : (
+                          <b>2 onsite meals </b>
+                        )
+                      ) : (
+                        <b>5 pickup {k.meal} meals </b>
+                      )}
+                      <br></br>
+                      {k.student === undefined
+                        ? 'user deleted'
+                        : l.postedBy.students.filter((student) =>
+                            student._id.includes(k.student)
+                          ) &&
+                          k.studentName +
+                            ' - ' +
+                            k.group}
+                      {/* {console.log(i,l.postedBy.students[i]._id)} */}
+                      {/* {console.log('meal req',k.meal)} */}
+                      <hr />
+                    </h6>
+                  ))}
+                </div>
+              </h5>
+              {/* {console.log(l.mealRequest)} */}
+              {l.pickupTime === 'Cafeteria' ?  <h2 className=" " style={{ fontSize: '16px' }}>
+                Pickup is on campus at the student <b>{l.pickupTime} </b> during school hours
+              </h2> : <h2 className=" " style={{ fontSize: '16px' }}>
                 Pickup for your order is between <b>{l.pickupTime} </b> on
-                Friday
-              </h2>
-              {/* </a> */}
+                Friday 
+              </h2>}
             </div>
             <div className="pt-1 ">
               <span className="">

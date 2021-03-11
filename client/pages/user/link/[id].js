@@ -739,7 +739,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     //     }
     // })
 
-    const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
+    // const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
     let length =
@@ -761,7 +761,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     setState({
       ...state,
       pickupCode: newPickupCode,
-      mealRequest: mealRequestNew,
+      // mealRequest: mealRequestNew,
       pickupCodeAdd: newPickupCodeAdd,
     });
   };
@@ -977,13 +977,13 @@ const Update = ({ oldLink, token, user, _id }) => {
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
         </button>
 
-        <button
+        {/* <button
           disabled={!token}
           className="btn btn-outline-danger float-right"
           onClick={(e) => confirmDelete(e, oldLink._id)}
         >
           {isAuth() || token ? 'Delete' : 'Login to Make Request'}
-        </button>
+        </button> */}
       </div>
 
       {/* <div className="form-group">
@@ -1176,7 +1176,7 @@ const Update = ({ oldLink, token, user, _id }) => {
 
                 {/* {console.log(mealRequest)} */}
               </div>
-              <div className="col-md-6 p-3">
+              <div className="col-md p-3">
                 {/* {success && showSuccessMessage(success)}
               {error && showErrorMessage(error)} */}
                 {submitLinkForm()}

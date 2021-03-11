@@ -39,7 +39,14 @@ const Requests = ({ token }) => {
     searchByStatus: '',
     searchBySchool: '',
     searchByGroup: '',
-    searchByTeacher: '',
+    searchByTeacher: 'filter',
+    searchByTeacher2: 'filter',
+    searchByTeacher3: 'filter',
+    searchByTeacher4: 'filter',
+    ageGroup1: '',
+    ageGroup2: '',
+    ageGroup3: '',
+    ageGroup4: '',
     error: '',
     success: '',
   });
@@ -52,6 +59,13 @@ const Requests = ({ token }) => {
     searchBySchool,
     searchByGroup,
     searchByTeacher,
+    searchByTeacher2,
+    searchByTeacher3,
+    searchByTeacher4,
+    ageGroup1,
+    ageGroup2,
+    ageGroup3,
+    ageGroup4,
     linksByDateFiltered,
     pickupDateLookup,
     loadedUsers,
@@ -203,8 +217,19 @@ const Requests = ({ token }) => {
   //     // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
   //     // .filter((l) => l.pickupDate === pickupDateLookup);
 
-  // const csvOnsiteData = linksByDate;
-  // const csvOffsiteData = allMealsArray;
+  const csvOffsiteData = linksByDate
+    .filter((l) => l.pickupTime.includes(searchPickupTime))
+    .filter((l) => l.pickupTime != 'Cafeteria')
+    .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+    .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+    
+  const csvOnsiteData = allMealsArray
+    // .filter((l) => l.pickupTime.includes(searchPickupTime))
+    .filter((l) => l.group != 'distance-learning')
+    .filter((l, i) => l.teacher.includes(searchByTeacher) || l.teacher.includes(searchByTeacher2) || l.teacher.includes(searchByTeacher3) || l.teacher.includes(searchByTeacher4))
+    .filter((l, i) => l.group.includes(searchByGroup))
+    .filter((l, i) => l.schoolName.includes(searchBySchool))
+    
 
   const onsiteHeaders = [
     { label: 'School Name', key: 'schoolName' },
@@ -543,7 +568,8 @@ const Requests = ({ token }) => {
         {allMealsArray
           // .filter((l) => l.pickupTime.includes(searchPickupTime))
           .filter((l) => l.group != 'distance-learning')
-          .filter((l, i) => l.teacher.includes(searchByTeacher))
+          // .filter((l, i) => l.teacher.includes(searchByTeacher))
+          .filter((l, i) => l.teacher.includes(searchByTeacher) || l.teacher.includes(searchByTeacher2) || l.teacher.includes(searchByTeacher3) || l.teacher.includes(searchByTeacher4))
           .filter((l, i) => l.group.includes(searchByGroup))
           .filter((l, i) => l.schoolName.includes(searchBySchool))
           // .filter((l) => l.complete.toString().includes(searchByStatus))
@@ -711,18 +737,18 @@ const Requests = ({ token }) => {
   //   setSkip(toSkip);
   // };
 
-  const addBESTeacher = (i, x) => (
+  const addBESTeacher = (teacherGroup) => (
     <>
-      <div key={i} className="form-group">
+      <div key={17} className="">
         <div className="">
           <select
             type="select"
             // value={state.value}
-            data-index={i}
+            // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={handleSearch('searchByTeacher')}
-            className="form-control btn btn-outline-primary"
+            onChange={handleSearch(teacherGroup)}
+            className="btn btn-outline-primary"
             required
           >
             {' '}
@@ -748,24 +774,24 @@ const Requests = ({ token }) => {
               // return <option value={g._id}>{g.name}</option>;
             })} */}
           </select>
-          <div className="p-2"></div>
+
         </div>
       </div>
     </>
   );
 
-  const addOHESTeacher = (i, x) => (
+  const addOHESTeacher = (teacherGroup) => (
     <>
-      <div key={i} className="form-group">
+      <div key={16} className="">
         <div className="">
           <select
             type="select"
             // value={state.value}
-            data-index={i}
+            // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={handleSearch('searchByTeacher')}
-            className="form-control btn btn-outline-primary"
+            onChange={handleSearch(teacherGroup)}
+            className="btn btn-outline-primary"
             required
           >
             {' '}
@@ -788,24 +814,24 @@ const Requests = ({ token }) => {
               // return <option value={g._id}>{g.name}</option>;
             })} */}
           </select>
-          <div className="p-2"></div>
+
         </div>
       </div>
     </>
   );
 
-  const addROESTeacher = (i, x) => (
+  const addROESTeacher = (teacherGroup) => (
     <>
-      <div key={i} className="form-group">
+      <div key={15} className="">
         <div className="">
           <select
             type="select"
             // value={state.value}
-            data-index={i}
+            // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={handleSearch('searchByTeacher')}
-            className="form-control btn btn-outline-primary"
+            onChange={handleSearch(teacherGroup)}
+            className="btn btn-outline-primary"
             required
           >
             {' '}
@@ -829,23 +855,23 @@ const Requests = ({ token }) => {
               // return <option value={g._id}>{g.name}</option>;
             })} */}
           </select>
-          <div className="p-2"></div>
+
         </div>
       </div>
     </>
   );
-  const addMCMSTeacher = (i, x) => (
+  const addMCMSTeacher = (teacherGroup) => (
     <>
-      <div key={i} className="form-group">
+      <div key={14} className="">
         <div className="">
           <select
             type="select"
             // value={state.value}
-            data-index={i}
+            // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={handleSearch('searchByTeacher')}
-            className="form-control btn btn-outline-primary"
+            onChange={handleSearch(teacherGroup)}
+            className=" btn btn-outline-primary"
             required
           >
             {' '}
@@ -860,24 +886,24 @@ const Requests = ({ token }) => {
               // return <option value={g._id}>{g.name}</option>;
             })} */}
           </select>
-          <div className="p-2"></div>
+
         </div>
       </div>
     </>
   );
 
-  const addOPHSTeacher = (i, x) => (
+  const addOPHSTeacher = (teacherGroup) => (
     <>
-      <div key={i} className="form-group">
+      <div key={13} className="">
         <div className="">
           <select
             type="select"
             // value={state.value}
-            data-index={i}
+            // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={handleSearch('searchByTeacher')}
-            className="form-control btn btn-outline-primary"
+            onChange={handleSearch(teacherGroup)}
+            className=" btn btn-outline-primary"
             required
           >
             {' '}
@@ -893,24 +919,24 @@ const Requests = ({ token }) => {
               // return <option value={g._id}>{g.name}</option>;
             })} */}
           </select>
-          <div className="p-2"></div>
+
         </div>
       </div>
     </>
   );
 
-  const addOODTeacher = (i, x) => (
+  const addOODTeacher = (teacherGroup) => (
     <>
-      <div key={i} className="form-group">
+      <div key={12} className="">
         <div className="">
           <select
             type="select"
             // value={state.value}
-            data-index={i}
+            // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={handleSearch('searchByTeacher')}
-            className="form-control btn btn-outline-primary"
+            onChange={handleSearch(teacherGroup)}
+            className=" btn btn-outline-primary"
           >
             {' '}
             <option selected disabled value="">
@@ -925,15 +951,65 @@ const Requests = ({ token }) => {
               // return <option value={g._id}>{g.name}</option>;
             })} */}
           </select>
-          <div className="p-2"></div>
+
+        </div>
+      </div>
+    </>
+  );
+  const addNONTeacher = (teacherGroup) => (
+    <>
+      <div key={11} className="">
+        <div className="">
+          <select
+            type="select"
+            // value={state.value}
+            // data-index={i}
+            // defaultValue={''}
+            // defaultValue={state.mealRequest[0].meal}
+            onChange={handleSearch(teacherGroup)}
+            className=" btn btn-outline-primary"
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            ,<option value="9th-grade">9th grade</option>
+            <option value="10th-grade">10th grade </option>
+            <option value="11th-grade">11th grade </option>
+            <option value="12th-grade">12th grade </option>
+            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+              return <option value={g._id}>{g.name}</option>;
+              // return <option value={g._id}>{g.name}</option>;
+            })} */}
+          </select>
+
         </div>
       </div>
     </>
   );
 
   const resetSearch = () => {
-      setState({...state, searchByGroup: '', searchBySchool: '', searchByTeacher: '', searchPickupTime:''})
-  }
+    setState({
+      ...state,
+      searchByGroup: '',
+      searchBySchool: '',
+      searchByTeacher: '',
+      searchPickupTime: '',
+    });
+  };
+
+  const handleObjectAgeChange = (ageGroup) => (e) => {
+    // let i = e.target.getAttribute('data-index');
+    // let ageSearch = age +` ${ i}`
+
+    setState({
+      ...state,
+      [ageGroup]: e.target.value,
+      error: '',
+      success: '',
+      buttonText: 'Register',
+    });
+  };
 
   return (
     <Layout>
@@ -976,7 +1052,7 @@ const Requests = ({ token }) => {
                 <CSVLink
                   className="float-right"
                   headers={onsiteHeaders}
-                  data={allMealsArray}
+                  data={csvOnsiteData}
                 >
                   Download csv
                 </CSVLink>
@@ -984,7 +1060,7 @@ const Requests = ({ token }) => {
                 <CSVLink
                   className="float-right"
                   headers={pickupHeaders}
-                  data={linksByDate}
+                  data={csvOffsiteData}
                 >
                   Download csv
                 </CSVLink>
@@ -1065,28 +1141,108 @@ const Requests = ({ token }) => {
               )}
               {orderType === 'Onsite' && (
                 <div key={2} className="">
-                  {searchBySchool === 'BES' && addBESTeacher()}
-                  {searchBySchool === 'OHES' && addOHESTeacher()}
-                  {searchBySchool === 'ROES' && addROESTeacher()}
-                  {searchBySchool === 'MCMS' && addMCMSTeacher()}
-                  {searchBySchool === 'OPHS' && addOPHSTeacher()}
-                  {searchBySchool === 'OVHS' && addOPHSTeacher()}
-                  {searchBySchool === 'NON' && (
-                    <div className="form-group pt-1">
-                      <input
-                        value={x.age}
-                        data-index={i}
-                        onChange={handleObjectAgeChange()}
-                        // onChange={handleChange({student: 'name'})}
-                        type="text"
-                        className="form-control "
-                        placeholder="Age"
-                        required={true}
-                      />
-                    </div>
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher')}
+                  {searchBySchool === 'NON' && addNONTeacher('searchByTeacher')}
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher2')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher2')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher2')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher2')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher2')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher2')}
+                  {searchBySchool === 'NON' && addNONTeacher('searchByTeacher2')}
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher3')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher3')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher3')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher3')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher3')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher3')}
+                  {searchBySchool === 'NON' && addNONTeacher('searchByTeacher3')}
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher4')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher4')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher4')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher4')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher4')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher4')}
+                  {searchBySchool === 'NON' && addNONTeacher('searchByTeacher4')}
+                </div>
+              )}
+              {/* {orderType === 'Onsite' && (
+                <div key={2} className="">
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher2')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher2')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher2')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher2')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher2')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher2')}
+                  {searchBySchool === 'NON' && (addNONTeacher('searchByTeacher2')
+                    // <div className="form-group pt-1">
+                    //   <input
+
+                    //     data-index={4}
+                    //     onChange={handleObjectAgeChange('ageGroup4')}
+                    //     // onChange={handleChange({student: 'name'})}
+                    //     type="text"
+                    //     className="form-control "
+                    //     placeholder="Age"
+                    //     required={true}
+                    //   />
+                    // </div>
                   )}
                 </div>
               )}
+              {orderType === 'Onsite' && (
+                <div key={2} className="">
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher3')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher3')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher3')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher3')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher3')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher3')}
+                  {searchBySchool === 'NON' && (addNONTeacher('searchByTeacher3')
+                    // <div className="form-group pt-1">
+                    //   <input
+
+                    //     data-index={4}
+                    //     onChange={handleObjectAgeChange('ageGroup4')}
+                    //     // onChange={handleChange({student: 'name'})}
+                    //     type="text"
+                    //     className="form-control "
+                    //     placeholder="Age"
+                    //     required={true}
+                    //   />
+                    // </div>
+                  )}
+                </div>
+              )}
+              {orderType === 'Onsite' && (
+                <div key={2} className="">
+                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher4')}
+                  {searchBySchool === 'OHES' && addOHESTeacher('searchByTeacher4')}
+                  {searchBySchool === 'ROES' && addROESTeacher('searchByTeacher4')}
+                  {searchBySchool === 'MCMS' && addMCMSTeacher('searchByTeacher4')}
+                  {searchBySchool === 'OPHS' && addOPHSTeacher('searchByTeacher4')}
+                  {searchBySchool === 'OVHS' && addOPHSTeacher('searchByTeacher4')}
+                  {searchBySchool === 'NON' && (addNONTeacher('searchByTeacher4')
+                    // <div className="form-group pt-1">
+                    //   <input
+
+                    //     data-index={4}
+                    //     onChange={handleObjectAgeChange('ageGroup4')}
+                    //     // onChange={handleChange({student: 'name'})}
+                    //     type="text"
+                    //     className="form-control "
+                    //     placeholder="Age"
+                    //     required={true}
+                    //   />
+                    // </div>
+                  )}
+                </div>
+              )} */}
               {orderType === 'Onsite' && (
                 <select
                   className="btn btn-outline-primary"

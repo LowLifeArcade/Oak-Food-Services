@@ -501,7 +501,9 @@ const Create = ({ token, user }) => {
     //     }
     // })
 
-    const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
+    // this code bellow deletes the none meal from the order. But it was messing up the update function as it shifted data in the array.
+    // const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
+    
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None') ;
 
     let length = newPickupCodeAdd.length - mealRequest.filter((meal) => meal.meal === 'Onsite').length + mealRequest.filter((meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup').length;
@@ -518,7 +520,7 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       pickupCode: newPickupCode,
-      mealRequest: mealRequestNew,
+      // mealRequest: mealRequestNew,
       pickupCodeAdd: newPickupCodeAdd,
     });
   };
