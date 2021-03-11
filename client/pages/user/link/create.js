@@ -217,7 +217,7 @@ const Create = ({ token, user }) => {
             // value={state.value}
             data-index={i}
             defaultValue={'Standard'}
-            // defaultValue={state.mealRequest[0].meal}
+            value={state.mealRequest[i].meal}
             onChange={(e) =>
               handleSelectChange(
                 e,
@@ -245,6 +245,7 @@ const Create = ({ token, user }) => {
       </div>
     </>
   );
+
   const selectOnsiteMealRequest = (
     i,
     student,
@@ -263,7 +264,7 @@ const Create = ({ token, user }) => {
             // value={state.value}
             data-index={i}
             defaultValue={'Standard Onsite'}
-            value={'Standard Onsite'}
+            value={mealRequest[i].meal}
             // defaultValue={state.mealRequest[0].meal}
             onChange={(e) =>
               handleSelectChange(
@@ -531,7 +532,6 @@ const Create = ({ token, user }) => {
         `${API}/link`,
         {
           mealRequest,
-          // pickupOption,
           pickupTime,
           pickupDate,
           username,
@@ -602,17 +602,17 @@ const Create = ({ token, user }) => {
     }
   };
 
-  const handleURLChange = async (e) => {
-    setState({ ...state, url: e.target.value, error: '', success: '' });
-  };
+  // const handleURLChange = async (e) => {
+  //   setState({ ...state, url: e.target.value, error: '', success: '' });
+  // };
 
-  const handleTypeClick = (e) => {
-    setState({ ...state, type: e.target.value, success: '', error: '' });
-  };
+  // const handleTypeClick = (e) => {
+  //   setState({ ...state, type: e.target.value, success: '', error: '' });
+  // };
 
-  const handleMediumClick = (e) => {
-    setState({ ...state, medium: e.target.value, success: '', error: '' });
-  };
+  // const handleMediumClick = (e) => {
+  //   setState({ ...state, medium: e.target.value, success: '', error: '' });
+  // };
 
   // should be id instead of c but it's fine
   const handleToggle = (c) => () => {

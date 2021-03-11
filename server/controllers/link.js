@@ -286,13 +286,19 @@ exports.read = (req, res) => {
 exports.update = (req, res) => {
   const { id } = req.params;
   const updatedLink = ({
+    // mealRequest,
+    // pickupOption,
+    // pickupTime,
+    // pickupDate,
+    // username,
+    // pickupCode,
+    // pickupCodeAdd, 
     mealRequest,
-    pickupOption,
     pickupTime,
     pickupDate,
-    username,
     pickupCode,
     pickupCodeAdd,
+    orderStatus,
   } = req.body);
   // const updatedLink = {title, url, categories, type, medium}
 

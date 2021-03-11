@@ -66,22 +66,55 @@ exports.orderStatusValidator = [
 
 exports.linkUpdateValidator = [
   
-  check('mealRequest')
-  .not()
-  .isEmpty()
-  .withMessage('At least one meal required'),
-  check('pickupOption')
-  .not()
-  .isEmpty()
-  .withMessage('pick up option is required'),
-  check('pickupTime')
-  .not()
-  .isEmpty()
-  .withMessage('pick up time is required'),
+  // check('mealRequest')
+  // .not()
+  // .isEmpty()
+  // .withMessage('At least one meal required'),
+  // check('pickupOption')
+  // .not()
+  // .isEmpty()
+  // .withMessage('pick up option is required'),
+  // check('pickupTime')
+  // .not()
+  // .isEmpty()
+  // .withMessage('pick up time is required'),
   // check('orderStatus')
   // .not()
   // .isEmpty()
   // .withMessage('order status is required'),
+  check('pickupDate')
+  .not()
+  .isEmpty()
+  .withMessage('Date is required!'),
+  check('orderStatus')
+  .not()
+  .isEmpty()
+  .withMessage('Order Status'),
+  check('mealRequest')
+  .not()
+  .isEmpty()
+  .withMessage('At least one meal required'),
+  // check('pickupOption')
+  // .not()
+  // .isEmpty()
+  // .withMessage('pick up option is required'),
+  check('pickupTime')
+  .not()
+  .isEmpty()
+  .withMessage('pick up time is required'),
+  check('pickupCode')
+  .not()
+  .isEmpty()
+  .withMessage('pick up code is required'),
+  check('pickupCodeAdd')
+  // .bail()
+  // .notEmpty()
+  // .isArray([{min: 0}])
+  .exists([{ checkFalsy: true }])
+  // .not()
+  // .isEmpty()
+  .optional({ checkFalsy: true })
+  .withMessage('pick up code add is required'),
 
   // check('title')
   //   .not()

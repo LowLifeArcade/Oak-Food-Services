@@ -147,14 +147,14 @@ const Admin = ({ token, user }) => {
                   <li className="nav-item">
                   <Link href="/admin/link/list">
                     <a className="nav-link" href="">
-                      Meal Request List and CSV Page
+                      Lists and CSV Page
                     </a>
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link href="/admin/link/read">
                     <a className="nav-link" href="">
-                      Meal Requests Page
+                      Order Details Page
                     </a>
                   </Link>
                   </li>
@@ -206,13 +206,13 @@ const Admin = ({ token, user }) => {
                 </Link>
               </li> 
               */}
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link href="/user/link/mockCreate">
                   <a className="nav-link" href="">
                     Create Mock Order
                   </a>
                 </Link>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <Link href="/user/link/create">
                   <a className="nav-link" href="">

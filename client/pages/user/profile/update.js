@@ -170,7 +170,7 @@ const Profile = ({ user, token }) => {
       ],
       error: '',
       success: '',
-      buttonText: 'Register',
+      buttonText: 'Update',
     });
   };
 
@@ -464,7 +464,7 @@ const Profile = ({ user, token }) => {
       students: [...students],
       error: '',
       success: '',
-      buttonText: 'Register',
+      buttonText: 'Update',
     });
   };
 
