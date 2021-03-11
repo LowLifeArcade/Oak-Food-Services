@@ -50,35 +50,73 @@ const Admin = ({ token, user }) => {
   // console.log(state.meals);
 
   const mealCounter = (meal) =>
-    state.meals.filter((m) => m.meal == meal).length;
+    state.meals.filter(
+      (m) =>
+        m.meal == meal && m.meal !== 'None' && m.pickupOption !== 'Lunch Only'
+    ).length;
+
+  const lunchOnlyMealCounter = (meal) =>
+    state.meals.filter((m) => m.meal == meal && m.pickupOption === 'Lunch Only')
+      .length;
+
+  const mealBreakfastOnlyCounter = (meal) =>
+    state.meals.filter(
+      (m) =>
+        m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+        m.pickupOption === 'Breakfast Only'
+    ).length;
   // console.log('a group open meals', meals.filter((m) => m.group == 'a-group').filter((x) => x.complete === false))
+
   const allOnsiteMeals = () =>
     meals.filter((m) => m.group == 'a-group').length +
     meals.filter((m) => m.group == 'b-group').length;
+
   const allOpenOnsiteMeals = () =>
     meals
-      .filter((m) => m.group == 'a-group' )
+      .filter((m) => m.group == 'a-group')
       .filter((x) => x.complete === false).length +
     meals
       .filter((m) => m.group == 'b-group')
       .filter((x) => x.complete === false).length;
+
   const allCompletedOnsiteMeals = () =>
     meals.filter((m) => m.group == 'a-group').filter((x) => x.complete === true)
       .length +
     meals.filter((m) => m.group == 'b-group').filter((x) => x.complete === true)
       .length;
+
   const allPickupMeals = (meal) =>
-    meals.filter((m) => m.group === 'distant-learning').length;
+    meals.filter(
+      (m) =>
+        m.group === 'distance-learning' ||
+        m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+    ).length;
+
+  const pickupMealsForLunch = () =>
+    meals.filter(
+      (m) => m.group === 'distance-learning' || m.pickupOption === 'Lunch Only' &&  m.group === 'distance-learning' || m.pickupOption === 'Breakfast and Lunch'
+    ).length;
+  const pickupMealsForBreakfast = () =>
+    meals.filter(
+      (m) =>
+        m.pickupOption === 'Breakfast Only' ||
+        m.pickupOption === 'Breakfast and Lunch' ||
+        m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+    ).length;
+
+  const pickupMealsBySchool = (school, group) =>
+    meals.filter((m) => m.schoolName === school && m.group === group).length;
 
   const allOpenPickupMeals = (meal) =>
     meals
-      .filter((m) => m.group === 'distant-learning')
+      .filter((m) => m.group === 'distance-learning' || m.pickupOption === 'Lunch Onsite / Breakfast Pickup')
       .filter((x) => x.complete === false).length;
 
   const allCompletedPickupMeals = (meal) =>
     meals
-      .filter((m) => m.group === 'distant-learning')
+      .filter((m) => m.group === 'distance-learning' || m.pickupOption === 'Lunch Onsite / Breakfast Pickup')
       .filter((x) => x.complete === true).length;
+
   // state.meals.filter((m) =>
   //   m == meal).length
 
@@ -144,7 +182,7 @@ const Admin = ({ token, user }) => {
           <div className="">
             <ul className="nav flex-column pt-1 ">
               <li className="nav-item">
-                  <li className="nav-item">
+                <li className="nav-item">
                   <Link href="/admin/link/list">
                     <a className="nav-link" href="">
                       Lists and CSV Page
@@ -157,22 +195,22 @@ const Admin = ({ token, user }) => {
                       Order Details Page
                     </a>
                   </Link>
-                  </li>
+                </li>
                 <li className="nav-item">
-                <Link href="/admin/category/create">
-                  <a className="nav-link" href="">
-                    Create Blog Post
-                  </a>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/admin/category/read">
-                  <a className="nav-link" href="">
-                    Edit Blog Posts
-                  </a>
-                </Link>
-              </li>
-              {/* <li className="nav-item">
+                  <Link href="/admin/category/create">
+                    <a className="nav-link" href="">
+                      Create Blog Post
+                    </a>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/admin/category/read">
+                    <a className="nav-link" href="">
+                      Edit Blog Posts
+                    </a>
+                  </Link>
+                </li>
+                {/* <li className="nav-item">
 
                 <Link href="/admin/group/create">
                   <a className="nav-link" href="">
@@ -220,6 +258,13 @@ const Admin = ({ token, user }) => {
                   </a>
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link href="/user">
+                  <a className="nav-link" href="">
+                    Admin's Created Orders
+                  </a>
+                </Link>
+              </li>
 
               <li className="nav-item">
                 <Link href="/user/profile/update">
@@ -233,72 +278,102 @@ const Admin = ({ token, user }) => {
                   <a className="nav-link">Add students</a>
                 </Link>
               </li>
-
-              <div className="pt-2">
-                <hr />
-
-                {/* {allMealsArray()} */}
-                {/* {
-                  requests.map((r,i)=>(
-                    r.mealRequest.map((mr, i) => (
-                      allMealsArray(mr, i)
-                      ))
-                      ))
-                    } */}
-                {/* {allMealsChange()} */}
-                {/* {allVeganMeals().length}
-                {allStandardMeals().length} */}
-                {/* {requests.map((i) => (
-                  <h4>graph</h4>
-                ))} */}
-              </div>
             </ul>
+            <hr />
+            <div className="">
+              <Calendar
+                onChange={(e) => onDateChange(e)}
+                tileDisabled={handleDisabledDates}
+                // defaultValue={twoWeeksFromNow}
+                // tileDisabled={(date, view) =>
+                //   yesterday.some(date =>
+                //      moment().isAfter(yesterday)
+                //   )}
+                // minDate={handlePastDate}
+                // minDate={twoWeeksFromNow}
+                // minDate={new Date().getDate() + 14}
+
+                value={''}
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div className="">
-        <Calendar
-          onChange={(e) => onDateChange(e)}
-          tileDisabled={handleDisabledDates}
-          // defaultValue={twoWeeksFromNow}
-          // tileDisabled={(date, view) =>
-          //   yesterday.some(date =>
-          //      moment().isAfter(yesterday)
-          //   )}
-          // minDate={handlePastDate}
-          // minDate={twoWeeksFromNow}
-          // minDate={new Date().getDate() + 14}
 
-          value={''}
-        />
-      </div>
       <hr />
       <h3>
-        <b className='text-danger' >{requests.length}</b> - Family Meal Requests <p />
+        <b className="text-danger">{requests.length}</b> - All Meal Requests{' '}
+        <p />
         {/* <b>{allPickupMeals() * 5}</b> - All Individual Meals <p /> */}
       </h3>
       <hr />
       <h4>
-        <b className='text-danger' >{allPickupMeals() * 5}</b> - All Pickup Meals <p />
+        <b className="text-danger">{allPickupMeals() * 5}</b> - Total Pickup
+        Meals <p />
+        <b className="text-danger">{pickupMealsForLunch('Lunch Only') * 5}</b> -
+        All Lunch Meals <p />
+        <b className="text-danger">{pickupMealsForBreakfast() * 5}</b> - All
+        Breakfast Meals <p />
+      </h4>
+
+      <h5 className="p-1">
         <b>{allOpenPickupMeals() * 5}</b> - Unfulfilled Pickup Meals <p />
         <b>{allCompletedPickupMeals() * 5}</b> - Fulfilled Pickup Meals
-        <hr />
-        <b className='text-danger' >{allOnsiteMeals() * 2}</b> - All onsite Meals <p />
-        <b>{allOpenOnsiteMeals() * 2}</b> - Unfulfilled onsite Meals <p />
-        <b>{allCompletedOnsiteMeals() * 2}</b> - Fulfilled onsite Meals <p />
-        <hr />
-      </h4>
-      <div className="p-2">
-        <h5>
+      </h5>
+      <hr />
+      <div className="p-3">
+        <h6>
           {mealCounter('Standard') * 5} - Standard meal requests
+          <hr />
+          {lunchOnlyMealCounter('Standard') * 5} - Standard meals LUNCH ONLY
           <hr />
           {mealCounter('Vegetarian') * 5} - Vegetarian meal requests
           <hr />
-          {mealCounter('Vegan') * 5} - Vegan meal requests
+          {lunchOnlyMealCounter('Vegetarian') * 5} - Vegetarian meals LUNCH ONLY
           <hr />
-          {mealCounter('GlutenFree') * 5} - Gluten Free meal requests
+          {lunchOnlyMealCounter('Vegan') * 5} - Vegan meals LUNCH ONLY
           <hr />
-        </h5>
+          {lunchOnlyMealCounter('GlutenFree') * 5} - Gluten Free meals LUNCH
+          ONLY
+          <hr />
+          {mealBreakfastOnlyCounter('Standard Onsite') * 5} - Breakfast Only
+          meal requests
+          <hr />
+        </h6>
+      </div>
+      <h4>
+        <b className="text-danger">{allOnsiteMeals() * 2}</b> - All Onsite Meals{' '}
+        <p />
+        {/* <b>{allOpenOnsiteMeals() * 2}</b> - Unfulfilled onsite Meals <p />
+        <b>{allCompletedOnsiteMeals() * 2}</b> - Fulfilled onsite Meals <p /> */}
+        <hr />
+      </h4>
+
+      <div className="p-3">
+        <h6>
+          {pickupMealsBySchool('BES', 'a-group') * 2} - BES A
+          <hr />
+          {pickupMealsBySchool('BES', 'b-group') * 2} - BES B
+          <hr />
+          {pickupMealsBySchool('OHES', 'a-group') * 2} - OHES A
+          <hr />
+          {pickupMealsBySchool('OHES', 'b-group') * 2} - OHES B
+          <hr />
+          {pickupMealsBySchool('ROES', 'a-group') * 2} - ROES A
+          <hr />
+          {pickupMealsBySchool('ROES', 'b-group') * 2} - ROES B
+          <hr />
+          {pickupMealsBySchool('MCMS', 'a-group') * 2} - MCMS A
+          <hr />
+          {pickupMealsBySchool('MCMS', 'b-group') * 2} - MCMS B
+          <hr />
+          {pickupMealsBySchool('OPHS', 'a-group') * 2} - OPHS A
+          <hr />
+          {pickupMealsBySchool('OPHS', 'b-group') * 2} - OPHS B
+          <hr />
+          {pickupMealsBySchool('OVHS') * 2} - OVHS
+          <hr />
+        </h6>
       </div>
       {/* {chart.render(ref)} */}
       {/* {renderChart()} */}

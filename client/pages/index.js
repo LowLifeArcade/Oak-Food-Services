@@ -125,7 +125,7 @@ const Home = ({ categories }) => {
                         )}
                         <div className="">
                           {/* <h3>{c.name}</h3> {c.createdAt} */}
-                          Posted {moment(c.createdAt).fromNow()}
+                          Posted {moment(c.createdAt).format('MMMM Do YYYY')}
                           {/* {popular.map((l, i) => l.postedBy.name)} */}
                           {/* {c.username} */}
                         </div>

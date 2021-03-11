@@ -163,23 +163,23 @@ const Links = ({
       {head()}
       <Layout>
         <div className="row">
-          <div className="col-md-8 pt-2">
+          <div className="col-md-12 pt-2">
             <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1>
             <hr />
             <div className="lead alert alert-seconary pt-2">
               {renderHTML(category.content || '')}
             </div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md">
             {category.image && (
               <img
                 src={category.image && category.image.url}
                 alt={category.name}
-                style={{ width: 'auto', maxHeight: '200px' }}
+                style={{ width: '350px', maxHeight: '' }}
               />
             )}
             <div className="pt-5"></div>
-            Posted {moment(category.createdAt).fromNow()}
+            Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
           </div>
         </div>
         <br />

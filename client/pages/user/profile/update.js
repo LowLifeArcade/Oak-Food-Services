@@ -788,9 +788,9 @@ const Profile = ({ user, token }) => {
                         <option disabled value="">
                           Choose Student Group
                         </option>
-                        <option value="a-group">A group</option>
-                        <option value="b-group">B group</option>
-                        <option value="distance-learning">Distance Learning</option>
+                        <option value="a-group">A - group (onsite)</option>
+                        <option value="b-group">B - group (onsite) </option>
+                        <option value="distance-learning">Distance Learning (pickup)</option>
                         {/* {state.loadedGroups.map((g, i) => {
                           return (
                             <option

@@ -16,17 +16,17 @@ import 'react-quill/dist/quill.snow.css';
 import Router from 'next/router'
 // import { set } from 'js-cookie';
 
-const Create = ({ user, username, token }) => {
+const Create = ({ user, token }) => {
   const [state, setState] = useState({
     name: '',
-    postedBy: username,
+    postedBy: user._id,
     error: '',
     success: '',
     // content: {content},
     buttonText: 'Post',
     image: '',
   });
-  
+  console.log('username',user)
 
   const [content, setContent] = useState('');
   const [group, setGroup] = useState('');
@@ -85,7 +85,7 @@ const Create = ({ user, username, token }) => {
             // data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => setGroup(e)}
+            onChange={(e) => setGroup(e.target.value)}
             className="form-control"
             required
           >
@@ -157,6 +157,7 @@ const Create = ({ user, username, token }) => {
       }
     }
   };
+  console.log('axios', name, content, image, group, postedBy)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -168,7 +169,7 @@ const Create = ({ user, username, token }) => {
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, image, group, postedBy },
+        { name, content, group, image, postedBy },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -193,7 +194,7 @@ const Create = ({ user, username, token }) => {
       setState({
         ...state,
         buttonText: 'Post',
-        error: 'something went wrong here',
+        error: error.response.data.error,
         // some stuff
       });
     }

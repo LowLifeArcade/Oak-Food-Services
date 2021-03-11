@@ -28,7 +28,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     pickupDate: oldLink.pickupDate,
     pickupCodeInput: '',
     buttonText: 'Update',
-    pickupCode: user.userCode + '-01',
+    pickupCode: user.userCode ,
     pickupCodeAdd: [],
     // pickupCodeAdd: oldLink.pickupCodeAdd,
     mealWeek: oldLink.pickupWeek,
@@ -577,6 +577,8 @@ const Update = ({ oldLink, token, user, _id }) => {
           teacher: teacher,
           pickupOption: pickupOption,
           foodAllergy: foodAllergy,
+          parentEmail: user.email,
+        parentName: user.name,
           complete: false,
         },
       ],
@@ -689,6 +691,14 @@ const Update = ({ oldLink, token, user, _id }) => {
 
     // pickupCode = NewPickupCode
     // newCodeMaker()
+    console.log(mealRequest,
+      // pickupOption,
+      pickupTime,
+      pickupDate,
+      // username,
+      pickupCode,
+      pickupCodeAdd,
+      orderStatus,)
     let dynamicUpdateUrl;
     if (isAuth() && isAuth().role === 'admin') {
       dynamicUpdateUrl = `${API}/link/admin/${oldLink._id}`;
@@ -705,7 +715,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           // pickupOption,
           pickupTime,
           pickupDate,
-          username,
+          // username,
           pickupCode,
           pickupCodeAdd,
           orderStatus,
@@ -725,8 +735,8 @@ const Update = ({ oldLink, token, user, _id }) => {
       });
       // .then(Router.push('/user'))
     } catch (error) {
-      // console.log('LINK SUBMIT ERROR', error);
-      setState({ ...state, error: error.response.data.error });
+      console.log('LINK SUBMIT ERROR', error);
+      setState({ ...state, error: 'update error' });
     }
   };
 
@@ -949,7 +959,8 @@ const Update = ({ oldLink, token, user, _id }) => {
   // create form
   const submitLinkForm = () => (
     <form
-      onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
+      onSubmit={isAuth().role === 'admin' ? handleSubmit : handleSubmit}
+      // onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
     >
       {/* <div className="form-group">
         <label htmlFor="" className="text-muted">

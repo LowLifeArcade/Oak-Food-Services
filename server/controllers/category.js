@@ -58,14 +58,13 @@ const s3 = new AWS.S3({
 //     });
 //   });
 // };
-
 exports.create = (req, res) => {
   // base64 taking off beginning of data
-  const { name, image, content, postedBy } = req.body;
+  const { name, content, image, group, postedBy } = req.body;
 
   // taking req.body name and making a slug for image name url i think
   const slug = slugify(name);
-  let category = new Category({ name, content, slug, group, postedBy });
+  let category = new Category({ name, content, slug, image, group, postedBy });
 
   if (image) {
     // image data
@@ -97,8 +96,8 @@ exports.create = (req, res) => {
       console.log(category);
       // save to db
   category.save((err, success) => {
+    console.log('error information', err)
     if (err) res.status(400).json({ error: 'Duplicate post' });
-    // console.log(err)
     return res.json(success);
   });
     });
@@ -108,34 +107,34 @@ exports.create = (req, res) => {
     // save to db
     category.save((err, success) => {
       if (err) res.status(400).json({ error: 'Duplicate post' });
-      // console.log(err)
+      console.log(err)
       return res.json(success);
     });
   }
 
    // if new blog post with a-group is posted this will email users in a group (i think)
-   User.find({ categories: { $in: group } }).exec((err, users) => {
-    if (err) {
-      throw new Error(err);
-    } else {
-      data.categories = result;
+  //  User.find({ categories: { $in: group } }).exec((err, users) => {
+  //   if (err) {
+  //     throw new Error(err);
+  //   } else {
+  //     data.categories = result;
 
-      for (let i = 0; i < users.length; i++) {
-        const params = linkPublishedParams(users[i].email, data); // email mod
-        const sendEmail = ses.sendEmail(params).promise();
+  //     for (let i = 0; i < users.length; i++) {
+  //       const params = linkPublishedParams(users[i].email, data); // email mod
+  //       const sendEmail = ses.sendEmail(params).promise();
 
-        sendEmail
-          .then((success) => {
-            console.log('email submitted to SES', success);
-            return;
-          })
-          .catch((failure) => {
-            console.log('error on email submitted to SES', failure);
-            return;
-          });
-      }
-    }
-  });
+  //       sendEmail
+  //         .then((success) => {
+  //           console.log('email submitted to SES', success);
+  //           return;
+  //         })
+  //         .catch((failure) => {
+  //           console.log('error on email submitted to SES', failure);
+  //           return;
+  //         });
+  //     }
+  //   }
+  // });
 };
 
 // exports.create = (req, res) => {
@@ -205,7 +204,7 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { slug } = req.params;
-  const { name, image, content } = req.body;
+  const { name, image, content, group } = req.body;
 
   // image data
   const base64Data = new Buffer.from(
@@ -213,7 +212,7 @@ exports.update = (req, res) => {
     'base64'
   );
 
-  Category.findOneAndUpdate({ slug }, { name, content }, { new: true }).exec(
+  Category.findOneAndUpdate({ slug }, { name, content, group }, { new: true }).exec(
     (err, updated) => {
       if (err) {
         return res.status(400).json({
