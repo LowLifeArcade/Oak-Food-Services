@@ -21,28 +21,60 @@ const linkSchema = new mongoose.Schema(
           ref: 'User'
         },
         complete: {
-          type: Boolean
+          type: Boolean,
+          required: true,
+          max: 256,
         },
         studentName: {
           type: String,
+          trim: true,
+          required: true,
+          max: 256,
         },
         schoolName: {
-          type: String
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
         },
         lastName: {
-          type: String
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
         },
         group: {
-          type: String
+          type: String,
+          trim: true,
+          max: 256,
         },
         teacher: {
-          type: String
+          type: String,
+          trim: true,
+          max: 256,
         },
         pickupOption: {
-          type: String
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
         },
         foodAllergy: {
-          type: String
+          type: String,
+          trim: true,
+          max: 256,
+        },
+        parentEmail: {
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
+        },
+        parentName: {
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
         },
         postedBy: {
           type: ObjectId,

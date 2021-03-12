@@ -245,7 +245,7 @@ const Profile = ({ user, token }) => {
             <option value="2nd-ruben">2nd - Ruben</option>
             <option value="3rd-arnold">3rd - Arnold</option>
             <option value="4th-lockrey">4th - Lockrey</option>
-            <option value="4th-farlow">4th - Farlow</option>
+            {/* <option value="4th-farlow">4th - Farlow</option> */}
             <option value="4th-chobanian">4th - Chobanian</option>
             <option value="5th-bailey">5th - Bailey</option>
             {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
@@ -319,9 +319,9 @@ const Profile = ({ user, token }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="6th-grade">6th grade </option>
-            <option value="7th-grade">7th grade </option>
-            <option value="8th-grade">8th grade </option>
+            ,<option value="6th-grade">6th </option>
+            <option value="7th-grade">7th </option>
+            <option value="8th-grade">8th </option>
             {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
@@ -352,10 +352,10 @@ const Profile = ({ user, token }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="9th-grade">9th grade</option>
-            <option value="10th-grade">10th grade </option>
-            <option value="11th-grade">11th grade </option>
-            <option value="12th-grade">12th grade </option>
+            ,<option value="9th-grade">9th</option>
+            <option value="10th-grade">10th </option>
+            <option value="11th-grade">11th </option>
+            <option value="12th-grade">12th </option>
             {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
@@ -367,38 +367,38 @@ const Profile = ({ user, token }) => {
     </>
   );
 
-  const addOODTeacher = (i, x) => (
-    <>
-      <div key={i} className="form-group">
-        <div className="">
-          <select
-            type="select"
-            // value={state.value}
-            value={x.teacher}
-            data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectTeacherChange(e)}
-            className="form-control"
-          >
-            {' '}
-            <option selected disabled value="">
-              Choose Grade Level
-            </option>
-            ,<option value="9th-grade">9th grade</option>
-            <option value="10th-grade">10th grade </option>
-            <option value="11th-grade">11th grade </option>
-            <option value="12th-grade">12th grade </option>
-            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
-          </select>
-          <div className="p-2"></div>
-        </div>
-      </div>
-    </>
-  );
+  // const addOODTeacher = (i, x) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <div className="">
+  //         <select
+  //           type="select"
+  //           // value={state.value}
+  //           value={x.teacher}
+  //           data-index={i}
+  //           // defaultValue={''}
+  //           // defaultValue={state.mealRequest[0].meal}
+  //           onChange={(e) => handleSelectTeacherChange(e)}
+  //           className="form-control"
+  //         >
+  //           {' '}
+  //           <option selected disabled value="">
+  //             Choose Grade Level
+  //           </option>
+  //           ,<option value="9th-grade">9th grade</option>
+  //           <option value="10th-grade">10th grade </option>
+  //           <option value="11th-grade">11th grade </option>
+  //           <option value="12th-grade">12th grade </option>
+  //           {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
+  //             return <option value={g._id}>{g.name}</option>;
+  //             // return <option value={g._id}>{g.name}</option>;
+  //           })} */}
+  //         </select>
+  //         <div className="p-2"></div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
   // console.log(loadedGroups)
   // const addStudentGroup = (i, x) => (
@@ -745,7 +745,7 @@ const Profile = ({ user, token }) => {
                       // onChange={handleChange({student: 'name'})}
                       type="text"
                       className="form-control"
-                      placeholder="Food Allergies (Only)"
+                      placeholder="List Food Allergies (Only)"
                     />
                   </div>
                   <div className="form-group pt-1">
@@ -767,11 +767,11 @@ const Profile = ({ user, token }) => {
                       <option value="MCMS">Medea Creek Middle School</option>
                       <option value="OPHS">Oak Park High School</option>
                       <option value="OVHS">Oak View High School</option>
-                      <option value="NON">Non OPUSD</option>
+                      <option value="NON">Non OPUSD Student</option>
                     </select>
                   </div>
 
-                  <div key={i} className="form-group">
+                  {students[i].schoolName != 'NON' && students[i].schoolName  != 'OVHS' && <div key={i} className="form-group">
                     <div className="">
                       {/* {console.log('group',x.group)} */}
                       <select
@@ -786,10 +786,10 @@ const Profile = ({ user, token }) => {
                         required
                       >
                         <option disabled value="">
-                          Choose Student Group
+                          Choose Cohort
                         </option>
-                        <option value="a-group">A - group (onsite)</option>
-                        <option value="b-group">B - group (onsite) </option>
+                        <option value="a-group">A (onsite)</option>
+                        <option value="b-group">B (onsite) </option>
                         <option value="distance-learning">Distance Learning (pickup)</option>
                         {/* {state.loadedGroups.map((g, i) => {
                           return (
@@ -803,8 +803,8 @@ const Profile = ({ user, token }) => {
                       </select>
                       <div className=""></div>
                     </div>
-                  </div>
-                  <div key={2} className="">
+                  </div>}
+                  {students[i].schoolName != 'NON' && <div key={2} className="">
                     {x.schoolName === 'BES' && addBESTeacher(i, x)}
                     {x.schoolName === 'OHES' && addOHESTeacher(i, x)}
                     {x.schoolName === 'ROES' && addROESTeacher(i, x)}
@@ -825,7 +825,22 @@ const Profile = ({ user, token }) => {
                         />
                       </div>
                     )}
-                  </div>
+                  </div>}
+
+                  {students[i].schoolName === 'NON' && x.schoolName === 'NON' && (
+                      <div className="form-group pt-1">
+                        <input
+                          value={x.age}
+                          data-index={i}
+                          onChange={handleObjectAgeChange()}
+                          // onChange={handleChange({student: 'name'})}
+                          type="text"
+                          className="form-control"
+                          placeholder="Age"
+                          required={true}
+                        />
+                      </div>
+                    )}
 
                   {/* <div key={i} className="">
                     {addStudentGroup(i, x)}
