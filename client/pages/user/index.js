@@ -14,7 +14,7 @@ const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm('WARNING! Please cancel at least a week in advance of pickup date if possible.');
+    let answer = window.confirm('ATENTION! Please cancel at least a week in advance of pickup date if possible.');
     if (answer) {
       window.confirm('Request is cancelled. No further action required.')
       handleDelete(id);
@@ -59,66 +59,70 @@ const User = ({ user, token, l, userLinks }) => {
               )}
             </h4>
 
-            <h4 className="pt-1 pb-1">
-              Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
-            </h4>
+            {l.mealRequest.filter(l => l.meal !== 'None' && l.meal !== 'Standard Onsite' && l.pickupOption !== 'Lunch Onsite / Breakfast Pickup').length != 0  && <h4 className="pt-1 pb-1">
+              Pickup date <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+            </h4>}
             <h4>
-              <b>Code: {l.pickupCode}</b>
+              {l.mealRequest.filter(l => l.meal !== 'None' && l.meal !== 'Standard Onsite' && l.pickupOption !== 'Lunch Onsite / Breakfast Pickup').length != 0 ? <b>Code: { l.pickupCode} </b>: <b>Onsite School Lunch for week of {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}</b>}
             </h4>
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
-                {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal
-                {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p>
+                {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal */}
+                {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p> */}
                 <div className="p-3">
                   {l.mealRequest.filter((l)=> l.meal !== 'None').map((k, i) => (
-                    <h6 className="">
-                      {console.log(k)}
-                      {/* Meal {`${i + 1} `} - for  */}
+                    <h5 className=""><b>
+
+                      {k.student === undefined
+                        ? 'user deleted'
+                        : 
+                        l.postedBy.students.filter((student) =>
+                        student._id.includes(k.student)
+                        ) &&
+                        k.studentName +
+                        
+                        (k.group === 'b-group' ? ' in Cohort B' : k.group === 'a-group' ? ' in Cohort A' : '')}
+                        </b>
+                      <br></br>
+
                       {k.student === undefined ? (
                         'user deleted'
                       ) : k.group === 'a-group' ||
                         k.group === 'b-group' ? (
                         k.pickupOption === 'Lunch Onsite / Breakfast Pickup' ? (
                           <>
-                            <b>2 onsite meals and </b>
+                            Onsite meals and 
                             <br />
-                            <b>5 pickup breakfast meals</b>{' '}
+                            Curbside breakfast meals{' '}
                           </>
                         ) : (
-                          <b>2 onsite meals </b>
+                          <>
+                          Onsite meals 
+                          </>
                         )
                       ) : (
-                        <b>5 pickup {k.meal} meals </b>
+                        <>
+                        Curbside {k.meal} meals 
+                        <br/>
+                        {k.pickupOption}
+                        </>
                       )}
-                      <br></br>
-                      {k.student === undefined
-                        ? 'user deleted'
-                        : l.postedBy.students.filter((student) =>
-                            student._id.includes(k.student)
-                          ) &&
-                          k.studentName +
-                            ' - ' +
-                            k.group}
-                      {/* {console.log(i,l.postedBy.students[i]._id)} */}
-                      {/* {console.log('meal req',k.meal)} */}
                       <hr />
-                    </h6>
+                    </h5>
                   ))}
                 </div>
               </h5>
               {/* {console.log(l.mealRequest)} */}
-              {l.pickupTime === 'Cafeteria' ?  <h2 className=" " style={{ fontSize: '16px' }}>
-                Pickup is on campus at the student <b>{l.pickupTime} </b> during school hours
-              </h2> : <h2 className=" " style={{ fontSize: '16px' }}>
-                Pickup for your order is between <b>{l.pickupTime} </b> on
-                Friday 
+              {l.pickupTime === 'Cafeteria' ?  null: <h2 className=" " style={{ fontSize: '16px' }}>
+                Pickup is between <b>{l.pickupTime} </b> on
+                Friday. Please print out or write out your code and display your <b className='text-danger' >CODE on your dashboard</b>. 
               </h2>}
             </div>
             <div className="pt-1 ">
               <span className="">
                 {' '}
-                {moment(l.createdAt).fromNow()} by{' '}
+                {moment(l.createdAt).format('M/d/yy')} by{' '}
                 {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
               </span>
             </div>

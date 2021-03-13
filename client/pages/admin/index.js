@@ -27,27 +27,63 @@ const Admin = ({ token, user }) => {
   });
 
   const { requests, pickupDate, meals } = state;
+  let myDate = ''
 
   useEffect(() => {
     // loadRequests();
+    let allMealsArray = [];
+    const pushAllMeals = (meal) => {
+      requests.map((r, i) =>
+        r.mealRequest.map((meal) => allMealsArray.push(meal))
+      );
+      console.log('meal array', allMealsArray);
+    };
+    console.log('none array', meals);
     pushAllMeals();
     setState({
       ...state,
-      meals: allMealsArray,
+      meals: allMealsArray.filter((meal) => meal.meal !== 'None'),
     });
   }, [requests]);
 
-  let allMealsArray = [];
-  const pushAllMeals = (meal) => {
-    requests.map((r, i) =>
-      r.mealRequest.map((meal) => allMealsArray.push(meal))
-    );
-  };
+  // useEffect(() => {
+  //   // loadRequests();
+  //   let allMealsArray = [];
+  // const pushAllMeals = (meal) => {
+  //   requests.map((r, i) =>
+  //     r.mealRequest.map((meal) => allMealsArray.push(meal))
+  //   );
+  //   console.log('meal array', allMealsArray);
+  // };
+  //   console.log('none array', meals)
+  //   pushAllMeals();
+  //   setState({
+  //     ...state,
+  //     meals: allMealsArray.filter(meal => meal.meal !== 'None'),
+  //   });
+  // }, [requests]);
+
   // setState({...state, meals: [...allMealsArray]})
-  console.log('state.meals', meals);
 
   // console.log(allMealsArray);
   // console.log(state.meals);
+
+  const handleTimeSelect = (e, pickupTimeSelected) => {
+    e.preventDefault();
+
+    let allMealsArray2 = [];
+
+    requests
+    .filter((mealRequest) => mealRequest.pickupTime === pickupTimeSelected)
+    .map((r, i) =>
+      r.mealRequest
+        
+        .map((meal) => allMealsArray2.push(meal))
+        );
+        
+        setState({ ...state, meals: allMealsArray2 });
+        console.log('req time', meals);
+      };
 
   const mealCounter = (meal) =>
     state.meals.filter(
@@ -94,7 +130,10 @@ const Admin = ({ token, user }) => {
 
   const pickupMealsForLunch = () =>
     meals.filter(
-      (m) => m.group === 'distance-learning' || m.pickupOption === 'Lunch Only' &&  m.group === 'distance-learning' || m.pickupOption === 'Breakfast and Lunch'
+      (m) =>
+        m.group === 'distance-learning' ||
+        (m.pickupOption === 'Lunch Only' && m.group === 'distance-learning') ||
+        m.pickupOption === 'Breakfast and Lunch'
     ).length;
   const pickupMealsForBreakfast = () =>
     meals.filter(
@@ -109,12 +148,20 @@ const Admin = ({ token, user }) => {
 
   const allOpenPickupMeals = (meal) =>
     meals
-      .filter((m) => m.group === 'distance-learning' || m.pickupOption === 'Lunch Onsite / Breakfast Pickup')
+      .filter(
+        (m) =>
+          m.group === 'distance-learning' ||
+          m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+      )
       .filter((x) => x.complete === false).length;
 
   const allCompletedPickupMeals = (meal) =>
     meals
-      .filter((m) => m.group === 'distance-learning' || m.pickupOption === 'Lunch Onsite / Breakfast Pickup')
+      .filter(
+        (m) =>
+          m.group === 'distance-learning' ||
+          m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+      )
       .filter((x) => x.complete === true).length;
 
   // state.meals.filter((m) =>
@@ -155,6 +202,8 @@ const Admin = ({ token, user }) => {
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDate: moment(pickupDate).format('l') });
     // setShowSearch(!showSearch);
+    
+    // myDate = pickupDate
     handleDateChange(pickupDate);
   };
 
@@ -284,6 +333,7 @@ const Admin = ({ token, user }) => {
               <Calendar
                 onChange={(e) => onDateChange(e)}
                 tileDisabled={handleDisabledDates}
+                value={pickupDate}
                 // defaultValue={twoWeeksFromNow}
                 // tileDisabled={(date, view) =>
                 //   yesterday.some(date =>
@@ -296,6 +346,15 @@ const Admin = ({ token, user }) => {
                 value={''}
               />
             </div>
+            <button onClick={(e) => handleTimeSelect(e, '7am-9am')}>
+              7am-9am
+            </button>
+            <button onClick={(e) => handleTimeSelect(e, '11am-1pm')}>
+              11am-1pm
+            </button>
+            <button onClick={(e) => handleTimeSelect(e, '4pm-6pm')}>
+              4pm-6pm
+            </button>
           </div>
         </div>
       </div>
@@ -308,32 +367,34 @@ const Admin = ({ token, user }) => {
       </h3>
       <hr />
       <h4>
-        <b className="text-danger">{allPickupMeals() * 5}</b> - Total Pickup
-        Meals <p />
+        {/* <b className="text-danger">{allPickupMeals() * 5}</b> - Total Pickup
+        Meals <p /> */}
         <b className="text-danger">{pickupMealsForLunch('Lunch Only') * 5}</b> -
-        All Lunch Meals <p />
-        <b className="text-danger">{pickupMealsForBreakfast() * 5}</b> - All
-        Breakfast Meals <p />
+        Curbside Lunch Meals <p />
+        <b className="text-danger">{pickupMealsForBreakfast() * 5}</b> -
+        Curbside Breakfast Meals <p />
       </h4>
 
       <h5 className="p-1">
-        <b>{allOpenPickupMeals() * 5}</b> - Unfulfilled Pickup Meals <p />
-        <b>{allCompletedPickupMeals() * 5}</b> - Fulfilled Pickup Meals
+        <b>{allOpenPickupMeals() * 5}</b> - Unfulfilled Curbside Meals <p />
+        <b>{allCompletedPickupMeals() * 5}</b> - Fulfilled Curbside Meals
       </h5>
       <hr />
       <div className="p-3">
         <h6>
-          {mealCounter('Standard') * 5} - Standard meal requests
+          {mealCounter('Standard') * 5} - Standard Breakfast and Lunch Meal
+          Requests
           <hr />
-          {lunchOnlyMealCounter('Standard') * 5} - Standard meals LUNCH ONLY
+          {lunchOnlyMealCounter('Standard') * 5} - Standard Meals LUNCH ONLY
           <hr />
-          {mealCounter('Vegetarian') * 5} - Vegetarian meal requests
+          {mealCounter('Vegetarian') * 5} - Vegetarian Breakfast and Lunch Meal
+          Requests
           <hr />
-          {lunchOnlyMealCounter('Vegetarian') * 5} - Vegetarian meals LUNCH ONLY
+          {lunchOnlyMealCounter('Vegetarian') * 5} - Vegetarian Meals LUNCH ONLY
           <hr />
-          {lunchOnlyMealCounter('Vegan') * 5} - Vegan meals LUNCH ONLY
+          {lunchOnlyMealCounter('Vegan') * 5} - Vegan Meals LUNCH ONLY
           <hr />
-          {lunchOnlyMealCounter('GlutenFree') * 5} - Gluten Free meals LUNCH
+          {lunchOnlyMealCounter('GlutenFree') * 5} - Gluten Free Meals LUNCH
           ONLY
           <hr />
           {mealBreakfastOnlyCounter('Standard Onsite') * 5} - Breakfast Only

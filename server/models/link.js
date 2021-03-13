@@ -76,6 +76,12 @@ const linkSchema = new mongoose.Schema(
           required: true,
           max: 256,
         },
+        individualPickupTime: {
+          type: String,
+          trim: true,
+          required: true,
+          max: 256,
+        },
         postedBy: {
           type: ObjectId,
           ref: 'User',

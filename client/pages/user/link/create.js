@@ -41,6 +41,7 @@ const Create = ({ token, user }) => {
         foodAllergy: user.students[0].foodAllergy,
         parentEmail: user.email,
         parentName: user.name,
+        individualPickupTime: '', 
         complete: false,
       },
     ],
@@ -526,6 +527,7 @@ const Create = ({ token, user }) => {
           foodAllergy: foodAllergy,
           parentEmail: user.email,
           parentName: user.name,
+          individualPickupTime: '',
           complete: false,
         },
       ],
@@ -574,6 +576,9 @@ const Create = ({ token, user }) => {
   // console.log(pickupCodeAdd)
 
   const submit = () => {
+    // make shallow copy of individual meals and add pickuptime to each OR map or something like that
+
+
     // mealRequest.forEach((meal) => {
     //     if(meal.meal === 'None'){
     //       // delete meal
@@ -612,6 +617,8 @@ const Create = ({ token, user }) => {
           user.userCode +
           '-0' +
           length);
+
+        
 
     setState({
       ...state,
