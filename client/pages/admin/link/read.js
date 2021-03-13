@@ -234,13 +234,13 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
               Delete
             </button>
           </Link>
-              {/* {
-                <Link href={`/link/admin/${l._id}`}>
+              {
+                <Link href={`/user/link/${l._id}`}>
                   <button className="badge btn btn-outline-warning text float-left">
                     Edit Request
                   </button>
                 </Link>
-              } */}
+              }
               {/* {console.log(orderStatus)} */}
               {l.orderStatus === false ? (
                 <Link href="">

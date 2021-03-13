@@ -79,7 +79,7 @@ const linkSchema = new mongoose.Schema(
         individualPickupTime: {
           type: String,
           trim: true,
-          required: true,
+          // required: true,
           max: 256,
         },
         postedBy: {

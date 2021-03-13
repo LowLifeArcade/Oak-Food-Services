@@ -118,7 +118,8 @@ const Profile = ({ user, token }) => {
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    oneStudent.group = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    oneStudent.group = e.target.value;
+    oneStudent.age = '' // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
     setState({
       ...state,
@@ -140,7 +141,7 @@ const Profile = ({ user, token }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
+            value={students[i].group}
             data-index={i}
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
@@ -584,7 +585,10 @@ const Profile = ({ user, token }) => {
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    oneStudent.schoolName = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    oneStudent.schoolName = e.target.value;
+    oneStudent.teacher = ''
+    oneStudent.age = ''
+    oneStudent.group = e.target.value === 'NON' ? 'distance-learning' : ''  // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
     // setState({
@@ -778,7 +782,7 @@ const Profile = ({ user, token }) => {
                   {/* <hr /> */}
                   <div className="form-group pt-1">
                     <select
-                      value={x.schoolName}
+                      value={students[i].schoolName }
                       data-index={i}
                       onChange={handleObjectSchoolChange()}
                       // onChange={handleChange({student: 'name'})}
@@ -814,7 +818,7 @@ const Profile = ({ user, token }) => {
                   {students[i].schoolName != 'NON' && students[i].schoolName  != 'OVHS' && <div key={1} className="">
                     {addStudentGroup(i)}
                   </div>}
-                  {students[i].schoolName != 'NON' && <div key={2} className="">
+                  {students[i].schoolName != 'NON' && students[i].group != 'distance-learning' && <div key={2} className="">
                     {x.schoolName === 'BES' && addBESTeacher(i, x)}
                     {x.schoolName === 'OHES' && addOHESTeacher(i, x)}
                     {x.schoolName === 'ROES' && addROESTeacher(i, x)}
@@ -868,16 +872,16 @@ const Profile = ({ user, token }) => {
       {/* {console.log('student array in state', state.students)} */}
 
       <div className="form-group">
-        <button
+        {students.length < 5 && <button
           type="text"
           onClick={(e) => addStudent(e)}
           className="btn btn-outline-primary "
         >
           {addButtonText}
-        </button>
+        </button>}
         {/* <div className=""> */}
 
-        {!state.students.length < 1 && (
+        {students.length > 1 && (
           <button
             className="btn btn-danger float-right"
             onClick={(e) => removeStudent(e)}
