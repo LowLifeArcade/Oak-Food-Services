@@ -116,7 +116,7 @@ const Layout = ({ children }) => {
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li className="nav-item ml-auto">
             <Link href="/admin">
-              <a className="nav-link text-white">Admin: {isAuth().name}</a>
+              <a className="nav-link text-white">Admin Dashboard: {isAuth().name}</a>
             </Link>
           </li>
         )}
@@ -124,7 +124,7 @@ const Layout = ({ children }) => {
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li className="nav-item ml-auto">
             <Link href="/user">
-              <a className="nav-link text-white">User: {isAuth().name}</a>
+              <a className="nav-link text-white">Dashboard: {isAuth().name}</a>
             </Link>
           </li>
         )}

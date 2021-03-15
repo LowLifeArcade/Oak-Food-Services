@@ -41,7 +41,7 @@ const Create = ({ token, user }) => {
         foodAllergy: user.students[0].foodAllergy,
         parentEmail: user.email,
         parentName: user.name,
-        individualPickupTime: '', 
+        individualPickupTime: '',
         complete: false,
       },
     ],
@@ -91,7 +91,6 @@ const Create = ({ token, user }) => {
   // console.log('pickup info before', pickupTime);
   // conditions: mealRequest has only Onsite Standard meals. So if nothing other than that exists than true.
   useEffect(() => {
-    
     setState({
       ...state,
       pickupTime:
@@ -99,26 +98,104 @@ const Create = ({ token, user }) => {
           ? '11am-1pm'
           : mealRequest
               .filter(
-                (meal) =>
-                  meal.meal !== 'None'
+                (meal) => meal.meal !== 'None'
                 // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
               )
-              .every((meal) => meal.meal === 'Standard Onsite') 
-              &&
+              .every((meal) => meal.meal === 'Standard Onsite') &&
             mealRequest
-            .filter(
-              (meal) =>
-                meal.meal !== 'None'
-              // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
-            )
-            .some(
-              (meal) => meal.pickupOption === 'Lunch Only'
-            )
+              .filter(
+                (meal) => meal.meal !== 'None'
+                // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
+              )
+              .some((meal) => meal.pickupOption === 'Lunch Only')
           ? 'Cafeteria'
           : '',
     });
   }, [mealRequest]);
 
+  useEffect(() => {
+    // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
+    // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    let frontCode = [];
+    // let mereq = [{ meal: 'Vegetarian' }];
+    // for (const mealObj in mereq) {
+    // for (const meal of mealObj) {
+    // console.log(mealObj);
+    mealRequest.forEach((item) => {
+      if (item.pickupOption != 'Lunch Only' && item.pickupOption != 'Breakfast Only' ) {
+        switch (item.meal) {
+          case 'Vegetarian':
+            frontCode.push('Vt');
+            // console.log('vege')
+            break;
+          case 'Standard':
+            frontCode.push('');
+            // console.log('gf')
+            break;
+          case 'Vegan':
+            frontCode.push('Vg');
+            // console.log('vegan')
+            break;
+          case 'GlutenFree':
+            frontCode.push('Gf');
+            // console.log('gf')
+            break;
+
+          default:
+            break;
+        }
+      }
+      switch (item.meal) {
+        case 'Vegan':
+          frontCode.push('Vg');
+          // console.log('vegan')
+          break;
+        case 'GlutenFree':
+          frontCode.push('Gf');
+          // console.log('gf')
+          break;
+
+        default:
+          break;
+      }
+    });
+    mealRequest.forEach((item) => {
+      switch (item.pickupOption) {
+        case 'Breakfast Only':
+          frontCode.push('B');
+          break;
+        case 'Lunch Onsite / Breakfast Pickup':
+          frontCode.push('B');
+          break;
+
+        default:
+          break;
+      }
+      item.pickupOption === 'Lunch Only' && item.meal === 'Standard'
+        ? frontCode.push('L')
+        : null;
+      item.pickupOption === 'Lunch Only' && item.meal === 'Vegetarian'
+        ? frontCode.push('Lv')
+        : null;
+      console.log('item meal', item.meal);
+      console.log('item pickup option', item.pickupOption);
+    });
+    // }
+    // code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    // codes[i] = code;
+    console.log('use effect front code', frontCode);
+    let newPickupCode =
+      frontCode.join('') + '-' + user.userCode + '-0' + mealRequest.length;
+
+    setState({
+      ...state,
+      buttonText: 'Update',
+      pickupCode: newPickupCode,
+      pickupCodeAdd: frontCode,
+      success: '',
+      error: '',
+    }); //puts ...mealRequest with new meal back into mealRequest: []
+  }, [mealRequest]);
 
   // load categories when component mounts useing useEffect
   useEffect(() => {
@@ -180,6 +257,14 @@ const Create = ({ token, user }) => {
     let pickupOptionLO = '';
     let groupLO = '';
     switch (input) {
+      case 'Lunch Only' && code.meal === 'Vegetarian':
+        frontCode = 'Vtl';
+        break;
+      case 'Lunch Only' && code.meal === 'Standard':
+        frontCode = 'Sl';
+        break;
+      case 'Breakfast Only':
+        frontCode = 'B';
       case 'Vegetarian':
         frontCode = 'Vt';
         pickupOptionLO = state.mealRequest[i].pickupOption;
@@ -348,10 +433,37 @@ const Create = ({ token, user }) => {
 
     meals[i] = meal;
 
+
+    let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
+    let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    let input = e.target.value;
+    let frontCode = '';
+
+    switch (input) {
+      // case 'Lunch Only' && code.meal === 'Vegetarian':
+      //   frontCode = 'Vtl';
+      //   break;
+      // case 'Lunch Only' && code.meal === 'Standard':
+      //   frontCode = 'Sl';
+      //   break;
+      case 'Breakfast Only':
+        frontCode = 'B';
+        break;
+      case 'Lunch Onsite / Breakfast Pickup':
+        frontCode = 'B';
+        break;
+      default:
+        break;
+    }
+    code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    codes[i] = code;
+    
+
     setState({
       ...state,
       mealRequest: [...meals],
       buttonText: 'Request',
+      pickupCodeAdd: codes,
       success: '',
       error: '',
     });
@@ -495,6 +607,29 @@ const Create = ({ token, user }) => {
     </>
   );
 
+  const selectPickupTimeCafeteriaOnly = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            value={pickupTime}
+            data-index={i}
+            onChange={(e) => handlePickupTimeChange(e)}
+            className="form-control"
+          >
+            {' '}
+            <option disabled value="">
+              Choose an option
+            </option>
+            <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
   // add meal button
   const addMeal = (
     student,
@@ -578,7 +713,6 @@ const Create = ({ token, user }) => {
   const submit = () => {
     // make shallow copy of individual meals and add pickuptime to each OR map or something like that
 
-
     // mealRequest.forEach((meal) => {
     //     if(meal.meal === 'None'){
     //       // delete meal
@@ -617,8 +751,6 @@ const Create = ({ token, user }) => {
           user.userCode +
           '-0' +
           length);
-
-        
 
     setState({
       ...state,
@@ -785,13 +917,27 @@ const Create = ({ token, user }) => {
         </label>
         {selectPickupOption()}
       </div> */}
-
-      <div className="form-group">
-        <label htmlFor="" className="text-muted">
-          Pickup Time
-        </label>
-        {selectPickupTime()}
-      </div>
+      {/* {console.log('add meal',mealRequest)} */}
+      {mealRequest
+        .filter((meal) => meal.meal !== 'None')
+        .every(
+          (meal) =>
+            meal.meal == 'Standard Onsite' && meal.pickupOption == 'Lunch Only'
+        ) ? (
+        <div className="form-group">
+          <label htmlFor="" className="text-muted">
+            Pickup at Cafeteria
+          </label>
+          {selectPickupTimeCafeteriaOnly()}
+        </div>
+      ) : (
+        <div className="form-group">
+          <label htmlFor="" className="text-muted">
+            Pickup Time
+          </label>
+          {selectPickupTime()}
+        </div>
+      )}
 
       {success && showSuccessMessage(success)}
       {error && showErrorMessage(error)}

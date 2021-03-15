@@ -318,7 +318,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       <div className="row">
         <div className="col-md-8 pt-4">
           <h3>
-            Meal Request for{' '}
+            Meal Receipts for{' '}
             {pickupDateLookup &&
               moment(state.pickupDateLookup).format('MMM Do')}{' '}
           </h3>

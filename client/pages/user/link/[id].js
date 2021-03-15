@@ -26,9 +26,10 @@ const Update = ({ oldLink, token, user, _id }) => {
     pickupTime: oldLink.pickupTime,
     pickupOption: oldLink.pickupOption,
     pickupDate: oldLink.pickupDate,
-    pickupCodeInput: '',
+    pickupCodeInput: oldLink.postedBy.userCode,
     buttonText: 'Update',
-    pickupCode: user.userCode ,
+    // userCode: oldLink.postedBy.userCode,
+    pickupCode: '', // fix. this doesn't work.
     pickupCodeAdd: [],
     // pickupCodeAdd: oldLink.pickupCodeAdd,
     mealWeek: oldLink.pickupWeek,
@@ -40,6 +41,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   const {
     pickupCodeInput,
     pickupOption,
+    // userCode,
     pickupTime,
     orderStatus,
     mealRequest,
@@ -58,12 +60,10 @@ const Update = ({ oldLink, token, user, _id }) => {
   // const username = user.username;
   // const userCode = user.userCode
   const [showSearch, setShowSearch] = useState(false);
-  console.log('meal req',mealRequest)
+  console.log('mealRequest', mealRequest);
 
   useEffect(() => {
-    // setTimeout(() => {
-   console.log('mealRequest changed' , pickupTime)
-    // },1000)
+    
     setState({
       ...state,
       pickupTime:
@@ -71,27 +71,23 @@ const Update = ({ oldLink, token, user, _id }) => {
           ? '11am-1pm'
           : mealRequest
               .filter(
-                (meal) =>
-                  meal.meal !== 'None'
+                (meal) => meal.meal !== 'None'
                 // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
               )
-              .every((meal) => meal.meal === 'Standard Onsite') 
-              &&
+              .every((meal) => meal.meal === 'Standard Onsite') &&
             mealRequest
-            .filter(
-              (meal) =>
-                meal.meal !== 'None'
-              // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
-            )
-            .some(
-              (meal) => meal.pickupOption === 'Lunch Only'
-            )
+              .filter(
+                (meal) => meal.meal !== 'None'
+                // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
+              )
+              .some((meal) => meal.pickupOption === 'Lunch Only')
           ? 'Cafeteria'
           : '',
     });
   }, [mealRequest]);
 
   useEffect(() => {
+    setTimeout(() => {
     // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
     // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     let frontCode = [];
@@ -100,11 +96,30 @@ const Update = ({ oldLink, token, user, _id }) => {
     // for (const meal of mealObj) {
     // console.log(mealObj);
     mealRequest.forEach((item) => {
+      if (item.pickupOption != 'Lunch Only' && item.pickupOption != 'Breakfast Only' ) {
+        switch (item.meal) {
+          case 'Vegetarian':
+            frontCode.push('Vt');
+            // console.log('vege')
+            break;
+          case 'Standard':
+            frontCode.push('');
+            // console.log('gf')
+            break;
+          case 'Vegan':
+            frontCode.push('Vg');
+            // console.log('vegan')
+            break;
+          case 'GlutenFree':
+            frontCode.push('Gf');
+            // console.log('gf')
+            break;
+
+          default:
+            break;
+        }
+      }
       switch (item.meal) {
-        case 'Vegetarian':
-          frontCode.push('Vt');
-          // console.log('vege')
-          break;
         case 'Vegan':
           frontCode.push('Vg');
           // console.log('vegan')
@@ -113,32 +128,49 @@ const Update = ({ oldLink, token, user, _id }) => {
           frontCode.push('Gf');
           // console.log('gf')
           break;
-        case 'Standard':
-          frontCode.push('');
-          // console.log('gf')
+
+        default:
+          break;
+      }
+    });
+    mealRequest.forEach((item) => {
+      switch (item.pickupOption) {
+        case 'Breakfast Only':
+          frontCode.push('B');
+          break;
+        case 'Lunch Onsite / Breakfast Pickup':
+          frontCode.push('B');
           break;
 
         default:
           break;
       }
-      // }
+      item.pickupOption === 'Lunch Only' && item.meal === 'Standard'
+        ? frontCode.push('L')
+        : null;
+      item.pickupOption === 'Lunch Only' && item.meal === 'Vegetarian'
+        ? frontCode.push('Lv')
+        : null;
+      console.log('item meal', item.meal);
+      console.log('item pickup option', item.pickupOption);
     });
     // }
-    // console.log(frontCode);
     // code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     // codes[i] = code;
-
-    let newPickupCode =
-      frontCode.join('') + '-' + user.userCode + '-0' + mealRequest.length;
+    console.log('use effect front code', frontCode);
+    // let newPickupCode =
+    //   frontCode.join('') + '-' + user.userCode + '-0' + mealRequest.length;
 
     setState({
       ...state,
       buttonText: 'Update',
-      pickupCode: newPickupCode,
+      // pickupCode: newPickupCode,
       pickupCodeAdd: frontCode,
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
+  },100)
+
   }, [mealRequest]);
 
   // console.log(user.students);
@@ -147,11 +179,15 @@ const Update = ({ oldLink, token, user, _id }) => {
   useEffect(() => {
     loadCategories();
     success === 'Your request was updated'
-      ? setTimeout(() => {
-          Router.push('/user');
-        }, 2000)
-      : loadCategories();
-    // : Router.push('');
+      ? isAuth().role === 'admin'
+        ? setTimeout(() => {
+            Router.push('/admin/link/read');
+          }, 2000)
+        : setTimeout(() => {
+            Router.push('/user');
+          }, 2000)
+      : // : Router.push('');:
+        null;
     return () => clearTimeout();
   }, [success]);
 
@@ -449,10 +485,35 @@ const Update = ({ oldLink, token, user, _id }) => {
 
     meals[i] = meal;
 
+    // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
+    // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    // let input = e.target.value;
+    // let frontCode = '';
+
+    // switch (input) {
+    //   // case 'Lunch Only' && code.meal === 'Vegetarian':
+    //   //   frontCode = 'Vtl';
+    //   //   break;
+    //   // case 'Lunch Only' && code.meal === 'Standard':
+    //   //   frontCode = 'Sl';
+    //   //   break;
+    //   case 'Breakfast Only':
+    //     frontCode = 'B';
+    //     break;
+    //   case 'Lunch Onsite / Breakfast Pickup':
+    //     frontCode = 'B';
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    // codes[i] = code;
+
     setState({
       ...state,
       mealRequest: [...meals],
       buttonText: 'Request',
+      // pickupCodeAdd: codes,
       success: '',
       error: '',
     });
@@ -541,6 +602,29 @@ const Update = ({ oldLink, token, user, _id }) => {
     </>
   );
 
+  const selectPickupTimeCafeteriaOnly = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            value={pickupTime}
+            data-index={i}
+            onChange={(e) => handlePickupTimeChange(e)}
+            className="form-control"
+          >
+            {' '}
+            <option disabled value="">
+              Choose an option
+            </option>
+            <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
   // add meal button
   const addMeal = (
     student,
@@ -557,17 +641,22 @@ const Update = ({ oldLink, token, user, _id }) => {
         ...mealRequest,
         {
           meal:
-            group === 'a-group' || group === 'b-group' ? 'Standard Onsite' : 'Standard',
+            group === 'a-group' || group === 'b-group'
+              ? 'Standard Onsite'
+              : 'Standard',
           student: student,
           studentName: studentName,
           lastName: user.lastName,
           schoolName: schoolName,
           group: group,
           teacher: teacher,
-          pickupOption: group === 'a-group' || group === 'b-group' ? 'Lunch Only' : 'Breakfast and Lunch' ,
+          pickupOption:
+            group === 'a-group' || group === 'b-group'
+              ? 'Lunch Only'
+              : 'Breakfast and Lunch',
           foodAllergy: foodAllergy,
           parentEmail: user.email,
-        parentName: user.name,
+          parentName: user.name,
           complete: false,
         },
       ],
@@ -680,14 +769,16 @@ const Update = ({ oldLink, token, user, _id }) => {
 
     // pickupCode = NewPickupCode
     // newCodeMaker()
-    console.log(mealRequest,
+    console.log(
+      mealRequest,
       // pickupOption,
       pickupTime,
       pickupDate,
       // username,
       pickupCode,
       pickupCodeAdd,
-      orderStatus,)
+      orderStatus
+    );
     let dynamicUpdateUrl;
     if (isAuth() && isAuth().role === 'admin') {
       dynamicUpdateUrl = `${API}/link/admin/${oldLink._id}`;
@@ -728,7 +819,7 @@ const Update = ({ oldLink, token, user, _id }) => {
       setState({ ...state, error: 'update error' });
     }
   };
-
+  console.log('pickup code add', pickupCodeAdd);
   const submit = () => {
     // mealRequest.forEach((meal) => {
     //     if(meal.meal === 'None'){
@@ -742,7 +833,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
     let length =
-    mealRequest.filter((meal) => meal.meal != 'None').length -
+      mealRequest.filter((meal) => meal.meal != 'None').length -
       mealRequest.filter((meal) => meal.meal === 'Standard Onsite').length +
       mealRequest.filter(
         (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup'
@@ -753,9 +844,19 @@ const Update = ({ oldLink, token, user, _id }) => {
 
     isAuth().role === 'admin'
       ? (newPickupCode =
-        (newPickupCodeAdd.join('') != '' ? newPickupCodeAdd.join('')+ '-' : '')  + (pickupCodeInput != '' ? pickupCodeInput : user.userCode) + '-0' + length)
+          (newPickupCodeAdd.join('') != ''
+            ? newPickupCodeAdd.join('') + '-'
+            : '') +
+          (pickupCodeInput != '' ? pickupCodeInput : user.userCode) +
+          '-0' +
+          length)
       : (newPickupCode =
-        (newPickupCodeAdd.join('') != '' ? newPickupCodeAdd.join('')+ '-' : '')  + user.userCode + '-0' + length);
+          (newPickupCodeAdd.join('') != ''
+            ? newPickupCodeAdd.join('') + '-'
+            : '') +
+          user.userCode +
+          '-0' +
+          length);
 
     setState({
       ...state,
@@ -857,7 +958,9 @@ const Update = ({ oldLink, token, user, _id }) => {
           >
             {' '}
             {/* <option value="">Choose an option</option> */}
-            <option disabled value={''}>Choose a meal</option>
+            <option disabled value={''}>
+              Choose a meal
+            </option>
             <option value={'Standard Onsite'}>Standard (Onsite)</option>
             <option value={'None'}>None</option>
           </select>
@@ -915,7 +1018,7 @@ const Update = ({ oldLink, token, user, _id }) => {
       </div>
     </>
   );
-console.log('meal req', mealRequest)
+  console.log('meal req', mealRequest);
   const selectNonePickupOption = (i) => (
     <>
       <div key={i} className="form-group">
@@ -981,12 +1084,26 @@ console.log('meal req', mealRequest)
         {selectPickupOption()}
       </div> */}
 
-      <div className="form-group">
-        <label htmlFor="" className="text-muted">
-          Pickup Time
-        </label>
-        {selectPickupTime()}
-      </div>
+      {mealRequest
+        .filter((meal) => meal.meal !== 'None')
+        .every(
+          (meal) =>
+            meal.meal == 'Standard Onsite' && meal.pickupOption == 'Lunch Only'
+        ) ? (
+        <div className="form-group">
+          <label htmlFor="" className="text-muted">
+            Pickup at Cafeteria
+          </label>
+          {selectPickupTimeCafeteriaOnly()}
+        </div>
+      ) : (
+        <div className="form-group">
+          <label htmlFor="" className="text-muted">
+            Pickup Time
+          </label>
+          {selectPickupTime()}
+        </div>
+      )}
 
       {success && showSuccessMessage(success)}
       {error && showErrorMessage(error)}
@@ -1112,12 +1229,27 @@ console.log('meal req', mealRequest)
                 {state.mealRequest.map((x, i) => {
                   return (
                     <>
-                      <h6 className="p-2">
-                        <label key={i} className="form-check-label text-muted">
-                          {/* Select Meal # {`${i + 1}`}  */}
-                          Select meal for {`${user.students[i].name}`}
-                        </label>
-                      </h6>
+                      {isAuth().role != 'admin' ? (
+                        <h6 className="p-2">
+                          <label
+                            key={i}
+                            className="form-check-label text-muted"
+                          >
+                            {/* Select Meal # {`${i + 1}`}  */}
+                            Select meal for {`${user.students[i].name}`}
+                          </label>
+                        </h6>
+                      ) : (
+                        <h6 className="p-2">
+                          <label
+                            key={i}
+                            className="form-check-label text-muted"
+                          >
+                            {/* Select Meal # {`${i + 1}`}  */}
+                            Select meal for student # {`${i + 1}`}
+                          </label>
+                        </h6>
+                      )}
                       {/* {console.log(x)}
                     {console.log(mealRequest)} */}
 

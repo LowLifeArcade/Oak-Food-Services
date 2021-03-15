@@ -1035,7 +1035,7 @@ const Requests = ({ token }) => {
       <div className="row">
         <div className="col-md-8 pt-4">
           <h3>
-            Meal Request for{' '}
+            Meal Lists for{' '}
             {pickupDateLookup &&
               moment(state.pickupDateLookup).format('MMM Do')}{' '}
           </h3>
