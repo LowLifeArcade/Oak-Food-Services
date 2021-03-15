@@ -39,10 +39,10 @@ const Requests = ({ token }) => {
     searchBySchool: '',
     searchByGroup: '',
     searchPickupTime: '',
-    searchByTeacher: '',
-    searchByTeacher2: '',
-    searchByTeacher3: '',
-    searchByTeacher4: '',
+    searchByTeacher: '', // this will return everything because it's empty
+    searchByTeacher2: 'filter', // used to defualt to a searchword that wouldn't return anything
+    searchByTeacher3: 'filter', // used to defualt to a searchword that wouldn't return anything
+    searchByTeacher4: 'filter', // used to defualt to a searchword that wouldn't return anything
     ageGroup1: '',
     ageGroup2: '',
     ageGroup3: '',
@@ -80,6 +80,10 @@ const Requests = ({ token }) => {
     loadUsers();
     handleDateChange(pickupDateLookup);
   }, []);
+
+  useEffect(() => {
+    orderType === 'Onsite' ? setShowStatus(false) : setShowStatus(true) 
+  }, [orderType])
 
   useEffect(() => {
     let allMealsArray2 = [];
@@ -579,15 +583,15 @@ const Requests = ({ token }) => {
           // .filter((l, i) => l.teacher.includes(searchByTeacher))
           .filter(
             (l, i) =>
-            // l.group != 'distance-learning' &&
-              l.teacher.includes(searchByTeacher) 
-              // l.teacher.includes(searchByTeacher2) ||
-              // l.teacher.includes(searchByTeacher3) ||
-              // l.teacher.includes(searchByTeacher4)
+              // l.group != 'distance-learning' &&
+              l.teacher.includes(searchByTeacher) ||
+              l.teacher.includes(searchByTeacher2) ||
+              l.teacher.includes(searchByTeacher3) ||
+              l.teacher.includes(searchByTeacher4)
           )
-          .filter((l, i) => l.teacher.includes(searchByTeacher2))
-          .filter((l, i) => l.teacher.includes(searchByTeacher3))
-          .filter((l, i) => l.teacher.includes(searchByTeacher4))
+          // .filter((l, i) => l.teacher.includes(searchByTeacher2))
+          // .filter((l, i) => l.teacher.includes(searchByTeacher3))
+          // .filter((l, i) => l.teacher.includes(searchByTeacher4))
           .filter((l, i) => l.group.includes(searchByGroup))
           .filter((l, i) => l.schoolName.includes(searchBySchool))
           // .filter((l) => l.complete.toString().includes(searchByStatus))
@@ -1006,6 +1010,9 @@ const Requests = ({ token }) => {
       searchByGroup: '',
       searchBySchool: '',
       searchByTeacher: '',
+      searchByTeacher2: 'filter',
+      searchByTeacher3: 'filter',
+      searchByTeacher4: 'filter',
       searchPickupTime: '',
     });
   };
@@ -1097,13 +1104,27 @@ const Requests = ({ token }) => {
                 placeholder="Search requests by pickup code"
               ></input>
               <br />
-              <select
+              {orderType === 'Pickup' && <button
+                className="btn btn-outline-primary"
+                onClick={handleSearch('orderType')}
+                value='Onsite'
+              >
+                Curbside
+              </button>}
+              {orderType === 'Onsite' && <button
+                className="btn btn-outline-primary"
+                onClick={handleSearch('orderType')}
+                value='Pickup'
+              >
+                Onsite
+              </button>}
+              {/* <select
                 className="btn btn-outline-primary"
                 onChange={handleSearch('orderType')}
               >
                 <option value="Pickup">Pickup</option>
                 <option value="Onsite">Onsite</option>
-              </select>
+              </select> */}
               {orderType === 'Pickup' && (
                 <select
                   className="btn btn-outline-primary"
@@ -1125,6 +1146,34 @@ const Requests = ({ token }) => {
                   <option value="11am-1pm">11-1pm</option>
                   <option value="4pm-6pm">4-6pm</option>
                   {/* <option value="Cafeteria">Onsite</option> */}
+                </select>
+              )}
+              {orderType === 'Pickup' &&  <button
+                className=" btn btn-outline-primary"
+                onClick={() => setShowStatus(!showStatus)}
+              >
+                Show Status
+              </button>}
+              {orderType === 'Pickup' && showStatus && (
+                <select
+                  className="btn btn-outline-primary"
+                  onChange={handleSearch(
+                    'searchByStatus',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.searchByStatus}
+                  type="text"
+                  // className="form-control"
+                  id=""
+                >
+                  <option disabled value="0">
+                    Status
+                  </option>
+                  <option value="">All</option>
+                  <option value={false}>Open</option>
+                  <option value={true}>Closed</option>
                 </select>
               )}
               {orderType === 'Onsite' && (
@@ -1152,62 +1201,95 @@ const Requests = ({ token }) => {
                 </select>
               )}
               {orderType === 'Onsite' && (
-                <div key={2} className="">
-                  {searchBySchool === 'BES' && addBESTeacher('searchByTeacher')}
-                  {searchBySchool === 'OHES' &&
-                    addOHESTeacher('searchByTeacher')}
-                  {searchBySchool === 'ROES' &&
-                    addROESTeacher('searchByTeacher')}
-                  {searchBySchool === 'MCMS' &&
-                    addMCMSTeacher('searchByTeacher')}
-                  {searchBySchool === 'OPHS' &&
-                    addOPHSTeacher('searchByTeacher')}
-                  {searchBySchool === 'OVHS' &&
-                    addOPHSTeacher('searchByTeacher')}
-                  {searchBySchool === 'NON' && addNONTeacher('searchByTeacher')}
-                  {searchBySchool === 'BES' &&
-                    addBESTeacher('searchByTeacher2')}
-                  {searchBySchool === 'OHES' &&
-                    addOHESTeacher('searchByTeacher2')}
-                  {searchBySchool === 'ROES' &&
-                    addROESTeacher('searchByTeacher2')}
-                  {searchBySchool === 'MCMS' &&
-                    addMCMSTeacher('searchByTeacher2')}
-                  {searchBySchool === 'OPHS' &&
-                    addOPHSTeacher('searchByTeacher2')}
-                  {searchBySchool === 'OVHS' &&
-                    addOPHSTeacher('searchByTeacher2')}
-                  {searchBySchool === 'NON' &&
-                    addNONTeacher('searchByTeacher2')}
-                  {searchBySchool === 'BES' &&
-                    addBESTeacher('searchByTeacher3')}
-                  {searchBySchool === 'OHES' &&
-                    addOHESTeacher('searchByTeacher3')}
-                  {searchBySchool === 'ROES' &&
-                    addROESTeacher('searchByTeacher3')}
-                  {searchBySchool === 'MCMS' &&
-                    addMCMSTeacher('searchByTeacher3')}
-                  {searchBySchool === 'OPHS' &&
-                    addOPHSTeacher('searchByTeacher3')}
-                  {searchBySchool === 'OVHS' &&
-                    addOPHSTeacher('searchByTeacher3')}
-                  {searchBySchool === 'NON' &&
-                    addNONTeacher('searchByTeacher3')}
-                  {searchBySchool === 'BES' &&
-                    addBESTeacher('searchByTeacher4')}
-                  {searchBySchool === 'OHES' &&
-                    addOHESTeacher('searchByTeacher4')}
-                  {searchBySchool === 'ROES' &&
-                    addROESTeacher('searchByTeacher4')}
-                  {searchBySchool === 'MCMS' &&
-                    addMCMSTeacher('searchByTeacher4')}
-                  {searchBySchool === 'OPHS' &&
-                    addOPHSTeacher('searchByTeacher4')}
-                  {searchBySchool === 'OVHS' &&
-                    addOPHSTeacher('searchByTeacher4')}
-                  {searchBySchool === 'NON' &&
-                    addNONTeacher('searchByTeacher4')}
-                </div>
+                <select
+                  className="btn btn-outline-primary"
+                  onChange={handleSearch(
+                    'searchByGroup',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.searchByGroup}
+                  type="text"
+                  // className="form-control"
+                  id=""
+                >
+                  <option value="">Cohort A & B</option>
+                  <option value="a-group">Cohort A</option>
+                  <option value="b-group">Cohort B</option>
+                </select>
+              )}
+
+              {orderType === 'Onsite' && (
+                <>
+                  { <div key={2} className="">
+                    {searchBySchool === 'BES' &&
+                      addBESTeacher('searchByTeacher')}
+                    {searchBySchool === 'OHES' &&
+                      addOHESTeacher('searchByTeacher')}
+                    {searchBySchool === 'ROES' &&
+                      addROESTeacher('searchByTeacher')}
+                    {searchBySchool === 'MCMS' &&
+                      addMCMSTeacher('searchByTeacher')}
+                    {searchBySchool === 'OPHS' &&
+                      addOPHSTeacher('searchByTeacher')}
+                    {searchBySchool === 'OVHS' &&
+                      addOPHSTeacher('searchByTeacher')}
+                    {searchBySchool === 'NON' &&
+                      addNONTeacher('searchByTeacher')}
+                  </div>}
+
+                 {searchByTeacher != '' && <div key={3} className="">
+                    {searchBySchool === 'BES' &&
+                      addBESTeacher('searchByTeacher2')}
+                    {searchBySchool === 'OHES' &&
+                      addOHESTeacher('searchByTeacher2')}
+                    {searchBySchool === 'ROES' &&
+                      addROESTeacher('searchByTeacher2')}
+                    {searchBySchool === 'MCMS' &&
+                      addMCMSTeacher('searchByTeacher2')}
+                    {searchBySchool === 'OPHS' &&
+                      addOPHSTeacher('searchByTeacher2')}
+                    {searchBySchool === 'OVHS' &&
+                      addOPHSTeacher('searchByTeacher2')}
+                    {searchBySchool === 'NON' &&
+                      addNONTeacher('searchByTeacher2')}
+                  </div>}
+
+                  {searchByTeacher2 != 'filter' && <div key={4} className="">
+                    {searchBySchool === 'BES' &&
+                      addBESTeacher('searchByTeacher3')}
+                    {searchBySchool === 'OHES' &&
+                      addOHESTeacher('searchByTeacher3')}
+                    {searchBySchool === 'ROES' &&
+                      addROESTeacher('searchByTeacher3')}
+                    {searchBySchool === 'MCMS' &&
+                      addMCMSTeacher('searchByTeacher3')}
+                    {searchBySchool === 'OPHS' &&
+                      addOPHSTeacher('searchByTeacher3')}
+                    {searchBySchool === 'OVHS' &&
+                      addOPHSTeacher('searchByTeacher3')}
+                    {searchBySchool === 'NON' &&
+                      addNONTeacher('searchByTeacher3')}
+                  </div>}
+
+                  {searchByTeacher3 != 'filter' && <div key={5} className="">
+                    {searchBySchool === 'BES' &&
+                      addBESTeacher('searchByTeacher4')}
+                    {searchBySchool === 'OHES' &&
+                      addOHESTeacher('searchByTeacher4')}
+                    {searchBySchool === 'ROES' &&
+                      addROESTeacher('searchByTeacher4')}
+                    {searchBySchool === 'MCMS' &&
+                      addMCMSTeacher('searchByTeacher4')}
+                    {searchBySchool === 'OPHS' &&
+                      addOPHSTeacher('searchByTeacher4')}
+                    {searchBySchool === 'OVHS' &&
+                      addOPHSTeacher('searchByTeacher4')}
+                    {searchBySchool === 'NON' &&
+                      addNONTeacher('searchByTeacher4')}
+                  </div>}
+                </>
               )}
               {/* {orderType === 'Onsite' && (
                 <div key={2} className="">
@@ -1281,54 +1363,9 @@ const Requests = ({ token }) => {
                   )}
                 </div>
               )} */}
-              {orderType === 'Onsite' && (
-                <select
-                  className="btn btn-outline-primary"
-                  onChange={handleSearch(
-                    'searchByGroup',
-                    state.search,
-                    searchPickupTime,
-                    searchByStatus
-                  )}
-                  value={state.searchByGroup}
-                  type="text"
-                  // className="form-control"
-                  id=""
-                >
-                  <option value="">All</option>
-                  <option value="a-group">A</option>
-                  <option value="b-group">B</option>
-                </select>
-              )}
+              
               <div className="p-2"></div>
-              <button
-                className=" btn btn-outline-primary"
-                onClick={() => setShowStatus(!showStatus)}
-              >
-                Status
-              </button>
-              {showStatus && (
-                <select
-                  className="btn btn-outline-primary"
-                  onChange={handleSearch(
-                    'searchByStatus',
-                    state.search,
-                    searchPickupTime,
-                    searchByStatus
-                  )}
-                  value={state.searchByStatus}
-                  type="text"
-                  // className="form-control"
-                  id=""
-                >
-                  <option disabled value="0">
-                    Status
-                  </option>
-                  <option value="">All</option>
-                  <option value={false}>Open</option>
-                  <option value={true}>Closed</option>
-                </select>
-              )}
+              
               <button
                 className=" btn btn-outline-primary"
                 onClick={() => resetSearch()}

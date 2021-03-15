@@ -57,12 +57,42 @@ const Layout = ({ children }) => {
         )}
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           // <li className="nav-item pointer-hand">
-          <Link href="/admin/link/list">
+          <Link href="/user/link/create">
             <a
               className="nav-link text-white btn btn-success"
               style={{ borderRadius: '0px' }}
             >
               {'🍱'}
+            </a>
+          </Link>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/data">
+            <a
+            className="nav-link text-white"
+            >
+              {'Order Data'}
+            </a>
+          </Link>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/list">
+            <a
+            className="nav-link text-white"
+            >
+              {'Lists'}
+            </a>
+          </Link>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/read">
+            <a
+            className="nav-link text-white"
+            >
+              {'Receipts'}
             </a>
           </Link>
         )}
