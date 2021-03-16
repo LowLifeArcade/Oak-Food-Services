@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
   );
 
   const nav = () => (
-    <nav className={' ' +  styles.nav}>
+    <nav className={'fixed-top ' +  styles.nav}>
       <ul className={'nav nav-tabs ' + styles.nav}>
         <li className="nav-item pointer-hand">
           <Link href="/">
@@ -141,7 +141,7 @@ const Layout = ({ children }) => {
   );
 
   const accordian = () => (
-    <accordion className= {' ' + styles.accordion}
+    <accordion className= {'fixed-top ' + styles.accordion}
 
     >
       <ul className={'nav nav-tabs ' + styles.accordion}>
