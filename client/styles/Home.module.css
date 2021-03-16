@@ -20,11 +20,14 @@
 .nav {
   /* background-color: #2f3c51 !important; */
   background-color: #4d6e74 !important;
-  /* color: black; */
-  /* position: sticky; */
-  /* display: flex; */
-  /* overflow: hidden; */
-  /* position: fixed; */
+  z-index:1; 
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  /* display: none; */
 }
 
 .nav a:hover {
@@ -56,6 +59,31 @@
   overflow: scroll;
 }
 
+.accordion {
+  background-color: #4d6e74 !important;
+  z-index:1; 
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* bottom: 0;
+  width: 100%; */
+  /* overflow: hidden; */
+}
+
+.tabbar {
+  background-color: #4d6e74 !important;
+  z-index:1; 
+  position: fixed;
+  display: flex;
+  /* top: 0;
+  left: 0;
+  right: 0; */
+  bottom: 0;
+  width: 100%;
+  /* overflow: hidden; */
+}
 /* .foodOrder {
   color: 'grey';
   border: '1px solid grey';
@@ -69,3 +97,14 @@
 /* @media {
   40
 } */
+
+@media only screen and (max-width: 600px) {
+  .accordion { display: block; }
+  .nav { display: none; }
+}
+
+@media only screen and (min-width: 600px) {
+  .accordion { display: none; }
+  .nav { display: block; }
+}
+

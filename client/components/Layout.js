@@ -7,6 +7,7 @@ import NProgress from 'nprogress';
 import { isAuth, logout } from '../helpers/auth';
 
 import styles from '../styles/Home.module.css';
+import { normalizeUnits } from 'moment';
 
 // progressbar
 Router.onRouteChangeStart = (url) => NProgress.start();
@@ -35,7 +36,7 @@ const Layout = ({ children }) => {
   );
 
   const nav = () => (
-    <nav className={styles.nav}>
+    <nav className={' ' +  styles.nav}>
       <ul className={'nav nav-tabs ' + styles.nav}>
         <li className="nav-item pointer-hand">
           <Link href="/">
@@ -66,6 +67,114 @@ const Layout = ({ children }) => {
             </a>
           </Link>
         )}
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          <li className="nav-item">
+            <Link href="/user">
+              <a className="nav-link text-white">Receipts </a>
+            </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/data">
+            <a className="nav-link text-white">{'Order Data'}</a>
+          </Link>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/list">
+            <a className="nav-link text-white">{'Lists'}</a>
+          </Link>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/read">
+            <a className="nav-link text-white">{'Receipts'}</a>
+          </Link>
+        )}
+
+        {process.browser && !isAuth() && (
+          <React.Fragment>
+            <li className="nav-item ml-auto">
+              <Link href="/login">
+                <a className="nav-link text-white">Login</a>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link href="/register">
+                <a className="nav-link text-white">Register</a>
+              </Link>
+            </li>
+          </React.Fragment>
+        )}
+
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item ml-auto">
+            <Link href="/admin">
+              <a className="nav-link text-white">
+                Admin Dashboard: {isAuth().name}
+              </a>
+            </Link>
+          </li>
+        )}
+
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          <li className="nav-item ml-auto">
+            <Link href="/user">
+              <a className="nav-link text-white">Dashboard: {isAuth().name}</a>
+            </Link>
+          </li>
+        )}
+
+        {process.browser && isAuth() && (
+          <li className="nav-item ">
+            <Link href="/login">
+              <a onClick={logout} className="nav-link text-white">
+                Logout
+              </a>
+            </Link>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+
+  const accordian = () => (
+    <accordion className= {' ' + styles.accordion}
+
+    >
+      <ul className={'nav nav-tabs ' + styles.accordion}>
+        <li className="nav-item pointer-hand">
+          <Link href="/">
+            <a className="nav-link text-white">Home</a>
+          </Link>
+        </li>
+
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/user/link/create">
+            <a
+              className="nav-link text-white btn btn-warning"
+              style={{ borderRadius: '0px' }}
+            >
+              {' 📝'}
+            </a>
+            {/* \u{1F354} */}
+          </Link>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          // <li className="nav-item pointer-hand">
+          <Link href="/admin/link/list">
+            <a
+              className="nav-link text-white btn btn-success"
+              style={{ borderRadius: '0px' }}
+            >
+              {'📝'}
+            </a>
+          </Link>
+        )}
+        {/* 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           // <li className="nav-item pointer-hand">
           <Link href="/admin/link/data">
@@ -95,7 +204,7 @@ const Layout = ({ children }) => {
               {'Receipts'}
             </a>
           </Link>
-        )}
+        )} */}
 
         {process.browser && !isAuth() && (
           <React.Fragment>
@@ -116,7 +225,9 @@ const Layout = ({ children }) => {
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li className="nav-item ml-auto">
             <Link href="/admin">
-              <a className="nav-link text-white">Admin Dashboard: {isAuth().name}</a>
+              <a className="nav-link text-white">
+                Admin: {isAuth().name}
+              </a>
             </Link>
           </li>
         )}
@@ -124,7 +235,7 @@ const Layout = ({ children }) => {
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li className="nav-item ml-auto">
             <Link href="/user">
-              <a className="nav-link text-white">Dashboard: {isAuth().name}</a>
+              <a className="nav-link text-white"> {isAuth().name}'s Receipts</a>
             </Link>
           </li>
         )}
@@ -139,18 +250,17 @@ const Layout = ({ children }) => {
           </li>
         )}
       </ul>
-
-      
-    </nav>
+    </accordion>
   );
 
   const sideBar = () => {
-      // 
-  }
+    //
+  };
 
   return (
     <React.Fragment>
-      {head()} {nav()} {sideBar()} <div className={'container pb-2 '}>{children}</div>
+      {head()} {nav()} {accordian()} {sideBar()}{' '}
+      <div className={'container pt-5 '}>{children}</div>
     </React.Fragment>
   );
 };
