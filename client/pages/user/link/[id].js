@@ -1317,7 +1317,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                         )
                       }
                     >
-                      Add Meal
+                      Next Meal
                     </button>
                   )}
 

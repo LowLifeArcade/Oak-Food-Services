@@ -1124,7 +1124,7 @@ const Create = ({ token, user }) => {
                         )
                       }
                     >
-                      Add Meal
+                      Next Meal
                     </button>
                   )}
 

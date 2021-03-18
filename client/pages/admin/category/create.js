@@ -4,9 +4,33 @@ import axios from 'axios';
 import Resizer from 'react-image-file-resizer';
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
+  // modules: {
+  //   table: true,
+  //   toolbar: '#toolbar'
+  // },
+
+  
   modules: {
-    table: true,
-  },
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+    
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+      [{ 'direction': 'rtl' }],                         // text direction
+    
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    
+      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+    
+      ['clean']                                         // remove formatting button
+    ],
+  }
 });
 import { API } from '../../../config';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
@@ -15,6 +39,25 @@ import withAdmin from '../../withAdmin';
 import 'react-quill/dist/quill.snow.css';
 import Router from 'next/router'
 // import { set } from 'js-cookie';
+// var toolbarOptions = [
+//   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+//   ['blockquote', 'code-block'],
+
+//   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+//   [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+//   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+//   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+//   [{ 'direction': 'rtl' }],                         // text direction
+
+//   [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+//   [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+//   [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+//   [{ 'font': [] }],
+//   [{ 'align': [] }],
+
+//   ['clean']                                         // remove formatting button
+// ];
 
 const Create = ({ user, token }) => {
   const [state, setState] = useState({
@@ -26,7 +69,7 @@ const Create = ({ user, token }) => {
     buttonText: 'Post',
     image: '',
   });
-  console.log('username',user)
+
 
   const [content, setContent] = useState('');
   const [group, setGroup] = useState('');
@@ -77,7 +120,7 @@ const Create = ({ user, token }) => {
 
   const chooseEmailGroup = () => (
     <>
-      <div className="form-group">
+      <div className="form-group col-md-4">
         <div className="">
           <select
             type="select"
@@ -119,7 +162,6 @@ const Create = ({ user, token }) => {
   };
 
   const handleContent = (e) => {
-    console.log(3);
     setContent(e);
     setState({ ...state, content: { content }, success: '', error: '' });
   };
@@ -157,7 +199,7 @@ const Create = ({ user, token }) => {
       }
     }
   };
-  console.log('axios', name, content, image, group, postedBy)
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -202,7 +244,7 @@ const Create = ({ user, token }) => {
 
   const createCategoryForm = () => (
     <form action="" onSubmit={handleSubmit}>
-      <div className="form-group">
+      <div className="form-group col-md-4">
         <label className="text-muted">Post Title</label>
         <input
           type="text"
@@ -212,6 +254,8 @@ const Create = ({ user, token }) => {
           required
         />
       </div>
+      {chooseEmailGroup()}
+
       {/* <div className="form-group">
         <label className="text-muted">Meal</label>
         <select
@@ -234,7 +278,7 @@ const Create = ({ user, token }) => {
           onChange={handleContent}
           placeholder="write here"
           theme="snow"
-          className="pd-5 mb-3"
+          className="pd-7 mb-3"
           style={{ border: '1px solid #333' }}
         />
       {/* insert table somehow */}
@@ -257,7 +301,6 @@ const Create = ({ user, token }) => {
           required
         /> */}
       </div>
-      {chooseEmailGroup()}
       {/* <div className="form-group">
         <label className="btn btn-outline-secondary">
           Add Table
@@ -292,7 +335,7 @@ const Create = ({ user, token }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="col-md-6 offset-md-3 pt-3">
+        <div className="col-md-10 offset-md-1 pt-3">
           <h1>Create Post</h1>
           <br />
           {success && showSuccessMessage(success)}
