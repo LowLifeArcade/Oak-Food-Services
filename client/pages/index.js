@@ -77,9 +77,11 @@ const Home = ({ categories }) => {
       .reverse()
       .map((c, i) => (
         <>
+        <div className="">
+
           <div
           key={i}
-            className=""
+            // className={'col-md-12 pt-2'}
             style={{
               // color: 'grey',
               border: '1px solid grey',
@@ -109,9 +111,13 @@ const Home = ({ categories }) => {
                 <div className="p-4">
               
 
-                      <h3 className="font-weight-bold p-2">{c.name}</h3>
+                      <h3 className="font-weight-bold ">{c.name}</h3>
                       <hr />
-                      <div className="lead alert alert-seconary pt-4">
+                      <div 
+                      // className="lead alert alert-seconary pt-4"
+                      // className={'col-md-12 pt-2'}
+
+                      >
                         {renderHTML(c.content || '')}
                       </div>
                       <div className="">
@@ -135,16 +141,19 @@ const Home = ({ categories }) => {
             </Link>
           </div>
           <div className="p-2"></div>
+          </div>
+
         </>
       ));
   return (
     <div key={2000} className={styles.background} >
 
-    
+    <div className={styles.mobilehome}>
+
     <Layout>
       {/* <div className=" pt-4">
         <div className="">
-          <h3 className="font-weight-bold">Your Food Feed</h3>
+        <h3 className="font-weight-bold">Your Food Feed</h3>
         </div>
       </div> */}
 
@@ -157,6 +166,7 @@ const Home = ({ categories }) => {
         <div className="col-md-12 overflow-hidden">{listOfLinks()}</div>
       </div> */}
     </Layout>
+      </div>
     </div>
   );
 };
