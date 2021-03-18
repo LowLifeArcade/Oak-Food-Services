@@ -26,7 +26,7 @@ const Home = ({ categories }) => {
   // console.log(popular);
 
   useEffect(() => {
-    !isAuth() ? Router.push('/login') : Router.push('/');
+    !isAuth() && Router.push('/login') ;
   }, [])
 
   // const handleClick = async (linkId) => {

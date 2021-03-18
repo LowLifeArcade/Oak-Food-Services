@@ -2,7 +2,11 @@ import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
-import { showErrorMessage, showSuccessMessage } from '../helpers/alerts';
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  showMessageMessage,
+} from '../helpers/alerts';
 import { API } from '../config';
 import styles from '../styles/Home.module.css';
 import { isAuth } from '../helpers/auth';
@@ -16,6 +20,8 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     error: '',
+    message: '',
+    goodMessage: '',
     success: '',
     buttonText: 'Register',
     students: [],
@@ -33,6 +39,8 @@ const Register = () => {
     addButtonText,
     name,
     lastName,
+    message,
+    goodMessage,
     email,
     password,
     confirmPassword,
@@ -57,7 +65,9 @@ const Register = () => {
       ? Router.push('admin')
       : isAuth() && isAuth().role === 'subscriber'
       ? Router.push('user')
-      : !isAuth() ? console.log('not registered or signed in') : Router.push('/');
+      : !isAuth()
+      ? console.log('not registered or signed in')
+      : Router.push('/');
     // : Router.push('user')
   }, [success]);
 
@@ -71,8 +81,9 @@ const Register = () => {
     return result;
   };
   // this takes first 3 letters of last name and 1 random character
-  const userCode = lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
-  console.log('USERCODE', userCode)
+  const userCode =
+    lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
+  // console.log('USERCODE', userCode);
 
   // const loadCategories = async () => {
   //   const response = await axios.get(`${API}/categories`);
@@ -106,34 +117,32 @@ const Register = () => {
     // console.log(e.target.getAttribute("data-index"))
   };
 
-  
-
-  const addStudentGroup = (i) => (
-    <>
-      <div key={i} className="form-group">
-        <div className="">
-          <select
-            type="select"
-            // value={state.value}
-            data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
-            onChange={(e) => handleSelectChange(e)}
-            className="form-control"
-            required
-          >
-            {' '}
-            <option selected disabled value="">Choose A Student Group</option>
-            {state.loadedGroups.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })}
-          </select>
-          <div className="p-2"></div>
-        </div>
-      </div>
-    </>
-  );
+  // const addStudentGroup = (i) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <div className="">
+  //         <select
+  //           type="select"
+  //           // value={state.value}
+  //           data-index={i}
+  //           // defaultValue={''}
+  //           // defaultValue={state.mealRequest[0].meal}
+  //           onChange={(e) => handleSelectChange(e)}
+  //           className="form-control"
+  //           required
+  //         >
+  //           {' '}
+  //           <option selected disabled value="">Choose A Student Group</option>
+  //           {state.loadedGroups.map((g, i) => {
+  //             return <option value={g._id}>{g.name}</option>;
+  //             // return <option value={g._id}>{g.name}</option>;
+  //           })}
+  //         </select>
+  //         <div className="p-2"></div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
   // adding a student to fields
   const addStudent = (e) => {
@@ -203,6 +212,42 @@ const Register = () => {
       buttonText: 'Register',
     });
   };
+
+  const handlePasswordChange = () => (e) => {
+    let shallowMessage = '';
+    let shallowGoodMessage = '';
+
+    if (password.length < 7) {
+      shallowMessage = 'Password must be at least 8 characters';
+    } else if (
+      // password.match(/[A-Z]/g) === 0 ||
+      !e.target.value.match(/[A-Z]/g)
+      // password.match(/[A-Z]/g) === null
+    ) {
+      shallowMessage = 'Password must contain at least one capitol letter';
+    } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
+      shallowMessage = 'Password must contain at least one special character';
+    } else if (password.length < 13) {
+      shallowGoodMessage = 'Good password'
+
+    } else if (password.length > 12){
+      shallowGoodMessage = 'Great Password!'
+    }
+
+
+
+      console.log('regex check', e.target.value);
+    setState({
+      ...state,
+      password: e.target.value,
+      message: shallowMessage,
+      goodMessage: shallowGoodMessage,
+      error: '',
+      success: '',
+      buttonText: 'Register',
+    });
+  };
+
   const handleObjectNameChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -266,50 +311,60 @@ const Register = () => {
     // console.table({ name, email, password });
     setState({ ...state, buttonText: 'Registering' });
     if (password !== confirmPassword) {
-      setState({...state, error: "Passwords don't match"}); 
-      // alert('passwords dont match')
-    } else {
+      setState({ ...state, error: "Passwords don't match" });
+    } else if (password.length < 7) {
+      setState({ ...state, error: "Password MUST be at least 8 characters" });
 
-    try {
-      const response = await axios.post(`${API}/register`, {
-        name,
-        lastName,
-        email,
-        password,
-        // students,
-      });
-      console.log(response);
-      setState({
-        ...state,
-        // name: '',
-        // email: '',
-        password: '',
-        confirmPassword: '',
-        buttonText: 'Submitted',
-        success: response.data.message,
-      });
-    } catch (error) {
-      console.log(error);
-      setState({
-        ...state,
-        buttonText: 'Register',
-        error: error.response.data.error,
-      });
-    }    }
+    }else if (password.match(/[A-Z]/g) === null) {
+      setState({ ...state, error: "Password MUST contain at least one capitol letter" });
+    } else if (!password.match(/[^A-Za-z0-9]/g)) {
+      setState({ ...state, error: "Password MUST contain at least one special character" });
 
+    }
+  
+    else {
+      try {
+        const response = await axios.post(`${API}/register`, {
+          name,
+          lastName,
+          email,
+          password,
+          // students,
+        });
+        console.log(response);
+        setState({
+          ...state,
+          // name: '',
+          // email: '',
+          password: '',
+          confirmPassword: '',
+          buttonText: 'Submitted',
+          success: response.data.message,
+        });
+      } catch (error) {
+        console.log(error);
+        setState({
+          ...state,
+          buttonText: 'Register',
+          error: error.response.data.error,
+        });
+      }
+    }
   };
 
   const registerForm = () => (
-    <form onSubmit={handleSubmit} 
-    onKeyPress={e => {
-      if (e.key === 'Enter') e.preventDefault()}}
-    action="POST">
+    <form
+      onSubmit={handleSubmit}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter') e.preventDefault();
+      }}
+      action="POST"
+    >
       <div className="form-group">
         <input
           value={name}
           onChange={handleChange('name')}
           type="text"
-
           className="form-control"
           placeholder="Parent First Name"
           required
@@ -320,7 +375,6 @@ const Register = () => {
           value={lastName}
           onChange={handleChange('lastName')}
           type="text"
-
           className="form-control"
           placeholder="Parent Last Name"
           required
@@ -339,7 +393,7 @@ const Register = () => {
       <div className="form-group">
         <input
           value={password}
-          onChange={handleChange('password')}
+          onChange={handlePasswordChange('password')}
           type="password"
           className="form-control"
           placeholder="New password"
@@ -358,9 +412,7 @@ const Register = () => {
       </div>
       {/* <label className="text-muted ml-2 pt-2"> Students: </label> */}
 
-      
-
-        {/* <div className="row">
+      {/* <div className="row">
           <div className="col-md-12 pt-2">
             {state.students
               .slice(0)
@@ -456,12 +508,14 @@ const Register = () => {
           </div> 
         {addStudent(i)} */}
 
-          <div className="row">
-          <div className="col">
-        <div className="pt-1"></div>
-        {success && showSuccessMessage(success)}
+      <div className="row">
+        <div className="col">
+          <div className="pt-1"></div>
+          {success && showSuccessMessage(success)}
+          {goodMessage && showSuccessMessage(goodMessage)}
           {error && showErrorMessage(error)}
-        <br/>
+          {message && showMessageMessage(message)}
+          <br />
           <button type="text" className="btn btn-warning">
             {buttonText}
           </button>
@@ -476,27 +530,28 @@ const Register = () => {
   );
 
   return (
-          <div className={styles.background} 
-          style={{ 
-            // height: '100vh'
-
-           }}
-          >
-    <Layout>
+    <div
+      className={styles.background}
+      style={
+        {
+          // height: '100vh'
+        }
+      }
+    >
+      <Layout>
         <div className={styles.body}>
-        <div className="pt-5 pb-2"></div>
+          <div className="pt-5 pb-2"></div>
 
-        {/* <div className="pt-4"></div> */}
-        <div className="col-md-6 offset-md-3 pt-4">
-
-        <div className={styles.subcard}>
-          {/* + "col-md-6 offset-md-3 subcard" */}
-          <h2 className={'text-muted ' + styles.title}>Register</h2>
-          <br />
-          {registerForm()}
-          {/* {success && showSuccessMessage(success)}
+          {/* <div className="pt-4"></div> */}
+          <div className="col-md-6 offset-md-3 pt-4">
+            <div className={styles.subcard}>
+              {/* + "col-md-6 offset-md-3 subcard" */}
+              <h2 className={'text-muted ' + styles.title}>Register</h2>
+              <br />
+              {registerForm()}
+              {/* {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)} */}
-        </div>
+            </div>
           </div>
         </div>
         {/* <div className="pb-4"></div> */}

@@ -334,7 +334,7 @@ const Layout = ({ children }) => {
         
 
 
-        <li key="1" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand pt-4">
+        <li key="101" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand pt-4">
           <Link href="/" >
             <a className="nav-link text-white">
             <i class="fas fa-home"></i>&nbsp;&nbsp;&nbsp; Home

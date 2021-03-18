@@ -4,3 +4,6 @@ export const showSuccessMessage = (success) => (
 export const showErrorMessage = (error) => (
   <div className="alert alert-danger">{error}</div>
 );
+export const showMessageMessage = (message) => (
+  <div className="alert alert-warning">{message}</div>
+);

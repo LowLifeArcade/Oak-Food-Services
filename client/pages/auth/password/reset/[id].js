@@ -3,6 +3,7 @@ import axios from 'axios';
 import {
   showErrorMessage,
   showSuccessMessage,
+  showMessageMessage,
 } from '../../../../helpers/alerts';
 import { API } from '../../../../config';
 import Router, { withRouter } from 'next/router';
@@ -16,6 +17,8 @@ const ResetPassword = ({ router }) => {
     newPassword: '',
     confirmPassword: '',
     buttonText: 'Reset Password',
+    message: '',
+    goodMessage: '',
     success: '',
     error: '',
   });
@@ -24,6 +27,8 @@ const ResetPassword = ({ router }) => {
     token,
     newPassword,
     buttonText,
+    message,
+    goodMessage,
     success,
     error,
     confirmPassword,
@@ -37,15 +42,41 @@ const ResetPassword = ({ router }) => {
 
   useEffect(() => {
     buttonText === 'Done'
-    ? setTimeout(() => {
-        Router.push('/login');
-      }, 2000)
-    : console.log("it's fine");
-  return () => clearTimeout();
-  }, [success])
+      ? setTimeout(() => {
+          Router.push('/login');
+        }, 2000)
+      : console.log("it's fine");
+    return () => clearTimeout();
+  }, [success]);
 
   const handleChange = (e) => {
-    setState({ ...state, newPassword: e.target.value, success: '', error: '' });
+    let shallowMessage = '';
+    let shallowGoodMessage = '';
+
+    if (newPassword.length < 7) {
+      shallowMessage = 'Password must be at least 8 characters';
+    } else if (
+      // password.match(/[A-Z]/g) === 0 ||
+      !e.target.value.match(/[A-Z]/g)
+      // password.match(/[A-Z]/g) === null
+    ) {
+      shallowMessage = 'Password must contain at least one capitol letter';
+    } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
+      shallowMessage = 'Password must contain at least one special character';
+    } else if (newPassword.length < 13) {
+      shallowGoodMessage = 'Good password';
+    } else if (newPassword.length > 12) {
+      shallowGoodMessage = 'Great Password!';
+    }
+
+    setState({
+      ...state,
+      newPassword: e.target.value,
+      message: shallowMessage,
+      goodMessage: shallowGoodMessage,
+      success: '',
+      error: '',
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -54,29 +85,37 @@ const ResetPassword = ({ router }) => {
     // console.log('post email to ', email);
 
     if (newPassword !== confirmPassword) {
-      setState({...state, error: "Passwords don't match"}); 
-      // alert('passwords dont match')
+      setState({ ...state, error: "Passwords don't match" });
+    } else if (newPassword.length < 7) {
+      setState({ ...state, error: "Password MUST be at least 8 characters" });
+
+    }else if (newPassword.match(/[A-Z]/g) === null) {
+      setState({ ...state, error: "Password MUST contain at least one capitol letter" });
+    } else if (!newPassword.match(/[^A-Za-z0-9]/g)) {
+      setState({ ...state, error: "Password MUST contain at least one special character" });
+
     } else {
-    try {
-      const response = await axios.put(`${API}/reset-password`, {
-        resetPasswordLink: token,
-        newPassword,
-      });
-      // console.log('FORGOT PW', response)
-      setState({
-        ...state,
-        newPassword: '',
-        buttonText: 'Done',
-        success: response.data.message,
-      });
-    } catch (error) {
-      console.log('RESET PW ERROR', error);
-      setState({
-        ...state,
-        buttonText: 'Forgot Password',
-        error: error.response.data.error,
-      });
-    }}
+      try {
+        const response = await axios.put(`${API}/reset-password`, {
+          resetPasswordLink: token,
+          newPassword,
+        });
+        // console.log('FORGOT PW', response)
+        setState({
+          ...state,
+          newPassword: '',
+          buttonText: 'Done',
+          success: response.data.message,
+        });
+      } catch (error) {
+        console.log('RESET PW ERROR', error);
+        setState({
+          ...state,
+          buttonText: 'Forgot Password',
+          error: error.response.data.error,
+        });
+      }
+    }
   };
 
   const handleChangeConfirm = (name) => (e) => {
@@ -126,7 +165,9 @@ const ResetPassword = ({ router }) => {
             <br />
           </div>
           {success && showSuccessMessage(success)}
+          {goodMessage && showSuccessMessage(goodMessage)}
           {error && showErrorMessage(error)}
+          {message && showMessageMessage(message)}
           {passwordResetForm()}
         </div>
       </div>
