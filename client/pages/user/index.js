@@ -1,5 +1,5 @@
 import styles from '../../styles/Home.module.css';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { API } from '../../config';
 import { getCookie } from '../../helpers/auth';
@@ -52,7 +52,7 @@ const User = ({ user, token, l, userLinks }) => {
       <>
         {console.log('links', l)}
         {
-          <div key={i} className={' p-4 alert alert-warning ' + styles.subcard}>
+          <div key={i} className={' p-4 alert alert-warning ' + styles.receipt}>
             <h4>
               {l.orderStatus && (
                 <b className="text-danger">
@@ -67,25 +67,34 @@ const User = ({ user, token, l, userLinks }) => {
                 l.meal !== 'Standard Onsite' &&
                 l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
             ).length != 0 && (
-              <h4 className="pt-1 pb-1">
-                Pickup date <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+              <React.Fragment>
+
+              <h4 className="pt-2 ">
+                PICKUP DATE 
+                <br/>
+                <b>{moment(l.pickupDate).format('MMMM Do')}</b>
               </h4>
+            Between <b className="pb-2 ">{l.pickupTime} </b>
+              </React.Fragment>
             )}
-            <h4>
+            <hr className={styles.hr} />
+            <h3>
               {l.mealRequest.filter(
                 (l) =>
                   l.meal !== 'None' &&
                   l.meal !== 'Standard Onsite' &&
                   l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
-                <b>Code: {l.pickupCode} </b>
+                <b className='d-flex justify-content-center' >{l.pickupCode} </b>
               ) : (
                 <b>
                   Onsite School Lunch for week of{' '}
                   {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}
                 </b>
               )}
-            </h4>
+            </h3>
+            <hr className={styles.hr} />
+            <h6>Display the above code <b className="text-danger" >on your dashboard </b>or show from your phone to the server</h6>
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
@@ -95,6 +104,7 @@ const User = ({ user, token, l, userLinks }) => {
                   {l.mealRequest
                     .filter((l) => l.meal !== 'None')
                     .map((k, i) => (
+                      <>
                       <h5 className="">
                         <b>
                           {k.student === undefined
@@ -102,48 +112,68 @@ const User = ({ user, token, l, userLinks }) => {
                             : l.postedBy.students.filter((student) =>
                                 student._id.includes(k.student)
                               ) &&
-                              k.studentName +
-                                (k.group === 'b-group'
-                                  ? ' in Cohort B'
-                                  : k.group === 'a-group'
-                                  ? ' in Cohort A'
-                                  : '')}
+                              k.studentName 
+                                // (k.group === 'b-group'
+                                //   ? ' in Cohort B'
+                                //   : k.group === 'a-group'
+                                //   ? ' in Cohort A'
+                                //   : '')
+                                  }
                         </b>
                         <br></br>
-
+                        </h5>
                         {k.student === undefined ? (
                           'user deleted'
                         ) : k.group === 'a-group' || k.group === 'b-group' ? (
                           k.pickupOption ===
                           'Lunch Onsite / Breakfast Pickup' ? (
                             <>
-                              Onsite meals and
-                              <br />
-                              Curbside breakfast meals{' '}
+                            <div className="pb-2">
+
+                              Curbside Breakfast Meals{' '}
+
+                            </div>
+                            <div className="p-2" style={{ fontSize: '16px' }}>
+
+                              PLUS: *Onsite Meals {(k.group === 'b-group'
+                                  ? ' in Cohort B'
+                                  : k.group === 'a-group'
+                                  ? ' in Cohort A'
+                                  : '')}* 
+                            </div>
+
                             </>
                           ) : (
-                            <>Onsite meals</>
+                            <>*Onsite Meals {(k.group === 'b-group'
+                            ? ' in Cohort B'
+                            : k.group === 'a-group'
+                            ? ' in Cohort A'
+                            : '')}* </>
                           )
                         ) : (
                           <>
-                            Curbside {k.meal} meals
-                            <br />
-                            {k.pickupOption}
+                            Curbside {k.meal}, {' '}
+                            <div className="p-2" style={{ fontSize: '16px' }}>
+
+
+                            TYPE: {k.pickupOption} Meals
+
+                            </div>
                           </>
                         )}
                         <hr />
-                      </h5>
+                        </>
                     ))}
                 </div>
               </h5>
               {/* {console.log(l.mealRequest)} */}
-              {l.pickupTime === 'Cafeteria' ? null : (
+              {/* {l.pickupTime === 'Cafeteria' ? null : (
                 <h2 className=" " style={{ fontSize: '16px' }}>
                   Pickup is between <b>{l.pickupTime} </b> on Friday. Please
                   print out or write out your code and display your{' '}
-                  <b className="text-danger">CODE on your dashboard</b>.
+                  <b >CODE on your dashboard</b>.
                 </h2>
-              )}
+              )} */}
             </div>
             <div className="pt-1 ">
               <span className="">
@@ -156,20 +186,20 @@ const User = ({ user, token, l, userLinks }) => {
             <div className=" pb-3 pt-3">
               {l.postedBy.students[i] === undefined ? null : (
                 <Link href={`/user/link/${l._id}`}>
-                  <button className="badge btn btn-outline-warning text float-left">
-                    Edit Request
+                  <button className="btn btn-sm btn-outline-dark text float-left">
+                  <i class="far fa-edit"></i> &nbsp;Edit
                   </button>
                 </Link>
               )}
               <Link href="">
                 <button
                   onClick={(e) => confirmDelete(e, l._id)}
-                  className="text-warning btn btn-danger float-right"
+                  className="text-warning btn btn-sm btn-danger float-right"
                 >
-                  Cancel Request
+                  Cancel
                 </button>
               </Link>
-              <div className="pb-2"></div>
+              <div className="pb-4"></div>
             </div>
           </div>
         }
@@ -184,7 +214,7 @@ const User = ({ user, token, l, userLinks }) => {
         {/* <div className=""> */}
         
         <h2 className="pt-3">
-          {user.name}'s dashboard{' '}
+          {user.name}'s Meal Requests{' '}
           {/* <span className="text-danger"> /{user.role}</span>{' '} */}
         </h2>
         {/* </div> */}
@@ -203,7 +233,9 @@ const User = ({ user, token, l, userLinks }) => {
             {/* </li> */}
             {/* <li className="nav-item p-4"> */}
             <Link href="/user/link/create">
-              <button className="btn btn-warning float-right">
+              <button className={'btn float-right ' + styles.button}>
+              <i class="fas fa-pencil-alt"></i>
+            &nbsp;&nbsp;
                 Submit a Request
               </button>
             </Link>

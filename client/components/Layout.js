@@ -223,7 +223,8 @@ const Layout = ({ children }) => {
           // <li className="nav-item pointer-hand">
           <Link href="/user/link/create">
             <a
-              className="nav-link text-white btn btn-warning"
+              className={"nav-link text-white btn btn-warning " }
+              // className="nav-link text-white btn btn-warning"
               style={{ borderRadius: '0px' }}
             >
               {/* {' 📝'} */}

@@ -49,7 +49,7 @@ exports.create = (req, res) => {
       console.log(err);
       return res.status(400).json({
         error:
-          "You've already submitted a request for this date. You can delete or edit the existing request from your user dashboard.",
+          "You have already submitted a request for this date. Edit or delete the existing request from your user receipts page.",
       });
     }
     // categories (used this for postman as it came as string)

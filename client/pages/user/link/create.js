@@ -54,7 +54,7 @@ const Create = ({ token, user }) => {
     pickupTime: '',
     // pickupTime: isAuth().role === 'admin' ? '11am-1pm' : mealRequest[1].group === 'b-group' ? 'Cafeteria' : '',
     mealWeek: '',
-    buttonText: 'Request',
+    buttonText: 'Submit',
     // title: '',
     // url: '',
     // categories: [],
@@ -189,7 +189,7 @@ const Create = ({ token, user }) => {
 
     setState({
       ...state,
-      buttonText: 'Update',
+      buttonText: 'Submit',
       pickupCode: newPickupCode,
       pickupCodeAdd: frontCode,
       success: '',
@@ -315,7 +315,7 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       mealRequest: [...meals],
-      buttonText: 'Request',
+      buttonText: 'Submit',
       // pickupCode: newPickupCode,
       // pickupOption: meal.meal === 'None' ? 'None': meal.group === 'a-group' || meal.group === 'b-group' ? 'Lunch Only': 'Breakfast and Lunch',
       pickupCodeAdd: codes,
@@ -374,7 +374,7 @@ const Create = ({ token, user }) => {
             <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
             <option value={'None'}>None</option>
           </select>
-          <div className="p-2"></div>
+          <div className="p-1"></div>
         </div>
       </div>
     </>
@@ -419,7 +419,7 @@ const Create = ({ token, user }) => {
             <option value={'Standard Onsite'}>Standard (Onsite)</option>
             <option value={'None'}>None</option>
           </select>
-          <div className="p-2"></div>
+          <div className="p-1"></div>
         </div>
       </div>
     </>
@@ -462,7 +462,7 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       mealRequest: [...meals],
-      buttonText: 'Request',
+      buttonText: 'Submit',
       pickupCodeAdd: codes,
       success: '',
       error: '',
@@ -492,7 +492,7 @@ const Create = ({ token, user }) => {
             Breakfast (Distance)/Lunch (Onsite)
           </option> */}
         </select>
-        <div className="p-2"></div>
+        <div className="p-1"></div>
         {/* </div> */}
       </div>
     </>
@@ -515,7 +515,7 @@ const Create = ({ token, user }) => {
             Lunch Only
           </option>
         </select>
-        <div className="p-2"></div>
+        <div className="p-1"></div>
         {/* </div> */}
       </div>
     </>
@@ -538,7 +538,7 @@ const Create = ({ token, user }) => {
             None
           </option>
         </select>
-        <div className="p-2"></div>
+        <div className="p-1"></div>
         {/* </div> */}
       </div>
     </>
@@ -564,7 +564,7 @@ const Create = ({ token, user }) => {
             Lunch Onsite / Breakfast Pickup
           </option>
         </select>
-        <div className="p-2"></div>
+        <div className="p-1"></div>
         {/* </div> */}
       </div>
     </>
@@ -575,7 +575,7 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       pickupTime: e.target.value,
-      buttonText: 'Request',
+      buttonText: 'Submit',
       success: '',
       error: '',
     });
@@ -601,7 +601,7 @@ const Create = ({ token, user }) => {
             <option value={'4pm-6pm'}>4pm-6pm</option>
             <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
           </select>
-          <div className="p-2"></div>
+          <div className="p-1"></div>
         </div>
       </div>
     </>
@@ -624,7 +624,7 @@ const Create = ({ token, user }) => {
             </option>
             <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
           </select>
-          <div className="p-2"></div>
+          <div className="p-1"></div>
         </div>
       </div>
     </>
@@ -944,10 +944,11 @@ const Create = ({ token, user }) => {
       <div>
         <button
           disabled={!token}
-          className="btn btn-outline-warning"
+          className={'btn  ' + styles.button}
           onClick={submit}
           type="submit"
         >
+          <i class="far fa-paper-plane"></i> &nbsp;&nbsp;
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
         </button>
       </div>
@@ -981,10 +982,23 @@ const Create = ({ token, user }) => {
           <div className={styles.subcard}>
             <div className="row">
               <div className="col-md-12">
-                <h3>
-                  Meal Request for:{' '}
-                  {pickupDate && moment(state.pickupDate).format('MMM Do')}{' '}
+                <h3 className="text-dark" >
+                  Meal Request For:{' '}
+                  
+                  {pickupDate && 
+                  <span onClick={() => setShowSearch(!showSearch)} >
+
+                  {moment(state.pickupDate).format('MMMM Do')}
+                  </span>
+
+                  }
                 </h3>
+                {pickupDate === '' && <button
+                  className={'btn btn-sm  '+ styles.buttonshadow }
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <i class="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
+                </button>}
                 {isAuth().role === 'admin'
                   ? showSearch && (
                       <Calendar
@@ -1018,7 +1032,7 @@ const Create = ({ token, user }) => {
                         value={''}
                       />
                     )}
-                <br />
+
                 {/* // <input
                   // type="date"
                   // defaultValue={moment(state.pickupDate).format(
@@ -1026,19 +1040,14 @@ const Create = ({ token, user }) => {
                     //   )}
                   //   /> */}
 
-                <button
-                  className="btn btn-outline-primary"
-                  onClick={() => setShowSearch(!showSearch)}
-                >
-                  Select Date
-                </button>
+                
 
-                <br />
+
                 {/* {`${moment(state.pickupDate).format('dddd, MMMM Do ')}`}{' '} */}
-                <br />
+
               </div>
             </div>
-
+<hr/>
             {isAuth().role === 'admin' && (
               <div className=" form-group">
                 <input
@@ -1057,8 +1066,8 @@ const Create = ({ token, user }) => {
                   return (
                     <>
                       <div>
-                        <label key={i} className="text-muted">
-                          Select meal for {`${state.students[i].name}`}
+                        <label key={i} className="text-secondary">
+                         <h5> <b>{`${state.students[i].name}`}'s</b> meal</h5>
                         </label>
                       </div>
                       <div key={i} className="">
@@ -1103,13 +1112,15 @@ const Create = ({ token, user }) => {
                             : selectPickupOption(i)
                           : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
                         : selectNonePickupOption(i)}
+                        <hr/>
                     </>
                   );
                 })}
+
                 <div className="">
                   {state.mealRequest.length < state.students.length && (
                     <button
-                      className="btn btn-warning"
+                      className={"btn  btn-outline-info " + styles.buttonshadow}
                       onClick={() =>
                         state.mealRequest.map((x, i) =>
                           addMeal(
@@ -1124,13 +1135,14 @@ const Create = ({ token, user }) => {
                         )
                       }
                     >
-                      Next Meal
+                      <i class="fas fa-utensils"></i>
+                      &nbsp;&nbsp; Next Meal
                     </button>
                   )}
 
                   {state.mealRequest.length !== 1 && (
                     <button
-                      className="btn btn-warning float-right"
+                      className={'btn float-right ' + styles.buttonshadow}
                       onClick={() => removeMeal()}
                     >
                       Remove
