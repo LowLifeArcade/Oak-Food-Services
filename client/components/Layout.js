@@ -327,14 +327,21 @@ const Layout = ({ children }) => {
     // style={{ display: showSidebar ? 'None': 'Block' }}
     className={showSidebar ?  styles.sidebarVisible : styles.sidebar }
     >
-      <ul className={'sidebar list-unstyled pt-5'}>
+      <ul className={'sidebar list-unstyled pt-5 p-4'}>
         <span onClick={() => setShowSidebar(false)} >
-        <i className="fas fa-times float-right p-3 "></i>
+        <i className="fas fa-times float-right pt-3 "></i>
         </span>
         
 
 
         <li key="1" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand pt-4">
+          <Link href="/" >
+            <a className="nav-link text-white">
+            <i class="fas fa-home"></i>&nbsp;&nbsp;&nbsp; Home
+            </a>
+          </Link>
+        </li>
+        <li key="1" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand ">
           <Link href="/" >
             <a className="nav-link text-white">
             <i class="fas fa-book-open"></i>&nbsp;&nbsp;&nbsp; Menu
@@ -413,6 +420,14 @@ const Layout = ({ children }) => {
           </Link>
           </li>
         )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li onClick={() => setShowSidebar(false)} className="nav-item pointer-hand">
+          <Link href="/admin/category/read">
+            <a className="nav-link text-white">
+            <i class="far fa-file-word"></i>&nbsp;&nbsp;&nbsp;{' Edit Menu'}</a>
+          </Link>
+          </li>
+        )}
 
         {process.browser && !isAuth() && (
           <React.Fragment>
@@ -430,7 +445,7 @@ const Layout = ({ children }) => {
           </React.Fragment>
         )}
 
-        {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li onClick={() => setShowSidebar(false)} key="5" className="nav-item ml-auto">
             <Link href="/admin">
               <a className="nav-link text-white">
@@ -438,12 +453,19 @@ const Layout = ({ children }) => {
               </a>
             </Link>
           </li>
-        )}
+        )} */}
 
-        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+        {/* {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li onClick={() => setShowSidebar(false)} key="6" className="nav-item ml-auto">
             <Link href="/user">
               <a className="nav-link text-white"> {isAuth().name}'s Dashboard</a>
+            </Link>
+          </li>
+        )} */}
+        {(
+          <li onClick={() => setShowSidebar(false)} key="8" className="nav-item ml-auto">
+            <Link href="/user/profile/update">
+              <a className="nav-link text-white"> Profile Update</a>
             </Link>
           </li>
         )}
