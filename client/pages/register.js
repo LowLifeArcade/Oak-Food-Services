@@ -55,7 +55,7 @@ const Register = () => {
     // isAuth() && Router.push('/user');
     isAuth() && isAuth().role === 'admin'
       ? Router.push('admin')
-      : isAuth() && isAuth().role === 'user'
+      : isAuth() && isAuth().role === 'subscriber'
       ? Router.push('user')
       : !isAuth() ? console.log('not registered or signed in') : Router.push('/');
     // : Router.push('user')

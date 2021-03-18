@@ -35,6 +35,15 @@ const ResetPassword = ({ router }) => {
       setState({ ...state, name: decoded.name, token: router.query.id });
   }, [router]);
 
+  useEffect(() => {
+    buttonText === 'Done'
+    ? setTimeout(() => {
+        Router.push('/login');
+      }, 2000)
+    : console.log("it's fine");
+  return () => clearTimeout();
+  }, [success])
+
   const handleChange = (e) => {
     setState({ ...state, newPassword: e.target.value, success: '', error: '' });
   };
@@ -76,7 +85,7 @@ const ResetPassword = ({ router }) => {
       [name]: e.target.value,
       error: '',
       success: '',
-      buttonText: 'Register',
+      buttonText: 'Update',
     });
   };
 

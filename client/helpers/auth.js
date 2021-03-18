@@ -41,12 +41,12 @@ export const getCookieFromServer = (key, req) => {
   let token = req.headers.cookie
     .split(';')
     .find((c) => c.trim().startsWith(`${key}=`));
-  if(!token) {
-    return undefined 
+  if (!token) {
+    return undefined;
   }
-    let tokenValue = token.split('='[1])
-    // console.log('getCookieFromServer', tokenValue)
-    return tokenValue
+  let tokenValue = token.split('='[1]);
+  // console.log('getCookieFromServer', tokenValue)
+  return tokenValue;
 };
 
 // set in localstorage
@@ -84,19 +84,59 @@ export const isAuth = () => {
   }
 };
 
+const modal = () => (
+
+  
+  
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+)
+
+
+
 export const logout = () => {
-  removeCookie('token');
-  removeLocalStorage('user');
-  Router.push('/login');
+  // modal()
+  let answer = window.confirm('Logout Now?');
+  if (answer) {
+    removeCookie('token');
+    removeLocalStorage('user');
+    Router.push('/login');
+  }
+};
+export const autoLogout = () => {
+  // modal()
+ 
+    removeCookie('token');
+    removeLocalStorage('user');
+    Router.push('/login');
+  
 };
 
 export const updateUser = (user, next) => {
-    if (process.browser) {
-      if (localStorage.getItem('user')) {
-        let auth = JSON.parse(localStorage.getItem('user'))
-        auth = user
-        localStorage.setItem('user', JSON.stringify(auth))
-        next()
-      }
+  if (process.browser) {
+    if (localStorage.getItem('user')) {
+      let auth = JSON.parse(localStorage.getItem('user'));
+      auth = user;
+      localStorage.setItem('user', JSON.stringify(auth));
+      next();
     }
-}
+  }
+};

@@ -14,9 +14,11 @@ const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm('ATENTION! Please cancel at least a week in advance of pickup date if possible.');
+    let answer = window.confirm(
+      'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
+    );
     if (answer) {
-      window.confirm('Request is cancelled. No further action required.')
+      window.confirm('Request is cancelled. No further action required.');
       handleDelete(id);
     }
   };
@@ -59,11 +61,30 @@ const User = ({ user, token, l, userLinks }) => {
               )}
             </h4>
 
-            {l.mealRequest.filter(l => l.meal !== 'None' && l.meal !== 'Standard Onsite' && l.pickupOption !== 'Lunch Onsite / Breakfast Pickup').length != 0  && <h4 className="pt-1 pb-1">
-              Pickup date <b>{moment(l.pickupDate).format('MMMM Do')}</b>
-            </h4>}
+            {l.mealRequest.filter(
+              (l) =>
+                l.meal !== 'None' &&
+                l.meal !== 'Standard Onsite' &&
+                l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
+            ).length != 0 && (
+              <h4 className="pt-1 pb-1">
+                Pickup date <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+              </h4>
+            )}
             <h4>
-              {l.mealRequest.filter(l => l.meal !== 'None' && l.meal !== 'Standard Onsite' && l.pickupOption !== 'Lunch Onsite / Breakfast Pickup').length != 0 ? <b>Code: { l.pickupCode} </b>: <b>Onsite School Lunch for week of {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}</b>}
+              {l.mealRequest.filter(
+                (l) =>
+                  l.meal !== 'None' &&
+                  l.meal !== 'Standard Onsite' &&
+                  l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
+              ).length != 0 ? (
+                <b>Code: {l.pickupCode} </b>
+              ) : (
+                <b>
+                  Onsite School Lunch for week of{' '}
+                  {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}
+                </b>
+              )}
             </h4>
             <p></p>
             <div className="p-2">
@@ -71,53 +92,58 @@ const User = ({ user, token, l, userLinks }) => {
                 {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal */}
                 {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p> */}
                 <div className="p-3">
-                  {l.mealRequest.filter((l)=> l.meal !== 'None').map((k, i) => (
-                    <h5 className=""><b>
-
-                      {k.student === undefined
-                        ? 'user deleted'
-                        : 
-                        l.postedBy.students.filter((student) =>
-                        student._id.includes(k.student)
-                        ) &&
-                        k.studentName +
-                        
-                        (k.group === 'b-group' ? ' in Cohort B' : k.group === 'a-group' ? ' in Cohort A' : '')}
+                  {l.mealRequest
+                    .filter((l) => l.meal !== 'None')
+                    .map((k, i) => (
+                      <h5 className="">
+                        <b>
+                          {k.student === undefined
+                            ? 'user deleted'
+                            : l.postedBy.students.filter((student) =>
+                                student._id.includes(k.student)
+                              ) &&
+                              k.studentName +
+                                (k.group === 'b-group'
+                                  ? ' in Cohort B'
+                                  : k.group === 'a-group'
+                                  ? ' in Cohort A'
+                                  : '')}
                         </b>
-                      <br></br>
+                        <br></br>
 
-                      {k.student === undefined ? (
-                        'user deleted'
-                      ) : k.group === 'a-group' ||
-                        k.group === 'b-group' ? (
-                        k.pickupOption === 'Lunch Onsite / Breakfast Pickup' ? (
-                          <>
-                            Onsite meals and 
-                            <br />
-                            Curbside breakfast meals{' '}
-                          </>
+                        {k.student === undefined ? (
+                          'user deleted'
+                        ) : k.group === 'a-group' || k.group === 'b-group' ? (
+                          k.pickupOption ===
+                          'Lunch Onsite / Breakfast Pickup' ? (
+                            <>
+                              Onsite meals and
+                              <br />
+                              Curbside breakfast meals{' '}
+                            </>
+                          ) : (
+                            <>Onsite meals</>
+                          )
                         ) : (
                           <>
-                          Onsite meals 
+                            Curbside {k.meal} meals
+                            <br />
+                            {k.pickupOption}
                           </>
-                        )
-                      ) : (
-                        <>
-                        Curbside {k.meal} meals 
-                        <br/>
-                        {k.pickupOption}
-                        </>
-                      )}
-                      <hr />
-                    </h5>
-                  ))}
+                        )}
+                        <hr />
+                      </h5>
+                    ))}
                 </div>
               </h5>
               {/* {console.log(l.mealRequest)} */}
-              {l.pickupTime === 'Cafeteria' ?  null: <h2 className=" " style={{ fontSize: '16px' }}>
-                Pickup is between <b>{l.pickupTime} </b> on
-                Friday. Please print out or write out your code and display your <b className='text-danger' >CODE on your dashboard</b>. 
-              </h2>}
+              {l.pickupTime === 'Cafeteria' ? null : (
+                <h2 className=" " style={{ fontSize: '16px' }}>
+                  Pickup is between <b>{l.pickupTime} </b> on Friday. Please
+                  print out or write out your code and display your{' '}
+                  <b className="text-danger">CODE on your dashboard</b>.
+                </h2>
+              )}
             </div>
             <div className="pt-1 ">
               <span className="">
@@ -156,7 +182,7 @@ const User = ({ user, token, l, userLinks }) => {
     >
       <Layout>
         {/* <div className=""> */}
-
+        
         <h2 className="pt-3">
           {user.name}'s dashboard{' '}
           {/* <span className="text-danger"> /{user.role}</span>{' '} */}
@@ -185,6 +211,8 @@ const User = ({ user, token, l, userLinks }) => {
             {/* </ul> */}
           </div>
         </div>
+
+        
 
         <div className="col-md flex-column justify-content-center ">
           <br />

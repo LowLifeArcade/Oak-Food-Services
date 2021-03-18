@@ -34,6 +34,35 @@
   border-radius: none;
 }
 
+.sidebar {
+  position: fixed;
+  background-color: #4d6e74;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
+  opacity: 0.98; /* 1 means fully visible, 0 means invisible */
+
+  transform: translateX(-100%);
+  transition: transform .3s ease-in-out;
+
+}
+
+.sidebarVisible {
+  position: fixed;
+  background-color: #4d6e74;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
+  opacity: 0.98; /* 1 means fully visible, 0 means invisible */
+
+  transform: translateX(0);
+  transition: transform .3s ease-in-out;
+}
+
 .subcard {
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, .2);
   background-color: rgb(250, 252, 253);
@@ -100,11 +129,13 @@
 
 @media only screen and (max-width: 600px) {
   .accordion { display: block; }
+  .sidebar { display: block; }
   .nav { display: none; }
 }
 
 @media only screen and (min-width: 600px) {
   .accordion { display: none; }
+  .sidebar { display: none; }
   .nav { display: block; }
 }
 

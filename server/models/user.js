@@ -78,7 +78,7 @@ const userSchema = new mongoose.Schema(
         },
         teacher:{
           type: String,
-          required: true
+          // required: true
         },
         age: {
           type: String
@@ -126,7 +126,7 @@ userSchema.methods = {
     if (!password) return '';
     try {
       return crypto
-        .createHmac('sha1', this.salt) // possible algorithm problem RS256 might have to go here instead of sha1
+        .createHmac('sha256', this.salt) // possible algorithm problem RS256 might have to go here instead of sha1
         .update(password)
         .digest('hex');
       console.log(hash);

@@ -12,7 +12,7 @@ import { getCookie } from '../../../helpers/auth';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
-import Router from 'next/router'
+import Router from 'next/router';
 
 const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const [allLinks, setAllLinks] = useState(links);
@@ -93,7 +93,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       );
       console.log('MEAL COMPLETE SUCCESS', response);
       // process.browser
-      process.browser && Router.push('/admin/link/read')
+      process.browser && Router.push('/admin/link/read');
       window.location.reload();
       window.confirm('Order is complete');
     } catch (error) {
@@ -108,7 +108,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         },
       });
       console.log('LINK DELETE SUCCESS', response);
-      process.browser && Router.push('/admin/link/read')
+      process.browser && Router.push('/admin/link/read');
       // window.location.reload();
     } catch (error) {
       console.log('ERROR LINK CATEGORY', error);
@@ -118,9 +118,11 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm('WARNING! Confirm delete of food request as admin.');
+    let answer = window.confirm(
+      'WARNING! Confirm delete of food request as admin.'
+    );
     if (answer) {
-      window.confirm('Food request has been deleted' )
+      window.confirm('Food request has been deleted');
       handleDelete(id);
     }
   };
@@ -155,7 +157,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             key={i}
             className={
               l.orderStatus === false
-                ? 'p-4 alert  alert-warning '+ styles.subcard
+                ? 'p-4 alert  alert-warning ' + styles.subcard
                 : 'p-4 alert  alert-secondary ' + styles.subcard
             }
           >
@@ -170,52 +172,59 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
-                {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal
-                {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p>
+                {l.mealRequest.filter((l) => l.meal !== 'None').length} weekly
+                meal
+                {l.mealRequest.filter((l) => l.meal !== 'None').length > 1 &&
+                  's'}
+                :<p></p>
                 <div className="p-3">
-                  {l.mealRequest.filter((l)=> l.meal !== 'None').map((k, i) => (
-                    <h6 className="">
-                      {console.log(k)}
-                      {/* Meal {`${i + 1} `} - for  */}
-                      {k.student === undefined ? (
-                        'user deleted'
-                      ) : k.group === 'a-group' ||
-                        k.group === 'b-group' ? (
-                        k.pickupOption === 'Lunch Onsite / Breakfast Pickup' ? (
-                          <>
-                            <b>2 onsite meals and </b>
-                            <br />
-                            <b>5 pickup breakfast meals</b>{' '}
-                          </>
+                  {l.mealRequest
+                    .filter((l) => l.meal !== 'None')
+                    .map((k, i) => (
+                      <h6 className="">
+                        {console.log(k)}
+                        {/* Meal {`${i + 1} `} - for  */}
+                        {k.student === undefined ? (
+                          'user deleted'
+                        ) : k.group === 'a-group' || k.group === 'b-group' ? (
+                          k.pickupOption ===
+                          'Lunch Onsite / Breakfast Pickup' ? (
+                            <>
+                              <b>2 onsite meals and </b>
+                              <br />
+                              <b>5 pickup breakfast meals</b>{' '}
+                            </>
+                          ) : (
+                            <b>2 onsite meals </b>
+                          )
                         ) : (
-                          <b>2 onsite meals </b>
-                        )
-                      ) : (
-                        <b>5 pickup {k.meal} meals </b>
-                      )}
-                      <br></br>
-                      {k.student === undefined
-                        ? 'user deleted'
-                        : l.postedBy.students.filter((student) =>
-                            student._id.includes(k.student)
-                          ) &&
-                          k.studentName +
-                            ' - ' +
-                            k.group}
-                      {/* {console.log(i,l.postedBy.students[i]._id)} */}
-                      {/* {console.log('meal req',k.meal)} */}
-                      <hr />
-                    </h6>
-                  ))}
+                          <b>5 pickup {k.meal} meals </b>
+                        )}
+                        <br></br>
+                        {k.student === undefined
+                          ? 'user deleted'
+                          : l.postedBy.students.filter((student) =>
+                              student._id.includes(k.student)
+                            ) && k.studentName + ' - ' + k.group}
+                        {/* {console.log(i,l.postedBy.students[i]._id)} */}
+                        {/* {console.log('meal req',k.meal)} */}
+                        <hr />
+                      </h6>
+                    ))}
                 </div>
               </h5>
               {/* {console.log(l.mealRequest)} */}
-              {l.pickupTime === 'Cafeteria' ?  <h2 className=" " style={{ fontSize: '16px' }}>
-                Pickup is on campus at the student <b>{l.pickupTime} </b> during school hours
-              </h2> : <h2 className=" " style={{ fontSize: '16px' }}>
-                Pickup for your order is between <b>{l.pickupTime} </b> on
-                Friday 
-              </h2>}
+              {l.pickupTime === 'Cafeteria' ? (
+                <h2 className=" " style={{ fontSize: '16px' }}>
+                  Pickup is on campus at the student <b>{l.pickupTime} </b>{' '}
+                  during school hours
+                </h2>
+              ) : (
+                <h2 className=" " style={{ fontSize: '16px' }}>
+                  Pickup for your order is between <b>{l.pickupTime} </b> on
+                  Friday
+                </h2>
+              )}
             </div>
             <div className="pt-1 ">
               <span className="">
@@ -226,14 +235,14 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             </div>
 
             <div className=" pb-3 pt-3">
-            <Link href="">
-            <button
-              onClick={(e) => confirmDelete(e, l._id)}
-              className="badge text-danger btn btn-outline-warning "
-            >
-              Delete
-            </button>
-          </Link>
+              <Link href="">
+                <button
+                  onClick={(e) => confirmDelete(e, l._id)}
+                  className="badge text-danger btn btn-outline-warning "
+                >
+                  Delete
+                </button>
+              </Link>
               {
                 <Link href={`/user/link/${l._id}`}>
                   <button className="badge btn btn-outline-warning text float-left">
@@ -411,5 +420,30 @@ Links.getInitialProps = async ({ req }) => {
     token,
   };
 };
+// Links.getInitialProps = async ({ req }) => {
+//   let skip = 0;
+//   let limit = 2;
+
+//   const token = getCookie('token', req);
+
+//   const dateLookup = moment(new Date()).format('l');
+//   const response = await axios.post(
+//     `${API}/links-by-date`,
+//     { dateLookup },
+//     { headers: { Authorization: `Bearer ${token}` } }
+//   );
+
+//   let initRequests = response.data;
+//   return {
+//     links: response.data,
+//     totalLinks: response.data.length,
+//     linksLimit: limit,
+//     linkSkip: skip,
+//     token,
+//     initRequests,
+//   };
+// };
+
+
 
 export default withAdmin(Links);

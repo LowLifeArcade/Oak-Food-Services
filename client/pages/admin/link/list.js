@@ -12,6 +12,8 @@ import { getCookie } from '../../../helpers/auth';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
+// import { getCookie, isAuth } from '../../../helpers/auth';
+
 
 // token, links, totalLinks, linksLimit, linkSkip
 const Requests = ({ token }) => {
@@ -1444,5 +1446,20 @@ const Requests = ({ token }) => {
 //   };
 
 // };
+
+Requests.getInitialProps = async ({req, user}) => {
+  const token = getCookie('token', req);
+
+const dateLookup = moment(new Date).format('l')
+const response = await axios.post(
+  `${API}/links-by-date`,
+  { dateLookup },
+  { headers: { Authorization: `Bearer ${token}` } }
+);
+
+  // pickupDate: pickupDateLookup,
+  let initRequests = response.data 
+  return {initRequests}
+}
 
 export default withAdmin(Requests);

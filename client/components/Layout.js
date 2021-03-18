@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { state, useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -15,12 +15,16 @@ Router.onRouteChangeComplete = (url) => NProgress.done();
 Router.onRouteChangeError = (url) => NProgress.done();
 
 const Layout = ({ children }) => {
+  const [showSidebar, setShowSidebar] = useState(false);
+  // const [modalShow, setModalShow] = React.useState(false);
+
   const head = () => (
     <>
       {/* bootstrap */}
       <link
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        // href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossOrigin="anonymous"
       />
@@ -32,20 +36,55 @@ const Layout = ({ children }) => {
         crossOrigin="anonymous"
       />
       {/* <link rel="stylesheet" href="../styles/Home.module.css"/> */}
+
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+        crossOrigin="anonymous"
+      />
     </>
   );
 
+  // const  MyVerticallyCenteredModal =(props)=> {
+  //   return (
+  //     <Modal
+  //       {...props}
+  //       size="lg"
+  //       aria-labelledby="contained-modal-title-vcenter"
+  //       centered
+  //     >
+  //       <Modal.Header closeButton>
+  //         <Modal.Title id="contained-modal-title-vcenter">
+  //           Modal heading
+  //         </Modal.Title>
+  //       </Modal.Header>
+  //       <Modal.Body>
+  //         <h4>Centered Modal</h4>
+  //         <p>
+  //           Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+  //           dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+  //           consectetur ac, vestibulum at eros.
+  //         </p>
+  //       </Modal.Body>
+  //       <Modal.Footer>
+  //         <Button onClick={props.onHide}>Close</Button>
+  //       </Modal.Footer>
+  //     </Modal>
+  //   );
+  // }
+
   const nav = () => (
-    <nav className={'fixed-top ' +  styles.nav}>
+    <nav className={'fixed-top ' + styles.nav}>
       <ul className={'nav nav-tabs ' + styles.nav}>
-        <li className="nav-item pointer-hand">
+        <li key="1" className="nav-item pointer-hand">
           <Link href="/">
             <a className="nav-link text-white">Home</a>
           </Link>
         </li>
 
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-          // <li className="nav-item pointer-hand">
+          <li className="nav-item pointer-hand">
           <Link href="/user/link/create">
             <a
               className="nav-link text-white btn btn-warning"
@@ -55,9 +94,10 @@ const Layout = ({ children }) => {
             </a>
             {/* \u{1F354} */}
           </Link>
+          </li>
         )}
         {process.browser && isAuth() && isAuth().role === 'admin' && (
-          // <li className="nav-item pointer-hand">
+          <li className="nav-item pointer-hand">
           <Link href="/user/link/create">
             <a
               className="nav-link text-white btn btn-success"
@@ -66,42 +106,53 @@ const Layout = ({ children }) => {
               {'🍱'}
             </a>
           </Link>
+          </li>
         )}
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-          <li className="nav-item">
+          <li key="2" className="nav-item">
             <Link href="/user">
               <a className="nav-link text-white">Receipts </a>
             </Link>
           </li>
         )}
         {process.browser && isAuth() && isAuth().role === 'admin' && (
-          // <li className="nav-item pointer-hand">
+          <li className="nav-item pointer-hand">
           <Link href="/admin/link/data">
             <a className="nav-link text-white">{'Order Data'}</a>
           </Link>
+          </li>
         )}
         {process.browser && isAuth() && isAuth().role === 'admin' && (
-          // <li className="nav-item pointer-hand">
+          <li className="nav-item pointer-hand">
           <Link href="/admin/link/list">
             <a className="nav-link text-white">{'Lists'}</a>
           </Link>
+          </li>
         )}
         {process.browser && isAuth() && isAuth().role === 'admin' && (
-          // <li className="nav-item pointer-hand">
+          <li className="nav-item pointer-hand">
           <Link href="/admin/link/read">
             <a className="nav-link text-white">{'Receipts'}</a>
           </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/admin/category/create">
+            <a className="nav-link text-white">{'Create Menu'}</a>
+          </Link>
+          </li>
         )}
 
         {process.browser && !isAuth() && (
           <React.Fragment>
-            <li className="nav-item ml-auto">
+            <li key="3" className="nav-item ml-auto">
               <Link href="/login">
                 <a className="nav-link text-white">Login</a>
               </Link>
             </li>
 
-            <li className="nav-item">
+            <li key="4" className="nav-item">
               <Link href="/register">
                 <a className="nav-link text-white">Register</a>
               </Link>
@@ -110,7 +161,7 @@ const Layout = ({ children }) => {
         )}
 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
-          <li className="nav-item ml-auto">
+          <li key="5" className="nav-item ml-auto">
             <Link href="/admin">
               <a className="nav-link text-white">
                 Admin Dashboard: {isAuth().name}
@@ -120,17 +171,28 @@ const Layout = ({ children }) => {
         )}
 
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-          <li className="nav-item ml-auto">
+          <li key="6" className="nav-item ml-auto">
             <Link href="/user">
               <a className="nav-link text-white">Dashboard: {isAuth().name}</a>
             </Link>
           </li>
         )}
+        {/* {process.browser && isAuth() && isAuth().role === 'superUser' && (
+          <li key='6' className="nav-item ml-auto">
+            <Link href="/user">
+              <a className="nav-link text-white">S-User: {isAuth().name}</a>
+            </Link>
+          </li>
+        )} */}
 
         {process.browser && isAuth() && (
-          <li className="nav-item ">
-            <Link href="/login">
-              <a onClick={logout} className="nav-link text-white">
+          <li key="7" className="nav-item ">
+            <Link href="">
+              <a
+                onClick={logout}
+                className="nav-link text-white"
+                // data-toggle={() => setModalShow(true)}
+              >
                 Logout
               </a>
             </Link>
@@ -141,14 +203,20 @@ const Layout = ({ children }) => {
   );
 
   const accordian = () => (
-    <accordion className= {'fixed-top ' + styles.accordion}
-
-    >
+    <accordion className={'fixed-top ' + styles.accordion}>
       <ul className={'nav nav-tabs ' + styles.accordion}>
-        <li className="nav-item pointer-hand">
-          <Link href="/">
-            <a className="nav-link text-white">Home</a>
-          </Link>
+        <li key="1" className="nav-item pointer-hand">
+          {/* <Link href=""> */}
+            <a className="nav-link text-white">
+              {/* {'🏠'} */}
+              {/* <button className="nav-btn open-btn" > */}
+              <span onClick={() => setShowSidebar(!showSidebar)} >
+
+                <i className="fas fa-bars"></i>
+              </span>
+              {/* </button> */}
+              </a>
+          {/* </Link> */}
         </li>
 
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
@@ -158,7 +226,8 @@ const Layout = ({ children }) => {
               className="nav-link text-white btn btn-warning"
               style={{ borderRadius: '0px' }}
             >
-              {' 📝'}
+              {/* {' 📝'} */}
+              <i class="fas fa-pencil-alt"></i>
             </a>
             {/* \u{1F354} */}
           </Link>
@@ -167,10 +236,11 @@ const Layout = ({ children }) => {
           // <li className="nav-item pointer-hand">
           <Link href="/admin/link/list">
             <a
-              className="nav-link text-white btn btn-success"
+              className="nav-link text-white btn btn-warning"
               style={{ borderRadius: '0px' }}
             >
-              {'📝'}
+              {/* {'📝'} */}
+              <i class="fas fa-pencil-alt"></i>
             </a>
           </Link>
         )}
@@ -208,13 +278,13 @@ const Layout = ({ children }) => {
 
         {process.browser && !isAuth() && (
           <React.Fragment>
-            <li className="nav-item ml-auto">
+            <li key="2" className="nav-item ml-auto">
               <Link href="/login">
                 <a className="nav-link text-white">Login</a>
               </Link>
             </li>
 
-            <li className="nav-item">
+            <li key="3" className="nav-item">
               <Link href="/register">
                 <a className="nav-link text-white">Register</a>
               </Link>
@@ -223,44 +293,187 @@ const Layout = ({ children }) => {
         )}
 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
-          <li className="nav-item ml-auto">
+          <li key="4" className="nav-item ml-auto">
             <Link href="/admin">
-              <a className="nav-link text-white">
-                Admin: {isAuth().name}
-              </a>
+              <a className="nav-link text-white">Admin: {isAuth().name}</a>
             </Link>
           </li>
         )}
 
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-          <li className="nav-item ml-auto">
+          <li key="5" className="nav-item ml-auto">
             <Link href="/user">
               <a className="nav-link text-white"> {isAuth().name}'s Receipts</a>
             </Link>
           </li>
         )}
 
-        {process.browser && isAuth() && (
-          <li className="nav-item ">
+        {/* {process.browser && isAuth() && (
+          <li key="6" className="nav-item ">
             <Link href="/login">
               <a onClick={logout} className="nav-link text-white">
+                {'✖️'}
+                <i className="fas fa-times"></i>
+              </a>
+            </Link>
+          </li>
+        )} */}
+      </ul>
+    </accordion>
+  );
+
+  const sideBar = () => (
+    <div 
+    // style={{ display: showSidebar ? 'None': 'Block' }}
+    className={showSidebar ?  styles.sidebarVisible : styles.sidebar }
+    >
+      <ul className={'sidebar  pt-5'}>
+        <span onClick={() => setShowSidebar(false)} >
+    {console.log(showSidebar)}
+        <i className="fas fa-times float-right p-3 "></i>
+        </span>
+        
+
+
+        <li key="1" className="nav-item pointer-hand pt-4">
+          <Link href="/">
+            <a className="nav-link text-white">Home</a>
+          </Link>
+        </li>
+
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/user/link/create">
+            <a
+              className="nav-link text-white "
+              // style={{ borderRadius: '0px' }}
+            >
+              {/* {' 📝'} */}
+              Order
+            </a>
+            {/* \u{1F354} */}
+          </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/user/link/create">
+            <a
+              className="nav-link text-white "
+              // style={{ borderRadius: '0px' }}
+            >
+              {/* {'🍱'} */}
+              Order
+            </a>
+          </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          <li key="2" className="nav-item">
+            <Link href="/user">
+              <a className="nav-link text-white">Receipts </a>
+            </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/admin/link/data">
+            <a className="nav-link text-white">{'Order Data'}</a>
+          </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/admin/link/list">
+            <a className="nav-link text-white">{'Lists'}</a>
+          </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/admin/link/read">
+            <a className="nav-link text-white">{'Receipts'}</a>
+          </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li className="nav-item pointer-hand">
+          <Link href="/admin/category/create">
+            <a className="nav-link text-white">{'Create Menu'}</a>
+          </Link>
+          </li>
+        )}
+
+        {process.browser && !isAuth() && (
+          <React.Fragment>
+            <li key="3" className="nav-item ml-auto">
+              <Link href="/login">
+                <a className="nav-link text-white">Login</a>
+              </Link>
+            </li>
+
+            <li key="4" className="nav-item">
+              <Link href="/register">
+                <a className="nav-link text-white">Register</a>
+              </Link>
+            </li>
+          </React.Fragment>
+        )}
+
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li key="5" className="nav-item ml-auto">
+            <Link href="/admin">
+              <a className="nav-link text-white">
+                Admin Dashboard: {isAuth().name}
+              </a>
+            </Link>
+          </li>
+        )}
+
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          <li key="6" className="nav-item ml-auto">
+            <Link href="/user">
+              <a className="nav-link text-white">Dashboard: {isAuth().name}</a>
+            </Link>
+          </li>
+        )}
+        {/* {process.browser && isAuth() && isAuth().role === 'superUser' && (
+          <li key='6' className="nav-item ml-auto">
+            <Link href="/user">
+              <a className="nav-link text-white">S-User: {isAuth().name}</a>
+            </Link>
+          </li>
+        )} */}
+
+        {process.browser && isAuth() && (
+          <li key="7" className="nav-item ">
+            <Link href="">
+              <a
+                onClick={logout}
+                className="nav-link text-white"
+                // data-toggle={() => setModalShow(true)}
+              >
                 Logout
               </a>
             </Link>
           </li>
         )}
       </ul>
-    </accordion>
+      <hr/>
+    </div>
   );
 
-  const sideBar = () => {
-    //
-  };
-
   return (
+    
     <React.Fragment>
+      {/* <Component> */}
       {head()} {nav()} {accordian()} {sideBar()}{' '}
       <div className={'container pt-5 '}>{children}</div>
+      {/* <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      /> */}
+      {/* </Component> */}
     </React.Fragment>
   );
 };

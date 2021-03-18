@@ -19,15 +19,11 @@ const Login = () => {
   });
 
   useEffect(() => {
-    // isAuth() && Router.push('/user');
-    // isAuth() && isAuth().role === 'user' && user.students === []
-    //   ? Router.push('user/profile/add')
-       isAuth() && isAuth().role === 'admin'
+    isAuth() && isAuth().role === 'admin'
       ? Router.push('admin')
-      : isAuth() && isAuth().role === 'user'
+      : isAuth() && isAuth().role === 'subscriber'
       ? Router.push('user')
       : Router.push('/login');
-    // : Router.push('user')
   }, []);
 
   const { email, password, error, success, buttonText } = state;
@@ -54,8 +50,8 @@ const Login = () => {
       // console.log(response); // user token
       authenticate(response, () =>
         // isAuth() && isAuth().role === 'user' && user.students === []
-          // ? Router.push('user/profile/add')
-           isAuth() && isAuth().role === 'admin'
+        // ? Router.push('user/profile/add')
+        isAuth() && isAuth().role === 'admin'
           ? Router.push('admin')
           : Router.push('user')
       );

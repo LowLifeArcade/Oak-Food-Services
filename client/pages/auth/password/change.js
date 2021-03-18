@@ -4,15 +4,26 @@ import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
 import Router from 'next/router';
 import Layout from '../../../components/Layout';
+import { isAuth, autoLogout } from '../../../helpers/auth';
 
 const ForgotPassword = () => {
   const [state, setState] = useState({
     email: '',
-    buttonText: 'Change Password',
+    buttonText: 'Submit',
     success: '',
     error: '',
   });
   const { email, buttonText, success, error } = state;
+
+  useEffect(() => {
+    buttonText === 'Done'
+    ? setTimeout(() => {
+      autoLogout();
+      console.log('log out')
+      }, 5000)
+    : console.log("it's fine");
+  return () => clearTimeout();
+  }, [success])
 
   const handleChange = (e) => {
     setState({ ...state, email: e.target.value, success: '', error: '' });
@@ -45,6 +56,7 @@ const ForgotPassword = () => {
       <div className="form-group">
         <input
           type="email"
+          name="email"
           className="form-control"
           onChange={handleChange}
           value={email}
@@ -63,8 +75,12 @@ const ForgotPassword = () => {
       <div className="row">
         <div className="col-md-6 offset-md3 pt-3">
           <h2>Change Password</h2>
-          <div className="col-md-3">
+          <div className="col-md">
             <br />
+            <h5 className="text-muted" >
+              After clicking submit go to your email and follow the provided link to reset your password.
+            </h5>
+            <br/>
           </div>
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}

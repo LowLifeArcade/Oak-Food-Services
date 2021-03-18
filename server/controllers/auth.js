@@ -173,7 +173,7 @@ exports.login = (req, res) => {
     }
     // generate token and send to client
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '7d',
+      expiresIn: '3d',
     });
     const { _id, name, email, role } = user;
 
@@ -191,7 +191,7 @@ exports.login = (req, res) => {
 
 exports.requireSignin = expressJwt({
   secret: process.env.JWT_SECRET,
-  algorithms: ['sha1', 'RS256', 'HS256'],
+  algorithms: ['sha1', 'sha256', 'RS256', 'HS256'],
 }); // req.user
 
 exports.authMiddleware = (req, res, next) => {

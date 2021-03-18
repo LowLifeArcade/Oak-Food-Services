@@ -108,8 +108,7 @@ const Home = ({ categories }) => {
               >
                 <div className="p-4">
               
-                  <div className="">
-                    <div className="">
+
                       <h3 className="font-weight-bold p-2">{c.name}</h3>
                       <hr />
                       <div className="lead alert alert-seconary pt-4">
@@ -129,8 +128,7 @@ const Home = ({ categories }) => {
                           {/* {popular.map((l, i) => l.postedBy.name)} */}
                           {/* {c.username} */}
                         </div>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </a>

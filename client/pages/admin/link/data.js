@@ -10,6 +10,8 @@ import axios from 'axios';
 import { API } from '../../../config';
 import ChartsEmbedSDK from '@mongodb-js/charts-embed-dom';
 import Layout from '../../../components/Layout';
+import { getCookie, isAuth } from '../../../helpers/auth';
+
 
 // const sdk = new ChartsEmbedSDK({
 //   baseUrl: 'https://charts.mongodb.com/charts-charts-fixture-tenant-zdvkh',
@@ -19,10 +21,10 @@ import Layout from '../../../components/Layout';
 // });
 
 
-const Admin = ({ token, user }) => {
+const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
-    requests: [],
-    pickupDate: '',
+    requests: initRequests,
+    pickupDate:  moment(new Date).format('l'),
     meals: [],
   });
 
@@ -31,6 +33,8 @@ const Admin = ({ token, user }) => {
 
   useEffect(() => {
     // loadRequests();
+    
+
     let allMealsArray = [];
     const pushAllMeals = (meal) => {
       requests.map((r, i) =>
@@ -42,9 +46,16 @@ const Admin = ({ token, user }) => {
     pushAllMeals();
     setState({
       ...state,
+      // pickupDate: moment(pickupDate).format('l'),
       meals: allMealsArray.filter((meal) => meal.meal !== 'None'),
     });
   }, [requests]);
+
+  // useEffect((pickupDate) => {
+  //     setTimeout(() => {
+  //       setState({ ...state, pickupDate: moment(pickupDate).format('l') });
+  //     }, 10)
+  // }, [pickupDate])
 
   // useEffect(() => {
   //   // loadRequests();
@@ -200,12 +211,21 @@ const Admin = ({ token, user }) => {
 
   // change date
   const onDateChange = (pickupDate) => {
+    // e.preventDefault()
     setState({ ...state, pickupDate: moment(pickupDate).format('l') });
     // setShowSearch(!showSearch);
     
     // myDate = pickupDate
     handleDateChange(pickupDate);
+
   };
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+        
+  //     handleDateChange(pickupDate);
+  //   }, 200)
+  // }, [pickupDate])
 
   const handleDateChange = async (pickupDate) => {
     const pickupDateLookup = moment(pickupDate).format('l');
@@ -214,7 +234,9 @@ const Admin = ({ token, user }) => {
       { pickupDateLookup },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    setState({ ...state, requests: response.data });
+    setState({ ...state, 
+      pickupDate: pickupDateLookup,
+      requests: response.data });
   };
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
@@ -226,12 +248,12 @@ const Admin = ({ token, user }) => {
       <br />
       <div className="row">
         <div className="col-md-4">
-          <h3>Order Data</h3>
+          <h3>Order Data {`for ${pickupDate}`}</h3>
           <hr />
           <div className="">
             <div className="">
               <Calendar
-                onChange={(e) => onDateChange(e)}
+                onChange={(e) => onDateChange(e) }
                 tileDisabled={handleDisabledDates}
                 value={pickupDate}
                 // defaultValue={twoWeeksFromNow}
@@ -354,5 +376,24 @@ const Admin = ({ token, user }) => {
 //     initialRequests: response.data,
 //   };
 // };
+// Create.getInitialProps = ({ req, user }) => {
+//   const token = getCookie('token', req);
+//   return { token, user };
+// };
+
+Admin.getInitialProps = async ({req, user}) => {
+    const token = getCookie('token', req);
+
+  const dateLookup = moment(new Date).format('l')
+  const response = await axios.post(
+    `${API}/links-by-date`,
+    { dateLookup },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  
+    // pickupDate: pickupDateLookup,
+    let initRequests = response.data 
+    return {initRequests}
+}
 
 export default withAdmin(Admin);

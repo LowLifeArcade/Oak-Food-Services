@@ -8,11 +8,19 @@ import Layout from '../../../components/Layout';
 const ForgotPassword = () => {
   const [state, setState] = useState({
     email: '',
-    buttonText: 'Forgot Password',
+    buttonText: 'Submit',
     success: '',
     error: '',
   });
   const { email, buttonText, success, error } = state;
+
+useEffect(() => {
+  buttonText === 'Done' &&
+  setTimeout(() => {
+      
+    Router.push('/login')
+  }, 2000)
+}, [success])
 
   const handleChange = (e) => {
     setState({ ...state, email: e.target.value, success: '', error: '' });
@@ -34,7 +42,7 @@ const ForgotPassword = () => {
       console.log('FORGOT PW ERROR', error);
       setState({
         ...state,
-        buttonText: 'Forgot Password',
+        buttonText: 'Submit',
         error: error.response.data.error,
       });
     }
@@ -45,6 +53,7 @@ const ForgotPassword = () => {
       <div className="form-group">
         <input
           type="email"
+          name="email"
           className="form-control"
           onChange={handleChange}
           value={email}
@@ -52,6 +61,17 @@ const ForgotPassword = () => {
           required
         />
       </div>
+      {/* <div 
+      className="d-none form-group">
+        <input
+          type="password"
+          className="form-control"
+          onChange={''}
+          value={email}
+          placeholder="Enter email"
+          required
+        />
+      </div> */}
       <div>
         <button className="btn btn-outline-warning">{buttonText}</button>
       </div>
@@ -63,8 +83,12 @@ const ForgotPassword = () => {
       <div className="row">
         <div className="col-md-6 offset-md3 pt-3">
           <h2>Forgot Password</h2>
-          <div className="col-md-3">
+          <div className="col-md">
             <br />
+            <h5 className="text-muted" >
+              After clicking submit go to your email and follow the provided link to reset your password.
+            </h5>
+            <br/>
           </div>
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}
