@@ -74,7 +74,9 @@ const userSchema = new mongoose.Schema(
         //   required: true
         // },
         foodAllergy: {
-          type: String
+          type: {
+            type: String
+          }
         },
         teacher:{
           type: String,

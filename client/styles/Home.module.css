@@ -178,6 +178,7 @@
 
 .toggle {
   visibility: hidden;
+  /* opacity: 0%; */
 }
 
 .label {
