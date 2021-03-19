@@ -26,8 +26,8 @@ const User = ({ user, token, l, userLinks }) => {
   useEffect(() => {
     // console.log('students!', user.students);
     user.students.length === 0
-      ? Router.push('/user/profile/add')
-      : console.log('useEffect not active');
+      && Router.push('/user/profile/add')
+      
   }, []);
 
   const handleDelete = async (id) => {
@@ -55,8 +55,14 @@ const User = ({ user, token, l, userLinks }) => {
           <div key={i} className={' p-4 alert alert-warning ' + styles.receipt}>
             <h4>
               {l.orderStatus && (
-                <b className="text-danger">
-                  picked up on {moment(l.updatedAt).format('MMM Do')}
+                <b className="text-danger ">
+                  <h2>
+
+                  * PICKED UP * 
+                  <br/>
+                   on {moment(l.updatedAt).format('MMM Do')}
+                  </h2>
+                  <hr/>
                 </b>
               )}
             </h4>
@@ -68,13 +74,12 @@ const User = ({ user, token, l, userLinks }) => {
                 l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
             ).length != 0 && (
               <React.Fragment>
-
-              <h4 className="pt-2 ">
-                PICKUP DATE 
-                <br/>
-                <b>{moment(l.pickupDate).format('MMMM Do')}</b>
-              </h4>
-            Between <b className="pb-2 ">{l.pickupTime} </b>
+                <h4 className="pt-2 ">
+                  PICKUP DATE
+                  <br />
+                  <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+                </h4>
+                Between <b className="pb-2 ">{l.pickupTime} </b>
               </React.Fragment>
             )}
             <hr className={styles.hr} />
@@ -85,7 +90,7 @@ const User = ({ user, token, l, userLinks }) => {
                   l.meal !== 'Standard Onsite' &&
                   l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
-                <b className='d-flex justify-content-center' >{l.pickupCode} </b>
+                <b className="d-flex justify-content-center">{l.pickupCode} </b>
               ) : (
                 <b>
                   Onsite School Lunch for week of{' '}
@@ -94,33 +99,31 @@ const User = ({ user, token, l, userLinks }) => {
               )}
             </h3>
             <hr className={styles.hr} />
-            <h6>Display the above code <b className="text-danger" >on your dashboard </b>or show from your phone to the server</h6>
+            <h6>
+              Display the above code{' '}
+              <b className="text-danger">on your dashboard </b>or show from your
+              phone to the server
+            </h6>
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
                 {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal */}
                 {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p> */}
+
                 <div className="p-3">
                   {l.mealRequest
                     .filter((l) => l.meal !== 'None')
                     .map((k, i) => (
                       <>
-                      <h5 className="">
-                        <b>
-                          {k.student === undefined
-                            ? 'user deleted'
-                            : l.postedBy.students.filter((student) =>
-                                student._id.includes(k.student)
-                              ) &&
-                              k.studentName 
-                                // (k.group === 'b-group'
-                                //   ? ' in Cohort B'
-                                //   : k.group === 'a-group'
-                                //   ? ' in Cohort A'
-                                //   : '')
-                                  }
-                        </b>
-                        <br></br>
+                        <h5 className="">
+                          <b>
+                            {k.student === undefined
+                              ? 'user deleted'
+                              : l.postedBy.students.filter((student) =>
+                                  student._id.includes(k.student)
+                                ) && k.studentName}:
+                          </b>
+                          <br></br>
                         </h5>
                         {k.student === undefined ? (
                           'user deleted'
@@ -128,41 +131,69 @@ const User = ({ user, token, l, userLinks }) => {
                           k.pickupOption ===
                           'Lunch Onsite / Breakfast Pickup' ? (
                             <>
-                            <div className="pb-2">
-
-                              Curbside Breakfast Meals{' '}
-
-                            </div>
-                            <div className="p-2" style={{ fontSize: '16px' }}>
-
-                              PLUS: *Onsite Meals {(k.group === 'b-group'
-                                  ? ' in Cohort B'
-                                  : k.group === 'a-group'
-                                  ? ' in Cohort A'
-                                  : '')}* 
-                            </div>
-
+                              <div className="p-1">
+                                <div className="pb-2 ">Curbside Breakfast </div>
+                                <div
+                                  className="p-2"
+                                  style={{ fontSize: '16px' }}
+                                >
+                                  PLUS:
+                                  <br />
+                                  *Onsite Lunches{' '}
+                                  {k.group === 'b-group'
+                                    ? '- B'
+                                    : k.group === 'a-group'
+                                    ? '- A'
+                                    : ''}
+                                  *
+                                  <br />
+                                  *Week of{' '}
+                                  {moment(l.pickupDate)
+                                    .add(3, 'day')
+                                    .format('MMMM Do')}
+                                  *
+                                </div>
+                              </div>
                             </>
                           ) : (
-                            <>*Onsite Meals {(k.group === 'b-group'
-                            ? ' in Cohort B'
-                            : k.group === 'a-group'
-                            ? ' in Cohort A'
-                            : '')}* </>
+                            <>
+                              <div className="p-1">
+                                Onsite Lunches
+                                <br />
+                                <div
+                                  className="p-2"
+                                  style={{ fontSize: '16px' }}
+                                >
+                                  *
+                                  {k.group === 'b-group'
+                                    ? 'Cohort B'
+                                    : k.group === 'a-group'
+                                    ? 'Cohort A'
+                                    : ''}
+                                  * <br />
+                                  *Week of{' '}
+                                  {moment(l.pickupDate)
+                                    .add(3, 'day')
+                                    .format('MMMM Do')}
+                                  *
+                                </div>
+                              </div>
+                            </>
                           )
                         ) : (
                           <>
-                            Curbside {k.meal}, {' '}
-                            <div className="p-2" style={{ fontSize: '16px' }}>
-
-
-                            TYPE: {k.pickupOption} Meals
-
+                            <div className="p-1">
+                              Curbside {k.meal}{' '}
+                              <div className="p-2" style={{ fontSize: '16px' }}>
+                                TYPE:
+                                <br />
+                                {k.pickupOption}
+                              </div>
                             </div>
                           </>
                         )}
                         <hr />
-                        </>
+                      </>
                     ))}
                 </div>
               </h5>
@@ -187,14 +218,14 @@ const User = ({ user, token, l, userLinks }) => {
               {l.postedBy.students[i] === undefined ? null : (
                 <Link href={`/user/link/${l._id}`}>
                   <button className="btn btn-sm btn-outline-dark text float-left">
-                  <i class="far fa-edit"></i> &nbsp;Edit
+                    <i class="far fa-edit"></i> &nbsp;Edit
                   </button>
                 </Link>
               )}
               <Link href="">
                 <button
                   onClick={(e) => confirmDelete(e, l._id)}
-                  className="text-warning btn btn-sm btn-danger float-right"
+                  className="text-white btn btn-sm btn-danger float-right"
                 >
                   Cancel
                 </button>
@@ -212,8 +243,8 @@ const User = ({ user, token, l, userLinks }) => {
     >
       <Layout>
         {/* <div className=""> */}
-        
-        <h2 className="pt-3">
+
+        <h2 className=" pt-3">
           {user.name}'s Meal Requests{' '}
           {/* <span className="text-danger"> /{user.role}</span>{' '} */}
         </h2>
@@ -234,25 +265,35 @@ const User = ({ user, token, l, userLinks }) => {
             {/* <li className="nav-item p-4"> */}
             <Link href="/user/link/create">
               <button className={'btn float-right ' + styles.button}>
-              <i class="fas fa-pencil-alt"></i>
-            &nbsp;&nbsp;
-                Submit a Request
+                <i class="fas fa-pencil-alt"></i>
+                &nbsp;&nbsp; Submit a Request
               </button>
             </Link>
             {/* </li> */}
             {/* </ul> */}
           </div>
         </div>
-
-        
-
-        <div className="col-md flex-column justify-content-center ">
-          <br />
-          {/* <h2>Your Meal Requests</h2> */}
-          {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
-          <div className="pb-3">
+        <br />
+        <div className={'d-flex justify-content-center  ' + styles.desktop}>
+          <div className={'col-md-6  justify-content-center ' + styles.desktop}>
             <br />
-            {listOfLinks()}
+
+            <div className="pb-3">
+              <br />
+              {listOfLinks()}
+            </div>
+          </div>
+        </div>
+
+        <div class={'' + styles.mobile}>
+          <div className="flex-column justify-content-center ">
+            <br />
+            {/* <h2>Your Meal Requests</h2> */}
+            {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
+            <div className="pb-3">
+              <br />
+              {listOfLinks()}
+            </div>
           </div>
         </div>
       </Layout>

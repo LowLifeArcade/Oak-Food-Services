@@ -335,20 +335,20 @@ const Layout = ({ children }) => {
         
 
 
-        <li key="101" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand pt-4">
+        { <li key="101" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand pt-4">
           <Link href="/" >
             <a className="nav-link text-white">
             <i class="fas fa-home"></i>&nbsp;&nbsp;&nbsp; Home
             </a>
           </Link>
-        </li>
-        <li key="1" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand ">
+        </li>}
+        {process.browser && isAuth() && <li key="1" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand ">
           <Link href="/" >
             <a className="nav-link text-white">
             <i class="fas fa-book-open"></i>&nbsp;&nbsp;&nbsp; Menu
             </a>
           </Link>
-        </li>
+        </li>}
 
         {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li onClick={() => setShowSidebar(false)} className="nav-item pointer-hand">
@@ -463,7 +463,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )} */}
-        {(
+        {process.browser && isAuth() &&(
           <li onClick={() => setShowSidebar(false)} key="8" className="nav-item ml-auto">
             <Link href="/user/profile/update">
               <a className="nav-link text-white"> Profile Update</a>

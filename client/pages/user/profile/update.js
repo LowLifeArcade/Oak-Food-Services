@@ -57,10 +57,10 @@ const Profile = ({ user, token }) => {
 
   useEffect(() => {
     success === "You've successfully updated your profile"
-      ? setTimeout(() => {
+      && setTimeout(() => {
           Router.push('/user');
         }, 2000)
-      : null;
+      
   }, [success]);
 
   

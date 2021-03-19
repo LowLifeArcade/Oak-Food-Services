@@ -210,10 +210,10 @@ const Create = ({ token, user }) => {
           }, 2000)
         : Router.push('')
       : success === 'Request was created'
-      ? setTimeout(() => {
+      && setTimeout(() => {
           Router.push('/user');
         }, 2000)
-      : Router.push('');
+      
     return () => clearTimeout();
   }, [success]);
 

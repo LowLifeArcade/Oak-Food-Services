@@ -14,7 +14,6 @@ import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
 // import { getCookie, isAuth } from '../../../helpers/auth';
 
-
 // token, links, totalLinks, linksLimit, linkSkip
 const Requests = ({ token }) => {
   // const [allLinks, setAllLinks] = useState(links);
@@ -84,8 +83,8 @@ const Requests = ({ token }) => {
   }, []);
 
   useEffect(() => {
-    orderType === 'Onsite' ? setShowStatus(false) : setShowStatus(true) 
-  }, [orderType])
+    orderType === 'Onsite' ? setShowStatus(false) : setShowStatus(true);
+  }, [orderType]);
 
   useEffect(() => {
     let allMealsArray2 = [];
@@ -773,7 +772,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className="btn btn-outline-primary"
+            className="btn btn-sm btn-outline-primary"
             required
           >
             {' '}
@@ -815,7 +814,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className="btn btn-outline-primary"
+            className="btn  btn-sm btn-outline-primary"
             required
           >
             {' '}
@@ -854,7 +853,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className="btn btn-outline-primary"
+            className="btn  btn-sm btn-outline-primary"
             required
           >
             {' '}
@@ -893,7 +892,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className=" btn btn-outline-primary"
+            className=" btn  btn-sm btn-outline-primary"
             required
           >
             {' '}
@@ -924,7 +923,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className=" btn btn-outline-primary"
+            className=" btn  btn-sm btn-outline-primary"
             required
           >
             {' '}
@@ -956,7 +955,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className=" btn btn-outline-primary"
+            className=" btn  btn-sm btn-outline-primary"
           >
             {' '}
             <option selected disabled value="">
@@ -986,7 +985,7 @@ const Requests = ({ token }) => {
             // defaultValue={''}
             // defaultValue={state.mealRequest[0].meal}
             onChange={handleSearch(teacherGroup)}
-            className=" btn btn-outline-primary"
+            className=" btn  btn-sm btn-outline-primary"
           >
             {' '}
             <option selected disabled value="">
@@ -1063,10 +1062,10 @@ const Requests = ({ token }) => {
                 />
               )}
               <button
-                className="btn btn-outline-primary"
+                className="btn btn-sm btn-outline-dark"
                 onClick={() => setShowSearch(!showSearch)}
               >
-                Select Date
+                <i className="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
               </button>
 
               {orderType === 'Onsite' ? (
@@ -1106,20 +1105,24 @@ const Requests = ({ token }) => {
                 placeholder="Search requests by pickup code"
               ></input>
               <br />
-              {orderType === 'Pickup' && <button
-                className="btn btn-outline-primary"
-                onClick={handleSearch('orderType')}
-                value='Onsite'
-              >
-                Curbside
-              </button>}
-              {orderType === 'Onsite' && <button
-                className="btn btn-outline-primary"
-                onClick={handleSearch('orderType')}
-                value='Pickup'
-              >
-                Onsite
-              </button>}
+              {orderType === 'Pickup' && (
+                <button
+                  className="btn  btn-outline-secondary fas fa-car-side"
+                  onClick={handleSearch('orderType')}
+                  value="Onsite"
+                >
+                  &nbsp; Curbside
+                </button>
+              )}
+              {orderType === 'Onsite' && (
+                <button
+                  className="btn btn-outline-secondary fas fa-school"
+                  onClick={handleSearch('orderType')}
+                  value="Pickup"
+                >
+                  &nbsp; Onsite
+                </button>
+              )}
               {/* <select
                 className="btn btn-outline-primary"
                 onChange={handleSearch('orderType')}
@@ -1129,7 +1132,7 @@ const Requests = ({ token }) => {
               </select> */}
               {orderType === 'Pickup' && (
                 <select
-                  className="btn btn-outline-primary"
+                  className="btn btn-sm btn-outline-primary"
                   onChange={handleSearch(
                     'searchPickupTime',
                     state.search,
@@ -1150,15 +1153,17 @@ const Requests = ({ token }) => {
                   {/* <option value="Cafeteria">Onsite</option> */}
                 </select>
               )}
-              {orderType === 'Pickup' &&  <button
-                className=" btn btn-outline-primary"
-                onClick={() => setShowStatus(!showStatus)}
-              >
-                Show Status
-              </button>}
+              {orderType === 'Pickup' && (
+                <button
+                  className=" btn btn-sm btn-outline-primary"
+                  onClick={() => setShowStatus(!showStatus)}
+                >
+                  Show Status
+                </button>
+              )}
               {orderType === 'Pickup' && showStatus && (
                 <select
-                  className="btn btn-outline-primary"
+                  className="btn btn-sm btn-outline-primary"
                   onChange={handleSearch(
                     'searchByStatus',
                     state.search,
@@ -1180,7 +1185,7 @@ const Requests = ({ token }) => {
               )}
               {orderType === 'Onsite' && (
                 <select
-                  className="btn btn-outline-primary"
+                  className="btn btn-sm btn-outline-primary"
                   onChange={handleSearch(
                     'searchBySchool',
                     state.search,
@@ -1204,7 +1209,7 @@ const Requests = ({ token }) => {
               )}
               {orderType === 'Onsite' && (
                 <select
-                  className="btn btn-outline-primary"
+                  className="btn btn-sm btn-outline-primary"
                   onChange={handleSearch(
                     'searchByGroup',
                     state.search,
@@ -1224,73 +1229,81 @@ const Requests = ({ token }) => {
 
               {orderType === 'Onsite' && (
                 <>
-                  { <div key={2} className="">
-                    {searchBySchool === 'BES' &&
-                      addBESTeacher('searchByTeacher')}
-                    {searchBySchool === 'OHES' &&
-                      addOHESTeacher('searchByTeacher')}
-                    {searchBySchool === 'ROES' &&
-                      addROESTeacher('searchByTeacher')}
-                    {searchBySchool === 'MCMS' &&
-                      addMCMSTeacher('searchByTeacher')}
-                    {searchBySchool === 'OPHS' &&
-                      addOPHSTeacher('searchByTeacher')}
-                    {searchBySchool === 'OVHS' &&
-                      addOPHSTeacher('searchByTeacher')}
-                    {searchBySchool === 'NON' &&
-                      addNONTeacher('searchByTeacher')}
-                  </div>}
+                  {
+                    <div key={2} className="">
+                      {searchBySchool === 'BES' &&
+                        addBESTeacher('searchByTeacher')}
+                      {searchBySchool === 'OHES' &&
+                        addOHESTeacher('searchByTeacher')}
+                      {searchBySchool === 'ROES' &&
+                        addROESTeacher('searchByTeacher')}
+                      {searchBySchool === 'MCMS' &&
+                        addMCMSTeacher('searchByTeacher')}
+                      {searchBySchool === 'OPHS' &&
+                        addOPHSTeacher('searchByTeacher')}
+                      {searchBySchool === 'OVHS' &&
+                        addOPHSTeacher('searchByTeacher')}
+                      {searchBySchool === 'NON' &&
+                        addNONTeacher('searchByTeacher')}
+                    </div>
+                  }
 
-                 {searchByTeacher != '' && <div key={3} className="">
-                    {searchBySchool === 'BES' &&
-                      addBESTeacher('searchByTeacher2')}
-                    {searchBySchool === 'OHES' &&
-                      addOHESTeacher('searchByTeacher2')}
-                    {searchBySchool === 'ROES' &&
-                      addROESTeacher('searchByTeacher2')}
-                    {searchBySchool === 'MCMS' &&
-                      addMCMSTeacher('searchByTeacher2')}
-                    {searchBySchool === 'OPHS' &&
-                      addOPHSTeacher('searchByTeacher2')}
-                    {searchBySchool === 'OVHS' &&
-                      addOPHSTeacher('searchByTeacher2')}
-                    {searchBySchool === 'NON' &&
-                      addNONTeacher('searchByTeacher2')}
-                  </div>}
+                  {searchByTeacher != '' && (
+                    <div key={3} className="">
+                      {searchBySchool === 'BES' &&
+                        addBESTeacher('searchByTeacher2')}
+                      {searchBySchool === 'OHES' &&
+                        addOHESTeacher('searchByTeacher2')}
+                      {searchBySchool === 'ROES' &&
+                        addROESTeacher('searchByTeacher2')}
+                      {searchBySchool === 'MCMS' &&
+                        addMCMSTeacher('searchByTeacher2')}
+                      {searchBySchool === 'OPHS' &&
+                        addOPHSTeacher('searchByTeacher2')}
+                      {searchBySchool === 'OVHS' &&
+                        addOPHSTeacher('searchByTeacher2')}
+                      {searchBySchool === 'NON' &&
+                        addNONTeacher('searchByTeacher2')}
+                    </div>
+                  )}
 
-                  {searchByTeacher2 != 'filter' && <div key={4} className="">
-                    {searchBySchool === 'BES' &&
-                      addBESTeacher('searchByTeacher3')}
-                    {searchBySchool === 'OHES' &&
-                      addOHESTeacher('searchByTeacher3')}
-                    {searchBySchool === 'ROES' &&
-                      addROESTeacher('searchByTeacher3')}
-                    {searchBySchool === 'MCMS' &&
-                      addMCMSTeacher('searchByTeacher3')}
-                    {searchBySchool === 'OPHS' &&
-                      addOPHSTeacher('searchByTeacher3')}
-                    {searchBySchool === 'OVHS' &&
-                      addOPHSTeacher('searchByTeacher3')}
-                    {searchBySchool === 'NON' &&
-                      addNONTeacher('searchByTeacher3')}
-                  </div>}
+                  {searchByTeacher2 != 'filter' && (
+                    <div key={4} className="">
+                      {searchBySchool === 'BES' &&
+                        addBESTeacher('searchByTeacher3')}
+                      {searchBySchool === 'OHES' &&
+                        addOHESTeacher('searchByTeacher3')}
+                      {searchBySchool === 'ROES' &&
+                        addROESTeacher('searchByTeacher3')}
+                      {searchBySchool === 'MCMS' &&
+                        addMCMSTeacher('searchByTeacher3')}
+                      {searchBySchool === 'OPHS' &&
+                        addOPHSTeacher('searchByTeacher3')}
+                      {searchBySchool === 'OVHS' &&
+                        addOPHSTeacher('searchByTeacher3')}
+                      {searchBySchool === 'NON' &&
+                        addNONTeacher('searchByTeacher3')}
+                    </div>
+                  )}
 
-                  {searchByTeacher3 != 'filter' && <div key={5} className="">
-                    {searchBySchool === 'BES' &&
-                      addBESTeacher('searchByTeacher4')}
-                    {searchBySchool === 'OHES' &&
-                      addOHESTeacher('searchByTeacher4')}
-                    {searchBySchool === 'ROES' &&
-                      addROESTeacher('searchByTeacher4')}
-                    {searchBySchool === 'MCMS' &&
-                      addMCMSTeacher('searchByTeacher4')}
-                    {searchBySchool === 'OPHS' &&
-                      addOPHSTeacher('searchByTeacher4')}
-                    {searchBySchool === 'OVHS' &&
-                      addOPHSTeacher('searchByTeacher4')}
-                    {searchBySchool === 'NON' &&
-                      addNONTeacher('searchByTeacher4')}
-                  </div>}
+                  {searchByTeacher3 != 'filter' && (
+                    <div key={5} className="">
+                      {searchBySchool === 'BES' &&
+                        addBESTeacher('searchByTeacher4')}
+                      {searchBySchool === 'OHES' &&
+                        addOHESTeacher('searchByTeacher4')}
+                      {searchBySchool === 'ROES' &&
+                        addROESTeacher('searchByTeacher4')}
+                      {searchBySchool === 'MCMS' &&
+                        addMCMSTeacher('searchByTeacher4')}
+                      {searchBySchool === 'OPHS' &&
+                        addOPHSTeacher('searchByTeacher4')}
+                      {searchBySchool === 'OVHS' &&
+                        addOPHSTeacher('searchByTeacher4')}
+                      {searchBySchool === 'NON' &&
+                        addNONTeacher('searchByTeacher4')}
+                    </div>
+                  )}
                 </>
               )}
               {/* {orderType === 'Onsite' && (
@@ -1365,11 +1378,11 @@ const Requests = ({ token }) => {
                   )}
                 </div>
               )} */}
-              
+
               <div className="p-2"></div>
-              
+
               <button
-                className=" btn btn-outline-primary"
+                className=" btn text-white btn-sm btn-warning"
                 onClick={() => resetSearch()}
               >
                 Reset Filters
@@ -1447,19 +1460,19 @@ const Requests = ({ token }) => {
 
 // };
 
-Requests.getInitialProps = async ({req, user}) => {
+Requests.getInitialProps = async ({ req, user }) => {
   const token = getCookie('token', req);
 
-const dateLookup = moment(new Date).format('l')
-const response = await axios.post(
-  `${API}/links-by-date`,
-  { dateLookup },
-  { headers: { Authorization: `Bearer ${token}` } }
-);
+  const dateLookup = moment(new Date()).format('l');
+  const response = await axios.post(
+    `${API}/links-by-date`,
+    { dateLookup },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
 
   // pickupDate: pickupDateLookup,
-  let initRequests = response.data 
-  return {initRequests}
-}
+  let initRequests = response.data;
+  return { initRequests };
+};
 
 export default withAdmin(Requests);

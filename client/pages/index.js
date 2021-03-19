@@ -25,9 +25,12 @@ const Home = ({ categories }) => {
   // };
   // console.log(popular);
 
-  useEffect(() => {
-    !isAuth() && Router.push('/login') ;
-  }, [])
+  // useEffect(() => {
+  //   // setTimeout(() => {
+      
+  //   // }, 500);
+  //   !isAuth() && Router.push('/login') ;
+  // }, [])
 
   // const handleClick = async (linkId) => {
   //   // e.preventDefault();

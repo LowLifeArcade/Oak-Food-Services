@@ -1,4 +1,5 @@
 import Layout from '../../../components/Layout';
+import Toggle from '../../../components/Toggle';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
@@ -20,7 +21,25 @@ const Profile = ({ user, token }) => {
     success: '',
     buttonText: 'Register',
     addButtonText: 'Add Student',
-    students: [{ name: '', schoolName: '', group: '', teacher: '', foodAllergy: '', age: '' }],
+    students: [
+      {
+        name: '',
+        schoolName: '',
+        group: '',
+        teacher: '',
+        foodAllergy: {
+          peanutes: false,
+          treeNuts: false,
+          dairy: false,
+          gluten: false,
+          egg: false,
+          sesame: false,
+          soy: false,
+        },
+        age: '',
+      },
+    ],
+    showAllergies: false,
     loadedCategories: [],
     categories: [], // categories selected by user for signup
     // categories: user.categories, // categories selected by user for signup
@@ -36,6 +55,7 @@ const Profile = ({ user, token }) => {
   // }, []);
 
   const {
+    showAllergies,
     addButtonText,
     students,
     // name,
@@ -104,13 +124,13 @@ const Profile = ({ user, token }) => {
   //   setState({ ...state, loadedCategories: response.data });
   // };
 
-  console.log('loaded groups', loadedGroups);
+  // console.log('loaded groups', loadedGroups);
   // const loadTeachers = async () => {
   //   const response = await axios.get(`${API}/teachers`);
   //   // console.log(response.data)
   //   setState({ ...state, loadedTeachers: response.data });
   // };
-  console.log('loaded teachers', loadedTeachers);
+  // console.log('loaded teachers', loadedTeachers);
 
   // student add select THIS is where things are going to be tricky
   const handleSelectGroupChange = (e) => {
@@ -118,8 +138,9 @@ const Profile = ({ user, token }) => {
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    console.log('group student', students);
     oneStudent.group = e.target.value;
-    oneStudent.age = '' // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    oneStudent.age = ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
     setState({
       ...state,
@@ -153,7 +174,9 @@ const Profile = ({ user, token }) => {
             <option selected disabled value="">
               Choose Cohort
             </option>
-            <option value="distance-learning">Distance Learning (pickup)</option>
+            <option value="distance-learning">
+              Distance Learning (pickup)
+            </option>
             <option value="a-group">A (onsite)</option>
             <option value="b-group">B (onsite)</option>
             {/* {state.loadedGroups.map((g, i) => {
@@ -359,8 +382,8 @@ const Profile = ({ user, token }) => {
             {' '}
             <option selected disabled value="">
               Choose Grade Level
-            </option>-grade
-            ,<option value="9th-grade">9th</option>
+            </option>
+            -grade ,<option value="9th-grade">9th</option>
             <option value="10th-grade">10th </option>
             <option value="11th-grade">11th </option>
             <option value="12th-grade">12th </option>
@@ -414,7 +437,14 @@ const Profile = ({ user, token }) => {
       ...state,
       students: [
         ...students,
-        { name: '', schoolName: '', group: '', teacher: '', foodAllergy: '', age: '' },
+        {
+          name: '',
+          schoolName: '',
+          group: '',
+          teacher: '',
+          foodAllergy: '',
+          age: '',
+        },
       ],
     });
   };
@@ -586,9 +616,9 @@ const Profile = ({ user, token }) => {
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     oneStudent.schoolName = e.target.value;
-    oneStudent.teacher = ''
-    oneStudent.age = ''
-    oneStudent.group = e.target.value === 'NON' ? 'distance-learning' : ''  // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    oneStudent.teacher = '';
+    oneStudent.age = '';
+    oneStudent.group = e.target.value === 'NON' ? 'distance-learning' : ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
     // setState({
@@ -660,6 +690,22 @@ const Profile = ({ user, token }) => {
     // }
   };
 
+  const handleAllergy = (name) => (e) => {
+    let value =
+      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+    let i = e.target.getAttribute('data-index');
+
+    let students = [...state.students];
+    let oneStudent = { ...students[i] };
+    console.log('let students value', state.students);
+    oneStudent.foodAllergy[name] = value;
+
+    students[i] = oneStudent;
+
+    setState({ ...state, students: [...students] });
+  };
+
   const registerForm = () => (
     <form
       onSubmit={handleSubmit}
@@ -668,71 +714,6 @@ const Profile = ({ user, token }) => {
       }}
       action="POST"
     >
-      {/* <div className="text-muted">First Name</div> */}
-      {/* <div className="form-group pt-2">
-        <input
-          value={name}
-          onChange={handleChange('name')}
-          type="text"
-          className="form-control"
-          placeholder="Enter your name"
-          required
-        />
-      </div>
-      
-
-      <div className="form-group">
-        <input
-          value={lastName}
-          onChange={handleChange('lastName')}
-          type="text"
-          className="form-control"
-          placeholder="Parent Last Name"
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <input
-          value={email}
-          onChange={handleChange('email')}
-          type="text"
-          className="form-control"
-          placeholder="Type your email"
-          required
-          // disabled
-        />
-      </div>
-      {
-        <Link href="/auth/password/change">
-          <a className="text-danger float-right">Change Password</a>
-        </Link>
-      }
-      <br /> */}
-      {/* <div className="form-group">
-        <input
-          value={password}
-          onChange={handleChange('password')}
-          autoComplete='current-password'
-          type="current-password"
-          className="form-control"
-          placeholder="password"
-          // disabled
-        />
-      </div>
-      <div className="form-group">
-        <input
-          value={confirmPassword}
-          onChange={handleChange('confirmPassword')}
-          type="password"
-          className="form-control"
-          placeholder="Repeat password"
-          // required
-        />
-      </div> */}
-
-      {/* <div className="text-muted">Student Name and School</div> */}
-
       <div className="row">
         <div className="col-md-12 pt-2">
           {state.students
@@ -768,7 +749,7 @@ const Profile = ({ user, token }) => {
                   {/* <label htmlFor="" className="form-check-label text-muted">
                         Food Allergies (Only)
                       </label> */}
-                  <div className="form-group pt-1">
+                  {/* <div className="form-group pt-1">
                     <input
                       value={x.foodAllergy}
                       data-index={i}
@@ -778,11 +759,90 @@ const Profile = ({ user, token }) => {
                       className="form-control"
                       placeholder="List Food Allergies (Only)"
                     />
-                  </div>
+                  </div> */}
+
+                  {/* <div className="toggle-container">
+                    <input type="checkbox" id="allergy" className="toggle" />
+                    <label htmlFor="" className="label">
+                      <div className="ball"></div>
+                    </label>
+                    <span>&nbsp; Peanutes</span>
+                  </div> */}
+
+
+                  <h6 className="p-2">
+                    <label key={i} onClick={e => setState({...state, showAllergies: !showAllergies })} className="btn form-check-label  cursor-pointer text-muted ">
+                      Food Allergies
+                      &nbsp;&nbsp;
+                      {/* <i class="fas fa-edit"></i> */}
+                      <i class="far fa-arrow-alt-circle-down"></i>
+                    </label>
+                  </h6>
+
+
+                  {showAllergies && <div className="form-control ">
+                    <div className="row p-1">
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.peanutes}
+                        toggleId="peanutes"
+                        toggleName="Peanutes"
+                        handleToggle={handleAllergy('peanutes')}
+                      ></Toggle>
+
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.treeNuts}
+                        toggleId="treenuts"
+                        toggleName="Tree Nuts"
+                        handleToggle={handleAllergy('treeNuts')}
+                      ></Toggle>
+
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.dairy}
+                        toggleId="dairy"
+                        toggleName="Dairy"
+                        handleToggle={handleAllergy('dairy')}
+                      ></Toggle>
+
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.gluten}
+                        toggleId="gluten"
+                        toggleName="Gluten"
+                        handleToggle={handleAllergy('gluten')}
+                      ></Toggle>
+
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.egg}
+                        toggleId="egg"
+                        toggleName="Egg"
+                        handleToggle={handleAllergy('egg')}
+                      ></Toggle>
+
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.sesame}
+                        toggleId="sesame"
+                        toggleName="Sesame"
+                        handleToggle={handleAllergy('sesame')}
+                      ></Toggle>
+
+                      <Toggle
+                        dataIndex={i}
+                        isOn={students[i].foodAllergy.soy}
+                        toggleId="soy"
+                        toggleName="Soy"
+                        handleToggle={handleAllergy('soy')}
+                      ></Toggle>
+                    </div>
+                  </div>}
                   {/* <hr /> */}
-                  <div className="form-group pt-1">
+                  <div className="form-group pt-3">
                     <select
-                      value={students[i].schoolName }
+                      value={students[i].schoolName}
                       data-index={i}
                       onChange={handleObjectSchoolChange()}
                       // onChange={handleChange({student: 'name'})}
@@ -815,47 +875,53 @@ const Profile = ({ user, token }) => {
                         required
                       />
                     </div> */}
-                  {students[i].schoolName != 'NON' && students[i].schoolName  != 'OVHS' && <div key={1} className="">
-                    {addStudentGroup(i)}
-                  </div>}
-                  {students[i].schoolName != 'NON' && students[i].group != 'distance-learning' && <div key={2} className="">
-                    {x.schoolName === 'BES' && addBESTeacher(i, x)}
-                    {x.schoolName === 'OHES' && addOHESTeacher(i, x)}
-                    {x.schoolName === 'ROES' && addROESTeacher(i, x)}
-                    {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
-                    {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
-                    {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
-                    {x.schoolName === 'NON' && (
-                      <div className="form-group pt-1">
-                        <input
-                          value={x.age}
-                          data-index={i}
-                          onChange={handleObjectAgeChange()}
-                          // onChange={handleChange({student: 'name'})}
-                          type="text"
-                          className="form-control"
-                          placeholder="Age"
-                          required={true}
-                        />
+                  {students[i].schoolName != 'NON' &&
+                    students[i].schoolName != 'OVHS' && (
+                      <div key={1} className="">
+                        {addStudentGroup(i)}
                       </div>
                     )}
-                  </div>}
+                  {students[i].schoolName != 'NON' &&
+                    students[i].group != 'distance-learning' && (
+                      <div key={2} className="">
+                        {x.schoolName === 'BES' && addBESTeacher(i, x)}
+                        {x.schoolName === 'OHES' && addOHESTeacher(i, x)}
+                        {x.schoolName === 'ROES' && addROESTeacher(i, x)}
+                        {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
+                        {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
+                        {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
+                        {x.schoolName === 'NON' && (
+                          <div className="form-group pt-1">
+                            <input
+                              value={x.age}
+                              data-index={i}
+                              onChange={handleObjectAgeChange()}
+                              // onChange={handleChange({student: 'name'})}
+                              type="text"
+                              className="form-control"
+                              placeholder="Age"
+                              required={true}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                   {students[i].schoolName === 'NON' && x.schoolName === 'NON' && (
-                      <div className="form-group pt-1">
-                        <input
-                          value={x.age}
-                          data-index={i}
-                          onChange={handleObjectAgeChange()}
-                          // onChange={handleChange({student: 'name'})}
-                          type="text"
-                          className="form-control"
-                          placeholder="Age"
-                          required={true}
-                        />
-                      </div>
-                    )}
-            
+                    <div className="form-group pt-1">
+                      <input
+                        value={x.age}
+                        data-index={i}
+                        onChange={handleObjectAgeChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="Age"
+                        required={true}
+                      />
+                    </div>
+                  )}
+
                   {/* <div className="form-group">
         <label className="text-muted ml-3"> Student Group </label>
 
@@ -872,21 +938,24 @@ const Profile = ({ user, token }) => {
       {/* {console.log('student array in state', state.students)} */}
 
       <div className="form-group">
-        {students.length < 5 && <button
-          type="text"
-          onClick={(e) => addStudent(e)}
-          className="btn btn-outline-primary "
-        >
-          {addButtonText}
-        </button>}
+        {students.length < 5 && (
+          <button
+            type="text"
+            onClick={(e) => addStudent(e)}
+            className={'btn text-dark btn-outline-secondary'}
+          >
+            <i class="fas fa-graduation-cap"></i> &nbsp;
+            {addButtonText}
+          </button>
+        )}
         {/* <div className=""> */}
 
         {students.length > 1 && (
           <button
-            className="btn btn-danger float-right"
+            className="btn text-danger btn-outline-secondary float-right"
             onClick={(e) => removeStudent(e)}
           >
-            Remove
+            <i class="fas fa-user-times"></i>{' '}
           </button>
         )}
         {/* </div> */}
@@ -897,6 +966,7 @@ const Profile = ({ user, token }) => {
         {error && showErrorMessage(error)}
         {!state.students.length < 1 && (
           <button type="text" className="btn btn-warning">
+            <i className="far fa-paper-plane"></i> &nbsp;
             {buttonText}
           </button>
         )}
