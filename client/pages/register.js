@@ -219,24 +219,19 @@ const Register = () => {
 
     if (password.length < 7) {
       shallowMessage = 'Password must be at least 8 characters';
-    } else if (
-      // password.match(/[A-Z]/g) === 0 ||
-      !e.target.value.match(/[A-Z]/g)
-      // password.match(/[A-Z]/g) === null
-    ) {
+    } else if (!e.target.value.match(/[A-Z]/g)) {
       shallowMessage = 'Password must contain at least one capitol letter';
     } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
       shallowMessage = 'Password must contain at least one special character';
+    } else if (!e.target.value.match(/[0-9]/g)) {
+      shallowMessage = 'Password must contain at least one special number';
     } else if (password.length < 13) {
-      shallowGoodMessage = 'Good password'
-
-    } else if (password.length > 12){
-      shallowGoodMessage = 'Great Password!'
+      shallowGoodMessage = 'Good password';
+    } else if (password.length > 12) {
+      shallowGoodMessage = 'Great Password!';
     }
 
-
-
-      console.log('regex check', e.target.value);
+    console.log('regex check', e.target.value);
     setState({
       ...state,
       password: e.target.value,
@@ -313,16 +308,23 @@ const Register = () => {
     if (password !== confirmPassword) {
       setState({ ...state, error: "Passwords don't match" });
     } else if (password.length < 7) {
-      setState({ ...state, error: "Password MUST be at least 8 characters" });
-
-    }else if (password.match(/[A-Z]/g) === null) {
-      setState({ ...state, error: "Password MUST contain at least one capitol letter" });
+      setState({ ...state, error: 'Password MUST be at least 8 characters' });
+    } else if (password.match(/[A-Z]/g) === null) {
+      setState({
+        ...state,
+        error: 'Password MUST contain at least one capitol letter',
+      });
     } else if (!password.match(/[^A-Za-z0-9]/g)) {
-      setState({ ...state, error: "Password MUST contain at least one special character" });
-
-    }
-  
-    else {
+      setState({
+        ...state,
+        error: 'Password MUST contain at least one special character',
+      });
+    } else if (password.match(/[0-9]/g) === null) {
+      setState({
+        ...state,
+        error: 'Password MUST contain at least one special number',
+      });
+    } else {
       try {
         const response = await axios.post(`${API}/register`, {
           name,
@@ -516,7 +518,9 @@ const Register = () => {
           {error && showErrorMessage(error)}
           {message && showMessageMessage(message)}
           <br />
-          <button type="text" className="btn btn-warning">
+
+          <button type="text" className="text-white btn btn-warning">
+            <i className="far fa-paper-plane"></i> &nbsp;
             {buttonText}
           </button>
         </div>

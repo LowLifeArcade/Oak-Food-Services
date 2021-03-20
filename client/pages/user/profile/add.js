@@ -465,11 +465,13 @@ const Profile = ({ user, token }) => {
   };
 
   // remove meal button
-  const removeStudent = (e, index) => {
+  const removeStudent = (e) => {
+    let i = e.target.getAttribute('data-index')
     e.preventDefault();
+
     const list = [...state.students];
     // console.log(list);
-    list.splice(-1)[0];
+    list.splice(i, 1);
     // list.splice(index, 1);
     setState({ ...state, students: list });
   };
@@ -803,7 +805,7 @@ const Profile = ({ user, token }) => {
                   <label
                     data-index={i}
                     onClick={(e) => handleShowAllergies(e)}
-                    className="form-control btn-sm btn-outline-muted  "
+                    className="form btn-sm btn-outline-muted  "
                   >
                     &nbsp;&nbsp;Food Allergies? &nbsp;
                     <i
@@ -812,6 +814,19 @@ const Profile = ({ user, token }) => {
                       class="far fa-arrow-alt-circle-down"
                     ></i>
                   </label>
+
+                  {
+                  // students.length > 1 && 
+                  (
+                    <button
+                    key={i}
+                    data-index={i}
+                      className="btn text-danger btn-outline-secondary float-right"
+                      onClick={(e) => removeStudent(e)}
+                    >
+                      <i class="fas fa-user-times"></i>{' '}
+                    </button>
+                  )}
                   {/* </h6> */}
 
                   {/* <div className={styles.toggleContainer}> */}
@@ -1018,14 +1033,14 @@ const Profile = ({ user, token }) => {
         )}
         {/* <div className=""> */}
 
-        {students.length > 1 && (
+        {/* {students.length > 1 && (
           <button
             className="btn text-danger btn-outline-secondary float-right"
             onClick={(e) => removeStudent(e)}
           >
             <i class="fas fa-user-times"></i>{' '}
           </button>
-        )}
+        )} */}
         {/* </div> */}
         {/* {addStudent(i)} */}
 

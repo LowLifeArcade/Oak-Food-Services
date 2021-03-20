@@ -90,11 +90,16 @@ const Login = () => {
         />
       </div>
       <div className="form-group">
-        <button type="text" className="btn btn-outline-warning ">
-          {buttonText}
-        </button>
-        <Link href="/auth/password/forgot">
-          <a className="text-danger float-right">Forgot Password?</a>
+
+
+        <button type="text" className="btn btn-outline-warning">
+            <i className="far fa-paper-plane"></i> &nbsp;
+            {buttonText}
+          </button>
+
+
+        <Link href="/auth/password/forgot" >
+          <a className="text-danger float-right" style={{ fontSize: '13px' }}>Forgot Password?</a>
         </Link>
       </div>
     </form>

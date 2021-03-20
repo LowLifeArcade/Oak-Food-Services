@@ -60,10 +60,28 @@ const linkSchema = new mongoose.Schema(
           max: 256,
         },
         foodAllergy: {
-          type: String,
-          trim: true,
-          max: 256,
-        },
+          peanutes: {
+           type: Boolean
+         },
+          treeNuts: {
+           type: Boolean
+         },
+          dairy: {
+           type: Boolean
+         },
+          gluten: {
+           type: Boolean
+         },
+          egg: {
+           type: Boolean
+         },
+          sesame: {
+           type: Boolean
+         },
+          soy: {
+           type: Boolean
+         },
+       },
         parentEmail: {
           type: String,
           trim: true,

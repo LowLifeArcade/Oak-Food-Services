@@ -74,9 +74,27 @@ const userSchema = new mongoose.Schema(
         //   required: true
         // },
         foodAllergy: {
-          type: {
-            type: String
-          }
+           peanutes: {
+            type: Boolean
+          },
+           treeNuts: {
+            type: Boolean
+          },
+           dairy: {
+            type: Boolean
+          },
+           gluten: {
+            type: Boolean
+          },
+           egg: {
+            type: Boolean
+          },
+           sesame: {
+            type: Boolean
+          },
+           soy: {
+            type: Boolean
+          },
         },
         teacher:{
           type: String,

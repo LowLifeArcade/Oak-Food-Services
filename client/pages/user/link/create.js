@@ -122,7 +122,10 @@ const Create = ({ token, user }) => {
     // for (const meal of mealObj) {
     // console.log(mealObj);
     mealRequest.forEach((item) => {
-      if (item.pickupOption != 'Lunch Only' && item.pickupOption != 'Breakfast Only' ) {
+      if (
+        item.pickupOption != 'Lunch Only' &&
+        item.pickupOption != 'Breakfast Only'
+      ) {
         switch (item.meal) {
           case 'Vegetarian':
             frontCode.push('Vt');
@@ -197,25 +200,26 @@ const Create = ({ token, user }) => {
     }); //puts ...mealRequest with new meal back into mealRequest: []
   }, [mealRequest]);
 
+  console.log('meal request', mealRequest);
   // load categories when component mounts useing useEffect
-  useEffect(() => {
-    // const timer = setTimeout()
-    // loadCategories();
-    // loadStudents()
-    //  Router.push('user')
-    isAuth().role === 'admin'
-      ? success === 'Request was created'
-        ? setTimeout(() => {
-            Router.push('/admin');
-          }, 2000)
-        : Router.push('')
-      : success === 'Request was created'
-      && setTimeout(() => {
-          Router.push('/user');
-        }, 2000)
-      
-    return () => clearTimeout();
-  }, [success]);
+  // useEffect(() => {
+  //   // const timer = setTimeout()
+  //   // loadCategories();
+  //   // loadStudents()
+  //   //  Router.push('user')
+  //   isAuth().role === 'admin'
+  //     ? success === 'Request was created'
+  //       ? setTimeout(() => {
+  //           Router.push('/admin');
+  //         }, 2000)
+  //       : Router.push('')
+  //     : success === 'Request was created' &&
+  //       setTimeout(() => {
+  //         Router.push('/user');
+  //       }, 2000);
+
+  //   return () => clearTimeout();
+  // }, [success]);
 
   // useEffect(() => {
   //     // if mealRequest.student.id === cohort a || cohort b
@@ -433,7 +437,6 @@ const Create = ({ token, user }) => {
 
     meals[i] = meal;
 
-
     let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
     let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     let input = e.target.value;
@@ -457,7 +460,6 @@ const Create = ({ token, user }) => {
     }
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
-    
 
     setState({
       ...state,
@@ -599,7 +601,6 @@ const Create = ({ token, user }) => {
             <option value={'7am-9am'}>7am-9am</option>
             <option value={'11am-1pm'}>11am-1pm</option>
             <option value={'4pm-6pm'}>4pm-6pm</option>
-            <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
           </select>
           <div className="p-1"></div>
         </div>
@@ -789,12 +790,23 @@ const Create = ({ token, user }) => {
         success: 'Request was created',
         error: '',
       });
+
+      isAuth().role === 'admin'
+        ? setTimeout(() => {
+            Router.push('/admin');
+          }, 2000)
+        : setTimeout(() => {
+            Router.push('/user');
+          }, 2000);
+
+      return () => clearTimeout();
       // .then(Router.push('/user'))
     } catch (error) {
       console.log('LINK SUBMIT ERROR', error);
       setState({ ...state, error: error.response.data.error });
     }
   };
+
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
     // console.table({title, url, categories, type, medium})
@@ -832,6 +844,14 @@ const Create = ({ token, user }) => {
         success: 'Request was created',
         error: '',
       });
+
+      isAuth().role === 'admin'
+        ? setTimeout(() => {
+            Router.push('/admin/link/read');
+          }, 2000)
+        : setTimeout(() => {
+            Router.push('/user');
+          }, 2000);
       // .then(Router.push('/user'))
     } catch (error) {
       // console.log('LINK SUBMIT ERROR', error);
@@ -899,6 +919,7 @@ const Create = ({ token, user }) => {
   const submitLinkForm = (student) => (
     <form
       onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
+      // onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
     >
       {/* <div className="form-group">
         <label htmlFor="" className="text-muted">
@@ -982,23 +1003,22 @@ const Create = ({ token, user }) => {
           <div className={styles.subcard}>
             <div className="row">
               <div className="col-md-12">
-                <h3 className="text-dark" >
+                <h3 className="text-dark">
                   Meal Request For:{' '}
-                  
-                  {pickupDate && 
-                  <span onClick={() => setShowSearch(!showSearch)} >
-
-                  {moment(state.pickupDate).format('MMMM Do')}
-                  </span>
-
-                  }
+                  {pickupDate && (
+                    <span onClick={() => setShowSearch(!showSearch)}>
+                      {moment(state.pickupDate).format('MMMM Do')}
+                    </span>
+                  )}
                 </h3>
-                {pickupDate === '' && <button
-                  className={'btn btn-sm  '+ styles.buttonshadow }
-                  onClick={() => setShowSearch(!showSearch)}
-                >
-                  <i class="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
-                </button>}
+                {pickupDate === '' && (
+                  <button
+                    className={'btn btn-sm  ' + styles.buttonshadow}
+                    onClick={() => setShowSearch(!showSearch)}
+                  >
+                    <i class="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
+                  </button>
+                )}
                 {isAuth().role === 'admin'
                   ? showSearch && (
                       <Calendar
@@ -1040,14 +1060,10 @@ const Create = ({ token, user }) => {
                     //   )}
                   //   /> */}
 
-                
-
-
                 {/* {`${moment(state.pickupDate).format('dddd, MMMM Do ')}`}{' '} */}
-
               </div>
             </div>
-<hr/>
+            <hr />
             {isAuth().role === 'admin' && (
               <div className=" form-group">
                 <input
@@ -1067,7 +1083,10 @@ const Create = ({ token, user }) => {
                     <>
                       <div>
                         <label key={i} className="text-secondary">
-                         <h5> <b>{`${state.students[i].name}`}'s</b> meal</h5>
+                          <h5>
+                            {' '}
+                            <b>{`${state.students[i].name}`}'s</b> meal
+                          </h5>
                         </label>
                       </div>
                       <div key={i} className="">
@@ -1112,7 +1131,7 @@ const Create = ({ token, user }) => {
                             : selectPickupOption(i)
                           : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
                         : selectNonePickupOption(i)}
-                        <hr/>
+                      <hr />
                     </>
                   );
                 })}
@@ -1120,7 +1139,7 @@ const Create = ({ token, user }) => {
                 <div className="">
                   {state.mealRequest.length < state.students.length && (
                     <button
-                      className={"btn  btn-outline-info " + styles.buttonshadow}
+                      className={'btn  btn-outline-info ' + styles.buttonshadow}
                       onClick={() =>
                         state.mealRequest.map((x, i) =>
                           addMeal(

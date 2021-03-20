@@ -177,20 +177,19 @@ const Update = ({ oldLink, token, user, _id }) => {
   // console.log(user.students);
   // load categories when component mounts useing useEffect
   // load categories when component mounts useing useEffect
-  useEffect(() => {
-    loadCategories();
-    success === 'Your request was updated'
-      ? isAuth().role === 'admin'
-        ? setTimeout(() => {
-            Router.push('/admin/link/read');
-          }, 2000)
-        : setTimeout(() => {
-            Router.push('/user');
-          }, 2000)
-      : // : Router.push('');:
-        null;
-    return () => clearTimeout();
-  }, [success]);
+  // useEffect(() => {
+  //   // loadCategories();
+  //   success === 'Your request was updated'
+  //     && isAuth().role === 'admin'
+  //       ? setTimeout(() => {
+  //           Router.push('/admin/link/read');
+  //         }, 2000)
+  //       : setTimeout(() => {
+  //           Router.push('/user');
+  //         }, 2000)
+      
+  //   return () => clearTimeout();
+  // }, [success]);
 
   // change date
   const onDateChange = (pickupDate) => {
@@ -595,7 +594,6 @@ const Update = ({ oldLink, token, user, _id }) => {
             <option value={'7am-9am'}>7am-9am</option>
             <option value={'11am-1pm'}>11am-1pm</option>
             <option value={'4pm-6pm'}>4pm-6pm</option>
-            <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
           </select>
           <div className="p-1"></div>
         </div>
@@ -749,6 +747,16 @@ const Update = ({ oldLink, token, user, _id }) => {
         success: 'Your request was updated',
         buttonText: 'Updated',
       });
+
+       isAuth().role === 'admin'
+        ? setTimeout(() => {
+            Router.push('/admin/link/read');
+          }, 2000)
+        : setTimeout(() => {
+            Router.push('/user');
+          }, 2000)
+      
+    return () => clearTimeout();
       // .then(Router.push('/user'))
     } catch (error) {
       console.log('LINK SUBMIT ERROR', error);

@@ -25,9 +25,7 @@ const User = ({ user, token, l, userLinks }) => {
 
   useEffect(() => {
     // console.log('students!', user.students);
-    user.students.length === 0
-      && Router.push('/user/profile/add')
-      
+    user.students.length === 0 && Router.push('/user/profile/add');
   }, []);
 
   const handleDelete = async (id) => {
@@ -50,28 +48,29 @@ const User = ({ user, token, l, userLinks }) => {
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <>
-        {console.log('links', l)}
+        {/* {console.log('links', l)} */}
         {
           <div key={i} className={' p-4 alert alert-warning ' + styles.receipt}>
             <h4>
               {l.orderStatus && (
                 <b className="text-danger ">
                   <h2>
-
-                  * PICKED UP * 
-                  <br/>
-                   on {moment(l.updatedAt).format('MMM Do')}
+                    * PICKED UP *
+                    <br />
+                    on {moment(l.updatedAt).format('MMM Do')}
                   </h2>
-                  <hr/>
+                  <hr />
                 </b>
               )}
             </h4>
-
+            {console.log('meals', l)}
             {l.mealRequest.filter(
               (l) =>
-                l.meal !== 'None' &&
-                l.meal !== 'Standard Onsite' &&
-                l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
+                l.meal == 'Standard' ||
+                l.meal == 'Vegetarian' ||
+                l.meal == 'Gluten Free' ||
+                l.meal == 'Vegan' ||
+                l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
             ).length != 0 && (
               <React.Fragment>
                 <h4 className="pt-2 ">
@@ -86,9 +85,11 @@ const User = ({ user, token, l, userLinks }) => {
             <h3>
               {l.mealRequest.filter(
                 (l) =>
-                  l.meal !== 'None' &&
-                  l.meal !== 'Standard Onsite' &&
-                  l.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
+                l.meal == 'Standard' ||
+                l.meal == 'Vegetarian' ||
+                l.meal == 'Gluten Free' ||
+                l.meal == 'Vegan' ||
+                l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
                 <b className="d-flex justify-content-center">{l.pickupCode} </b>
               ) : (
@@ -121,7 +122,8 @@ const User = ({ user, token, l, userLinks }) => {
                               ? 'user deleted'
                               : l.postedBy.students.filter((student) =>
                                   student._id.includes(k.student)
-                                ) && k.studentName}:
+                                ) && k.studentName}
+                            :
                           </b>
                           <br></br>
                         </h5>

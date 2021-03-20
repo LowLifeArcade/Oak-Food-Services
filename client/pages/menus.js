@@ -11,7 +11,7 @@ import { isAuth } from '../helpers/auth';
 
 
 // refactor this into the admin only view
-const Home = ({ categories }) => {
+const Menus = ({ categories }) => {
   // move all of this CODE to admin page
   // const [popular, setPopular] = useState([]);
 
@@ -74,81 +74,80 @@ const Home = ({ categories }) => {
   //   ));
   // CODE for admin /
 
-  // const listCategories = () =>
-  //   categories
-  //     .slice(0)
-  //     .reverse()
-  //     .map((c, i) => (
-  //       <>
-  //       <div className="">
+  const listCategories = () =>
+    categories
+      .slice(0)
+      .reverse()
+      .map((c, i) => (
+        <>
+        <div className="">
 
-  //         <div
-  //         key={i}
-  //           // className={'col-md-12 pt-2'}
-  //           style={{
-  //             // color: 'grey',
-  //             border: '1px solid grey',
-  //             // padding: '10px',
-  //             boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
-  //             // borderRadius: '8px',
-  //             // borderBlock: '5px',
-  //           }}
-  //           className="bg-white"
-  //         >
-  //           <Link
+          <div
+          key={i}
+            // className={'col-md-12 pt-2'}
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              // padding: '10px',
+              boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
+              // borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+            className="bg-white"
+          >
+            <Link
               
-  //             href={`/links/${c.slug}`}
-  //             style={{ textDecoration: 'none' }}
-  //           >
-  //             <a
-  //               style={{
-  //                 color: 'grey',
-  //                 textDecoration: 'none'
-  //                 // border: '1px solid grey',
-  //                 // padding: '10px',
-  //                 // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
-  //                 // borderRadius: '8px',
-  //                 // borderBlock: '5px',
-  //               }}
-  //             >
-  //               <div className="p-4">
+              href={`/links/${c.slug}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <a
+                style={{
+                  color: 'grey',
+                  textDecoration: 'none'
+                  // border: '1px solid grey',
+                  // padding: '10px',
+                  // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+                  // borderRadius: '8px',
+                  // borderBlock: '5px',
+                }}
+              >
+                <div className="p-4">
               
 
-  //                     <h3 className="font-weight-bold ">{c.name}</h3>
-  //                     <hr />
-  //                     <div 
-  //                     // className="lead alert alert-seconary pt-4"
-  //                     // className={'col-md-12 pt-2'}
+                      <h3 className="font-weight-bold ">{c.name}</h3>
+                      <hr />
+                      <div 
+                      // className="lead alert alert-seconary pt-4"
+                      // className={'col-md-12 pt-2'}
 
-  //                     >
-  //                       {renderHTML(c.content || '')}
-  //                     </div>
-  //                     <div className="">
-  //                       {c.image && (
-  //                         <img
-  //                           src={c.image.url}
-  //                           alt={c.name}
-  //                           style={{ width: '280px', maxHeight: 'auto' }}
-  //                         />
-  //                       )}
-  //                       <div className="">
-  //                         {/* <h3>{c.name}</h3> {c.createdAt} */}
-  //                         Posted {moment(c.createdAt).format('MMMM Do YYYY')}
-  //                         {/* {popular.map((l, i) => l.postedBy.name)} */}
-  //                         {/* {c.username} */}
-  //                       </div>
+                      >
+                        {renderHTML(c.content || '')}
+                      </div>
+                      <div className="">
+                        {c.image && (
+                          <img
+                            src={c.image.url}
+                            alt={c.name}
+                            style={{ width: '280px', maxHeight: 'auto' }}
+                          />
+                        )}
+                        <div className="">
+                          {/* <h3>{c.name}</h3> {c.createdAt} */}
+                          Posted {moment(c.createdAt).format('MMMM Do YYYY')}
+                          {/* {popular.map((l, i) => l.postedBy.name)} */}
+                          {/* {c.username} */}
+                        </div>
 
-  //                 </div>
-  //               </div>
-  //             </a>
-  //           </Link>
-  //         </div>
-  //         <div className="p-2"></div>
-  //         </div>
+                  </div>
+                </div>
+              </a>
+            </Link>
+          </div>
+          <div className="p-2"></div>
+          </div>
 
-  //       </>
-  //     ));
-  
+        </>
+      ));
   return (
     <div key={2000} className={styles.background} >
 
@@ -183,4 +182,4 @@ Home.getInitialProps = async () => {
   };
 };
 
-export default Home;
+export default Menus;

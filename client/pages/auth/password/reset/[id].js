@@ -63,6 +63,8 @@ const ResetPassword = ({ router }) => {
       shallowMessage = 'Password must contain at least one capitol letter';
     } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
       shallowMessage = 'Password must contain at least one special character';
+    } else if (!e.target.value.match(/[0-9]/g)) {
+      shallowMessage = 'Password must contain at least one special number';
     } else if (newPassword.length < 13) {
       shallowGoodMessage = 'Good password';
     } else if (newPassword.length > 12) {
@@ -94,6 +96,11 @@ const ResetPassword = ({ router }) => {
     } else if (!newPassword.match(/[^A-Za-z0-9]/g)) {
       setState({ ...state, error: "Password MUST contain at least one special character" });
 
+    } else if (password.match(/[0-9]/g) === null) {
+      setState({
+        ...state,
+        error: 'Password MUST contain at least one special number',
+      });
     } else {
       try {
         const response = await axios.put(`${API}/reset-password`, {

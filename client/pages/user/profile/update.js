@@ -24,7 +24,13 @@ const Profile = ({ user, token }) => {
     students: user.students,
     loadedCategories: [],
     categories: user.categories, // categories selected by user for signup
-    showAllergies: [{showAllergey: false},{showAllergey: false},{showAllergey: false},{showAllergey: false},{showAllergey: false}],
+    showAllergies: [
+      { showAllergey: false },
+      { showAllergey: false },
+      { showAllergey: false },
+      { showAllergey: false },
+      { showAllergey: false },
+    ],
     groups: [],
     teachers: [],
     loadedGroups: [],
@@ -80,7 +86,7 @@ const Profile = ({ user, token }) => {
   //       showAllergies: [... showAllergies],
   //       success: '',
   //       error: '',
-  //     }); 
+  //     });
   //   // }, 100);
   // }, [students]);
 
@@ -508,14 +514,24 @@ const Profile = ({ user, token }) => {
   };
 
   // remove meal button
-  const removeStudent = (e, index) => {
+  const removeStudent = (e) => {
+    let i = e.target.getAttribute('data-index')
     e.preventDefault();
+
     const list = [...state.students];
     // console.log(list);
-    list.splice(-1)[0];
+    list.splice(i, 1);
     // list.splice(index, 1);
     setState({ ...state, students: list });
   };
+  // const removeStudent = (e, index) => {
+  //   e.preventDefault();
+  //   const list = [...state.students];
+  //   // console.log(list);
+  //   list.splice(-1)[0];
+  //   // list.splice(index, 1);
+  //   setState({ ...state, students: list });
+  // };
 
   // should be id instead of c but it's fine
   const handleToggle = (c) => () => {
@@ -682,7 +698,6 @@ const Profile = ({ user, token }) => {
   const handleAllergy = (name) => (e) => {
     let value =
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
     let i = e.target.getAttribute('data-index');
     console.log('let students value', e.target);
 
@@ -691,6 +706,7 @@ const Profile = ({ user, token }) => {
     oneStudent.foodAllergy[name] = value;
 
     students[i] = oneStudent;
+    console.log('one student', oneStudent);
 
     setState({ ...state, students: [...students] });
   };
@@ -825,7 +841,7 @@ const Profile = ({ user, token }) => {
                   <label
                     data-index={i}
                     onClick={(e) => handleShowAllergies(e)}
-                    className="form-control btn-sm btn-outline-muted  "
+                    className="form btn-sm btn-outline-muted  "
                   >
                     &nbsp;&nbsp;Food Allergies? &nbsp;
                     <i
@@ -836,8 +852,20 @@ const Profile = ({ user, token }) => {
                   </label>
 
                   {
-                  showAllergies[i].showAllergy && 
+                  // students.length > 1 && 
                   (
+                    <button
+                    key={i}
+                    data-index={i}
+                      className="btn text-danger btn-outline-secondary float-right"
+                      onClick={(e) => removeStudent(e)}
+                    >
+                      <i class="fas fa-user-times"></i>{' '}
+                    </button>
+                  )}
+                  
+                  <div className="pb-2"></div>
+                  {showAllergies[i].showAllergy && (
                     <div className="form-control ">
                       <div className="row p-1">
                         <Toggle
@@ -1043,14 +1071,14 @@ const Profile = ({ user, token }) => {
         )}
         {/* <div className=""> */}
 
-        {students.length > 1 && (
+        {/* {students.length > 1 && (
           <button
-            className="btn btn-danger float-right"
+            className="btn text-danger btn-outline-secondary float-right"
             onClick={(e) => removeStudent(e)}
           >
-            Remove
+            <i class="fas fa-user-times"></i>{' '}
           </button>
-        )}
+        )} */}
         {/* </div> */}
         {/* {addStudent(i)} */}
 
@@ -1059,6 +1087,7 @@ const Profile = ({ user, token }) => {
         {error && showErrorMessage(error)}
         {!state.students.length < 1 && (
           <button type="text" className="btn btn-warning">
+            <i className="far fa-paper-plane"></i> &nbsp;
             {buttonText}
           </button>
         )}
