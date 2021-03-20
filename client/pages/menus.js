@@ -175,7 +175,7 @@ const Menus = ({ categories }) => {
 };
 // all above for admin only view OR this will be the available food orders and people click request
 
-Home.getInitialProps = async () => {
+Menus.getInitialProps = async () => {
   const response = await axios.get(`${API}/categories`);
   return {
     categories: response.data,
