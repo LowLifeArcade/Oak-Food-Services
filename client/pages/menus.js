@@ -11,7 +11,7 @@ import { isAuth } from '../helpers/auth';
 
 
 // refactor this into the admin only view
-const Home = ({ categories }) => {
+const Menus = ({ categories }) => {
   // move all of this CODE to admin page
   // const [popular, setPopular] = useState([]);
 
@@ -175,11 +175,11 @@ const Home = ({ categories }) => {
 };
 // all above for admin only view OR this will be the available food orders and people click request
 
-Home.getInitialProps = async () => {
+Menus.getInitialProps = async () => {
   const response = await axios.get(`${API}/categories`);
   return {
     categories: response.data,
   };
 };
 
-export default Home;
+export default Menus;
