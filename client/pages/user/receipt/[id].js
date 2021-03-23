@@ -85,6 +85,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                 oldLink.meal == 'Vegetarian' ||
                 oldLink.meal == 'Gluten Free' ||
                 oldLink.meal == 'Vegan' ||
+                l.meal == 'Standard DF' ||
+                l.meal == 'GlutenFree DF' ||
                 oldLink.pickupOption === 'Lunch Onsite / Breakfast Pickup'
             ).length != 0 && (
               <React.Fragment>
@@ -104,6 +106,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                 oldLink.meal == 'Vegetarian' ||
                 oldLink.meal == 'Gluten Free' ||
                 oldLink.meal == 'Vegan' ||
+                l.meal == 'Standard DF' ||
+                l.meal == 'GlutenFree DF' ||
                 oldLink.pickupOption === 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
                 <b className="d-flex justify-content-center">{oldLink.pickupCode} </b>

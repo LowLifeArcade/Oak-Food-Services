@@ -116,7 +116,12 @@ const Update = ({ oldLink, token, user, _id }) => {
               frontCode.push('Gf');
               // console.log('gf')
               break;
-
+            case 'Standard DF':
+              frontCode.push('Df');
+              break;
+            case 'GlutenFree DF':
+              frontCode.push('Gfdf');
+              break;
             default:
               break;
           }
@@ -187,7 +192,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   //       : setTimeout(() => {
   //           Router.push('/user');
   //         }, 2000)
-      
+
   //   return () => clearTimeout();
   // }, [success]);
 
@@ -222,6 +227,14 @@ const Update = ({ oldLink, token, user, _id }) => {
     let frontCode = '';
     let pickupOptionLO = '';
     switch (input) {
+      case 'Lunch Only' && code.meal === 'Vegetarian':
+        frontCode = 'Lv';
+        break;
+      case 'Lunch Only' && code.meal === 'Standard':
+        frontCode = 'Sl';
+        break;
+      case 'Breakfast Only':
+        frontCode = 'B';
       case 'Vegetarian':
         frontCode = 'Vt';
         pickupOptionLO = state.mealRequest[i].pickupOption;
@@ -238,6 +251,14 @@ const Update = ({ oldLink, token, user, _id }) => {
         frontCode = '';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
+      case 'Standard DF':
+        frontCode = 'Df';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'GlutenFree DF':
+        frontCode = 'Gfdf';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
       case 'Standard Onsite':
         frontCode = 'Onsite';
         pickupOptionLO = state.mealRequest[i].pickupOption;
@@ -245,11 +266,48 @@ const Update = ({ oldLink, token, user, _id }) => {
       case 'None':
         frontCode = 'None';
         pickupOptionLO = 'None';
+        group = 'None';
+        // console.log('gf')
         break;
 
       default:
         break;
     }
+
+    // let input = e.target.value;
+    // let frontCode = '';
+    // let pickupOptionLO = '';
+    // switch (input) {
+
+    //   case 'Vegetarian':
+    //     frontCode = 'Vt';
+    //     pickupOptionLO = state.mealRequest[i].pickupOption;
+    //     break;
+    //   case 'Vegan':
+    //     frontCode = 'Vg';
+    //     pickupOptionLO = 'Lunch Only';
+    //     break;
+    //   case 'GlutenFree':
+    //     frontCode = 'Gf';
+    //     pickupOptionLO = 'Lunch Only';
+    //     break;
+    //   case 'Standard':
+    //     frontCode = '';
+    //     pickupOptionLO = state.mealRequest[i].pickupOption;
+    //     break;
+    //   case 'Standard Onsite':
+    //     frontCode = 'Onsite';
+    //     pickupOptionLO = state.mealRequest[i].pickupOption;
+    //     break;
+    //   case 'None':
+    //     frontCode = 'None';
+    //     pickupOptionLO = 'None';
+    //     break;
+
+    //   default:
+    //     break;
+    // }
+
     // console.log(frontCode)
 
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
@@ -454,10 +512,34 @@ const Update = ({ oldLink, token, user, _id }) => {
             <option disabled value="">
               Choose an option
             </option>
-            <option value={'Standard'}>Standard</option>
-            <option value={'Vegetarian'}>Vegetarian</option>
+            {state.mealRequest[i].foodAllergy.dairy === true ? (
+              <option value={'Standard DF'}>
+                Standard Dairy Free (lunch only)
+              </option>
+            ) : (
+              state.mealRequest[i].foodAllergy.gluten === false && (
+                <option value={'Standard'}>Standard</option>
+              )
+            )}
+
+            
+            {state.mealRequest[i].foodAllergy.dairy !== true && (
+              <option value={'Vegetarian'}>Vegetarian</option>
+            )}
+
+
             <option value={'Vegan'}>Vegan (lunch only)</option>
-            <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+
+
+            {state.mealRequest[i].foodAllergy.gluten === true ? (
+              state.mealRequest[i].foodAllergy.dairy === true ? (
+                <option value={'GlutenFree DF'}>
+                  Gluten Free Dairy Free(lunch only)
+                </option>
+              ) : (
+                <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+              )
+            ) : null}
             <option value={'None'}>None</option>
           </select>
           <div className="p-1"></div>
@@ -512,7 +594,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     setState({
       ...state,
       mealRequest: [...meals],
-      buttonText: 'Request',
+      buttonText: 'Update',
       // pickupCodeAdd: codes,
       success: '',
       error: '',
@@ -748,15 +830,15 @@ const Update = ({ oldLink, token, user, _id }) => {
         buttonText: 'Updated',
       });
 
-       isAuth().role === 'admin'
+      isAuth().role === 'admin'
         ? setTimeout(() => {
             Router.push('/admin/link/read');
           }, 2000)
         : setTimeout(() => {
             Router.push('/user');
-          }, 2000)
-      
-    return () => clearTimeout();
+          }, 2000);
+
+      return () => clearTimeout();
       // .then(Router.push('/user'))
     } catch (error) {
       console.log('LINK SUBMIT ERROR', error);
@@ -1245,10 +1327,13 @@ const Update = ({ oldLink, token, user, _id }) => {
                     <>
                       {isAuth().role != 'admin' ? (
                         <div>
-                        <label key={i} className="text-secondary">
-                         <h6> <b>{`${state.students[i].name}`}'s</b> meal</h6>
-                        </label>
-                      </div>
+                          <label key={i} className="text-secondary">
+                            <h6>
+                              {' '}
+                              <b>{`${state.students[i].name}`}'s</b> meal
+                            </h6>
+                          </label>
+                        </div>
                       ) : (
                         <h6 className="p-2">
                           <label
@@ -1305,7 +1390,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                             : selectPickupOption(i)
                           : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
                         : selectNonePickupOption(i)}
-                        <hr/>
+                      <hr />
                     </>
                   );
                 })}
@@ -1313,7 +1398,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 <div className="">
                   {state.mealRequest.length < state.students.length && (
                     <button
-                    className={"btn  btn-outline-info " + styles.buttonshadow}
+                      className={'btn  btn-outline-info ' + styles.buttonshadow}
                       onClick={() =>
                         state.mealRequest.map((x, i) =>
                           addMeal(
@@ -1335,7 +1420,7 @@ const Update = ({ oldLink, token, user, _id }) => {
 
                   {state.mealRequest.length !== 1 && (
                     <button
-                    className={'btn float-right ' + styles.buttonshadow}
+                      className={'btn float-right ' + styles.buttonshadow}
                       onClick={() => removeMeal()}
                     >
                       Remove

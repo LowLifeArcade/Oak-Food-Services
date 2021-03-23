@@ -468,13 +468,14 @@ const Profile = ({ user, token }) => {
           group: '',
           teacher: '',
           foodAllergy: {
-            peanutes: false,
+            peanuts: false,
             treeNuts: false,
             dairy: false,
             gluten: false,
             egg: false,
             sesame: false,
             soy: false,
+            seafood: false,
           },
           age: '',
         },
@@ -629,7 +630,10 @@ const Profile = ({ user, token }) => {
     oneStudent.schoolName = e.target.value;
     oneStudent.teacher = '';
     oneStudent.age = '';
-    oneStudent.group = e.target.value === 'NON' || e.target.value === 'DK' ? 'distance-learning' : '';
+    oneStudent.group =
+      e.target.value === 'NON' || e.target.value === 'DK'
+        ? 'distance-learning'
+        : '';
     // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
 
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
@@ -704,7 +708,12 @@ const Profile = ({ user, token }) => {
     let students = [...state.students];
     let oneStudent = { ...students[i] };
     oneStudent.foodAllergy[name] = value;
-    oneStudent.foodAllergy.gluten === true ? oneStudent.group = 'distance-learning' : null
+    oneStudent.foodAllergy.gluten === true ||
+    oneStudent.foodAllergy.egg === true ||
+    oneStudent.foodAllergy.dairy === true ||
+    oneStudent.foodAllergy.soy === true
+      ? (oneStudent.group = 'distance-learning')
+      : null;
 
     students[i] = oneStudent;
     console.log('one student', oneStudent);
@@ -871,10 +880,10 @@ const Profile = ({ user, token }) => {
                         <Toggle
                           toggleKey={i}
                           dataIndex={i}
-                          isOn={students[i].foodAllergy.peanutes}
-                          toggleId="peanutes"
-                          toggleName="Peanutes"
-                          handleToggle={handleAllergy('peanutes')}
+                          isOn={students[i].foodAllergy.peanuts}
+                          toggleId="peanuts"
+                          toggleName="Peanuts"
+                          handleToggle={handleAllergy('peanuts')}
                         ></Toggle>
 
                         {/* <button key={i} > test + `${i}` </button> */}
@@ -931,9 +940,35 @@ const Profile = ({ user, token }) => {
                           toggleName="Soy"
                           handleToggle={handleAllergy('soy')}
                         ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.seafood}
+                          toggleId="seafood"
+                          toggleName="Seafood"
+                          handleToggle={handleAllergy('seafood')}
+                        ></Toggle>
                       </div>
                     </div>
                   )}
+
+                  {students[i].foodAllergy.dairy === true
+                    ? showSuccessMessage(
+                        'Curbside pickup only for your allergy group'
+                      )
+                    : students[i].foodAllergy.gluten === true
+                    ? showSuccessMessage(
+                        'Curbside pickup only for your allergy group'
+                      )
+                    : students[i].foodAllergy.soy === true
+                    ? showSuccessMessage(
+                        'Curbside pickup only for your allergy group'
+                      )
+                    : students[i].foodAllergy.egg === true &&
+                      showSuccessMessage(
+                        'Curbside pickup only for your allergy group'
+                      )}
 
                   <div className="form-group pt-1">
                     <select
@@ -959,7 +994,8 @@ const Profile = ({ user, token }) => {
                     </select>
                   </div>
 
-                  {students[i].schoolName != 'NON' && students[i].schoolName != 'DK' &&
+                  {students[i].schoolName != 'NON' &&
+                    students[i].schoolName != 'DK' &&
                     students[i].schoolName != 'OVHS' && (
                       <div key={1} className="form-group">
                         <div className="">
@@ -981,14 +1017,20 @@ const Profile = ({ user, token }) => {
                             <option value="distance-learning">
                               Distance Learning (pickup)
                             </option>
-                            {students[i].foodAllergy.gluten === true ? (
+                            {students[i].foodAllergy.gluten === true ||
+                            students[i].foodAllergy.egg === true ||
+                            students[i].foodAllergy.dairy === true ||
+                            students[i].foodAllergy.soy === true ? (
                               <option disabled value="a-group">
                                 A (onsite)
                               </option>
                             ) : (
                               <option value="a-group">A (onsite)</option>
                             )}
-                            {students[i].foodAllergy.gluten === true ? (
+                            {students[i].foodAllergy.gluten === true ||
+                            students[i].foodAllergy.egg === true ||
+                            students[i].foodAllergy.dairy === true ||
+                            students[i].foodAllergy.soy === true ? (
                               <option disabled value="b-group">
                                 B (onsite)
                               </option>
@@ -1018,23 +1060,24 @@ const Profile = ({ user, token }) => {
                         {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
                         {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
                         {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
-                        {x.schoolName === 'NON' || x.schoolName === 'DK' && (
-                          <div className="form-group pt-1">
-                            <input
-                              value={x.age}
-                              data-index={i}
-                              onChange={handleObjectAgeChange()}
-                              // onChange={handleChange({student: 'name'})}
-                              type="text"
-                              className="form-control"
-                              placeholder="Age (must be under 18)"
-                              required={true}
-                            />
-                          </div>
-                        )}
+                        {x.schoolName === 'NON' ||
+                          (x.schoolName === 'DK' && (
+                            <div className="form-group pt-1">
+                              <input
+                                value={x.age}
+                                data-index={i}
+                                onChange={handleObjectAgeChange()}
+                                // onChange={handleChange({student: 'name'})}
+                                type="text"
+                                className="form-control"
+                                placeholder="Age (must be under 18)"
+                                required={true}
+                              />
+                            </div>
+                          ))}
                       </div>
                     )}
-                    {students[i].schoolName === 'DK'  &&  (
+                  {students[i].schoolName === 'DK' && (
                     <div className="form-group pt-1">
                       <input
                         value={x.age}
@@ -1048,7 +1091,7 @@ const Profile = ({ user, token }) => {
                       />
                     </div>
                   )}
-                  {students[i].schoolName === 'NON'  &&  (
+                  {students[i].schoolName === 'NON' && (
                     <div className="form-group pt-1">
                       <input
                         value={x.age}

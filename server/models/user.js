@@ -74,7 +74,7 @@ const userSchema = new mongoose.Schema(
         //   required: true
         // },
         foodAllergy: {
-           peanutes: {
+           peanuts: {
             type: Boolean
           },
            treeNuts: {
@@ -93,6 +93,9 @@ const userSchema = new mongoose.Schema(
             type: Boolean
           },
            soy: {
+            type: Boolean
+          },
+           seafood: {
             type: Boolean
           },
         },

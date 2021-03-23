@@ -26,7 +26,10 @@ const Create = ({ token, user }) => {
           user.students[0].group === 'a-group' ||
           user.students[0].group === 'b-group'
             ? 'Standard Onsite'
+            : user.students[0].foodAllergy.dairy === true
+            ? 'Standard DF'
             : 'Standard',
+
         student: user.students[0]._id,
         studentName: user.students[0].name,
         lastName: user.lastName,
@@ -142,6 +145,12 @@ const Create = ({ token, user }) => {
           case 'GlutenFree':
             frontCode.push('Gf');
             // console.log('gf')
+            break;
+          case 'Standard DF':
+            frontCode.push('Df');
+            break;
+          case 'GlutenFree DF':
+            frontCode.push('Gfdf');
             break;
 
           default:
@@ -262,7 +271,7 @@ const Create = ({ token, user }) => {
     let groupLO = '';
     switch (input) {
       case 'Lunch Only' && code.meal === 'Vegetarian':
-        frontCode = 'Vtl';
+        frontCode = 'Lv';
         break;
       case 'Lunch Only' && code.meal === 'Standard':
         frontCode = 'Sl';
@@ -283,6 +292,14 @@ const Create = ({ token, user }) => {
         break;
       case 'Standard':
         frontCode = '';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'Standard DF':
+        frontCode = 'Df';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'GlutenFree DF':
+        frontCode = 'Gfdf';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
       case 'Standard Onsite':
@@ -372,10 +389,28 @@ const Create = ({ token, user }) => {
             <option disabled value="">
               Choose an option
             </option>
-            <option value={'Standard'}>Standard</option>
-            <option value={'Vegetarian'}>Vegetarian</option>
+            {state.mealRequest[i].foodAllergy.dairy === true ? (
+              <option value={'Standard DF'}>
+                Standard Dairy Free (lunch only)
+              </option>
+            ) : (
+              state.mealRequest[i].foodAllergy.gluten === false && (
+                <option value={'Standard'}>Standard</option>
+              )
+            )}
+            {state.mealRequest[i].foodAllergy.dairy !== true && (
+              <option value={'Vegetarian'}>Vegetarian</option>
+            )}
             <option value={'Vegan'}>Vegan (lunch only)</option>
-            <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+            {state.mealRequest[i].foodAllergy.gluten === true ? (
+              state.mealRequest[i].foodAllergy.dairy === true ? (
+                <option value={'GlutenFree DF'}>
+                  Gluten Free Dairy Free(lunch only)
+                </option>
+              ) : (
+                <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+              )
+            ) : null}
             <option value={'None'}>None</option>
           </select>
           <div className="p-1"></div>
@@ -1126,7 +1161,10 @@ const Create = ({ token, user }) => {
                       </div>
                       {x.meal != 'None'
                         ? state.students[i].group === 'distance-learning'
-                          ? x.meal === 'GlutenFree' || x.meal === 'Vegan'
+                          ? x.meal === 'GlutenFree' ||
+                            x.meal === 'GlutenFree DF' ||
+                            x.meal === 'Standard DF' ||
+                            x.meal === 'Vegan'
                             ? selectPickupLunchOnlyOption(i)
                             : selectPickupOption(i)
                           : selectPickupLunchOnsiteBreakfastOffsiteOption(i)

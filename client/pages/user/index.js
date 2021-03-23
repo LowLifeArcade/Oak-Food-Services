@@ -77,6 +77,8 @@ const User = ({ user, token, l, userLinks }) => {
                 l.meal == 'Vegetarian' ||
                 l.meal == 'Gluten Free' ||
                 l.meal == 'Vegan' ||
+                l.meal == 'Standard DF' ||
+                l.meal == 'GlutenFree DF' ||
                 l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
             ).length != 0 && (
               <React.Fragment>
@@ -94,8 +96,10 @@ const User = ({ user, token, l, userLinks }) => {
                 (l) =>
                 l.meal == 'Standard' ||
                 l.meal == 'Vegetarian' ||
-                l.meal == 'Gluten Free' ||
+                l.meal == 'GlutenFree' ||
                 l.meal == 'Vegan' ||
+                l.meal == 'Standard DF' ||
+                l.meal == 'GlutenFree DF' ||
                 l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
                 <b className="d-flex justify-content-center">{l.pickupCode} </b>
