@@ -100,7 +100,7 @@ const Layout = ({ children }) => {
           <li className="nav-item pointer-hand">
           <Link href="/user/link/create">
             <a
-              className="nav-link text-white btn btn-success"
+              className="nav-link text-white btn btn-warning"
               style={{ borderRadius: '0px' }}
             >
               {'🍱'}
@@ -343,7 +343,7 @@ const Layout = ({ children }) => {
           </Link>
         </li>}
         {process.browser && isAuth() && <li key="1" onClick={() => setShowSidebar(false)} className="nav-item pointer-hand ">
-          <Link href="/" >
+          <Link href="/menus" >
             <a className="nav-link text-white">
             <i class="fas fa-book-open"></i>&nbsp;&nbsp;&nbsp; Menu
             </a>

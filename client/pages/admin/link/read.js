@@ -153,6 +153,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       .filter((l) => l.pickupDate === pickupDateLookup)
       .map((l, i) => (
         <>
+
+<div className={'d-flex justify-content-center  ' + styles.desktop}>
+          <div className={'col-md-6  justify-content-center ' + styles.desktop}>
           <div
             key={i}
             className={
@@ -161,121 +164,192 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
                 : 'p-4 alert  alert-secondary ' + styles.subcard
             }
           >
-            {/* {console.log(l.orderStatus)} */}
-            <h4 className="pt-1 pb-1">
-              Request for <b>{moment(l.pickupDate).format('MMM Do')}</b>
-            </h4>
             <h4>
-              <b>Code: {l.pickupCode}</b>
-              {/* {console.log(typeof(l.pickupCode))} */}
+              {l.orderStatus && (
+                <b className="text-danger ">
+                  <h2>
+                    * PICKED UP *
+                    <br />
+                    on {moment(l.updatedAt).format('MMM Do')}
+                  </h2>
+                  <hr />
+                </b>
+              )}
             </h4>
+            {console.log('meals', l)}
+            {l.mealRequest.filter(
+              (l) =>
+                l.meal == 'Standard' ||
+                l.meal == 'Vegetarian' ||
+                l.meal == 'Gluten Free' ||
+                l.meal == 'Vegan' ||
+                l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+            ).length != 0 && (
+              <>
+                <h4 className="pt-2 ">
+                  PICKUP DATE
+                  <br />
+                  <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+                </h4>
+                Between <b className="pb-2 ">{l.pickupTime} </b>
+              </>
+            )}
+            <hr className={styles.hr} />
+            <h3>
+              {l.mealRequest.filter(
+                (l) =>
+                  l.meal == 'Standard' ||
+                  l.meal == 'Vegetarian' ||
+                  l.meal == 'Gluten Free' ||
+                  l.meal == 'Vegan' ||
+                  l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+              ).length != 0 ? (
+                <b className="d-flex justify-content-center">{l.pickupCode} </b>
+              ) : (
+                <b>
+                  Onsite School Lunch for week of{' '}
+                  {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}
+                </b>
+              )}
+            </h3>
+            <hr className={styles.hr} />
+            <h6>
+              Display the above code{' '}
+              <b className="text-danger">on your dashboard </b>or show from your
+              phone to the server
+            </h6>
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
-                {l.mealRequest.filter((l) => l.meal !== 'None').length} weekly
-                meal
-                {l.mealRequest.filter((l) => l.meal !== 'None').length > 1 &&
-                  's'}
-                :<p></p>
+                {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal */}
+                {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p> */}
+
                 <div className="p-3">
                   {l.mealRequest
                     .filter((l) => l.meal !== 'None')
                     .map((k, i) => (
-                      <h6 className="">
-                        {console.log(k)}
-                        {/* Meal {`${i + 1} `} - for  */}
+                      <>
+                        <h5 className="">
+                          <b>
+                            {k.student === undefined
+                              ? 'user deleted'
+                              : l.postedBy.students.filter((student) =>
+                                  student._id.includes(k.student)
+                                ) && k.studentName}
+                            :
+                          </b>
+                          <br></br>
+                        </h5>
                         {k.student === undefined ? (
                           'user deleted'
                         ) : k.group === 'a-group' || k.group === 'b-group' ? (
                           k.pickupOption ===
                           'Lunch Onsite / Breakfast Pickup' ? (
                             <>
-                              <b>2 onsite meals and </b>
-                              <br />
-                              <b>5 pickup breakfast meals</b>{' '}
+                              <div className="p-1">
+                                <div className="pb-2 ">Curbside Breakfast </div>
+                                <div
+                                  className="p-2"
+                                  style={{ fontSize: '16px' }}
+                                >
+                                  PLUS:
+                                  <br />
+                                  *Onsite Lunches{' '}
+                                  {k.group === 'b-group'
+                                    ? '- B'
+                                    : k.group === 'a-group'
+                                    ? '- A'
+                                    : ''}
+                                  *
+                                  <br />
+                                  *Week of{' '}
+                                  {moment(l.pickupDate)
+                                    .add(3, 'day')
+                                    .format('MMMM Do')}
+                                  *
+                                </div>
+                              </div>
                             </>
                           ) : (
-                            <b>2 onsite meals </b>
+                            <>
+                              <div className="p-1">
+                                Onsite Lunches
+                                <br />
+                                <div
+                                  className="p-2"
+                                  style={{ fontSize: '16px' }}
+                                >
+                                  *
+                                  {k.group === 'b-group'
+                                    ? 'Cohort B'
+                                    : k.group === 'a-group'
+                                    ? 'Cohort A'
+                                    : ''}
+                                  * <br />
+                                  *Week of{' '}
+                                  {moment(l.pickupDate)
+                                    .add(3, 'day')
+                                    .format('MMMM Do')}
+                                  *
+                                </div>
+                              </div>
+                            </>
                           )
                         ) : (
-                          <b>5 pickup {k.meal} meals </b>
+                          <>
+                            <div className="p-1">
+                              Curbside {k.meal}{' '}
+                              <div className="p-2" style={{ fontSize: '16px' }}>
+                                TYPE:
+                                <br />
+                                {k.pickupOption}
+                              </div>
+                            </div>
+                          </>
                         )}
-                        <br></br>
-                        {k.student === undefined
-                          ? 'user deleted'
-                          : l.postedBy.students.filter((student) =>
-                              student._id.includes(k.student)
-                            ) && k.studentName + ' - ' + k.group}
-                        {/* {console.log(i,l.postedBy.students[i]._id)} */}
-                        {/* {console.log('meal req',k.meal)} */}
                         <hr />
-                      </h6>
+                      </>
                     ))}
                 </div>
               </h5>
               {/* {console.log(l.mealRequest)} */}
-              {l.pickupTime === 'Cafeteria' ? (
+              {/* {l.pickupTime === 'Cafeteria' ? null : (
                 <h2 className=" " style={{ fontSize: '16px' }}>
-                  Pickup is on campus at the student <b>{l.pickupTime} </b>{' '}
-                  during school hours
+                  Pickup is between <b>{l.pickupTime} </b> on Friday. Please
+                  print out or write out your code and display your{' '}
+                  <b >CODE on your dashboard</b>.
                 </h2>
-              ) : (
-                <h2 className=" " style={{ fontSize: '16px' }}>
-                  Pickup for your order is between <b>{l.pickupTime} </b> on
-                  Friday
-                </h2>
-              )}
+              )} */}
             </div>
             <div className="pt-1 ">
               <span className="">
                 {' '}
-                {moment(l.createdAt).fromNow()} by{' '}
+                {moment(l.createdAt).format('M/d/yy')} by{' '}
                 {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
               </span>
             </div>
 
             <div className=" pb-3 pt-3">
+              {l.postedBy.students[i] === undefined ? null : (
+                <Link href={`/user/link/${l._id}`}>
+                  <button className="btn btn-sm btn-outline-dark text float-left">
+                    <i class="far fa-edit"></i> &nbsp;Edit
+                  </button>
+                </Link>
+              )}
               <Link href="">
                 <button
                   onClick={(e) => confirmDelete(e, l._id)}
-                  className="badge text-danger btn btn-outline-warning "
+                  className="text-white btn btn-sm btn-danger float-right"
                 >
-                  Delete
+                  Cancel
                 </button>
               </Link>
-              {
-                <Link href={`/user/link/${l._id}`}>
-                  <button className="badge btn btn-outline-warning text float-left">
-                    Edit Request
-                  </button>
-                </Link>
-              }
-              {/* {console.log(orderStatus)} */}
-              {l.orderStatus === false ? (
-                <Link href="">
-                  <button
-                    onClick={(e) => confirmComplete(e, l._id)}
-                    className="text-grey btn btn-warning float-right"
-                  >
-                    Complete Order?
-                  </button>
-                </Link>
-              ) : (
-                <h4 className="pt-3">
-                  <b>Completed on {moment(l.updatedAt).format('MMM Do')}</b>
-                </h4>
-              )}
-              {/* <Link href="">
-                <button
-                  onClick={(e) => confirmDelete(e, l._id)}
-                  className="badge text-danger btn btn-outline-warning float-right"
-                >
-                  Delete
-                </button>
-              </Link> */}
-              {l.orderStatus === false && <div className="pb-4"></div>}
+              <div className="pb-4"></div>
             </div>
           </div>
+          </div>
+ </div>
         </>
       ));
 
@@ -324,8 +398,11 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 
   return (
     <Layout>
-      <div className="row">
-        <div className="col-md-8 pt-4">
+
+
+      
+      <div className="row d-flex justify-content-center">
+        <div className="col-md-6 pt-4">
           <h3>
             Meal Receipts for{' '}
             {pickupDateLookup &&
@@ -374,10 +451,14 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
           </div>
         </div>
       </div>
+
+
       <br />
 
       {/* i can probably remove loadmeals as each date should have lots of data there already to stop infinite scroll from overloading */}
-      {loadmeals && (
+      {
+      loadmeals && 
+      (
         <InfiniteScroll
           pageStart={0}
           loadMore={loadMore}
@@ -443,7 +524,5 @@ Links.getInitialProps = async ({ req }) => {
 //     initRequests,
 //   };
 // };
-
-
 
 export default withAdmin(Links);

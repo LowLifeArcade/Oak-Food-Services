@@ -1,108 +1,116 @@
-import styles from '../../styles/Home.module.css';
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import { API } from '../../config';
-import { getCookie } from '../../helpers/auth';
-import withUser from '../withUser';
-import Link from 'next/link';
+// imports
+import styles from '../../../styles/Home.module.css';
 import moment from 'moment';
 import Router from 'next/router';
+import { useState, useEffect } from 'react';
+import Layout from '../../../components/Layout';
+import withUser from '../../withUser';
+import { getCookie, isAuth } from '../../../helpers/auth';
+import { API } from '../../../config';
+import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
+import axios from 'axios';
+import Link from 'next/link';
 
-import Layout from '../../components/Layout';
 
-const User = ({ user, token, l, userLinks }) => {
+const Update = ({ oldLink, token, user, _id }) => {
+
+
+  // state
+  // console.log('old link data from user[id]', oldLink);
   const confirmDelete = (e, id) => {
     e.preventDefault();
     // console.log('delete >', slug);
-    let answer = window.confirm(
-      'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
-    );
+    let answer = window.confirm('WARNING! Delete this order?');
     if (answer) {
-      window.confirm('Request is cancelled. No further action required.');
       handleDelete(id);
     }
   };
 
-  useEffect(() => {
-    // console.log('students!', user.students);
-    user.students.length === 0 && Router.push('/user/profile/add');
-  }, []);
-
   const handleDelete = async (id) => {
-    // console.log('delete link', id)
     try {
-      const response = await axios.delete(`${API}/link/${id}`, {
+      const response = await axios.delete(`${API}/link/admin/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       console.log('LINK DELETE SUCCESS', response);
-      Router.replace('/user');
+      process.browser && 
+      window.location.reload();
+      
+      isAuth() && isAuth().role === 'admin'
+        ? Router.push('admin')
+        : isAuth() && isAuth().role === 'subscriber'
+        ? Router.push('user')
+        : Router.push('/login');
     } catch (error) {
-      console.log('ERROR DELETING LINK', error);
+      console.log('ERROR LINK CATEGORY', error);
     }
   };
-  {
-    console.log('pages user index', userLinks.mealRequest);
-  }
-  const listOfLinks = () =>
-    userLinks.map((l, i) => (
-      <>
+
+  
+
+  return (
+    <div
+      className={styles.background}
+      style={
+        {
+          // background: '#eeeff0'
+        }
+      }
+    >
+      <Layout>
+        <div className="p-4"></div>
+        <>
         {/* {console.log('links', l)} */}
         {
-          <div
-          key={i}
-          className={
-            l.orderStatus === false
-              ? 'p-4 alert  alert-warning ' + styles.subcard
-              : 'p-4 alert  alert-secondary ' + styles.subcard
-          }
-        >
+
+       
+          <div className={' p-4 alert alert-warning ' + styles.receipt}>
             <h4>
-              {l.orderStatus && (
+              {oldLink.orderStatus && (
                 <b className="text-danger ">
                   <h2>
                     * PICKED UP *
                     <br />
-                    on {moment(l.updatedAt).format('MMM Do')}
+                    on {moment(oldLink.updatedAt).format('MMM Do')}
                   </h2>
                   <hr />
                 </b>
               )}
             </h4>
-            {console.log('meals', l)}
-            {l.mealRequest.filter(
+
+            {oldLink.mealRequest.filter(
               (l) =>
-                l.meal == 'Standard' ||
-                l.meal == 'Vegetarian' ||
-                l.meal == 'Gluten Free' ||
-                l.meal == 'Vegan' ||
-                l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+                oldLink.meal == 'Standard' ||
+                oldLink.meal == 'Vegetarian' ||
+                oldLink.meal == 'Gluten Free' ||
+                oldLink.meal == 'Vegan' ||
+                oldLink.pickupOption === 'Lunch Onsite / Breakfast Pickup'
             ).length != 0 && (
               <React.Fragment>
                 <h4 className="pt-2 ">
                   PICKUP DATE
                   <br />
-                  <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+                  <b>{moment(oldLink.pickupDate).format('MMMM Do')}</b>
                 </h4>
-                Between <b className="pb-2 ">{l.pickupTime} </b>
+                Between <b className="pb-2 ">{oldLink.pickupTime} </b>
               </React.Fragment>
             )}
             <hr className={styles.hr} />
             <h3>
-              {l.mealRequest.filter(
+              {oldLink.mealRequest.filter(
                 (l) =>
-                l.meal == 'Standard' ||
-                l.meal == 'Vegetarian' ||
-                l.meal == 'Gluten Free' ||
-                l.meal == 'Vegan' ||
-                l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+                oldLink.meal == 'Standard' ||
+                oldLink.meal == 'Vegetarian' ||
+                oldLink.meal == 'Gluten Free' ||
+                oldLink.meal == 'Vegan' ||
+                oldLink.pickupOption === 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
-                <b className="d-flex justify-content-center">{l.pickupCode} </b>
+                <b className="d-flex justify-content-center">{oldLink.pickupCode} </b>
               ) : (
                 <b>
                   Onsite School Lunch for week of{' '}
-                  {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}
+                  {moment(oldLink.pickupDate).add(3, 'day').format('MMMM Do')}
                 </b>
               )}
             </h3>
@@ -119,15 +127,15 @@ const User = ({ user, token, l, userLinks }) => {
                 {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p> */}
 
                 <div className="p-3">
-                  {l.mealRequest
-                    .filter((l) => l.meal !== 'None')
+                  {oldLink.mealRequest
+                    .filter((l) => oldLink.meal !== 'None')
                     .map((k, i) => (
                       <>
                         <h5 className="">
                           <b>
                             {k.student === undefined
                               ? 'user deleted'
-                              : l.postedBy.students.filter((student) =>
+                              : oldLink.postedBy.students.filter((student) =>
                                   student._id.includes(k.student)
                                 ) && k.studentName}
                             :
@@ -157,7 +165,7 @@ const User = ({ user, token, l, userLinks }) => {
                                   *
                                   <br />
                                   *Week of{' '}
-                                  {moment(l.pickupDate)
+                                  {moment(oldLink.pickupDate)
                                     .add(3, 'day')
                                     .format('MMMM Do')}
                                   *
@@ -181,7 +189,7 @@ const User = ({ user, token, l, userLinks }) => {
                                     : ''}
                                   * <br />
                                   *Week of{' '}
-                                  {moment(l.pickupDate)
+                                  {moment(oldLink.pickupDate)
                                     .add(3, 'day')
                                     .format('MMMM Do')}
                                   *
@@ -218,14 +226,14 @@ const User = ({ user, token, l, userLinks }) => {
             <div className="pt-1 ">
               <span className="">
                 {' '}
-                {moment(l.createdAt).format('M/d/yy')} by{' '}
-                {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
+                {moment(oldLink.createdAt).format('M/d/yy')} by{' '}
+                {oldLink.postedBy == null ? 'user deleted' : oldLink.postedBy.name}{' '}
               </span>
             </div>
 
             <div className=" pb-3 pt-3">
-              {l.postedBy.students[i] === undefined ? null : (
-                <Link href={`/user/link/${l._id}`}>
+              { (
+                <Link href={`/user/link/${oldLink._id}`}>
                   <button className="btn btn-sm btn-outline-dark text float-left">
                     <i class="far fa-edit"></i> &nbsp;Edit
                   </button>
@@ -233,7 +241,7 @@ const User = ({ user, token, l, userLinks }) => {
               )}
               <Link href="">
                 <button
-                  onClick={(e) => confirmDelete(e, l._id)}
+                  onClick={(e) => confirmDelete(e, oldLink._id)}
                   className="text-white btn btn-sm btn-danger float-right"
                 >
                   Cancel
@@ -242,73 +250,25 @@ const User = ({ user, token, l, userLinks }) => {
               <div className="pb-4"></div>
             </div>
           </div>
+           
         }
       </>
-    ));
 
-  return (
-    <div
-    // className={styles.background}
-    >
-      <Layout>
-        {/* <div className=""> */}
-
-        <h2 className=" pt-3">
-          {user.name}'s Meal Requests{' '}
-          {/* <span className="text-danger"> /{user.role}</span>{' '} */}
-        </h2>
-        {/* </div> */}
-        <hr />
-        <div className="p-1">
-          <div className="">
-            {/* <ul className="nav flex-column"> */}
-            {/* <li className="nav-item"> */}
-            <Link href="/user/profile/update">
-              <a className="nav-item">Update profile</a>
-            </Link>
-            {/* <br/>
-          <Link href="/user/profile/add">
-            <a className="nav-item">Add students</a>
-          </Link> */}
-            {/* </li> */}
-            {/* <li className="nav-item p-4"> */}
-            <Link href="/user/link/create">
-              <button className={'btn float-right ' + styles.button}>
-                <i class="fas fa-pencil-alt"></i>
-                &nbsp;&nbsp; Submit a Request
-              </button>
-            </Link>
-            {/* </li> */}
-            {/* </ul> */}
-          </div>
-        </div>
-        <br />
-        
-        <div className={'d-flex justify-content-center  ' + styles.desktop}>
-          <div className={'col-md-6  justify-content-center ' + styles.desktop}>
-            <br />
-
-            <div className="pb-3">
-              <br />
-              {listOfLinks()}
-            </div>
-          </div>
-        </div>
-
-        <div class={'' + styles.mobile}>
-          <div className="flex-column justify-content-center ">
-            <br />
-            {/* <h2>Your Meal Requests</h2> */}
-            {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
-            <div className="pb-3">
-              <br />
-              {listOfLinks()}
-            </div>
-          </div>
-        </div>
       </Layout>
     </div>
   );
 };
 
-export default withUser(User);
+Update.getInitialProps = async ({ req, token, query, user }) => {
+  const response = await axios.get(`${API}/link/${query.id}`);
+  return { oldLink: response.data, token, user };
+  // const token = getCookie('token', req);
+  // return { token, user };
+  // const response = await axios.get(`${API}/link/${query.id}`);
+  // // const token = getCookie('token', req);
+  // return { oldLink: response.data, token, user};
+  // // return { token, user };
+};
+
+export default withUser(Update);
+// export default withUser(Create)

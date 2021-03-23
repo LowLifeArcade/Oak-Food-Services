@@ -221,18 +221,35 @@ const Requests = ({ token }) => {
   //   linksByDate
   //     // .filter(l => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
   //     // .filter((l) => l.pickupDate === pickupDateLookup);
+  let csvOffsiteData = []
+useEffect(() => {
+  let allergiesList = []
+  let newList = []
 
-  const csvOffsiteData = linksByDate
-    .filter((l) => l.pickupTime.includes(searchPickupTime))
-    // .filter((l) => l.meal != 'None')
-    .filter((l) => l.pickupTime != 'Cafeteria')
-    .filter((l) => l.orderStatus.toString().includes(searchByStatus))
-    .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
+  csvOffsiteData = linksByDate
+  .filter((l) => l.pickupTime.includes(searchPickupTime))
+  .filter((l) => l.pickupTime != 'Cafeteria')
+  .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
 
+  // csvOffsiteData = csvOffsiteData.map((l,i) => {
+      
+  //   allergiesList = l.mealRequest.map((x) => {
+  //       x.foodAllergy.map((allergy) => {
+  //         if(allergy === true) {
+  //           allergy.key
+  //         }  
+  //       })
+  //   })
+  //   allergy = {... allergiesList[i]}
+  //   allergiesList.allergy = newList
+  //   console.log(newList)
+  // })
+  
+}, [linksByDate])
+  
   const csvOnsiteData = allMealsArray
-    // .filter((l) => l.pickupTime.includes(searchPickupTime))
     .filter((l) => l.group != 'distance-learning')
-    // .filter((l) => l.meal != 'None')
     .filter(
       (l, i) =>
         l.teacher.includes(searchByTeacher) ||
@@ -527,7 +544,16 @@ const Requests = ({ token }) => {
             <>
               <tr key={i}>
                 {/* <th scope="col">1</th> */}
-                <td>{l.pickupCode}</td>
+
+                  <td >
+                <Link  href={`/user/receipt/${l._id}`}>
+                    
+                  <a className="text-dark">
+                    {l.pickupCode}
+                    
+                  </a>
+                </Link>
+                    </td>
                 <td>
                   {/* {console.log('order status', l.orderStatus)} */}
                   {l.postedBy === null

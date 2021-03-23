@@ -139,7 +139,7 @@ const Profile = ({ user, token }) => {
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    console.log('group student', students);
+    // console.log('group student', students);
     oneStudent.group = e.target.value;
     oneStudent.age = ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
@@ -178,12 +178,23 @@ const Profile = ({ user, token }) => {
             <option value="distance-learning">
               Distance Learning (pickup)
             </option>
+            {students[i].foodAllergy.gluten === true ?
+            <option disabled value="a-group">A (onsite)</option> :
             <option value="a-group">A (onsite)</option>
+            
+            }
+            {students[i].foodAllergy.gluten === true ?
+            <option disabled value="b-group">B (onsite)</option> :
             <option value="b-group">B (onsite)</option>
+            
+            }
             {/* {state.loadedGroups.map((g, i) => {
               return <option value={g._id}>{g.name}</option>;
               // return <option value={g._id}>{g.name}</option>;
             })} */}
+            {/* {console.log(students[i].foodAllergy.hasOwnProperty({gluten: false}))} */}
+            {/* {console.log(students[i].foodAllergy.gluten === true)}
+            {console.log(students[i].foodAllergy)} */}
           </select>
           <div className=""></div>
         </div>
@@ -571,15 +582,16 @@ const Profile = ({ user, token }) => {
       buttonText: 'Register',
     });
   };
-
   const handleObjectAllergyChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
-
+    
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     oneStudent.foodAllergy = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    oneStudent.group = e.target.value === 'gluten' && ''
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
-
+    
+    console.log('group',students[i].group)
     // setState({
     //   ...state,
     //   student: [...students],
@@ -635,7 +647,7 @@ const Profile = ({ user, token }) => {
     oneStudent.schoolName = e.target.value;
     oneStudent.teacher = '';
     oneStudent.age = '';
-    oneStudent.group = e.target.value === 'NON' ? 'distance-learning' : ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    oneStudent.group = e.target.value === 'NON' || e.target.value === 'DK'? 'distance-learning' : ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
     // setState({
@@ -660,7 +672,7 @@ const Profile = ({ user, token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('submit', students);
+    // console.log('submit', students);
     setState({ ...state, buttonText: 'Registering...' });
     // if (password !== confirmPassword) {
     //   setState({ ...state, error: "Passwords don't match" });
@@ -712,13 +724,14 @@ const Profile = ({ user, token }) => {
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
     let i = e.target.getAttribute('data-index');
-    console.log('let students value', e.target);
+    // console.log('let students value', e.target);
 
     let students = [...state.students];
     let oneStudent = { ...students[i] };
     oneStudent.foodAllergy[name] = value;
-
+    oneStudent.foodAllergy.gluten === true ? oneStudent.group = 'distance-learning' : null
     students[i] = oneStudent;
+    console.log('group' , students[i].group)
 
     setState({ ...state, students: [...students] });
   };
@@ -733,7 +746,7 @@ const Profile = ({ user, token }) => {
     showOne.showAllergy = !showOne.showAllergy;
 
     allShow[i] = showOne;
-    console.log(allShow);
+    // console.log(allShow);
 
     setState({ ...state, showAllergies: [...allShow] });
   };
@@ -862,7 +875,7 @@ const Profile = ({ user, token }) => {
                           toggleId="peanutes"
                           toggleName="Peanutes"
                           handleToggle={handleAllergy('peanutes')}
-                          indexIs={getIndex}
+                          // indexIs={getIndex}
                         ></Toggle>
 
                         {/* <button key={i} > test + `${i}` </button> */}
@@ -936,6 +949,7 @@ const Profile = ({ user, token }) => {
                       required
                     >
                       <option value="">Choose School</option>
+                      <option value="DK">Preschool</option>
                       <option value="BES">Brookside Elementary School</option>
                       <option value="OHES">Oak Hills Elementary School</option>
                       <option value="ROES">Red Oak Elementary School</option>
@@ -958,7 +972,7 @@ const Profile = ({ user, token }) => {
                         required
                       />
                     </div> */}
-                  {students[i].schoolName != 'NON' &&
+                  {students[i].schoolName != 'NON' && students[i].schoolName != 'DK' &&
                     students[i].schoolName != 'OVHS' && (
                       <div key={i + 14} className="">
                         {addStudentGroup(i)}
@@ -973,7 +987,7 @@ const Profile = ({ user, token }) => {
                         {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
                         {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
                         {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
-                        {x.schoolName === 'NON' && (
+                        {x.schoolName === 'NON' || x.schoolName === 'DK'  && (
                           <div className="form-group pt-1">
                             <input
                               value={x.age}
@@ -982,7 +996,7 @@ const Profile = ({ user, token }) => {
                               // onChange={handleChange({student: 'name'})}
                               type="text"
                               className="form-control"
-                              placeholder="Age"
+                              placeholder="Age (must be under 18)"
                               required={true}
                             />
                           </div>
@@ -990,7 +1004,7 @@ const Profile = ({ user, token }) => {
                       </div>
                     )}
 
-                  {students[i].schoolName === 'NON' && x.schoolName === 'NON' && (
+                  {students[i].schoolName === 'DK'  &&  (
                     <div className="form-group pt-1">
                       <input
                         value={x.age}
@@ -1000,6 +1014,20 @@ const Profile = ({ user, token }) => {
                         type="text"
                         className="form-control"
                         placeholder="Age"
+                        required={true}
+                      />
+                    </div>
+                  )}
+                  {students[i].schoolName === 'NON'  &&  (
+                    <div className="form-group pt-1">
+                      <input
+                        value={x.age}
+                        data-index={i}
+                        onChange={handleObjectAgeChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="Age (must be under 18)"
                         required={true}
                       />
                     </div>

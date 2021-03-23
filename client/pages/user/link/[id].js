@@ -1246,7 +1246,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       {isAuth().role != 'admin' ? (
                         <div>
                         <label key={i} className="text-secondary">
-                         <h5> <b>{`${state.students[i].name}`}'s</b> meal</h5>
+                         <h6> <b>{`${state.students[i].name}`}'s</b> meal</h6>
                         </label>
                       </div>
                       ) : (
@@ -1329,7 +1329,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       }
                     >
                       <i class="fas fa-utensils"></i>
-                      &nbsp;&nbsp; Next Meal
+                      &nbsp;&nbsp; Next Student
                     </button>
                   )}
 

@@ -1083,10 +1083,10 @@ const Create = ({ token, user }) => {
                     <>
                       <div>
                         <label key={i} className="text-secondary">
-                          <h5>
+                          <h6>
                             {' '}
                             <b>{`${state.students[i].name}`}'s</b> meal
-                          </h5>
+                          </h6>
                         </label>
                       </div>
                       <div key={i} className="">
@@ -1155,7 +1155,7 @@ const Create = ({ token, user }) => {
                       }
                     >
                       <i class="fas fa-utensils"></i>
-                      &nbsp;&nbsp; Next Meal
+                      &nbsp;&nbsp; Next Student
                     </button>
                   )}
 

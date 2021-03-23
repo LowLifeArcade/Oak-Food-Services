@@ -515,7 +515,7 @@ const Profile = ({ user, token }) => {
 
   // remove meal button
   const removeStudent = (e) => {
-    let i = e.target.getAttribute('data-index')
+    let i = e.target.getAttribute('data-index');
     e.preventDefault();
 
     const list = [...state.students];
@@ -629,7 +629,7 @@ const Profile = ({ user, token }) => {
     oneStudent.schoolName = e.target.value;
     oneStudent.teacher = '';
     oneStudent.age = '';
-    oneStudent.group = e.target.value === 'NON' ? 'distance-learning' : '';
+    oneStudent.group = e.target.value === 'NON' || e.target.value === 'DK' ? 'distance-learning' : '';
     // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
 
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
@@ -704,6 +704,7 @@ const Profile = ({ user, token }) => {
     let students = [...state.students];
     let oneStudent = { ...students[i] };
     oneStudent.foodAllergy[name] = value;
+    oneStudent.foodAllergy.gluten === true ? oneStudent.group = 'distance-learning' : null
 
     students[i] = oneStudent;
     console.log('one student', oneStudent);
@@ -852,18 +853,17 @@ const Profile = ({ user, token }) => {
                   </label>
 
                   {
-                  // students.length > 1 && 
-                  (
+                    // students.length > 1 &&
                     <button
-                    key={i}
-                    data-index={i}
+                      key={i}
+                      data-index={i}
                       className="btn text-danger btn-outline-secondary float-right"
                       onClick={(e) => removeStudent(e)}
                     >
                       <i class="fas fa-user-times"></i>{' '}
                     </button>
-                  )}
-                  
+                  }
+
                   <div className="pb-2"></div>
                   {showAllergies[i].showAllergy && (
                     <div className="form-control ">
@@ -948,6 +948,7 @@ const Profile = ({ user, token }) => {
                       required
                     >
                       <option value="">Choose School</option>
+                      <option value="DK">Preschool</option>
                       <option value="BES">Brookside Elementary School</option>
                       <option value="OHES">Oak Hills Elementary School</option>
                       <option value="ROES">Red Oak Elementary School</option>
@@ -958,7 +959,7 @@ const Profile = ({ user, token }) => {
                     </select>
                   </div>
 
-                  {students[i].schoolName != 'NON' &&
+                  {students[i].schoolName != 'NON' && students[i].schoolName != 'DK' &&
                     students[i].schoolName != 'OVHS' && (
                       <div key={1} className="form-group">
                         <div className="">
@@ -977,11 +978,23 @@ const Profile = ({ user, token }) => {
                             <option disabled value="">
                               Choose Cohort
                             </option>
-                            <option value="a-group">A (onsite)</option>
-                            <option value="b-group">B (onsite) </option>
                             <option value="distance-learning">
                               Distance Learning (pickup)
                             </option>
+                            {students[i].foodAllergy.gluten === true ? (
+                              <option disabled value="a-group">
+                                A (onsite)
+                              </option>
+                            ) : (
+                              <option value="a-group">A (onsite)</option>
+                            )}
+                            {students[i].foodAllergy.gluten === true ? (
+                              <option disabled value="b-group">
+                                B (onsite)
+                              </option>
+                            ) : (
+                              <option value="b-group">B (onsite)</option>
+                            )}
                             {/* {state.loadedGroups.map((g, i) => {
                           return (
                             <option
@@ -1005,7 +1018,7 @@ const Profile = ({ user, token }) => {
                         {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
                         {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
                         {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
-                        {x.schoolName === 'NON' && (
+                        {x.schoolName === 'NON' || x.schoolName === 'DK' && (
                           <div className="form-group pt-1">
                             <input
                               value={x.age}
@@ -1014,15 +1027,14 @@ const Profile = ({ user, token }) => {
                               // onChange={handleChange({student: 'name'})}
                               type="text"
                               className="form-control"
-                              placeholder="Age"
+                              placeholder="Age (must be under 18)"
                               required={true}
                             />
                           </div>
                         )}
                       </div>
                     )}
-
-                  {students[i].schoolName === 'NON' && x.schoolName === 'NON' && (
+                    {students[i].schoolName === 'DK'  &&  (
                     <div className="form-group pt-1">
                       <input
                         value={x.age}
@@ -1036,6 +1048,35 @@ const Profile = ({ user, token }) => {
                       />
                     </div>
                   )}
+                  {students[i].schoolName === 'NON'  &&  (
+                    <div className="form-group pt-1">
+                      <input
+                        value={x.age}
+                        data-index={i}
+                        onChange={handleObjectAgeChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="Age (must be under 18)"
+                        required={true}
+                      />
+                    </div>
+                  )}
+
+                  {/* {students[i].schoolName === 'NON' && x.schoolName === 'NON' && (
+                    <div className="form-group pt-1">
+                      <input
+                        value={x.age}
+                        data-index={i}
+                        onChange={handleObjectAgeChange()}
+                        // onChange={handleChange({student: 'name'})}
+                        type="text"
+                        className="form-control"
+                        placeholder="Age (must be under 18)"
+                        required={true}
+                      />
+                    </div>
+                  )} */}
 
                   {/* <div key={i} className="">
                     {addStudentGroup(i, x)}
