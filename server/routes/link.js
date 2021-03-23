@@ -13,8 +13,7 @@ const { runValidation } = require('../validators');
 const { requireSignin, authMiddleware, adminMiddleware, canUpdateDeleteLink } = require('../controllers/auth');
 const {create, mockCreate, list, read, update, remove,all, clickCount, popular, popularInCategory, complete, listByDate} = require('../controllers/link')
 
-// routes categoryCreateValidator, runValidation,
-// becareful with route orders 
+// routes 
 router.post('/link', linkCreateValidator, runValidation, requireSignin, authMiddleware, create);
 router.post('/mock-link', linkCreateValidator, runValidation, requireSignin, authMiddleware, mockCreate);
 router.post('/links', requireSignin, adminMiddleware, list);

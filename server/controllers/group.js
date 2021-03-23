@@ -17,7 +17,7 @@ exports.create = (req, res) => {
   // save to db
   group.save((err, success) => {
     if (err) res.status(400).json({ error: 'Duplicate post' });
-    // console.log(err)
+    console.log('create group and save to db error',err)
     return res.json(success);
   });
 };
@@ -36,7 +36,7 @@ exports.read = (req, res) => {
           error: 'Could not load category',
         });
       }
-      // res.json(category)
+
       Link.find({ categories: category })
         .populate('postedBy', '_id name username')
         .populate('categories', 'name')
@@ -82,10 +82,9 @@ exports.update = (req, res) => {
       
       updated.save((err, success) => {
         if (err) res.status(400).json({ error: 'Duplicate post' });
-        // console.log(err)
+        console.log('update and save error',err)
         res.json(success);
       });
-      // res.json(updated);
     }
   );
 };
@@ -104,4 +103,3 @@ exports.remove = (req, res) => {
     });
   });
 };
-// delete

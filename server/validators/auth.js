@@ -11,11 +11,6 @@ exports.userRegisterValidator = [
     .isLength({ min: 8 })
     .isLength({ max: 30 })
     .withMessage('Password must be at least 8 characters'),
-  // check('categories')
-  //   .not()
-  //   .isEmpty()
-  //   // .isLength({ min: 8 })
-  //   .withMessage('Choose at least one school'),
 ];
 
 exports.userLoginValidator = [
@@ -40,5 +35,4 @@ exports.resetPasswordValidator = [
 
 exports.userUpdateValidator = [
   check('name').not().isEmpty().withMessage('Name is required'),
-  // check('email').isEmail().withMessage('Must be valid email'),
 ];

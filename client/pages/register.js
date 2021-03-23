@@ -54,11 +54,6 @@ const Register = () => {
     loadedGroups,
   } = state;
 
-  // load categories when component mounts useing useEffect
-  // useEffect(() => {
-  //   loadGroups();
-  // }, []);
-
   useEffect(() => {
     isAuth() && isAuth().role === 'admin'
       ? Router.push('admin')
@@ -69,19 +64,14 @@ const Register = () => {
       : Router.push('/');
   }, [success]);
 
-  const makeUserCode = (length) => {
-    let result = '';
-    const chars = 'abcdefghijklmnopqrstuvwxyz';
-    const charsLength = chars.length;
-    for (var i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * charsLength));
-    }
-    return result;
-  };
-
-  // const loadGroups = async () => {
-  //   const response = await axios.get(`${API}/groups`);
-  //   setState({ ...state, loadedGroups: response.data });
+  // const makeUserCode = (length) => {
+  //   let result = '';
+  //   const chars = 'abcdefghijklmnopqrstuvwxyz';
+  //   const charsLength = chars.length;
+  //   for (var i = 0; i < length; i++) {
+  //     result += chars.charAt(Math.floor(Math.random() * charsLength));
+  //   }
+  //   return result;
   // };
 
   const handleChange = (name) => (e) => {
@@ -265,6 +255,8 @@ const Register = () => {
           </div>
         </div>
       </Layout>
+      <div className="p-5"></div>
+
     </div>
   );
 };

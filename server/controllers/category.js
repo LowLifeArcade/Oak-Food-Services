@@ -58,6 +58,7 @@ const s3 = new AWS.S3({
 //     });
 //   });
 // };
+
 exports.create = (req, res) => {
   // base64 taking off beginning of data
   const { name, content, image, group, postedBy } = req.body;
@@ -90,29 +91,24 @@ exports.create = (req, res) => {
       console.log('AWS UPLOAD RES DATA', data);
       category.image.url = data.Location;
       category.image.key = data.Key;
-      // posted by
-      // category.postedBy = data.user._id;
 
-      console.log(category);
       // save to db
-  category.save((err, success) => {
-    console.log('error information', err)
-    if (err) res.status(400).json({ error: 'Duplicate post' });
-    return res.json(success);
-  });
+      category.save((err, success) => {
+        console.log('error information', err);
+        if (err) res.status(400).json({ error: 'Duplicate post' });
+        return res.json(success);
+      });
     });
   } else {
-
-    
     // save to db
     category.save((err, success) => {
       if (err) res.status(400).json({ error: 'Duplicate post' });
-      console.log(err)
+      console.log(err);
       return res.json(success);
     });
   }
 
-   // if new blog post with a-group is posted this will email users in a group (i think)
+  // if new blog post with a-group is posted this will email users in a group (i think)
   //  User.find({ categories: { $in: group } }).exec((err, users) => {
   //   if (err) {
   //     throw new Error(err);
@@ -212,60 +208,62 @@ exports.update = (req, res) => {
     'base64'
   );
 
-  Category.findOneAndUpdate({ slug }, { name, content, group }, { new: true }).exec(
-    (err, updated) => {
-      if (err) {
-        return res.status(400).json({
-          error: 'Could find not category to update',
-        });
-      }
-      console.log('UPDATED', updated);
-
-      // incase of image
-      if (image) {
-        // find image in aws and remove from s3 before updating
-        const deleteParams = {
-          Bucket: 'oakfoods',
-          Key: `${updated.image.key}`,
-        };
-
-        s3.deleteObject(deleteParams, function (err, data) {
-          if (err) console.log('S3 DELETE ERROR DURING UPDATE', err);
-          else console.log('S3 DELETED DURING UPDATE', data); //deleted
-        });
-
-        const type = image.split(';')[0].split('/')[1];
-
-        // params for image data
-        const params = {
-          Bucket: 'oakfoods',
-          Key: `category/${uuidv4()}.${type}`,
-          Body: base64Data, // reads whole image before uploading !important
-          ACL: 'public-read',
-          ContentEncoding: 'base64',
-          ContentType: `image/${type}`,
-        };
-
-        // upload to s3
-        s3.upload(params, (err, data) => {
-          if (err) res.status(400).json({ error: 'Upload to s3 failed' });
-          console.log('AWS UPLOAD RES DATA', data);
-          updated.image.url = data.Location;
-          updated.image.key = data.Key;
-
-          // save to db
-          updated.save((err, success) => {
-            if (err) res.status(400).json({ error: 'Duplicate post' });
-            // console.log(err)
-            res.json(success);
-          });
-        });
-      } else {
-        // if no image it just does this anyway
-        res.json(updated);
-      }
+  Category.findOneAndUpdate(
+    { slug },
+    { name, content, group },
+    { new: true }
+  ).exec((err, updated) => {
+    if (err) {
+      return res.status(400).json({
+        error: 'Could find not category to update',
+      });
     }
-  );
+    console.log('UPDATED', updated);
+
+    // incase of image
+    if (image) {
+      // find image in aws and remove from s3 before updating
+      const deleteParams = {
+        Bucket: 'oakfoods',
+        Key: `${updated.image.key}`,
+      };
+
+      s3.deleteObject(deleteParams, function (err, data) {
+        if (err) console.log('S3 DELETE ERROR DURING UPDATE', err);
+        else console.log('S3 DELETED DURING UPDATE', data); //deleted
+      });
+
+      const type = image.split(';')[0].split('/')[1];
+
+      // params for image data
+      const params = {
+        Bucket: 'oakfoods',
+        Key: `category/${uuidv4()}.${type}`,
+        Body: base64Data, // reads whole image before uploading !important
+        ACL: 'public-read',
+        ContentEncoding: 'base64',
+        ContentType: `image/${type}`,
+      };
+
+      // upload to s3
+      s3.upload(params, (err, data) => {
+        if (err) res.status(400).json({ error: 'Upload to s3 failed' });
+        console.log('AWS UPLOAD RES DATA', data);
+        updated.image.url = data.Location;
+        updated.image.key = data.Key;
+
+        // save to db
+        updated.save((err, success) => {
+          if (err) res.status(400).json({ error: 'Duplicate post' });
+          // console.log(err)
+          res.json(success);
+        });
+      });
+    } else {
+      // if no image it just does this anyway
+      res.json(updated);
+    }
+  });
 };
 
 exports.remove = (req, res) => {

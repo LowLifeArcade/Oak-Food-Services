@@ -14,13 +14,12 @@ const ForgotPassword = () => {
   });
   const { email, buttonText, success, error } = state;
 
-useEffect(() => {
-  buttonText === 'Done' &&
-  setTimeout(() => {
-      
-    Router.push('/login')
-  }, 2000)
-}, [success])
+  useEffect(() => {
+    buttonText === 'Done' &&
+      setTimeout(() => {
+        Router.push('/login');
+      }, 2000);
+  }, [success]);
 
   const handleChange = (e) => {
     setState({ ...state, email: e.target.value, success: '', error: '' });
@@ -28,10 +27,8 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log('post email to ', email);
     try {
       const response = await axios.put(`${API}/forgot-password`, { email });
-      // console.log('FORGOT PW', response)
       setState({
         ...state,
         email: '',
@@ -61,17 +58,6 @@ useEffect(() => {
           required
         />
       </div>
-      {/* <div 
-      className="d-none form-group">
-        <input
-          type="password"
-          className="form-control"
-          onChange={''}
-          value={email}
-          placeholder="Enter email"
-          required
-        />
-      </div> */}
       <div>
         <button className="btn btn-outline-warning">{buttonText}</button>
       </div>
@@ -85,10 +71,11 @@ useEffect(() => {
           <h2>Forgot Password</h2>
           <div className="col-md">
             <br />
-            <h5 className="text-muted" >
-              After clicking submit go to your email and follow the provided link to reset your password.
+            <h5 className="text-muted">
+              After clicking submit go to your email and follow the provided
+              link to reset your password.
             </h5>
-            <br/>
+            <br />
           </div>
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}

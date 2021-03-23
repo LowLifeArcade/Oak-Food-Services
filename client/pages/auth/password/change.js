@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
-import Router from 'next/router';
 import Layout from '../../../components/Layout';
-import { isAuth, autoLogout } from '../../../helpers/auth';
+import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
+import { autoLogout } from '../../../helpers/auth';
+import axios from 'axios';
 
 const ForgotPassword = () => {
   const [state, setState] = useState({
@@ -17,13 +16,13 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     buttonText === 'Done'
-    ? setTimeout(() => {
-      autoLogout();
-      console.log('log out')
-      }, 5000)
-    : console.log("it's fine");
-  return () => clearTimeout();
-  }, [success])
+      ? setTimeout(() => {
+          autoLogout();
+          console.log('log out');
+        }, 5000)
+      : console.log("it's fine");
+    return () => clearTimeout();
+  }, [success]);
 
   const handleChange = (e) => {
     setState({ ...state, email: e.target.value, success: '', error: '' });
@@ -31,10 +30,8 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log('post email to ', email);
     try {
       const response = await axios.put(`${API}/forgot-password`, { email });
-      // console.log('FORGOT PW', response)
       setState({
         ...state,
         email: '',
@@ -77,10 +74,11 @@ const ForgotPassword = () => {
           <h2>Change Password</h2>
           <div className="col-md">
             <br />
-            <h5 className="text-muted" >
-              After clicking submit go to your email and follow the provided link to reset your password.
+            <h5 className="text-muted">
+              After clicking submit go to your email and follow the provided
+              link to reset your password.
             </h5>
-            <br/>
+            <br />
           </div>
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}

@@ -1,21 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import styles from '../../styles/Home.module.css';
+import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
-import Router from 'next/router';
 import withAdmin from '../withAdmin';
 import Link from 'next/link';
 import axios from 'axios';
 import { API } from '../../config';
-import ChartsEmbedSDK from '@mongodb-js/charts-embed-dom';
-
-// const sdk = new ChartsEmbedSDK({
-//   baseUrl: 'https://charts.mongodb.com/charts-charts-fixture-tenant-zdvkh',
-// });
-// const chart = sdk.createChart({
-//   chartId: '48043c78-f1d9-42ab-a2e1-f2d3c088f864',
-// });
 
 import Layout from '../../components/Layout';
 
@@ -27,10 +17,9 @@ const Admin = ({ token, user }) => {
   });
 
   const { requests, pickupDate, meals } = state;
-  let myDate = ''
+  let myDate = '';
 
   useEffect(() => {
-    // loadRequests();
     let allMealsArray = [];
     const pushAllMeals = (meal) => {
       requests.map((r, i) =>
@@ -46,44 +35,18 @@ const Admin = ({ token, user }) => {
     });
   }, [requests]);
 
-  // useEffect(() => {
-  //   // loadRequests();
-  //   let allMealsArray = [];
-  // const pushAllMeals = (meal) => {
-  //   requests.map((r, i) =>
-  //     r.mealRequest.map((meal) => allMealsArray.push(meal))
-  //   );
-  //   console.log('meal array', allMealsArray);
-  // };
-  //   console.log('none array', meals)
-  //   pushAllMeals();
-  //   setState({
-  //     ...state,
-  //     meals: allMealsArray.filter(meal => meal.meal !== 'None'),
-  //   });
-  // }, [requests]);
-
-  // setState({...state, meals: [...allMealsArray]})
-
-  // console.log(allMealsArray);
-  // console.log(state.meals);
-
   const handleTimeSelect = (e, pickupTimeSelected) => {
     e.preventDefault();
 
     let allMealsArray2 = [];
 
     requests
-    .filter((mealRequest) => mealRequest.pickupTime === pickupTimeSelected)
-    .map((r, i) =>
-      r.mealRequest
-        
-        .map((meal) => allMealsArray2.push(meal))
-        );
-        
-        setState({ ...state, meals: allMealsArray2 });
-        console.log('req time', meals);
-      };
+      .filter((mealRequest) => mealRequest.pickupTime === pickupTimeSelected)
+      .map((r, i) => r.mealRequest.map((meal) => allMealsArray2.push(meal)));
+
+    setState({ ...state, meals: allMealsArray2 });
+    console.log('req time', meals);
+  };
 
   const mealCounter = (meal) =>
     state.meals.filter(
@@ -101,7 +64,6 @@ const Admin = ({ token, user }) => {
         m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
         m.pickupOption === 'Breakfast Only'
     ).length;
-  // console.log('a group open meals', meals.filter((m) => m.group == 'a-group').filter((x) => x.complete === false))
 
   const allOnsiteMeals = () =>
     meals.filter((m) => m.group == 'a-group').length +
@@ -164,46 +126,9 @@ const Admin = ({ token, user }) => {
       )
       .filter((x) => x.complete === true).length;
 
-  // state.meals.filter((m) =>
-  //   m == meal).length
-
-  // const allStandardMeals = (meal) =>
-  //   requests.map((r, i) =>
-  //     r.mealRequest.filter((meal) => {
-  //     meal.standard === 'Standard'
-  //     })
-  //   );
-  // const ref = useRef('chart');
-  // const renderChart = () => {
-  //   // render the chart into a container
-  //   chart.render(ref).catch(() => window.alert('Chart failed to initialise'));
-  // };
-
-  // const allMealsArray = (mr, i) =>
-  //   requests.map((r, i) =>
-  //     r.mealRequest.forEach((mr, i) => {
-  //       let veg = 0
-  //       let stn = 0
-  //       if (mr.meal === 'Vegetarian') {
-  //         veg ++;
-  //         console.log(veg)
-  //       }
-  //       if (mr.meal === 'Standard') {
-  //         stn ++
-  //         console.log(stn)
-  //       }
-  //       if (mr.meal === 'Vegan') {
-  //         return <h1>vegan</h1>;
-  //       }
-  //     })
-  //   );
-
   // change date
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDate: moment(pickupDate).format('l') });
-    // setShowSearch(!showSearch);
-    
-    // myDate = pickupDate
     handleDateChange(pickupDate);
   };
 
@@ -230,76 +155,36 @@ const Admin = ({ token, user }) => {
           <hr />
           <div className="">
             <ul className="nav flex-column pt-1 ">
+              {/* <li className="nav-item"> */}
               <li className="nav-item">
-                <li className="nav-item">
-                  <Link href="/admin/link/list">
-                    <a className="nav-link" href="">
-                      Lists and CSV Page
-                    </a>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/admin/link/read">
-                    <a className="nav-link" href="">
-                      Order Details Page
-                    </a>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/admin/category/create">
-                    <a className="nav-link" href="">
-                      Create Blog Post
-                    </a>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link href="/admin/category/read">
-                    <a className="nav-link" href="">
-                      Edit Blog Posts
-                    </a>
-                  </Link>
-                </li>
-                {/* <li className="nav-item">
-
-                <Link href="/admin/group/create">
+                <Link href="/admin/link/list">
                   <a className="nav-link" href="">
-                    Create Student Group
-                  </a>
-                </Link>
-              </li> */}
-              </li>
-
-              {/* <li className="nav-item">
-                <Link href="/admin/group/read">
-                  <a className="nav-link" href="">
-                    Edit Student Groups
-                  </a>
-                </Link>
-              </li> */}
-              {/* 
-              <li className="nav-item">
-                <Link href="/admin/teacher/create">
-                  <a className="nav-link" href="">
-                    Create Teacher
+                    Lists and CSV Page
                   </a>
                 </Link>
               </li>
-
               <li className="nav-item">
-                <Link href="/admin/teacher/read">
+                <Link href="/admin/link/read">
                   <a className="nav-link" href="">
-                    Edit Teacher
+                    Order Details Page
                   </a>
                 </Link>
-              </li> 
-              */}
-              {/* <li className="nav-item">
-                <Link href="/user/link/mockCreate">
+              </li>
+              <li className="nav-item">
+                <Link href="/admin/category/create">
                   <a className="nav-link" href="">
-                    Create Mock Order
+                    Create Blog Post
                   </a>
                 </Link>
-              </li> */}
+              </li>
+              <li className="nav-item">
+                <Link href="/admin/category/read">
+                  <a className="nav-link" href="">
+                    Edit Blog Posts
+                  </a>
+                </Link>
+              </li>
+              {/* </li> */}
               <li className="nav-item">
                 <Link href="/user/link/create">
                   <a className="nav-link" href="">
@@ -334,15 +219,6 @@ const Admin = ({ token, user }) => {
                 onChange={(e) => onDateChange(e)}
                 tileDisabled={handleDisabledDates}
                 value={pickupDate}
-                // defaultValue={twoWeeksFromNow}
-                // tileDisabled={(date, view) =>
-                //   yesterday.some(date =>
-                //      moment().isAfter(yesterday)
-                //   )}
-                // minDate={handlePastDate}
-                // minDate={twoWeeksFromNow}
-                // minDate={new Date().getDate() + 14}
-
                 value={''}
               />
             </div>
@@ -363,12 +239,9 @@ const Admin = ({ token, user }) => {
       <h3>
         <b className="text-danger">{requests.length}</b> - All Meal Requests{' '}
         <p />
-        {/* <b>{allPickupMeals() * 5}</b> - All Individual Meals <p /> */}
       </h3>
       <hr />
       <h4>
-        {/* <b className="text-danger">{allPickupMeals() * 5}</b> - Total Pickup
-        Meals <p /> */}
         <b className="text-danger">{pickupMealsForLunch('Lunch Only') * 5}</b> -
         Curbside Lunch Meals <p />
         <b className="text-danger">{pickupMealsForBreakfast() * 5}</b> -
@@ -405,8 +278,6 @@ const Admin = ({ token, user }) => {
       <h4>
         <b className="text-danger">{allOnsiteMeals() * 2}</b> - All Onsite Meals{' '}
         <p />
-        {/* <b>{allOpenOnsiteMeals() * 2}</b> - Unfulfilled onsite Meals <p />
-        <b>{allCompletedOnsiteMeals() * 2}</b> - Fulfilled onsite Meals <p /> */}
         <hr />
       </h4>
 
@@ -436,11 +307,6 @@ const Admin = ({ token, user }) => {
           <hr />
         </h6>
       </div>
-      {/* {chart.render(ref)} */}
-      {/* {renderChart()} */}
-      {/* <div className="p-2 chart" ref={ref} id="chart"> */}
-      {/* {chart.render().catch(() => window.alert('Chart failed to initialise'))} */}
-      {/* </div> */}
     </Layout>
   );
 };

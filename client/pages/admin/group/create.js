@@ -12,7 +12,7 @@ import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
 import 'react-quill/dist/quill.snow.css';
-import Router from 'next/router'
+import Router from 'next/router';
 // import { set } from 'js-cookie';
 
 const Create = ({ user, username, token }) => {
@@ -28,25 +28,16 @@ const Create = ({ user, username, token }) => {
 
   const [content, setContent] = useState('');
 
-  const {
-    postedBy,
-    name,
-    success,
-    error,
-    image,
-    buttonText,
-  } = state;
+  const { postedBy, name, success, error, image, buttonText } = state;
 
   useEffect(() => {
     buttonText === 'Created'
-    ? setTimeout(() => {
-        Router.push('/admin');
-      }, 2000)
-      : console.log('none')
-    // : Router.push('');
-  }, [buttonText])
+      ? setTimeout(() => {
+          Router.push('/admin');
+        }, 2000)
+      : console.log('none');
+  }, [buttonText]);
 
-  // maybe add a className that makes the div go away with transform translateY
   const handleChange = (name) => (e) => {
     setState({
       ...state,
@@ -64,7 +55,7 @@ const Create = ({ user, username, token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setState({ ...state, buttonText: 'Creating...' });   
+    setState({ ...state, buttonText: 'Creating...' });
 
     try {
       const response = await axios.post(
@@ -81,7 +72,6 @@ const Create = ({ user, username, token }) => {
       setState({
         ...state,
         name: '',
-        // content: '',
         formData: '',
         buttonText: 'Group set',
         success: `${response.data.name} is created`,
@@ -93,14 +83,12 @@ const Create = ({ user, username, token }) => {
         ...state,
         buttonText: 'Set Group',
         error: error.response.data.error,
-        // error: 'something went wrong here',
       });
     }
   };
 
   const createGroupForm = () => (
     <form action="" onSubmit={handleSubmit}>
-
       <div className="form-group">
         <label className="text-muted">Group Title</label>
         <input
@@ -111,7 +99,7 @@ const Create = ({ user, username, token }) => {
           required
         />
       </div>
- 
+
       <div className="form-group">
         <label className="text-muted">Group Description</label>
         <ReactQuill

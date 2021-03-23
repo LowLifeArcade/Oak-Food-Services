@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap'); 
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@1,300&family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@500&display=swap');
 
@@ -11,13 +11,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   justify-content: center;
-  /* height: 80vh; */
-  /* overflow: scroll; */
   margin: 0;
-
-  /* background-color: #4d6e74 !important; */
 }
 
 .buttonshadow {
@@ -26,17 +21,10 @@
 }
 
 .button {
-  /* background-color: #eeeb47 !important; */
   background-color: #fddf65 !important;
-  /* background-color: #fad74a !important; */
-  /* background-color: #f8ea6d !important; */
-  /* background-color: #fdfa46 !important; */
   outline-color: #4d6e74;
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3);
   color: rgb(73, 73, 73);
-  /* outline-style: solid; */
-  /* padding: 2px 2px 3px 5px; */
-  /* border-radius: 10px; */
 }
 .deletebutton {
   background-color: #b91515 !important;
@@ -49,7 +37,7 @@
   /* background-color: #2f3c51 !important; */
   /* background-color: #4d6e74 !important; */
   background-color: #215963 !important;
-font-family: 'Arimo';
+  font-family: 'Arimo';
   /* background-color: #4d6e74 !important; */
   z-index: 1;
   position: fixed;
@@ -98,11 +86,43 @@ font-family: 'Arimo';
   transition: transform 0.3s ease-in-out;
 }
 
+.sideMenu {
+  position: fixed;
+  background-color: #034a57;
+  /* box-shadow: 0px 0px 18px 20px rgba(0, 0, 0, 0.3); */
+
+  top: 0;
+  right: 0;
+  /* height: 70vh; */
+  width: 250px;
+  z-index: 1;
+  opacity: 0.98; /* 1 means fully visible, 0 means invisible */
+
+  transform: translateX(120%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sideMenuVisible {
+  position: fixed;
+  background-color: #034a57;
+  box-shadow: 0px 0px 1px 2px rgb(1, 37, 46);
+
+  /* background-color: #4d6e74; */
+  top: 0;
+  right: 0;
+  /* position: absolute; */
+  /* height: 70vh; */
+  width: 250px;
+  z-index: 1;
+  opacity: 0.98; /* 1 means fully visible, 0 means invisible */
+
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
 .subcard {
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
   background-color: rgb(250, 252, 253);
-  /* background-color: #fff; */
-  /* background-color: #eeeff0; */
   padding: 30px;
   border-radius: 5px;
   /* transform: translateY(-800px); */
@@ -110,11 +130,8 @@ font-family: 'Arimo';
 
 .receipt {
   font-family: 'Roboto Mono', sans-serif;
-
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
   background-color: rgb(250, 252, 253);
-  /* background-color: #fff; */
-  /* background-color: #eeeff0; */
   padding: 30px;
   border-radius: 10px;
   /* transform: translateY(-800px); */
@@ -123,14 +140,11 @@ font-family: 'Arimo';
 .hr {
   border: 3px dotted #b91f1f;
   border-style: none none dotted;
-  /* color: #fff; 
-    background-color: #fff; */
 }
 
 .title {
   box-shadow: 0px 1.2px 3px 0px rgba(0, 0, 0, 0.2);
   background-color: rgb(247, 249, 252);
-  /* background-color: #eeeff0; */
   padding: 20px;
   border-radius: 4px;
   /* transform: translateY(-800px); */
@@ -144,7 +158,6 @@ font-family: 'Arimo';
 
 .accordion {
   font-family: 'Arimo';
-
   background-color: #215963 !important;
   z-index: 1;
   position: fixed;
@@ -152,9 +165,6 @@ font-family: 'Arimo';
   top: 0;
   left: 0;
   right: 0;
-  /* bottom: 0;
-  width: 100%; */
-  /* overflow: hidden; */
 }
 
 .tabbar {
@@ -162,12 +172,8 @@ font-family: 'Arimo';
   z-index: 1;
   position: fixed;
   display: flex;
-  /* top: 0;
-  left: 0;
-  right: 0; */
   bottom: 0;
   width: 100%;
-  /* overflow: hidden; */
 }
 
 .mobilehome {
@@ -179,18 +185,14 @@ font-family: 'Arimo';
 }
 
 .toggleContainer {
-  /* padding: 2px; */
   display: flex;
   flex-direction: column;
-  /* justify-content: flex-start; */
   align-items: center;
-  /* margin: 1px 1px 1px 12px ; */
   width: 60px;
 }
 
 .toggle {
   visibility: hidden;
-  /* opacity: 0%; */
 }
 
 .label {
@@ -199,14 +201,12 @@ font-family: 'Arimo';
   border-radius: 20px;
   cursor: pointer;
   display: inline-block;
-  /* margin: 0 0 0; */
   width: 25px;
   height: 12px;
 }
 
 .toggleName {
   font-size: 10px;
-
 }
 
 .toggle:checked + .label {

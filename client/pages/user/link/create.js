@@ -30,6 +30,10 @@ const Create = ({ token, user }) => {
             ? 'Standard DF'
             : user.students[0].foodAllergy.gluten === true
             ? 'GlutenFree'
+            : user.students[0].foodAllergy.soy === true
+            ? 'Standard Syf'
+            : user.students[0].foodAllergy.sesame === true
+            ? 'Standard Smf'
             : 'Standard',
         student: user.students[0]._id,
         studentName: user.students[0].name,
@@ -112,7 +116,7 @@ const Create = ({ token, user }) => {
     let frontCode = [];
     mealRequest.forEach((item) => {
       if (
-        item.pickupOption != 'Lunch Only' &&
+        item.pickupOption != 'Lunch Onsite' &&
         item.pickupOption != 'Breakfast Only'
       ) {
         switch (item.meal) {
@@ -165,16 +169,16 @@ const Create = ({ token, user }) => {
             break;
         }
       }
-      switch (item.meal) {
-        case 'Vegan':
-          frontCode.push('Vg');
-          break;
-        case 'GlutenFree':
-          frontCode.push('Gf');
-          break;
-        default:
-          break;
-      }
+      // switch (item.meal) {
+      //   case 'Vegan':
+      //     frontCode.push('Vg');
+      //     break;
+      //   case 'GlutenFree':
+      //     frontCode.push('Gf');
+      //     break;
+      //   default:
+      //     break;
+      // }
     });
     mealRequest.forEach((item) => {
       switch (item.pickupOption) {
@@ -193,8 +197,6 @@ const Create = ({ token, user }) => {
       item.pickupOption === 'Lunch Only' && item.meal === 'Vegetarian'
         ? frontCode.push('Lv')
         : null;
-      console.log('item meal', item.meal);
-      console.log('item pickup option', item.pickupOption);
     });
     console.log('use effect front code', frontCode);
     let newPickupCode =
@@ -508,11 +510,9 @@ const Create = ({ token, user }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
             data-index={i}
             defaultValue={'Standard Onsite'}
             value={mealRequest[i].meal}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) =>
               handleSelectChange(
                 e,
@@ -581,8 +581,6 @@ const Create = ({ token, user }) => {
       <div key={i} className="form-group">
         <select
           type="select"
-          // defaultValue={state.mealRequest[i].pickupOption}
-          // value={state.mealRequest[i].pickupOption}
           data-index={i}
           onChange={(e) => handlePickupOption(i, e)}
           className="form-control"
@@ -766,6 +764,7 @@ const Create = ({ token, user }) => {
 
   // add meal button
   const addMeal = (
+    i,
     student,
     studentName,
     schoolName,
@@ -782,13 +781,17 @@ const Create = ({ token, user }) => {
           meal:
             group === 'a-group' || group === 'b-group'
               ? 'Standard Onsite'
-              : user.students[0].foodAllergy.dairy === true &&
-                user.students[0].foodAllergy.gluten === true
+              : foodAllergy.dairy === true &&
+                foodAllergy.gluten === true
               ? 'GlutenFree DF'
-              : user.students[0].foodAllergy.dairy === true
+              : foodAllergy.dairy === true
               ? 'Standard DF'
-              : user.students[0].foodAllergy.gluten === true
+              : foodAllergy.gluten === true
               ? 'GlutenFree'
+              : foodAllergy.soy === true
+              ? 'Standard Syf'
+              : foodAllergy.sesame === true
+              ? 'Standard Smf'
               : 'Standard',
           student: student,
           studentName: studentName,
@@ -1160,6 +1163,7 @@ const Create = ({ token, user }) => {
                       onClick={() =>
                         state.mealRequest.map((x, i) =>
                           addMeal(
+                            i,
                             state.students[`${i + 1}`]._id,
                             state.students[`${i + 1}`].name,
                             state.students[`${i + 1}`].schoolName,
@@ -1191,6 +1195,8 @@ const Create = ({ token, user }) => {
           </div>
         </div>
       </Layout>
+      <div className="p-5"></div>
+      {/* <div className="p-5"></div> */}
     </div>
   );
 };

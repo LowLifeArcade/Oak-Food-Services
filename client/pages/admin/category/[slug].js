@@ -8,9 +8,7 @@ import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
 import 'react-quill/dist/quill.snow.css';
-import Router from 'next/router'
- 
-// import { set } from 'js-cookie';
+import Router from 'next/router';
 
 const Update = ({ oldCategory, token }) => {
   const [state, setState] = useState({
@@ -18,21 +16,21 @@ const Update = ({ oldCategory, token }) => {
     emailGroup: oldCategory.group,
     error: '',
     success: '',
-    // content: {content},
     buttonText: 'Update',
     imagePreview: categoryImage,
     image: '',
   });
-console.log('old category',oldCategory)
+  console.log('old category', oldCategory);
 
-  const categoryImage = oldCategory.image && oldCategory.image.url 
+  const categoryImage = oldCategory.image && oldCategory.image.url;
   const [content, setContent] = useState(oldCategory.content);
   const [group, setGroup] = useState(oldCategory.group);
 
-
-  const [imageUploadButtonName, setImageUploadButtonName, emailGroup] = useState(
-    'Update image'
-  );
+  const [
+    imageUploadButtonName,
+    setImageUploadButtonName,
+    emailGroup,
+  ] = useState('Update image');
 
   const {
     name,
@@ -47,12 +45,11 @@ console.log('old category',oldCategory)
 
   useEffect(() => {
     buttonText === 'Updated'
-    ? setTimeout(() => {
-        Router.push('/');
-      }, 2000)
-      : console.log('none')
-    // : Router.push('');
-  }, [buttonText])
+      ? setTimeout(() => {
+          Router.push('/');
+        }, 2000)
+      : console.log('none');
+  }, [buttonText]);
 
   // maybe add a className that makes the div go away with transform translateY
   const handleChange = (name) => (e) => {
@@ -61,21 +58,21 @@ console.log('old category',oldCategory)
       [name]: e.target.value,
       error: '',
       success: '',
-      buttonText: 'Update', 
+      buttonText: 'Update',
     });
   };
 
   const handleContent = (e) => {
     console.log(3);
     setContent(e);
-    setState({ ...state, content: { content },       buttonText: 'Update', 
-    success: '', error: '' });
+    setState({
+      ...state,
+      content: { content },
+      buttonText: 'Update',
+      success: '',
+      error: '',
+    });
   };
-
-  // const handleImage = (e) => {
-  //     const image = e.target.files[0]
-  //     console.log(image)
-  // }
 
   const handleImage = (event) => {
     let fileInput = false;
@@ -94,8 +91,13 @@ console.log('old category',oldCategory)
           0,
           (uri) => {
             console.log(uri);
-            setState({ ...state, image: uri,      buttonText: 'Update', 
-            success: '', error: '' });
+            setState({
+              ...state,
+              image: uri,
+              buttonText: 'Update',
+              success: '',
+              error: '',
+            });
           },
           'base64',
           200,
@@ -110,8 +112,6 @@ console.log('old category',oldCategory)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ ...state, buttonText: 'Updating...' });
-    // console.table({name, content, image});
-    // console.log(...formData);
     try {
       const response = await axios.put(
         `${API}/category/${oldCategory.slug}`,
@@ -123,25 +123,20 @@ console.log('old category',oldCategory)
         }
       );
       console.log('CATEGORY UPDATE RESPONSE', response);
-      // setImageUploadButtonName('Update image');
-      // setContent('');
       setState({
         ...state,
-        // name: '',
         buttonText: 'Updated',
-        // imageUploadText: 'Update image',
         imagePreview: categoryImage,
         success: `${response.data.name} is updated`,
         error: '',
       });
-      setContent(response.data.content)
+      setContent(response.data.content);
     } catch (error) {
       console.log('CATEGORY CREATE ERROR', error);
       setState({
         ...state,
         buttonText: 'Awe',
         error: error.response.data.error,
-        //
       });
     }
   };
@@ -152,10 +147,7 @@ console.log('old category',oldCategory)
         <div className="">
           <select
             type="select"
-            // value={emailGroup}
-            // data-index={i}
             defaultValue={group}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => setGroup(e.target.value)}
             className="form-control"
             required
@@ -168,10 +160,6 @@ console.log('old category',oldCategory)
             <option value="distance-learning">Distance Learning</option>
             <option value="a-group">A - Group</option>
             <option value="b-group">B - Group</option>
-            {/* {state.loadedGroups.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
           </select>
           <div className=""></div>
         </div>
@@ -191,21 +179,6 @@ console.log('old category',oldCategory)
           required
         />
       </div>
-      {/* <div className="form-group">
-        <label className="text-muted">Meal</label>
-        <select
-          type="select"
-          onChange={handleChange('meal')}
-          value={meal}
-          className="form-control"
-          required
-        >
-        <option value='' selected></option>
-        <option value='ST'>Standard</option>
-        <option value='Vt'>Vegetarian</option>
-        <option value='Vg'>Vegan</option>
-        </select>
-      </div> */}
       <div className="form-group">
         <label className="text-muted">Content</label>
         <ReactQuill
@@ -217,19 +190,12 @@ console.log('old category',oldCategory)
           style={{ border: '1px solid #333' }}
         />
         {chooseEmailGroup()}
-        {/* <textarea
-          type="content"
-          onChange={handleChange('content')}
-          value={content}
-          className="form-control"
-          required
-        /> */}
       </div>
       <div className="form-group">
         <label className="btn btn-outline-secondary">
           {imageUploadButtonName}
           <span>
-            <img src={imagePreview} alt="image" height='150' />
+            <img src={imagePreview} alt="image" height="150" />
           </span>
           <input
             onChange={handleImage}

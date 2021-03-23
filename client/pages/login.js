@@ -28,7 +28,6 @@ const Login = () => {
 
   const { email, password, error, success, buttonText } = state;
 
-  // maybe add a className that makes the div go away with transform translateY
   const handleChange = (name) => (e) => {
     setState({
       ...state,
@@ -47,10 +46,7 @@ const Login = () => {
         email,
         password,
       });
-      // console.log(response); // user token
       authenticate(response, () =>
-        // isAuth() && isAuth().role === 'user' && user.students === []
-        // ? Router.push('user/profile/add')
         isAuth() && isAuth().role === 'admin'
           ? Router.push('admin')
           : Router.push('user')
@@ -109,7 +105,6 @@ const Login = () => {
     <div
       className={styles.background}
       style={{
-        // background: '#eeeff0',
         height: '100vh',
       }}
     >
@@ -118,10 +113,8 @@ const Login = () => {
           <div className="pt-5 pb-5"></div>
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
-              {/* + "subcard col-md4 offset-md-3" */}
 
               <h2 className={'text-muted ' + styles.title}>Login</h2>
-              {/* {JSON.stringify(isAuth())} */}
               <br />
               {success && showSuccessMessage(success)}
               {error && showErrorMessage(error)}

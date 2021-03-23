@@ -55,11 +55,7 @@ const ResetPassword = ({ router }) => {
 
     if (newPassword.length < 7) {
       shallowMessage = 'Password must be at least 8 characters';
-    } else if (
-      // password.match(/[A-Z]/g) === 0 ||
-      !e.target.value.match(/[A-Z]/g)
-      // password.match(/[A-Z]/g) === null
-    ) {
+    } else if (!e.target.value.match(/[A-Z]/g)) {
       shallowMessage = 'Password must contain at least one capitol letter';
     } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
       shallowMessage = 'Password must contain at least one special character';
@@ -84,18 +80,21 @@ const ResetPassword = ({ router }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ ...state, buttonText: 'Sending...' });
-    // console.log('post email to ', email);
 
     if (newPassword !== confirmPassword) {
       setState({ ...state, error: "Passwords don't match" });
     } else if (newPassword.length < 7) {
-      setState({ ...state, error: "Password MUST be at least 8 characters" });
-
-    }else if (newPassword.match(/[A-Z]/g) === null) {
-      setState({ ...state, error: "Password MUST contain at least one capitol letter" });
+      setState({ ...state, error: 'Password MUST be at least 8 characters' });
+    } else if (newPassword.match(/[A-Z]/g) === null) {
+      setState({
+        ...state,
+        error: 'Password MUST contain at least one capitol letter',
+      });
     } else if (!newPassword.match(/[^A-Za-z0-9]/g)) {
-      setState({ ...state, error: "Password MUST contain at least one special character" });
-
+      setState({
+        ...state,
+        error: 'Password MUST contain at least one special character',
+      });
     } else if (newPassword.match(/[0-9]/g) === null) {
       setState({
         ...state,
@@ -107,7 +106,6 @@ const ResetPassword = ({ router }) => {
           resetPasswordLink: token,
           newPassword,
         });
-        // console.log('FORGOT PW', response)
         setState({
           ...state,
           newPassword: '',

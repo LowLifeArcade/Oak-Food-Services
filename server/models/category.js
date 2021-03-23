@@ -25,7 +25,6 @@ const categorySchema = new mongoose.Schema({
   },
   group: {
     type: String,
-    // required: true
   },
   postedBy: {
     type: ObjectId,

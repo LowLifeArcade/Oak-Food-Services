@@ -70,7 +70,7 @@ const Update = ({ oldLink, token, user, _id }) => {
       let frontCode = [];
       mealRequest.forEach((item) => {
         if (
-          item.pickupOption != 'Lunch Only' &&
+          item.pickupOption != 'Lunch On' &&
           item.pickupOption != 'Breakfast Only'
         ) {
           switch (item.meal) {
@@ -654,12 +654,12 @@ const Update = ({ oldLink, token, user, _id }) => {
           meal:
             group === 'a-group' || group === 'b-group'
               ? 'Standard Onsite'
-              : user.students[0].foodAllergy.dairy === true &&
-                user.students[0].foodAllergy.gluten === true
+              : foodAllergy.dairy === true &&
+                foodAllergy.gluten === true
               ? 'GlutenFree DF'
-              : user.students[0].foodAllergy.dairy === true
+              : foodAllergy.dairy === true
               ? 'Standard DF'
-              : user.students[0].foodAllergy.gluten === true
+              : foodAllergy.gluten === true
               ? 'GlutenFree'
               : 'Standard',
           student: student,

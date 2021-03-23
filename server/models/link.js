@@ -3,11 +3,6 @@ const { ObjectId } = mongoose.Schema;
 
 const linkSchema = new mongoose.Schema(
   {
-    // OrderNumber: {
-    //   type: ObjectId, // auto generate in sequence in database somehow
-    // },
-    // members: [{ firstName: String, lastName: String }]
-    // ,
     mealRequest: [
       {
         meal: {
@@ -18,7 +13,7 @@ const linkSchema = new mongoose.Schema(
         },
         student: {
           type: ObjectId,
-          ref: 'User'
+          ref: 'User',
         },
         complete: {
           type: Boolean,
@@ -61,27 +56,27 @@ const linkSchema = new mongoose.Schema(
         },
         foodAllergy: {
           peanutes: {
-           type: Boolean
-         },
+            type: Boolean,
+          },
           treeNuts: {
-           type: Boolean
-         },
+            type: Boolean,
+          },
           dairy: {
-           type: Boolean
-         },
+            type: Boolean,
+          },
           gluten: {
-           type: Boolean
-         },
+            type: Boolean,
+          },
           egg: {
-           type: Boolean
-         },
+            type: Boolean,
+          },
           sesame: {
-           type: Boolean
-         },
+            type: Boolean,
+          },
           soy: {
-           type: Boolean
-         },
-       },
+            type: Boolean,
+          },
+        },
         parentEmail: {
           type: String,
           trim: true,
@@ -97,7 +92,6 @@ const linkSchema = new mongoose.Schema(
         individualPickupTime: {
           type: String,
           trim: true,
-          // required: true,
           max: 256,
         },
         postedBy: {
@@ -108,14 +102,8 @@ const linkSchema = new mongoose.Schema(
     ],
     orderStatus: {
       type: Boolean,
-      required: false
+      required: false,
     },
-    // pickupOption: {
-    //   type: String,
-    //   trim: true,
-    //   required: true,
-    //   max: 256,
-    // },
     pickupTime: {
       type: String,
       trim: true,
@@ -124,66 +112,26 @@ const linkSchema = new mongoose.Schema(
     },
     pickupDate: {
       type: String,
+      trim: true,
       required: true,
-      // unique: true
+      max: 256,
     },
     pickupCode: {
       type: String,
+      trim: true,
       required: true,
-      // unique: true
+      max: 256,
     },
     pickupCodeAdd: [
       {
         type: String,
-        // required: true,
-        // unique: true
+        max: 256,
       },
     ],
-    // title: {
-    //   type: String,
-    //   trim: true,
-    //   required: false,
-    //   max: 256,
-    // },
-    // url: {
-    //   type: String,
-    //   trim: true,
-    //   required: false,
-    //   max: 256,
-    // },
-    // slug: {
-    //   type: String,
-    //   lowercase: true,
-    //   required: true,
-    //   index: true,
-    // },
     postedBy: {
       type: ObjectId,
       ref: 'User',
     },
-    // userCode: {
-    //   type: ObjectId,
-    //   ref: 'User',
-    // },
-    // categories: [
-    //   {
-    //     type: ObjectId,
-    //     ref: 'Category',
-    //     required: false
-    //   }
-    // ],
-    // type: {
-    //   type: String,
-    //   default: 'Free',
-    // },
-    // medium: {
-    //   type: String,
-    //   default: 'Video',
-    // },
-    // clicks: {
-    //   type: Number,
-    //   default: 0,
-    // },
   },
   { timestamps: true }
 );

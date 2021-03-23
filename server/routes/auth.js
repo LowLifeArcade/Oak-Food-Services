@@ -37,10 +37,4 @@ router.put(
   resetPassword
 );
 
-// router.get('/secret', requireSignin, (req,res) => {
-//     res.json({
-//       data: 'Secret for logged in users only'
-//     })
-// })
-
 module.exports = router;

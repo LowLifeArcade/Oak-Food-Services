@@ -20,7 +20,6 @@ AWS.config.update({
 const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 exports.register = (req, res) => {
-  // console.log('REGISTER CONTROLLER', req.body);\
   const { name, lastName, email, password, students } = req.body;
   // check if user exits
   User.findOne({ email }).exec((err, user) => {
@@ -32,7 +31,6 @@ exports.register = (req, res) => {
     }
 
     // generate userCode
-    // if (!userCode) {
     const makeUserCode = (length) => {
       let result = '';
       const chars = 'abcdefghijklmnopqrstuvwxyz';
@@ -45,9 +43,6 @@ exports.register = (req, res) => {
     // this takes first 3 letters of last name and 1 random character
     const userCode =
       lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
-    // console.log('USERCODE', userCode);
-
-    // }
 
     // checks to see if anyone has usercode
     User.findOne({ userCode }).exec((err, userCode) => {
@@ -99,7 +94,6 @@ exports.register = (req, res) => {
 
 exports.registerActivate = (req, res) => {
   const { token } = req.body;
-  // console.log(token)
   jwt.verify(
     token,
     process.env.JWT_ACCOUNT_ACTIVATION,
@@ -158,7 +152,6 @@ exports.registerActivate = (req, res) => {
 
 exports.login = (req, res) => {
   const { email, password } = req.body;
-  // console.table({email,password})
   User.findOne({ email }).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({
@@ -183,11 +176,6 @@ exports.login = (req, res) => {
     });
   });
 };
-
-// exports.userLoginValidator = (req, res) => {
-//   const {email, password} = req.body
-
-// }
 
 exports.requireSignin = expressJwt({
   secret: process.env.JWT_SECRET,
@@ -273,7 +261,7 @@ exports.forgotPassword = (req, res) => {
 exports.resetPassword = (req, res) => {
   const { resetPasswordLink, newPassword } = req.body;
   if (resetPasswordLink) {
-    // check for expiry
+    // check for expiration
     jwt.verify(
       resetPasswordLink,
       process.env.JWT_RESET_PASSWORD,
@@ -324,7 +312,7 @@ exports.canUpdateDeleteLink = (req, res, next) => {
       });
     }
     let authorizedUser =
-      data.postedBy._id.toString() === req.user._id.toString(); // might be req._id.toString()
+      data.postedBy._id.toString() === req.user._id.toString();
     if (!authorizedUser) {
       return res.status(400).json({
         error: 'You are not authorized',

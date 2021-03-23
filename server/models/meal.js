@@ -16,10 +16,6 @@ const mealSchema = new mongoose.Schema(
     complete: {
       type: Boolean,
     },
-    // postedBy: {
-    //   type: ObjectId,
-    //   ref: 'User',
-    // },
   },
   { timestamps: true }
 );

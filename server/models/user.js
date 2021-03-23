@@ -101,7 +101,7 @@ const userSchema = new mongoose.Schema(
         type: Boolean
       }
     },
-    categories: [ // can change to schools 
+    categories: [ 
       {
         type: ObjectId,
         ref: 'Category',
@@ -154,6 +154,5 @@ userSchema.methods = {
     return Math.round(new Date().valueOf() * Math.random() + '');
   },
 };
-// export user model
 
 module.exports = mongoose.model('User', userSchema);

@@ -24,8 +24,8 @@ const withAdmin = (Page) => {
       } catch (error) {
         if (error.response.status === 401) {
           user = null;
+          // console.log('with Admin get error', response.data)
         }
-        // console.log(response.data)
       }
     }
 

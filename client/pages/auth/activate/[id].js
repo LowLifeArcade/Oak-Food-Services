@@ -7,7 +7,6 @@ import { withRouter } from 'next/router';
 import Layout from '../../../components/Layout';
 import Router from 'next/router';
 
-
 const ActivateAccount = ({ router }) => {
   const [state, setState] = useState({
     name: '',
@@ -28,12 +27,12 @@ const ActivateAccount = ({ router }) => {
 
   useEffect(() => {
     success === 'Registration successful. Please login.'
-    ? setTimeout(() => {
-        Router.push('/login');
-      }, 2000)
-    : console.log("it's fine");
-  return () => clearTimeout();
-  }, [success])
+      ? setTimeout(() => {
+          Router.push('/login');
+        }, 2000)
+      : console.log("it's fine");
+    return () => clearTimeout();
+  }, [success]);
 
   const clickSubmit = async (e) => {
     e.preventDefault();
@@ -45,14 +44,16 @@ const ActivateAccount = ({ router }) => {
       console.log('account activate response', response);
       setState({
         ...state,
-        // name: '',
         token: '',
         buttonText: 'Activated!',
         success: response.data.message,
       });
     } catch (error) {
-      setState({ ...state, buttonText: 'Activation Failed', error: error.response.data.error });
-      // error.response.data.error
+      setState({
+        ...state,
+        buttonText: 'Activation Failed',
+        error: error.response.data.error,
+      });
     }
   };
 
@@ -72,10 +73,8 @@ const ActivateAccount = ({ router }) => {
           </button>
         </div>
       </div>
-      {/* {JSON.stringify(state)} */}
     </Layout>
   );
-  // return <div>{JSON.stringify(router)}</div>;
 };
 
 export default withRouter(ActivateAccount);

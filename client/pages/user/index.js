@@ -2,7 +2,6 @@ import styles from '../../styles/Home.module.css';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { API } from '../../config';
-import { getCookie } from '../../helpers/auth';
 import withUser from '../withUser';
 import Link from 'next/link';
 import moment from 'moment';
@@ -13,7 +12,6 @@ import Layout from '../../components/Layout';
 const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
-    // console.log('delete >', slug);
     let answer = window.confirm(
       'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
     );
@@ -24,12 +22,10 @@ const User = ({ user, token, l, userLinks }) => {
   };
 
   useEffect(() => {
-    // console.log('students!', user.students);
     user.students.length === 0 && Router.push('/user/profile/add');
   }, []);
 
   const handleDelete = async (id) => {
-    // console.log('delete link', id)
     try {
       const response = await axios.delete(`${API}/link/${id}`, {
         headers: {
@@ -48,16 +44,15 @@ const User = ({ user, token, l, userLinks }) => {
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <>
-        {/* {console.log('links', l)} */}
         {
           <div
-          key={i}
-          className={
-            l.orderStatus === false
-              ? 'p-4 alert  alert-warning ' + styles.subcard
-              : 'p-4 alert  alert-secondary ' + styles.subcard
-          }
-        >
+            key={i}
+            className={
+              l.orderStatus === false
+                ? 'p-4 alert  alert-warning ' + styles.subcard
+                : 'p-4 alert  alert-secondary ' + styles.subcard
+            }
+          >
             <h4>
               {l.orderStatus && (
                 <b className="text-danger ">
@@ -94,13 +89,13 @@ const User = ({ user, token, l, userLinks }) => {
             <h3>
               {l.mealRequest.filter(
                 (l) =>
-                l.meal == 'Standard' ||
-                l.meal == 'Vegetarian' ||
-                l.meal == 'GlutenFree' ||
-                l.meal == 'Vegan' ||
-                l.meal == 'Standard DF' ||
-                l.meal == 'GlutenFree DF' ||
-                l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+                  l.meal == 'Standard' ||
+                  l.meal == 'Vegetarian' ||
+                  l.meal == 'GlutenFree' ||
+                  l.meal == 'Vegan' ||
+                  l.meal == 'Standard DF' ||
+                  l.meal == 'GlutenFree DF' ||
+                  l.pickupOption === 'Lunch Onsite / Breakfast Pickup'
               ).length != 0 ? (
                 <b className="d-flex justify-content-center">{l.pickupCode} </b>
               ) : (
@@ -119,9 +114,6 @@ const User = ({ user, token, l, userLinks }) => {
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
-                {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length} weekly meal */}
-                {/* {l.mealRequest.filter((l)=> l.meal !== 'None').length > 1 && 's'}:<p></p> */}
-
                 <div className="p-3">
                   {l.mealRequest
                     .filter((l) => l.meal !== 'None')
@@ -210,14 +202,6 @@ const User = ({ user, token, l, userLinks }) => {
                     ))}
                 </div>
               </h5>
-              {/* {console.log(l.mealRequest)} */}
-              {/* {l.pickupTime === 'Cafeteria' ? null : (
-                <h2 className=" " style={{ fontSize: '16px' }}>
-                  Pickup is between <b>{l.pickupTime} </b> on Friday. Please
-                  print out or write out your code and display your{' '}
-                  <b >CODE on your dashboard</b>.
-                </h2>
-              )} */}
             </div>
             <div className="pt-1 ">
               <span className="">
@@ -251,43 +235,26 @@ const User = ({ user, token, l, userLinks }) => {
     ));
 
   return (
-    <div
-    // className={styles.background}
-    >
+    <div>
       <Layout>
-        {/* <div className=""> */}
-
-        <h2 className=" pt-3">
-          {user.name}'s Meal Requests{' '}
-          {/* <span className="text-danger"> /{user.role}</span>{' '} */}
-        </h2>
-        {/* </div> */}
+        <h2 className=" pt-3">{user.name}'s Meal Requests </h2>
         <hr />
         <div className="p-1">
           <div className="">
-            {/* <ul className="nav flex-column"> */}
-            {/* <li className="nav-item"> */}
             <Link href="/user/profile/update">
               <a className="nav-item">Update profile</a>
             </Link>
-            {/* <br/>
-          <Link href="/user/profile/add">
-            <a className="nav-item">Add students</a>
-          </Link> */}
-            {/* </li> */}
-            {/* <li className="nav-item p-4"> */}
+
             <Link href="/user/link/create">
               <button className={'btn float-right ' + styles.button}>
                 <i class="fas fa-pencil-alt"></i>
                 &nbsp;&nbsp; Submit a Request
               </button>
             </Link>
-            {/* </li> */}
-            {/* </ul> */}
           </div>
         </div>
         <br />
-        
+
         <div className={'d-flex justify-content-center  ' + styles.desktop}>
           <div className={'col-md-6  justify-content-center ' + styles.desktop}>
             <br />
@@ -302,8 +269,6 @@ const User = ({ user, token, l, userLinks }) => {
         <div class={'' + styles.mobile}>
           <div className="flex-column justify-content-center ">
             <br />
-            {/* <h2>Your Meal Requests</h2> */}
-            {/* <div className="col-md-5 p-3  alert alert-warning flex-column align-items-center rounded"> */}
             <div className="pb-3">
               <br />
               {listOfLinks()}

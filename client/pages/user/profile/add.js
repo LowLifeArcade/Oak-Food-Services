@@ -388,26 +388,6 @@ const Profile = ({ user, token }) => {
     });
   };
 
-  // const handleObjectAllergyChange = (name) => (e) => {
-  //   let i = e.target.getAttribute('data-index');
-
-  //   let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
-  //   let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-  //   oneStudent.foodAllergy = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
-  //   oneStudent.group = e.target.value === 'gluten' && '';
-  //   students[i] = oneStudent; // puts meal[i] back into mealRequest array
-
-  //   console.log('group', students[i].group);
-
-  //   setState({
-  //     ...state,
-  //     students: [...students],
-  //     error: '',
-  //     success: '',
-  //     buttonText: 'Register',
-  //   });
-  // };
-
   const handleObjectAgeChange = (age) => (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -459,7 +439,7 @@ const Profile = ({ user, token }) => {
         {
           students,
           categories,
-          special
+          special,
         },
         {
           headers: {
@@ -786,14 +766,7 @@ const Profile = ({ user, token }) => {
   );
 
   return (
-    <div
-      className={styles.background}
-      style={
-        {
-          // height: '100vh'
-        }
-      }
-    >
+    <div className={styles.background}>
       <Layout>
         <div className={styles.body}>
           <div className="pt-5 pb-2"></div>
@@ -809,6 +782,8 @@ const Profile = ({ user, token }) => {
           </div>
         </div>
       </Layout>
+      <div className="p-5"></div>
+
     </div>
   );
 };
