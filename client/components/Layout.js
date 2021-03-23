@@ -189,8 +189,8 @@ const Layout = ({ children }) => {
     <accordion className={'fixed-top ' + styles.accordion}>
       <ul className={'nav nav-tabs ' + styles.accordion}>
         <li key="1" className="nav-item pointer-hand">
-          <a className="nav-link text-white">
-            <span onClick={() => setShowSidebar(!showSidebar)}>
+          <a onClick={() => setShowSidebar(!showSidebar)} className="nav-link text-white">
+            <span >
               <i className="fas fa-bars"></i>
             </span>
           </a>
