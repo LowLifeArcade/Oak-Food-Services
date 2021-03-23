@@ -8,15 +8,12 @@ import axios from 'axios';
 import withUser from '../../withUser';
 import moment from 'moment';
 import Router from 'next/router';
-// import Datepicker from '../../../components/Datepicker';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 const Create = ({ token, user }) => {
   const username = user.username;
-  // const userCode = user.userCode
   const [showSearch, setShowSearch] = useState(false);
-  // const [orderStatus, setOrderStatus] = useState(true)
 
   // state
   const [state, setState] = useState({
@@ -26,10 +23,14 @@ const Create = ({ token, user }) => {
           user.students[0].group === 'a-group' ||
           user.students[0].group === 'b-group'
             ? 'Standard Onsite'
+            : user.students[0].foodAllergy.dairy === true &&
+              user.students[0].foodAllergy.gluten === true
+            ? 'GlutenFree DF'
             : user.students[0].foodAllergy.dairy === true
             ? 'Standard DF'
+            : user.students[0].foodAllergy.gluten === true
+            ? 'GlutenFree'
             : 'Standard',
-
         student: user.students[0]._id,
         studentName: user.students[0].name,
         lastName: user.lastName,
@@ -39,6 +40,9 @@ const Create = ({ token, user }) => {
         pickupOption:
           user.students[0].group === 'a-group' ||
           user.students[0].group === 'b-group'
+            ? 'Lunch Onsite'
+            : user.students[0].foodAllergy.egg === true ||
+              user.students[0].foodAllergy.soy === true
             ? 'Lunch Only'
             : 'Breakfast and Lunch',
         foodAllergy: user.students[0].foodAllergy,
@@ -53,20 +57,12 @@ const Create = ({ token, user }) => {
     pickupCodeInput: '',
     pickupCodeAdd: [''],
     pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
-    // pickupOption: 'Breakfast and Lunch',
     pickupTime: '',
-    // pickupTime: isAuth().role === 'admin' ? '11am-1pm' : mealRequest[1].group === 'b-group' ? 'Cafeteria' : '',
     mealWeek: '',
     buttonText: 'Submit',
-    // title: '',
-    // url: '',
-    // categories: [],
-    // loadedCategories: [],
     success: '',
     error: '',
     students: user.students,
-    // type: '',
-    // medium: '',
   });
   const {
     studentName,
@@ -79,19 +75,15 @@ const Create = ({ token, user }) => {
     pickupCodeAdd,
     pickupDate,
     mealRequest,
-    // pickupOption,
     pickupTime,
     title,
     url,
-    // categories,
-    // loadedCategories,
     success,
     error,
     type,
     medium,
   } = state;
 
-  // console.log('pickup info before', pickupTime);
   // conditions: mealRequest has only Onsite Standard meals. So if nothing other than that exists than true.
   useEffect(() => {
     setState({
@@ -110,20 +102,14 @@ const Create = ({ token, user }) => {
                 (meal) => meal.meal !== 'None'
                 // meal.pickupOption !== 'Lunch Onsite / Breakfast Pickup'
               )
-              .some((meal) => meal.pickupOption === 'Lunch Only')
+              .some((meal) => meal.pickupOption === 'Lunch Onsite')
           ? 'Cafeteria'
           : '',
     });
   }, [mealRequest]);
 
   useEffect(() => {
-    // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
-    // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     let frontCode = [];
-    // let mereq = [{ meal: 'Vegetarian' }];
-    // for (const mealObj in mereq) {
-    // for (const meal of mealObj) {
-    // console.log(mealObj);
     mealRequest.forEach((item) => {
       if (
         item.pickupOption != 'Lunch Only' &&
@@ -132,19 +118,21 @@ const Create = ({ token, user }) => {
         switch (item.meal) {
           case 'Vegetarian':
             frontCode.push('Vt');
-            // console.log('vege')
             break;
           case 'Standard':
             frontCode.push('');
-            // console.log('gf')
             break;
           case 'Vegan':
             frontCode.push('Vg');
-            // console.log('vegan')
+            break;
+          case 'Vegan B':
+            frontCode.push('Vg+b');
             break;
           case 'GlutenFree':
             frontCode.push('Gf');
-            // console.log('gf')
+            break;
+          case 'GlutenFree B':
+            frontCode.push('Gf+b');
             break;
           case 'Standard DF':
             frontCode.push('Df');
@@ -152,7 +140,27 @@ const Create = ({ token, user }) => {
           case 'GlutenFree DF':
             frontCode.push('Gfdf');
             break;
-
+          case 'Standard SF':
+            frontCode.push('Smf');
+            break;
+          case 'Vegetarian SF':
+            frontCode.push('Smfvt');
+            break;
+          case 'Vegan SF':
+            frontCode.push('Smfvg');
+            break;
+          case 'Standard SyF':
+            frontCode.push('Syf');
+            break;
+          case 'Vegetarian SyF':
+            frontCode.push('Syfvt');
+            break;
+          case 'Vegan SyF':
+            frontCode.push('Syfvg');
+            break;
+          case '2on 3off':
+            frontCode.push('H');
+            break;
           default:
             break;
         }
@@ -160,13 +168,10 @@ const Create = ({ token, user }) => {
       switch (item.meal) {
         case 'Vegan':
           frontCode.push('Vg');
-          // console.log('vegan')
           break;
         case 'GlutenFree':
           frontCode.push('Gf');
-          // console.log('gf')
           break;
-
         default:
           break;
       }
@@ -179,7 +184,6 @@ const Create = ({ token, user }) => {
         case 'Lunch Onsite / Breakfast Pickup':
           frontCode.push('B');
           break;
-
         default:
           break;
       }
@@ -192,9 +196,6 @@ const Create = ({ token, user }) => {
       console.log('item meal', item.meal);
       console.log('item pickup option', item.pickupOption);
     });
-    // }
-    // code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
-    // codes[i] = code;
     console.log('use effect front code', frontCode);
     let newPickupCode =
       frontCode.join('') + '-' + user.userCode + '-0' + mealRequest.length;
@@ -209,35 +210,6 @@ const Create = ({ token, user }) => {
     }); //puts ...mealRequest with new meal back into mealRequest: []
   }, [mealRequest]);
 
-  console.log('meal request', mealRequest);
-  // load categories when component mounts useing useEffect
-  // useEffect(() => {
-  //   // const timer = setTimeout()
-  //   // loadCategories();
-  //   // loadStudents()
-  //   //  Router.push('user')
-  //   isAuth().role === 'admin'
-  //     ? success === 'Request was created'
-  //       ? setTimeout(() => {
-  //           Router.push('/admin');
-  //         }, 2000)
-  //       : Router.push('')
-  //     : success === 'Request was created' &&
-  //       setTimeout(() => {
-  //         Router.push('/user');
-  //       }, 2000);
-
-  //   return () => clearTimeout();
-  // }, [success]);
-
-  // useEffect(() => {
-  //     // if mealRequest.student.id === cohort a || cohort b
-  //     // const onsiteMealRequest =  {mealRequest: mealRequest.meal, student: mealRequest.student, complete: false }
-  //     setState({...state,
-  //       mealRequest1: {mealRequest: mealRequest[0].meal, student: mealRequest[0].student, complete: false },
-  //     })
-  // }, [mealRequest[0]])
-
   // change date
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDate: moment(pickupDate).format('l') });
@@ -245,7 +217,6 @@ const Create = ({ token, user }) => {
   };
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
-  // date.getDay() !== 2
 
   // meal request select
   const handleSelectChange = (
@@ -263,12 +234,11 @@ const Create = ({ token, user }) => {
     let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
     let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
 
-    // console.log(pickupCodeAdd)
-
     let input = e.target.value;
     let frontCode = '';
     let pickupOptionLO = '';
     let groupLO = '';
+
     switch (input) {
       case 'Lunch Only' && code.meal === 'Vegetarian':
         frontCode = 'Lv';
@@ -278,6 +248,7 @@ const Create = ({ token, user }) => {
         break;
       case 'Breakfast Only':
         frontCode = 'B';
+        break; // this wasnt there and worked fine. Not sure why i had it out
       case 'Vegetarian':
         frontCode = 'Vt';
         pickupOptionLO = state.mealRequest[i].pickupOption;
@@ -286,9 +257,17 @@ const Create = ({ token, user }) => {
         frontCode = 'Vg';
         pickupOptionLO = 'Lunch Only';
         break;
+      case 'Vegan B':
+        frontCode = 'Vg+b';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
       case 'GlutenFree':
         frontCode = 'Gf';
         pickupOptionLO = 'Lunch Only';
+        break;
+      case 'GlutenFree B':
+        frontCode = 'Gf+b';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
       case 'Standard':
         frontCode = '';
@@ -302,21 +281,47 @@ const Create = ({ token, user }) => {
         frontCode = 'Gfdf';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
+      case 'Standard SF':
+        frontCode = 'Smf';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'Vegetarian SF':
+        frontCode = 'Smfvt';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'Vegan SF':
+        frontCode = 'Smfvg';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'Standard SyF':
+        frontCode = 'Syf';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'Vegetarian SyF':
+        frontCode = 'Syfvt';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case 'Vegan SyF':
+        frontCode = 'Syfvg';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
       case 'Standard Onsite':
         frontCode = 'Onsite';
+        pickupOptionLO = state.mealRequest[i].pickupOption;
+        break;
+      case '2on 3off':
+        frontCode = 'H';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
       case 'None':
         frontCode = 'None';
         pickupOptionLO = 'None';
         group = 'None';
-        // console.log('gf')
         break;
 
       default:
         break;
     }
-    // console.log(frontCode)
 
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
@@ -337,21 +342,12 @@ const Create = ({ token, user }) => {
       ...state,
       mealRequest: [...meals],
       buttonText: 'Submit',
-      // pickupCode: newPickupCode,
-      // pickupOption: meal.meal === 'None' ? 'None': meal.group === 'a-group' || meal.group === 'b-group' ? 'Lunch Only': 'Breakfast and Lunch',
       pickupCodeAdd: codes,
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
-    // setState({...state,
-    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
-    // console.log(e.target.getAttribute("data-index"))
-    // setState({...state, pickupCode: user.userCode})
-    // console.log(codes)
   };
 
-  // console.log(state.pickupCodeAdd)
-  // console.log(user)
   const selectMealRequest = (
     i,
     student,
@@ -389,28 +385,106 @@ const Create = ({ token, user }) => {
             <option disabled value="">
               Choose an option
             </option>
-            {state.mealRequest[i].foodAllergy.dairy === true ? (
-              <option value={'Standard DF'}>
-                Standard Dairy Free (lunch only)
-              </option>
-            ) : (
-              state.mealRequest[i].foodAllergy.gluten === false && (
-                <option value={'Standard'}>Standard</option>
-              )
+            {user.special.twothree == 'true' && <option value={'2on 3off'}>Standard 2 onite meals 3 offsite meals</option>}
+            {user.special.vtplus == 'true' && <option value={'GlutenFree B'}>Gluten Free plus Vegetarian Breakfast</option>}
+            {user.special.vgplus == 'true' && <option value={'Vegan B'}>Vegan plus Vegetarian Breakfast</option>}
+
+            {isAuth().role === 'admin' && (
+              <option value={'Standard '}>Standard</option>
             )}
-            {state.mealRequest[i].foodAllergy.dairy !== true && (
+            {isAuth().role === 'admin' && (
               <option value={'Vegetarian'}>Vegetarian</option>
             )}
-            <option value={'Vegan'}>Vegan (lunch only)</option>
-            {state.mealRequest[i].foodAllergy.gluten === true ? (
-              state.mealRequest[i].foodAllergy.dairy === true ? (
-                <option value={'GlutenFree DF'}>
-                  Gluten Free Dairy Free(lunch only)
-                </option>
-              ) : (
+            {isAuth().role === 'admin' && (
+              <option value={'Vegan'}>Vegan</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'GlutenFree'}>Gluten Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'GlutenFree DF'}>Gluten Free Dairy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Standard DF'}>Standard Dairy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Standard SF'}>Standard Sesame Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Standard SyF'}>Standard Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'2on 3off'}>Standard 2 on 3 off</option>
+            )}
+            
+            {/* standard options */}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.gluten === false &&
+              state.mealRequest[i].foodAllergy.sesame === false &&
+              state.mealRequest[i].foodAllergy.dairy === false &&
+              state.mealRequest[i].foodAllergy.soy === false && (
+                <option value={'Standard'}>Standard</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.gluten === false &&
+              state.mealRequest[i].foodAllergy.sesame === false &&
+              state.mealRequest[i].foodAllergy.dairy === false &&
+              state.mealRequest[i].foodAllergy.soy === false && (
+                <option value={'Vegetarian'}>Vegetarian</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.gluten === false &&
+              state.mealRequest[i].foodAllergy.sesame === false &&
+              state.mealRequest[i].foodAllergy.dairy === false &&
+              state.mealRequest[i].foodAllergy.soy === false && (
+                <option value={'Vegan'}>Vegan (lunch only)</option>
+              )}
+            {/* allergy options */}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.dairy === false &&
+              state.mealRequest[i].foodAllergy.gluten === true && (
                 <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
-              )
-            ) : null}
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.dairy === true &&
+              state.mealRequest[i].foodAllergy.gluten === false && (
+                <option value={'Standard DF'}>
+                  Standard Dairy Free (lunch only)
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.sesame === true && (
+                <option value={'Standard SF'}>Standard Sesame Free</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.sesame === true && (
+                <option value={'Vegetarian SF'}>Vegetarian Sesame Free</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.sesame === true && (
+                <option value={'Vegan SF'}>Vegan Sesame Free</option>
+              )}
+
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.soy === true && (
+                <option value={'Standard SyF'}>Standard Soy Free</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.soy === true && (
+                <option value={'Vegetarian SyF'}>Vegetarian Soy Free</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.soy === true && (
+                <option value={'Vegan SyF'}>Vegan Soy Free</option>
+              )}
+            {/* special  */}
+            {isAuth().role === 'subscriber' &&
+              state.mealRequest[i].foodAllergy.gluten === true &&
+              state.mealRequest[i].foodAllergy.dairy === true && (
+                <option value={'GlutenFree DF'}>
+                  Gluten Free Dairy Free (lunch only)
+                </option>
+              )}
             <option value={'None'}>None</option>
           </select>
           <div className="p-1"></div>
@@ -455,7 +529,9 @@ const Create = ({ token, user }) => {
           >
             {' '}
             {/* <option value="">Choose an option</option> */}
-            <option value={'Standard Onsite'}>Standard (Onsite)</option>
+            {isAuth().role === 'subscriber' && (
+              <option value={'Standard Onsite'}>Standard (Onsite)</option>
+            )}
             <option value={'None'}>None</option>
           </select>
           <div className="p-1"></div>
@@ -478,12 +554,6 @@ const Create = ({ token, user }) => {
     let frontCode = '';
 
     switch (input) {
-      // case 'Lunch Only' && code.meal === 'Vegetarian':
-      //   frontCode = 'Vtl';
-      //   break;
-      // case 'Lunch Only' && code.meal === 'Standard':
-      //   frontCode = 'Sl';
-      //   break;
       case 'Breakfast Only':
         frontCode = 'B';
         break;
@@ -506,15 +576,39 @@ const Create = ({ token, user }) => {
     });
   };
 
+  const selectAdminPickupOptions = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <select
+          type="select"
+          // defaultValue={state.mealRequest[i].pickupOption}
+          // value={state.mealRequest[i].pickupOption}
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {console.log('pickup option', state.mealRequest)}{' '}
+          <option selected value={'Breakfast and Lunch'}>
+            Breakfast and Lunch
+          </option>
+          <option value={'Breakfast Only'}>Breakfast Only</option>
+          <option value={'Lunch Only'}>Lunch Only</option>
+          <option value={'Lunch Onsite'}>Lunch Onsite</option>
+          <option value={'Lunch Onsite / Breakfast Pickup'}>
+            Lunch Onsite / Breakfast Pickup
+          </option>
+        </select>
+        <div className="p-1"></div>
+      </div>
+    </>
+  );
   const selectPickupOption = (i) => (
     <>
       <div key={i} className="form-group">
-        {/* <div className=""> */}
         <select
           type="select"
           defaultValue={state.mealRequest[i].pickupOption}
           value={state.mealRequest[i].pickupOption}
-          // value='Breakfast and Lunch'
           data-index={i}
           onChange={(e) => handlePickupOption(i, e)}
           className="form-control"
@@ -525,12 +619,8 @@ const Create = ({ token, user }) => {
           </option>
           <option value={'Breakfast Only'}>Breakfast Only</option>
           <option value={'Lunch Only'}>Lunch Only</option>
-          {/* <option value={'Breakfast Distance Lunch Onsite'}>
-            Breakfast (Distance)/Lunch (Onsite)
-          </option> */}
         </select>
         <div className="p-1"></div>
-        {/* </div> */}
       </div>
     </>
   );
@@ -538,7 +628,6 @@ const Create = ({ token, user }) => {
   const selectPickupLunchOnlyOption = (i) => (
     <>
       <div key={i} className="form-group">
-        {/* <div className=""> */}
         <select
           type="select"
           defaultValue={state.mealRequest[i].pickupOption}
@@ -553,7 +642,6 @@ const Create = ({ token, user }) => {
           </option>
         </select>
         <div className="p-1"></div>
-        {/* </div> */}
       </div>
     </>
   );
@@ -561,7 +649,6 @@ const Create = ({ token, user }) => {
   const selectNonePickupOption = (i) => (
     <>
       <div key={i} className="form-group">
-        {/* <div className=""> */}
         <select
           type="select"
           defaultValue={state.mealRequest[i].pickupOption}
@@ -576,7 +663,6 @@ const Create = ({ token, user }) => {
           </option>
         </select>
         <div className="p-1"></div>
-        {/* </div> */}
       </div>
     </>
   );
@@ -584,7 +670,6 @@ const Create = ({ token, user }) => {
   const selectPickupLunchOnsiteBreakfastOffsiteOption = (i) => (
     <>
       <div key={i} className="form-group">
-        {/* <div className=""> */}
         <select
           type="select"
           defaultValue={state.mealRequest[i].pickupOption}
@@ -594,15 +679,14 @@ const Create = ({ token, user }) => {
           className="form-control"
         >
           {' '}
-          <option selected value={'Lunch Only'}>
-            Lunch Only
+          <option selected value={'Lunch Onsite'}>
+            Lunch Onsite
           </option>
           <option value={'Lunch Onsite / Breakfast Pickup'}>
             Lunch Onsite / Breakfast Pickup
           </option>
         </select>
         <div className="p-1"></div>
-        {/* </div> */}
       </div>
     </>
   );
@@ -636,6 +720,11 @@ const Create = ({ token, user }) => {
             <option value={'7am-9am'}>7am-9am</option>
             <option value={'11am-1pm'}>11am-1pm</option>
             <option value={'4pm-6pm'}>4pm-6pm</option>
+            {isAuth().role === 'admin' && (
+              <option value={'Cafeteria'}>
+                Student Cafeteria Lunch Onsite
+              </option>
+            )}
           </select>
           <div className="p-1"></div>
         </div>
@@ -658,7 +747,16 @@ const Create = ({ token, user }) => {
             <option disabled value="">
               Choose an option
             </option>
-            <option value={'Cafeteria'}>Student Cafeteria Lunch Only</option>
+            {isAuth().role === 'admin' && (
+              <option value={'7am-9am'}>7am-9am</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'11am-1pm'}>11am-1pm</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'4pm-6pm'}>4pm-6pm</option>
+            )}
+            <option value={'Cafeteria'}>Student Cafeteria Lunch Onsite</option>
           </select>
           <div className="p-1"></div>
         </div>
@@ -684,6 +782,13 @@ const Create = ({ token, user }) => {
           meal:
             group === 'a-group' || group === 'b-group'
               ? 'Standard Onsite'
+              : user.students[0].foodAllergy.dairy === true &&
+                user.students[0].foodAllergy.gluten === true
+              ? 'GlutenFree DF'
+              : user.students[0].foodAllergy.dairy === true
+              ? 'Standard DF'
+              : user.students[0].foodAllergy.gluten === true
+              ? 'GlutenFree'
               : 'Standard',
           student: student,
           studentName: studentName,
@@ -693,7 +798,7 @@ const Create = ({ token, user }) => {
           teacher: teacher,
           pickupOption:
             group === 'a-group' || group === 'b-group'
-              ? 'Lunch Only'
+              ? 'Lunch Onsite'
               : 'Breakfast and Lunch',
           foodAllergy: foodAllergy,
           parentEmail: user.email,
@@ -705,61 +810,22 @@ const Create = ({ token, user }) => {
       pickupCodeAdd: [...pickupCodeAdd, ''],
     });
   };
-  // console.log(pickupCodeAdd)
 
   // remove meal button
   const removeMeal = (index) => {
     const list = [...state.mealRequest];
-    // console.log(list);
     list.splice(-1)[0];
-    // list.splice(index, 1);
 
     const list2 = [...state.pickupCodeAdd];
-    // console.log(list);
     list2.splice(-1)[0];
     setState({ ...state, mealRequest: list, pickupCodeAdd: list2 });
-    // list.splice(index, 1);
-    // setState({ ...state, pickupCodeAdd: list2 });
   };
-
-  const loadCategories = async () => {
-    const response = await axios.get(`${API}/categories`);
-    setState({ ...state, loadedCategories: response.data });
-  };
-
-  // const loadStudents = async () => {
-  //   const response = await axios.get(`${API}/user`);
-  //   setState({ ...state, student: [...response.data.student] });
-  // };
-
-  const handleTitleChange = async (e) => {
-    setState({ ...state, title: e.target.value, error: '', success: '' });
-  };
-
-  const yesterday = [moment().subtract(1, 'day')];
-  // const disablePastDt = (current) => {
-  //   return current.isAfter(yesterday);
-  // }
 
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
-  // console.log(pickupCodeAdd)
 
   const submit = () => {
-    // make shallow copy of individual meals and add pickuptime to each OR map or something like that
-
-    // mealRequest.forEach((meal) => {
-    //     if(meal.meal === 'None'){
-    //       // delete meal
-    //       console.log(meal)
-    //       mealRequest.splice(meal,1)
-    //     }
-    // })
-
-    // this code bellow deletes the none meal from the order. But it was messing up the update function as it shifted data in the array.
-    // const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
-
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
     let length =
@@ -769,7 +835,6 @@ const Create = ({ token, user }) => {
         (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup'
       ).length;
 
-    // let newFrontCode = codes
     let newPickupCode = '';
 
     isAuth().role === 'admin'
@@ -791,7 +856,6 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       pickupCode: newPickupCode,
-      // mealRequest: mealRequestNew,
       pickupCodeAdd: newPickupCodeAdd,
     });
   };
@@ -812,7 +876,6 @@ const Create = ({ token, user }) => {
           pickupCodeAdd,
           orderStatus,
         },
-        // { title, url, categories, type, medium },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -828,14 +891,13 @@ const Create = ({ token, user }) => {
 
       isAuth().role === 'admin'
         ? setTimeout(() => {
-            Router.push('/admin');
+            Router.push('/user');
           }, 2000)
         : setTimeout(() => {
             Router.push('/user');
           }, 2000);
 
       return () => clearTimeout();
-      // .then(Router.push('/user'))
     } catch (error) {
       console.log('LINK SUBMIT ERROR', error);
       setState({ ...state, error: error.response.data.error });
@@ -844,15 +906,7 @@ const Create = ({ token, user }) => {
 
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
-    // console.table({title, url, categories, type, medium})
-    // const toAddCode = user.userCode
-    // const newCode = user.userCode + '_0' + toString(mealRequest.length)
 
-    // let NewPickupCode = pickupCodeAdd + pickupCode
-
-    // pickupCode = NewPickupCode
-    // newCodeMaker()
-    console.log(pickupCode);
     try {
       const response = await axios.post(
         `${API}/mock-link`,
@@ -882,31 +936,17 @@ const Create = ({ token, user }) => {
 
       isAuth().role === 'admin'
         ? setTimeout(() => {
-            Router.push('/admin/link/read');
+            Router.push('/user');
           }, 2000)
         : setTimeout(() => {
             Router.push('/user');
           }, 2000);
-      // .then(Router.push('/user'))
     } catch (error) {
-      // console.log('LINK SUBMIT ERROR', error);
+      console.log('LINK SUBMIT ERROR', error);
       setState({ ...state, error: error.response.data.error });
     }
   };
 
-  // const handleURLChange = async (e) => {
-  //   setState({ ...state, url: e.target.value, error: '', success: '' });
-  // };
-
-  // const handleTypeClick = (e) => {
-  //   setState({ ...state, type: e.target.value, success: '', error: '' });
-  // };
-
-  // const handleMediumClick = (e) => {
-  //   setState({ ...state, medium: e.target.value, success: '', error: '' });
-  // };
-
-  // should be id instead of c but it's fine
   const handleToggle = (c) => () => {
     // return the first index or -1
     const clickedCategory = categories.indexOf(c);
@@ -918,7 +958,6 @@ const Create = ({ token, user }) => {
       all.splice(clickedCategory, 1);
     }
 
-    // console.log('all >> categories', all);
     setState({ ...state, categories: all, success: '', error: '' });
   };
 
@@ -954,31 +993,13 @@ const Create = ({ token, user }) => {
   const submitLinkForm = (student) => (
     <form
       onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
-      // onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
     >
-      {/* <div className="form-group">
-        <label htmlFor="" className="text-muted">
-          Title
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          onChange={handleTitleChange}
-          value={title}
-        />
-      </div> */}
-      {/* <div className="form-group">
-        <label htmlFor="" className="text-muted">
-          Meal Options
-        </label>
-        {selectPickupOption()}
-      </div> */}
-      {/* {console.log('add meal',mealRequest)} */}
       {mealRequest
         .filter((meal) => meal.meal !== 'None')
         .every(
           (meal) =>
-            meal.meal == 'Standard Onsite' && meal.pickupOption == 'Lunch Only'
+            meal.meal == 'Standard Onsite' &&
+            meal.pickupOption == 'Lunch Onsite'
         ) ? (
         <div className="form-group">
           <label htmlFor="" className="text-muted">
@@ -1008,31 +1029,11 @@ const Create = ({ token, user }) => {
           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
         </button>
       </div>
-
-      {/* <div className="form-group">
-        <label htmlFor="" className="text-muted">
-          URL
-        </label>
-        <input
-          type="url"
-          className="form-control"
-          onChange={handleURLChange}
-          value={url}
-        />
-      </div>
-       */}
     </form>
   );
 
   return (
-    <div
-      className={styles.background}
-      style={
-        {
-          // background: '#eeeff0'
-        }
-      }
-    >
+    <div className={styles.background}>
       <Layout>
         <div className="col-md-6 offset-md-3 pt-4">
           <div className={styles.subcard}>
@@ -1059,15 +1060,6 @@ const Create = ({ token, user }) => {
                       <Calendar
                         onChange={(e) => onDateChange(e)}
                         tileDisabled={handleDisabledDates}
-                        // defaultValue={twoWeeksFromNow}
-                        // tileDisabled={(date, view) =>
-                        //   yesterday.some(date =>
-                        //      moment().isAfter(yesterday)
-                        //   )}
-                        // minDate={handlePastDate}
-                        // minDate={twoWeeksFromNow}
-                        // minDate={new Date().getDate() + 14}
-
                         value={''}
                       />
                     )
@@ -1076,26 +1068,10 @@ const Create = ({ token, user }) => {
                         onChange={(e) => onDateChange(e)}
                         tileDisabled={handleDisabledDates}
                         defaultValue={twoWeeksFromNow}
-                        // tileDisabled={(date, view) =>
-                        //   yesterday.some(date =>
-                        //      moment().isAfter(yesterday)
-                        //   )}
-                        // minDate={handlePastDate}
                         minDate={twoWeeksFromNow}
-                        // minDate={new Date().getDate() + 14}
-
                         value={''}
                       />
                     )}
-
-                {/* // <input
-                  // type="date"
-                  // defaultValue={moment(state.pickupDate).format(
-                    //   'dddd, MMMM Do '
-                    //   )}
-                  //   /> */}
-
-                {/* {`${moment(state.pickupDate).format('dddd, MMMM Do ')}`}{' '} */}
               </div>
             </div>
             <hr />
@@ -1103,7 +1079,6 @@ const Create = ({ token, user }) => {
               <div className=" form-group">
                 <input
                   type="text"
-                  // value={user.userCode}
                   className=" form-control"
                   placeholder="Enter a 4 digit User Code"
                   onChange={(e) => handleCodeChange(e)}
@@ -1159,12 +1134,16 @@ const Create = ({ token, user }) => {
                             state.students[i].foodAllergy
                           )}
                       </div>
-                      {x.meal != 'None'
+                      {isAuth().role === 'admin'
+                        ? selectAdminPickupOptions()
+                        : x.meal != 'None'
                         ? state.students[i].group === 'distance-learning'
                           ? x.meal === 'GlutenFree' ||
                             x.meal === 'GlutenFree DF' ||
                             x.meal === 'Standard DF' ||
-                            x.meal === 'Vegan'
+                            x.meal === 'Vegan' ||
+                            user.students[i].foodAllergy.egg === true ||
+                            user.students[i].foodAllergy.soy === true
                             ? selectPickupLunchOnlyOption(i)
                             : selectPickupOption(i)
                           : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
@@ -1205,15 +1184,9 @@ const Create = ({ token, user }) => {
                       Remove
                     </button>
                   )}
-                  {/* {console.log(mealRequest)} */}
                 </div>
-                {/* {console.log(mealRequest)} */}
               </div>
-              <div className="col-md-6 p-3">
-                {/* {success && showSuccessMessage(success)}
-              {error && showErrorMessage(error)} */}
-                {submitLinkForm()}
-              </div>
+              <div className="col-md-6 p-3">{submitLinkForm()}</div>
             </div>
           </div>
         </div>
@@ -1228,4 +1201,3 @@ Create.getInitialProps = ({ req, user }) => {
 };
 
 export default withUser(Create);
-// export default withUser(Create)

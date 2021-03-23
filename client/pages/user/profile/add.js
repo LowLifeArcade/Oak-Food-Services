@@ -5,22 +5,12 @@ import axios from 'axios';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
 import styles from '../../../styles/Home.module.css';
-import { isAuth, updateUser } from '../../../helpers/auth';
+import { updateUser } from '../../../helpers/auth';
 import withUser from '../../withUser';
-import Link from 'next/link';
 import Router from 'next/router';
 
 const Profile = ({ user, token }) => {
   const [state, setState] = useState({
-    // name: user.name,
-    // lastName: user.lastName,
-    // email: user.email,
-    // password: '',
-    // confirmPassword: '',
-    error: '',
-    success: '',
-    buttonText: 'Register',
-    addButtonText: 'Add Student',
     students: [
       {
         name: '',
@@ -41,30 +31,24 @@ const Profile = ({ user, token }) => {
       },
     ],
     showAllergies: [{ showAllergy: false }],
-    // showAllergies: [{student: false, student2: false, student3: false, student4: false, student5: false, }],
     loadedCategories: [],
     categories: [], // categories selected by user for signup
-    // categories: user.categories, // categories selected by user for signup
+    error: '',
+    success: '',
+    buttonText: 'Register',
+    addButtonText: 'Add Student',
+    special: { special: false },
     groups: [],
     teachers: [],
     loadedGroups: [],
     loadedTeachers: [],
   });
-  // console.log(user)
-
-  // useEffect(() => {
-  //   isAuth() && Router.push('/');
-  // }, []);
 
   const {
+    special,
     showAllergies,
     addButtonText,
     students,
-    // name,
-    // lastName,
-    // email,
-    // password,
-    // confirmPassword,
     error,
     success,
     buttonText,
@@ -78,18 +62,8 @@ const Profile = ({ user, token }) => {
 
   // load categories when component mounts useing useEffect
   useEffect(() => {
-    // loadCategories();
-    // setTimeout(() => {
-    // }, 1000)
     loadGroups();
-    // loadTeachers();
   }, []);
-
-  // useEffect(() => {
-  //   // loadCategories();
-  //   // loadGroups();
-  //   loadTeachers();
-  // }, []);
 
   useEffect(() => {
     success === "You've successfully registered your students"
@@ -99,21 +73,9 @@ const Profile = ({ user, token }) => {
       : console.log('add students');
   }, [success]);
 
-  // useEffect(() => {
-  //   // isAuth() && Router.push('/user');
-  //   isAuth() && isAuth().role === 'admin'
-  //     ? Router.push('admin')
-  //     : isAuth() && isAuth().role === 'user'
-  //     ? Router.push('user')
-  //     : !isAuth() ? console.log('not registered or signed in') : Router.push('/');
-  //   // : Router.push('user')
-  // }, [success]);
   const loadGroups = async () => {
     const response = await axios.get(`${API}/groups`);
     const response2 = await axios.get(`${API}/teachers`);
-    // console.log(response.data)
-    // setState({ ...state, loadedTeachers: response2.data });
-    // console.log(response.data)
     setState({
       ...state,
       loadedTeachers: response2.data,
@@ -121,26 +83,11 @@ const Profile = ({ user, token }) => {
     });
   };
 
-  // const loadCategories = async () => {
-  //   const response = await axios.get(`${API}/categories`);
-  //   setState({ ...state, loadedCategories: response.data });
-  // };
-
-  // console.log('loaded groups', loadedGroups);
-  // const loadTeachers = async () => {
-  //   const response = await axios.get(`${API}/teachers`);
-  //   // console.log(response.data)
-  //   setState({ ...state, loadedTeachers: response.data });
-  // };
-  // console.log('loaded teachers', loadedTeachers);
-
-  // student add select THIS is where things are going to be tricky
   const handleSelectGroupChange = (e) => {
     let i = e.target.getAttribute('data-index');
 
     let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
     let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    // console.log('group student', students);
     oneStudent.group = e.target.value;
     oneStudent.age = ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
@@ -152,11 +99,7 @@ const Profile = ({ user, token }) => {
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
-    // setState({...state,
-    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
-    // console.log(e.target.getAttribute("data-index"))
   };
-  // console.log('categories added',categories)
 
   const addStudentGroup = (i) => (
     <>
@@ -166,8 +109,6 @@ const Profile = ({ user, token }) => {
             type="select"
             value={students[i].group}
             data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectGroupChange(e)}
             className="form-control"
             required
@@ -199,13 +140,6 @@ const Profile = ({ user, token }) => {
             ) : (
               <option value="b-group">B (onsite)</option>
             )}
-            {/* {state.loadedGroups.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
-            {/* {console.log(students[i].foodAllergy.hasOwnProperty({gluten: false}))} */}
-            {/* {console.log(students[i].foodAllergy.gluten === true)}
-            {console.log(students[i].foodAllergy)} */}
           </select>
           <div className=""></div>
         </div>
@@ -213,7 +147,6 @@ const Profile = ({ user, token }) => {
     </>
   );
 
-  // student add select THIS is where things are going to be tricky
   const handleSelectTeacherChange = (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -228,9 +161,6 @@ const Profile = ({ user, token }) => {
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
-    // setState({...state,
-    //   mealRequest: [...mealRequest, {meal: e.target.value}]});
-    // console.log(e.target.getAttribute("data-index"))
   };
 
   const addBESTeacher = (i, x) => (
@@ -239,10 +169,7 @@ const Profile = ({ user, token }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
             data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
@@ -265,10 +192,6 @@ const Profile = ({ user, token }) => {
             <option value="5th-stephens">5th - Stephens</option>
             <option value="5th-becker">5th - Becker</option>
             <option value="5th-powers">5th - Powers</option>
-            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
           </select>
           <div className="p-2"></div>
         </div>
@@ -282,10 +205,7 @@ const Profile = ({ user, token }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
             data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
@@ -302,13 +222,8 @@ const Profile = ({ user, token }) => {
             <option value="2nd-ruben">2nd - Ruben</option>
             <option value="3rd-arnold">3rd - Arnold</option>
             <option value="4th-lockrey">4th - Lockrey</option>
-            {/* <option value="4th-farlow">4th - Farlow</option> */}
             <option value="4th-chobanian">4th - Chobanian</option>
             <option value="5th-bailey">5th - Bailey</option>
-            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
           </select>
           <div className="p-2"></div>
         </div>
@@ -322,10 +237,7 @@ const Profile = ({ user, token }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
             data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
@@ -346,10 +258,6 @@ const Profile = ({ user, token }) => {
             <option value="4th-matthews">4th - Matthews</option>
             <option value="5th-bodily">5th - Bodily</option>
             <option value="5th-cass">5th - Cass</option>
-            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
           </select>
           <div className="p-2"></div>
         </div>
@@ -362,10 +270,7 @@ const Profile = ({ user, token }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
             data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
@@ -374,13 +279,9 @@ const Profile = ({ user, token }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="6th-grade">6th </option>
+            <option value="6th-grade">6th </option>
             <option value="7th-grade">7th </option>
             <option value="8th-grade">8th </option>
-            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
           </select>
           <div className="p-2"></div>
         </div>
@@ -394,10 +295,7 @@ const Profile = ({ user, token }) => {
         <div className="">
           <select
             type="select"
-            // value={state.value}
             data-index={i}
-            // defaultValue={''}
-            // defaultValue={state.mealRequest[0].meal}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
@@ -406,52 +304,16 @@ const Profile = ({ user, token }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            -grade ,<option value="9th-grade">9th</option>
+            <option value="9th-grade">9th</option>
             <option value="10th-grade">10th </option>
             <option value="11th-grade">11th </option>
             <option value="12th-grade">12th </option>
-            {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-              return <option value={g._id}>{g.name}</option>;
-              // return <option value={g._id}>{g.name}</option>;
-            })} */}
           </select>
           <div className="p-2"></div>
         </div>
       </div>
     </>
   );
-
-  // const addOODTeacher = (i, x) => (
-  //   <>
-  //     <div key={i} className="form-group">
-  //       <div className="">
-  //         <select
-  //           type="select"
-  //           // value={state.value}
-  //           data-index={i}
-  //           // defaultValue={''}
-  //           // defaultValue={state.mealRequest[0].meal}
-  //           onChange={(e) => handleSelectTeacherChange(e)}
-  //           className="form-control"
-  //         >
-  //           {' '}
-  //           <option selected disabled value="">
-  //             Choose Grade Level
-  //           </option>
-  //           ,<option value="9th">9th</option>
-  //           <option value="10th">10th </option>
-  //           <option value="11th">11th </option>
-  //           <option value="12th">12th </option>
-  //           {/* {x.schoolName === 'BES' && state.loadedTeachers.map((g, i) => {
-  //             return <option value={g._id}>{g.name}</option>;
-  //             // return <option value={g._id}>{g.name}</option>;
-  //           })} */}
-  //         </select>
-  //         <div className="p-2"></div>
-  //       </div>
-  //     </div>
-  //   </>
-  // );
 
   // adding a student to fields
   const addStudent = (e) => {
@@ -493,15 +355,11 @@ const Profile = ({ user, token }) => {
     e.preventDefault();
 
     const list = [...state.students];
-    // console.log(list);
     list.splice(i, 1);
-    // list.splice(index, 1);
     setState({ ...state, students: list });
   };
 
-  // should be id instead of c but it's fine
   const handleToggle = (c) => () => {
-    // return the first index or -1
     const clickedCategory = categories.indexOf(c);
     const all = [...categories];
 
@@ -510,59 +368,7 @@ const Profile = ({ user, token }) => {
     } else {
       all.splice(clickedCategory, 1);
     }
-
-    // console.log('all >> categories', all);
     setState({ ...state, categories: all, success: '', error: '' });
-  };
-
-  // category checkboxes turn into select
-  const showGroups = () => {
-    return (
-      loadedGroups &&
-      loadedGroups.map((c, i) => (
-        <li className="list-unstyled" key={c._id}>
-          <input
-            type="checkbox"
-            onChange={handleToggle(c._id)}
-            className="mr-2 "
-          />
-          <label htmlFor="" className="form-check-label">
-            {c.name}
-          </label>
-        </li>
-      ))
-    );
-  };
-
-  // category checkboxes
-  const showCategories = () => {
-    return (
-      loadedCategories &&
-      loadedCategories.map((c, i) => (
-        <li className="list-unstyled" key={c._id}>
-          <input
-            checked={categories.includes(c._id)} // populates checked categories from registration
-            type="checkbox"
-            onChange={handleToggle(c._id)}
-            className="mr-2"
-          />
-          <label htmlFor="" className="form-check-label">
-            {c.name}
-          </label>
-        </li>
-      ))
-    );
-  };
-
-  const handleChange = (name, student) => (e) => {
-    setState({
-      ...state,
-      [name]: e.target.value,
-      [student]: e.target.value,
-      error: '',
-      success: '',
-      buttonText: 'Register',
-    });
   };
 
   const handleObjectNameChange = (name) => (e) => {
@@ -573,45 +379,6 @@ const Profile = ({ user, token }) => {
     oneStudent.name = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
-    // setState({
-    //   ...state,
-    //   student: [...students],
-    //   buttonText: 'Register',
-    //   success: '',
-    //   error: '',
-    // });
-
-    setState({
-      ...state,
-      students: [
-        ...students,
-        // {
-        //   name: e.target.value,
-        // },
-      ],
-      error: '',
-      success: '',
-      buttonText: 'Register',
-    });
-  };
-  const handleObjectAllergyChange = (name) => (e) => {
-    let i = e.target.getAttribute('data-index');
-
-    let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
-    let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    oneStudent.foodAllergy = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
-    oneStudent.group = e.target.value === 'gluten' && '';
-    students[i] = oneStudent; // puts meal[i] back into mealRequest array
-
-    console.log('group', students[i].group);
-    // setState({
-    //   ...state,
-    //   student: [...students],
-    //   buttonText: 'Register',
-    //   success: '',
-    //   error: '',
-    // });
-
     setState({
       ...state,
       students: [...students],
@@ -621,6 +388,26 @@ const Profile = ({ user, token }) => {
     });
   };
 
+  // const handleObjectAllergyChange = (name) => (e) => {
+  //   let i = e.target.getAttribute('data-index');
+
+  //   let students = [...state.students]; // spreads array from mealRequest: [] into an array called meals
+  //   let oneStudent = { ...students[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   oneStudent.foodAllergy = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+  //   oneStudent.group = e.target.value === 'gluten' && '';
+  //   students[i] = oneStudent; // puts meal[i] back into mealRequest array
+
+  //   console.log('group', students[i].group);
+
+  //   setState({
+  //     ...state,
+  //     students: [...students],
+  //     error: '',
+  //     success: '',
+  //     buttonText: 'Register',
+  //   });
+  // };
+
   const handleObjectAgeChange = (age) => (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -629,22 +416,9 @@ const Profile = ({ user, token }) => {
     oneStudent.age = e.target.value; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
 
-    // setState({
-    //   ...state,
-    //   student: [...students],
-    //   buttonText: 'Register',
-    //   success: '',
-    //   error: '',
-    // });
-
     setState({
       ...state,
-      students: [
-        ...students,
-        // {
-        //   name: e.target.value,
-        // },
-      ],
+      students: [...students],
       error: '',
       success: '',
       buttonText: 'Register',
@@ -664,15 +438,6 @@ const Profile = ({ user, token }) => {
         ? 'distance-learning'
         : ''; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     students[i] = oneStudent; // puts meal[i] back into mealRequest array
-
-    // setState({
-    //   ...state,
-    //   student: [...students],
-    //   buttonText: 'Register',
-    //   success: '',
-    //   error: '',
-    // });
-
     setState({
       ...state,
       students: [
@@ -687,22 +452,14 @@ const Profile = ({ user, token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log('submit', students);
     setState({ ...state, buttonText: 'Registering...' });
-    // if (password !== confirmPassword) {
-    //   setState({ ...state, error: "Passwords don't match" });
-    //   // alert('passwords dont match')
-    // } else {
     try {
       const response = await axios.put(
         `${API}/user/add`,
         {
-          // name,
-          // lastName,
-          // email,
-          // password,
           students,
           categories,
+          special
         },
         {
           headers: {
@@ -710,17 +467,11 @@ const Profile = ({ user, token }) => {
           },
         }
       );
-      // console.log('User update response', response);
       updateUser(response.data, () => {
         setState({
           ...state,
-          // name: '',
-          // email: '',
-          // password: '',
-          // confirmPassword: '',
           buttonText: 'Submitted',
           success: "You've successfully registered your students",
-          // success: response.data.message,
         });
       });
     } catch (error) {
@@ -731,7 +482,6 @@ const Profile = ({ user, token }) => {
         error: error.response.data.error,
       });
     }
-    // }
   };
 
   const handleAllergy = (name) => (e) => {
@@ -739,7 +489,6 @@ const Profile = ({ user, token }) => {
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
     let i = e.target.getAttribute('data-index');
-    // console.log('let students value', e.target);
 
     let students = [...state.students];
     let oneStudent = { ...students[i] };
@@ -766,7 +515,6 @@ const Profile = ({ user, token }) => {
     showOne.showAllergy = !showOne.showAllergy;
 
     allShow[i] = showOne;
-    // console.log(allShow);
 
     setState({ ...state, showAllergies: [...allShow] });
   };
@@ -794,11 +542,6 @@ const Profile = ({ user, token }) => {
                   </h6>
 
                   <div className="form-group pt-1">
-                    {/* <div className="form-group">
-                      <label htmlFor="" className="form-check-label text-muted">
-                        Student's Full Name
-                      </label>
-                    </div> */}
                     <input
                       key={i + 3}
                       value={x.all}
@@ -811,30 +554,6 @@ const Profile = ({ user, token }) => {
                       required
                     />
                   </div>
-                  {/* <label htmlFor="" className="form-check-label text-muted">
-                        Food Allergies (Only)
-                      </label> */}
-                  {/* <div className="form-group pt-1">
-                    <input
-                      value={x.foodAllergy}
-                      data-index={i}
-                      onChange={handleObjectAllergyChange()}
-                      // onChange={handleChange({student: 'name'})}
-                      type="text"
-                      className="form-control"
-                      placeholder="List Food Allergies (Only)"
-                    />
-                  </div> */}
-
-                  {/* <div className="toggle-container">
-                    <input type="checkbox" id="allergy" className="toggle" />
-                    <label htmlFor="" className="label">
-                      <div className="ball"></div>
-                    </label>
-                    <span>&nbsp; Peanutes</span>
-                  </div> */}
-
-                  {/* <h6 key={i} className="form-control"> */}
                   <label
                     data-index={i}
                     onClick={(e) => handleShowAllergies(e)}
@@ -849,7 +568,6 @@ const Profile = ({ user, token }) => {
                   </label>
 
                   {
-                    // students.length > 1 &&
                     <button
                       key={i}
                       data-index={i}
@@ -859,30 +577,6 @@ const Profile = ({ user, token }) => {
                       <i class="fas fa-user-times"></i>{' '}
                     </button>
                   }
-                  {/* </h6> */}
-
-                  {/* <div className={styles.toggleContainer}> */}
-                  {/* <input
-                          key={i}
-                          data-index={i}
-                          type="checkbox"
-                          id={'peanuts' + [i]}
-                          onChange={handleAllergy('peanuts')}
-                          className={styles.toggle}
-                          checked={students[i].foodAllergy.peanuts}
-                        />
-                          <label data-index={i} htmlFor={'peanuts'+ [i]} className={styles.label}>
-                          <div className={styles.ball}></div>
-                        </label>
-                        <span
-                        data-index={i}
-                          className="text-secondary"
-                          className={styles.toggleName}
-                        >
-                          {' '}
-                          {'Peanutes'}
-                        </span> */}
-                  {/* </div> */}
 
                   {showAllergies[i].showAllergy && (
                     <div className="form-control ">
@@ -894,10 +588,8 @@ const Profile = ({ user, token }) => {
                           toggleId="peanuts"
                           toggleName="Peanuts"
                           handleToggle={handleAllergy('peanuts')}
-                          // indexIs={getIndex}
                         ></Toggle>
 
-                        {/* <button key={i} > test + `${i}` </button> */}
                         <Toggle
                           toggleKey={i}
                           dataIndex={i}
@@ -979,13 +671,11 @@ const Profile = ({ user, token }) => {
                       showSuccessMessage(
                         'Curbside pickup only for your allergy group'
                       )}
-                  {/* <hr /> */}
                   <div className="form-group pt-3">
                     <select
                       value={students[i].schoolName}
                       data-index={i}
                       onChange={handleObjectSchoolChange()}
-                      // onChange={handleChange({student: 'name'})}
                       type="text"
                       defaultValue={''}
                       className="form-control"
@@ -1004,18 +694,6 @@ const Profile = ({ user, token }) => {
                     </select>
                   </div>
 
-                  {/* <div className="form-group pt-1">
-                      <input
-                        value={students.student}
-                        data-index={i}
-                        onChange={handleObjectSchoolChange()}
-                        // onChange={handleChange({student: 'name'})}
-                        type="text"
-                        className="form-control"
-                        placeholder="School student attends"
-                        required
-                      />
-                    </div> */}
                   {students[i].schoolName != 'NON' &&
                     students[i].schoolName != 'DK' &&
                     students[i].schoolName != 'OVHS' && (
@@ -1056,7 +734,6 @@ const Profile = ({ user, token }) => {
                         value={x.age}
                         data-index={i}
                         onChange={handleObjectAgeChange()}
-                        // onChange={handleChange({student: 'name'})}
                         type="text"
                         className="form-control"
                         placeholder="Age"
@@ -1070,7 +747,6 @@ const Profile = ({ user, token }) => {
                         value={x.age}
                         data-index={i}
                         onChange={handleObjectAgeChange()}
-                        // onChange={handleChange({student: 'name'})}
                         type="text"
                         className="form-control"
                         placeholder="Age (must be under 18)"
@@ -1078,21 +754,11 @@ const Profile = ({ user, token }) => {
                       />
                     </div>
                   )}
-
-                  {/* <div className="form-group">
-        <label className="text-muted ml-3"> Student Group </label>
-
-        <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
-          {showGroups()}
-        </ul>
-      </div> */}
                 </div>
               );
             })}
         </div>
       </div>
-
-      {/* {console.log('student array in state', state.students)} */}
 
       <div className="form-group">
         {students.length < 5 && (
@@ -1105,18 +771,6 @@ const Profile = ({ user, token }) => {
             {addButtonText}
           </button>
         )}
-        {/* <div className=""> */}
-
-        {/* {students.length > 1 && (
-          <button
-            className="btn text-danger btn-outline-secondary float-right"
-            onClick={(e) => removeStudent(e)}
-          >
-            <i class="fas fa-user-times"></i>{' '}
-          </button>
-        )} */}
-        {/* </div> */}
-        {/* {addStudent(i)} */}
 
         <div className="pt-4"></div>
         {success && showSuccessMessage(success)}
@@ -1131,19 +785,6 @@ const Profile = ({ user, token }) => {
     </form>
   );
 
-  // return (
-  //   <Layout>
-  //     <div className="pt-4"></div>
-  //     <div className={styles.subcard}>
-  //       {/* + "col-md-6 offset-md-3 subcard" */}
-  //       <h2 className={styles.title}>Update Profile</h2>
-  //       <br />
-  //       {success && showSuccessMessage(success)}
-  //       {error && showErrorMessage(error)}
-  //       {updateForm()}
-  //     </div>
-  //   </Layout>
-  // );
   return (
     <div
       className={styles.background}
@@ -1157,29 +798,19 @@ const Profile = ({ user, token }) => {
         <div className={styles.body}>
           <div className="pt-5 pb-2"></div>
 
-          {/* <div className="pt-4"></div> */}
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
-              {/* + "col-md-6 offset-md-3 subcard" */}
               <h4 className={'text-muted ' + styles.title}>
                 Register Students for Meal Requests
               </h4>
               <br />
               {registerForm()}
-              {/* {success && showSuccessMessage(success)}
-    {error && showErrorMessage(error)} */}
             </div>
           </div>
         </div>
-        {/* <div className="pb-4"></div> */}
       </Layout>
     </div>
   );
 };
-
-// Profile.getInitialProps = () => {
-//   loadGroups();
-//   loadTeachers();
-// }
 
 export default withUser(Profile);

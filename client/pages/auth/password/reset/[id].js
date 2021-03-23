@@ -96,7 +96,7 @@ const ResetPassword = ({ router }) => {
     } else if (!newPassword.match(/[^A-Za-z0-9]/g)) {
       setState({ ...state, error: "Password MUST contain at least one special character" });
 
-    } else if (password.match(/[0-9]/g) === null) {
+    } else if (newPassword.match(/[0-9]/g) === null) {
       setState({
         ...state,
         error: 'Password MUST contain at least one special number',

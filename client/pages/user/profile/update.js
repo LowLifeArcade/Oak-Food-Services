@@ -31,6 +31,7 @@ const Profile = ({ user, token }) => {
       { showAllergey: false },
       { showAllergey: false },
     ],
+    special: { special: false },
     groups: [],
     teachers: [],
     loadedGroups: [],
@@ -42,6 +43,7 @@ const Profile = ({ user, token }) => {
     showAllergies,
     addButtonText,
     students,
+    special,
     name,
     teachers,
     lastName,
@@ -668,6 +670,7 @@ const Profile = ({ user, token }) => {
           lastName,
           email,
           students,
+          special
         },
         {
           headers: {

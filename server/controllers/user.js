@@ -99,7 +99,7 @@ exports.list = (req, res) => {
 // };
 
 exports.update = (req, res) => {
-  const { name, lastName, email, students } = req.body;
+  const { name, lastName, email, students, special } = req.body;
   // switch (true) {
   //   case password && password.length < 8:
   //     return res
@@ -111,7 +111,7 @@ exports.update = (req, res) => {
 
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { name, lastName, email, students },
+    { name, lastName, email, students, special },
     { new: true }
   ).exec((err, updated) => {
     if (err) {
@@ -127,7 +127,7 @@ exports.update = (req, res) => {
 };
 
 exports.addStudents = (req, res) => {
-  const { students } = req.body;
+  const { students, special } = req.body;
   // switch (true) {
   //   case password && password.length < 8:
   //     return res
@@ -139,7 +139,7 @@ exports.addStudents = (req, res) => {
 
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { students },
+    { students, special },
     { new: true }
   ).exec((err, updated) => {
     if (err) {

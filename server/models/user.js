@@ -47,13 +47,6 @@ const userSchema = new mongoose.Schema(
       data: String,
       default: '',
     },
-    // students: [ // can change to schools 
-    //   { 
-    //     type: ObjectId,
-    //     ref: 'Student',
-    //     required: true
-    //   }
-    // ],
     students: [ 
       { 
         name: {
@@ -68,11 +61,6 @@ const userSchema = new mongoose.Schema(
           type: String,
           required: true
         },
-        // teacher:{
-        //   type: ObjectId,
-        //   ref: 'Teacher',
-        //   required: true
-        // },
         foodAllergy: {
            peanuts: {
             type: Boolean
@@ -108,6 +96,11 @@ const userSchema = new mongoose.Schema(
         }
       }
     ],
+    special: {
+      special: {
+        type: Boolean
+      }
+    },
     categories: [ // can change to schools 
       {
         type: ObjectId,
@@ -117,7 +110,6 @@ const userSchema = new mongoose.Schema(
     ],
     userCode: {
       type: String,
-      // trim: true,
       required: true,
       max: 32,
     },
@@ -149,7 +141,7 @@ userSchema.methods = {
     if (!password) return '';
     try {
       return crypto
-        .createHmac('sha256', this.salt) // possible algorithm problem RS256 might have to go here instead of sha1
+        .createHmac('sha256', this.salt) // possible algorithm problem RS256 might have to go here instead or bcrypt 
         .update(password)
         .digest('hex');
       console.log(hash);
