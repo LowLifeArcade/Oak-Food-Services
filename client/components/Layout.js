@@ -707,7 +707,7 @@ const Layout = ({ children }) => {
     <React.Fragment>
       {head()} 
       {nav()} 
-      {/* {accordian()}  */}
+      {accordian()} 
       {/* {sideMenu()}  */}
       {/* {sideBar()} */}
       {' '}
