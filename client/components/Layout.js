@@ -368,7 +368,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )}
-        {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSidebar(false)}
             className="nav-item pointer-hand"
@@ -392,9 +392,9 @@ const Layout = ({ children }) => {
               </a>
             </Link>
           </li>
-        )}
+        )} */}
 
-        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSidebar(false)}
             className="nav-item pointer-hand"
@@ -419,7 +419,7 @@ const Layout = ({ children }) => {
               </a>
             </Link>
           </li>
-        )} */}
+        )}
 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
