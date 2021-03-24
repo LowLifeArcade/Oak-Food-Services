@@ -394,7 +394,7 @@ const Layout = ({ children }) => {
           </li>
         )}
 
-        {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSidebar(false)}
             className="nav-item pointer-hand"
@@ -419,9 +419,9 @@ const Layout = ({ children }) => {
               </a>
             </Link>
           </li>
-        )}
+        )} */}
 
-        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSideMenu(false)}
             className="nav-item pointer-hand"
@@ -458,9 +458,9 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           </React.Fragment>
-        )} */}
+        )}
 
-        {/* {
+        {
           // pageloaded &&
           process.browser && isAuth() && (
             <li
@@ -473,9 +473,9 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )
-        } */}
+        }
 
-        {/* {
+        {
           // pageloaded &&
           process.browser && isAuth() && (
             <li
@@ -490,7 +490,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )
-        } */}
+        }
       </ul>
     </div>
   );
