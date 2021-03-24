@@ -7,7 +7,7 @@ import Link from 'next/link';
 import moment from 'moment';
 import renderHTML from 'react-render-html';
 import Router from 'next/router';
-// import { isAuth } from '../helpers/auth';
+import { isAuth } from '../helpers/auth';
 
 // refactor this into the admin only view
 const Menus = ({ categories }) => {
@@ -131,7 +131,7 @@ const Menus = ({ categories }) => {
                         {/* {popular.map((l, i) => l.postedBy.name)} */}
                         {/* {c.username} */}
                         {
-                        process.browser && isAuth().role === 'admin' && 
+                        process.browser && isAuth() && isAuth().role === 'admin' && 
                         (
                           <div className="">
                             <Link href={`/admin/category/${c.slug}`}>
