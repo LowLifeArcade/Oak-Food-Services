@@ -232,9 +232,10 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )}
-        {/* {process.browser && isAuth().role === 'subscriber' && (
+
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li
-            key="1"
+            key="1133"
             onClick={() => setShowSidebar(false)}
             className="nav-item pointer-hand "
           >
@@ -260,7 +261,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           </React.Fragment>
-        )} */}
+        )}
 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li key="4" className="nav-item ml-auto">
@@ -708,8 +709,8 @@ const Layout = ({ children }) => {
       {head()} 
       {nav()} 
       {accordian()} 
-      {/* {sideMenu()}  */}
-      {/* {sideBar()} */}
+      {sideMenu()} 
+      {sideBar()}
       {' '}
       <div className={'container pt-5 '}>{children}</div>
     </React.Fragment>
