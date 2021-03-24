@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -15,15 +15,6 @@ Router.onRouteChangeError = (url) => NProgress.done();
 const Layout = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showSideMenu, setShowSideMenu] = useState(false);
-  const [pageloaded, setPageloaded] = useState(false);
-  const [input, setInput] = useState(false);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setPageloaded(true);
-  //   }, 500);
-  // }, [input]);
-
   const head = () => (
     <>
       {/* bootstrap */}
@@ -153,7 +144,7 @@ const Layout = ({ children }) => {
           </li>
         )} */}
 
-        {process.browser && isAuth() && isAuth().role === 'admin' &&  (
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li key="5" className="nav-item ml-auto">
             <a
               onClick={() => setShowSideMenu(!showSideMenu)}
@@ -163,7 +154,7 @@ const Layout = ({ children }) => {
             </a>
           </li>
         )}
-        {process.browser &&isAuth() && isAuth().role === 'subscriber' &&  (
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li key="6" className="nav-item ml-auto">
             <a
               onClick={() => setShowSideMenu(!showSideMenu)}
@@ -198,11 +189,8 @@ const Layout = ({ children }) => {
     <accordion className={'fixed-top ' + styles.accordion}>
       <ul className={'nav nav-tabs ' + styles.accordion}>
         <li key="1" className="nav-item pointer-hand">
-          <a
-            onClick={() => setShowSidebar(!showSidebar)}
-            className="nav-link text-white"
-          >
-            <span>
+          <a onClick={() => setShowSidebar(!showSidebar)} className="nav-link text-white">
+            <span >
               <i className="fas fa-bars"></i>
             </span>
           </a>
@@ -468,9 +456,7 @@ const Layout = ({ children }) => {
           </React.Fragment>
         )}
 
-        {
-        // pageloaded && 
-        process.browser && isAuth() && (
+        {process.browser && isAuth() && (
           <li
             onClick={() => setShowSidebar(false)}
             key="8"
@@ -482,9 +468,7 @@ const Layout = ({ children }) => {
           </li>
         )}
 
-        {
-        // pageloaded && 
-        process.browser && isAuth() && (
+        {process.browser && isAuth() && (
           <li
             onClick={() => setShowSidebar(false)}
             key="7"
@@ -712,14 +696,7 @@ const Layout = ({ children }) => {
   return (
     <React.Fragment>
       {head()} {nav()} {accordian()} {sideMenu()} {sideBar()}{' '}
-      <div
-        className={
-          'container pt-5 '
-          // + (pageload && styles.pageload)
-        }
-      >
-        {children}
-      </div>
+      <div className={'container pt-5 '}>{children}</div>
     </React.Fragment>
   );
 };
