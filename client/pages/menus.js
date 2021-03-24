@@ -131,7 +131,7 @@ const Menus = ({ categories }) => {
                         {/* {popular.map((l, i) => l.postedBy.name)} */}
                         {/* {c.username} */}
                         {
-                        process.browser && isAuth() && isAuth().role === 'admin' && 
+                        process.browser && isAuth().role === 'admin' && 
                         (
                           <div className="">
                             <Link href={`/admin/category/${c.slug}`}>
