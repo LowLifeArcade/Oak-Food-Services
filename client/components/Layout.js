@@ -711,7 +711,7 @@ const Layout = ({ children }) => {
 
   return (
     <React.Fragment>
-      {head()} {nav()} {accordian()} {sideMenu()} {sideBar()}{' '}
+      {/* {head()} {nav()} {accordian()} {sideMenu()} {sideBar()}{' '} */}
       <div
         className={
           'container pt-5 '
