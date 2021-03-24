@@ -243,15 +243,15 @@ const Links = ({
         <br />
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <div className="">
-              {/* <Link href={`/admin/category/${category.slug}`}>
+              <Link href={`/admin/category/${category.slug}`}>
                 <button className="badge btn btn-sm btn-outline-warning  mb-1">
                   Update
                 </button>
-              </Link> */}
+              </Link>
               &nbsp;
               <button
                 onClick={(e) => confirmDelete(e, category.slug)}
-                className="badge btn btn btn-outline-danger float-right"
+                className="badge btn btn-sm btn-outline-danger "
               >
                 Delete
               </button>

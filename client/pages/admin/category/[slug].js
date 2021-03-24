@@ -380,23 +380,20 @@ const Update = ({ oldCategory, token }) => {
         </label>
       </div>
       <button className="btn btn-outline-warning">{buttonText}</button>
-      <div className="p-2"></div>
-      {(
-        <div className="">
-          <Link href={`/admin/category/${oldCategory.slug}`}>
+      
+          {/* <Link href={`/admin/category/${oldCategory.slug}`}>
             <button className="badge btn btn-sm btn-outline-warning  mb-1">
-              Update
+            Update
             </button>
-          </Link>
-          &nbsp;
+          </Link> */}
           <button
             onClick={(e) => confirmDelete(e, oldCategory.slug)}
-            className="badge btn btn-sm btn-outline-danger "
+            className="badge btn btn btn-outline-danger float-right"
           >
             Delete
           </button>
-        </div>
-      )}
+          <div className="p-2"></div>
+      
     </form>
   );
 
