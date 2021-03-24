@@ -6,9 +6,8 @@ import Layout from '../components/Layout';
 import Link from 'next/link';
 import moment from 'moment';
 import renderHTML from 'react-render-html';
-import  Router  from 'next/router';
+import Router from 'next/router';
 import { isAuth } from '../helpers/auth';
-
 
 // refactor this into the admin only view
 const Menus = ({ categories }) => {
@@ -27,7 +26,7 @@ const Menus = ({ categories }) => {
 
   // useEffect(() => {
   //   // setTimeout(() => {
-      
+
   //   // }, 500);
   //   !isAuth() && Router.push('/login') ;
   // }, [])
@@ -80,95 +79,105 @@ const Menus = ({ categories }) => {
       .reverse()
       .map((c, i) => (
         <>
-        <div className="">
-
-          <div
-          key={i}
-            // className={'col-md-12 pt-2'}
-            style={{
-              // color: 'grey',
-              border: '1px solid grey',
-              // padding: '10px',
-              boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
-              // borderRadius: '8px',
-              // borderBlock: '5px',
-            }}
-            className="bg-white"
-          >
-            <Link
-              
-              href={`/links/${c.slug}`}
-              style={{ textDecoration: 'none' }}
+          <div className="">
+            <div
+              key={i}
+              // className={'col-md-12 pt-2'}
+              style={{
+                // color: 'grey',
+                border: '1px solid grey',
+                // padding: '10px',
+                boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
+                // borderRadius: '8px',
+                // borderBlock: '5px',
+              }}
+              className="bg-white"
             >
-              <a
-                style={{
-                  color: 'grey',
-                  textDecoration: 'none'
-                  // border: '1px solid grey',
-                  // padding: '10px',
-                  // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
-                  // borderRadius: '8px',
-                  // borderBlock: '5px',
-                }}
+              <Link
+                href={`/links/${c.slug}`}
+                style={{ textDecoration: 'none' }}
               >
-                <div className="p-4">
-              
-
-                      <h3 className="font-weight-bold ">{c.name}</h3>
-                      <hr />
-                      <div 
-                      // className="lead alert alert-seconary pt-4"
-                      // className={'col-md-12 pt-2'}
-
-                      >
-                        {renderHTML(c.content || '')}
-                      </div>
+                <a
+                  style={{
+                    color: 'grey',
+                    textDecoration: 'none',
+                    // border: '1px solid grey',
+                    // padding: '10px',
+                    // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+                    // borderRadius: '8px',
+                    // borderBlock: '5px',
+                  }}
+                >
+                  <div className="p-4">
+                    <h3 className="font-weight-bold ">{c.name}</h3>
+                    <hr />
+                    <div
+                    // className="lead alert alert-seconary pt-4"
+                    // className={'col-md-12 pt-2'}
+                    >
+                      {renderHTML(c.content || '')}
+                    </div>
+                    <div className="">
+                      {c.image && (
+                        <img
+                          src={c.image.url}
+                          alt={c.name}
+                          style={{ width: '280px', maxHeight: 'auto' }}
+                        />
+                      )}
                       <div className="">
-                        {c.image && (
-                          <img
-                            src={c.image.url}
-                            alt={c.name}
-                            style={{ width: '280px', maxHeight: 'auto' }}
-                          />
+                        {/* <h3>{c.name}</h3> {c.createdAt} */}
+                        Posted {moment(c.createdAt).format('MMMM Do YYYY')}
+                        {/* {popular.map((l, i) => l.postedBy.name)} */}
+                        {/* {c.username} */}
+                        {process.browser && isAuth().role === 'admin' && (
+                          <div className="">
+                            <Link href={`/admin/category/${c.slug}`}>
+                              <button className="badge btn btn-sm btn-outline-warning  mb-1 float-right">
+                                Update
+                              </button>
+                            </Link>
+                            &nbsp;
+                            {/* <button
+                onClick={(e) => confirmDelete(e, category.slug)}
+                className="badge btn btn-sm btn-outline-danger "
+              >
+                Delete
+              </button> */}
+                          </div>
                         )}
-                        <div className="">
-                          {/* <h3>{c.name}</h3> {c.createdAt} */}
-                          Posted {moment(c.createdAt).format('MMMM Do YYYY')}
-                          {/* {popular.map((l, i) => l.postedBy.name)} */}
-                          {/* {c.username} */}
-                        </div>
-
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </a>
-            </Link>
+                </a>
+              </Link>
+            </div>
+            <div className="p-2"></div>
           </div>
-          <div className="p-2"></div>
-          </div>
-
         </>
       ));
   return (
-    <div key={2000} className={styles.background} >
-
-    <div className={styles.mobilehome}>
-
-    <Layout>
-      {/* <div className=" pt-4">
+    <div key={2000} className={styles.background}>
+      <div className={styles.mobilehome}>
+        <Layout>
+          {/* <div className=" pt-4">
         <div className="">
         <h3 className="font-weight-bold">Your Food Feed</h3>
         </div>
       </div> */}
 
-      <div key={1000} className=" row flex-column justify-content-center pt-3 ">
-        {listCategories()}
-      </div>
+          <div
+            key={1000}
+            className=" row flex-column justify-content-center pt-3 "
+          >
+            {listCategories()}
+          </div>
 
-      {/* <div className="row pt-5">
+          {/* <div className="row pt-5">
         <h2 className="font-weight-bold pb-3">Trending</h2>
         <div className="col-md-12 overflow-hidden">{listOfLinks()}</div>
       </div> */}
-    </Layout>
+        </Layout>
       </div>
     </div>
   );

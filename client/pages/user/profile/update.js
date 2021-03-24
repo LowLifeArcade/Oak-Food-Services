@@ -11,6 +11,7 @@ import withUser from '../../withUser';
 import Link from 'next/link';
 
 const Profile = ({ user, token }) => {
+  const [handleEmail, setHandleEmail] = useState(true);
   const [state, setState] = useState({
     name: user.name,
     lastName: user.lastName,
@@ -31,14 +32,16 @@ const Profile = ({ user, token }) => {
       { showAllergey: false },
       { showAllergey: false },
     ],
-    special: { special: false },
+    special: {
+      sendEmail: user.special && user.special.sendEmail ? true :user.special.sendEmail, // checks if there's a value, if not sets to true
+    },
     groups: [],
     teachers: [],
     loadedGroups: [],
     loadedTeachers: [],
   });
-  console.log('on load', user.students);
-
+  // console.log('on load', user.students);
+// console.log('type of send email',typeof user.special.sendEmail)
   const {
     showAllergies,
     addButtonText,
@@ -61,10 +64,12 @@ const Profile = ({ user, token }) => {
   } = state;
 
   // load categories when component mounts useing useEffect
-  useEffect(() => {
-    // loadCategories();
-    loadGroups();
-  }, []);
+  // useEffect(() => {
+  //   if (user.special.sendEmail != undefined) {
+
+  //     setState({...state, special: {sendEmail: user.special.sendEmail}})
+  //   }
+  // }, [groups]);
 
   useEffect(() => {
     success === "You've successfully updated your profile" &&
@@ -73,18 +78,18 @@ const Profile = ({ user, token }) => {
       }, 2000);
   }, [success]);
 
-  const loadGroups = async () => {
-    const response = await axios.get(`${API}/groups`);
-    const response2 = await axios.get(`${API}/teachers`);
+  // const loadGroups = async () => {
+  //   const response = await axios.get(`${API}/groups`);
+  //   const response2 = await axios.get(`${API}/teachers`);
 
-    setState({
-      ...state,
-      loadedTeachers: response2.data,
-      loadedGroups: response.data,
-    });
-  };
+  //   setState({
+  //     ...state,
+  //     loadedTeachers: response2.data,
+  //     loadedGroups: response.data,
+  //   });
+  // };
   // console.log(loadedTeachers)
-  console.log('loaded groups', loadedGroups);
+  // console.log('loaded groups', loadedGroups);
 
   // student add select THIS is where things are going to be tricky
   const handleGroupSelectChange = (e) => {
@@ -357,17 +362,17 @@ const Profile = ({ user, token }) => {
     setState({ ...state, students: list });
   };
 
-  const handleToggle = (c) => () => {
-    const clickedCategory = categories.indexOf(c);
-    const all = [...categories];
+  // const handleToggle = (c) => () => {
+  //   const clickedCategory = categories.indexOf(c);
+  //   const all = [...categories];
 
-    if (clickedCategory === -1) {
-      all.push(c);
-    } else {
-      all.splice(clickedCategory, 1);
-    }
-    setState({ ...state, categories: all, success: '', error: '' });
-  };
+  //   if (clickedCategory === -1) {
+  //     all.push(c);
+  //   } else {
+  //     all.splice(clickedCategory, 1);
+  //   }
+  //   setState({ ...state, categories: all, success: '', error: '' });
+  // };
 
   const handleChange = (name, student) => (e) => {
     setState({
@@ -379,6 +384,24 @@ const Profile = ({ user, token }) => {
       buttonText: 'Update',
     });
   };
+
+  const handleEmailToggle = (e) => {
+    setState({
+      ...state,
+      special: {
+        sendEmail:
+          e.target.type === 'checkbox'
+            ? // ? 'true': 'false',
+              e.target.checked
+            : e.target.checked,
+      },
+      // [student]: e.target.value,
+      error: '',
+      success: '',
+      buttonText: 'Update',
+    });
+  };
+  console.log('email option', special.sendEmail);
 
   const handleObjectNameChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
@@ -536,11 +559,22 @@ const Profile = ({ user, token }) => {
           required
         />
       </div>
-      {
-        <Link href="/auth/password/change">
-          <a className="text-danger float-right">Change Password</a>
-        </Link>
-      }
+      <Link href="/auth/password/change">
+        <a className="text-danger float-right">Change Password</a>
+      </Link>
+      <div className="text-danger">
+        <Toggle
+          toggleKey={11}
+          dataIndex={11}
+          isOn={special.sendEmail}
+          toggleId="email"
+          toggleName="Get Emails"
+          handleToggle={(e) => handleEmailToggle(e)}
+        ></Toggle>
+      </div>
+
+      
+
       <br />
       <div className="row">
         <div className="col-md-12 pt-2">
@@ -848,7 +882,6 @@ const Profile = ({ user, token }) => {
         </div>
       </Layout>
       <div className="p-5"></div>
-
     </div>
   );
 };

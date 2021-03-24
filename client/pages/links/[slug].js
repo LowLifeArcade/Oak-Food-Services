@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
+import { isAuth } from '../../helpers/auth';
 import Layout from '../../components/Layout';
 import styles from '../../styles/Home.module.css';
 import axios from 'axios';
@@ -44,6 +45,28 @@ const Links = ({
   useEffect(() => {
     loadPopular();
   }, []);
+
+  const confirmDelete = (e, slug) => {
+    e.preventDefault();
+    let answer = window.confirm('WARNING! Confirm delete.');
+    if (answer) {
+      handleDelete(slug);
+    }
+  };
+
+  const handleDelete = async (slug) => {
+    try {
+      const response = await axios.delete(`${API}/category/${slug}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('CATEGORY DELETE SUCCESS', response);
+      // loadCatergories();
+    } catch (error) {
+      console.log('ERROR DELETING CATEGORY', error);
+    }
+  };
 
   const loadPopular = async () => {
     const response = await axios.get(`${API}/link/popular/${category.slug}`);
@@ -157,17 +180,46 @@ const Links = ({
   //     )
   //   );
   // };
-
   return (
     <>
       {head()}
       <Layout>
-        <div className="row">
+        <div className="row ">
+          
           <div className="col-md-12 pt-2">
+          
             <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1>
+            
             <hr />
-            <div className="lead alert alert-seconary pt-2">
+            <div className="alert-seconary pt-2">
               {renderHTML(category.content || '')}
+            </div>
+            
+            <div className="alert-seconary pt-2">
+               <table className="table table-striped">
+                {category.menu.length > 0 && <thead>
+                  <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Breakfast</th>
+                    <th scope="col">Lunch</th>
+                    <th scope="col">Vegetarian Lunch</th>
+                  </tr>
+                </thead>}
+                <tbody>
+                  {category.menu.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>{l.row1}</td>
+                        <td>{l.row2}</td>
+                        <td>{l.row3}</td>
+                        <td>{l.row4}</td>
+                      </tr>
+                    </>
+                  )) || ''}
+                </tbody>
+              </table> 
+
+
             </div>
           </div>
           <div className="col-md">
@@ -180,9 +232,31 @@ const Links = ({
             )}
             <div className="pt-5"></div>
             Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
+            <Link href="/user/link/create">
+              <button className={'btn float-right ' + styles.button}>
+                <i class="fas fa-pencil-alt"></i>
+                &nbsp;&nbsp; Request
+              </button>
+            </Link>
           </div>
         </div>
         <br />
+          {isAuth().role === 'admin' && (
+            <div className="">
+              <Link href={`/admin/category/${category.slug}`}>
+                <button className="badge btn btn-sm btn-outline-warning  mb-1">
+                  Update
+                </button>
+              </Link>
+              &nbsp;
+              {/* <button
+                onClick={(e) => confirmDelete(e, category.slug)}
+                className="badge btn btn-sm btn-outline-danger "
+              >
+                Delete
+              </button> */}
+            </div>
+          )}
         {/* formated link area */}
         {/* <div className="row">
         <div className="col-md-8">{listOfLinks()}</div>

@@ -1,3 +1,4 @@
+import styles from '../../../styles/Home.module.css';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -32,10 +33,15 @@ import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
 import 'react-quill/dist/quill.snow.css';
 import Router from 'next/router';
+import { isAuth } from '../../../helpers/auth';
+import Link from 'next/link';
 
 const Create = ({ user, token }) => {
   const [state, setState] = useState({
     name: '',
+    menu: [
+      { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
+    ],
     postedBy: user._id,
     error: '',
     success: '',
@@ -43,6 +49,7 @@ const Create = ({ user, token }) => {
     image: '',
   });
 
+  const [menuChange, setMenuChange] = useState('');
   const [content, setContent] = useState('');
   const [group, setGroup] = useState('');
 
@@ -51,6 +58,7 @@ const Create = ({ user, token }) => {
   );
 
   const {
+    menu,
     postedBy,
     name,
     success,
@@ -69,31 +77,6 @@ const Create = ({ user, token }) => {
       : console.log('none');
   }, [buttonText]);
 
-  const chooseEmailGroup = () => (
-    <>
-      <div className="form-group col-md-4">
-        <div className="">
-          <select
-            type="select"
-            onChange={(e) => setGroup(e.target.value)}
-            className="form-control"
-            required
-          >
-            {' '}
-            <option selected disabled value="">
-              Choose Student Group
-            </option>
-            <option value="all-students">All Students</option>
-            <option value="distance-learning">Distance Learning</option>
-            <option value="a-group">A - Group</option>
-            <option value="b-group">B - Group</option>
-          </select>
-          <div className=""></div>
-        </div>
-      </div>
-    </>
-  );
-
   const handleChange = (name) => (e) => {
     setState({
       ...state,
@@ -106,6 +89,26 @@ const Create = ({ user, token }) => {
   const handleContent = (e) => {
     setContent(e);
     setState({ ...state, content: { content }, success: '', error: '' });
+  };
+
+  const handleMenu = (rowName) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    setMenuChange(e.target.value);
+
+    let newMenu = [...state.menu];
+    let menuRow = { ...newMenu[i] };
+
+    menuRow[rowName] = menuChange;
+
+    newMenu[i] = menuRow;
+
+    setState({
+      ...state,
+      menu: [...newMenu],
+      success: '',
+      error: '',
+    });
   };
 
   const handleImage = (event) => {
@@ -144,7 +147,7 @@ const Create = ({ user, token }) => {
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, group, image, postedBy },
+        { name, content, group, image, postedBy, menu },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -173,6 +176,47 @@ const Create = ({ user, token }) => {
     }
   };
 
+  const addRow = (e) => {
+    // e.preventDefault();
+    setState({
+      ...state,
+      menu: [...menu, { row1: '', row2: '', row3: '', row4: '' }],
+    });
+  };
+
+  const removeRow = (e) => {
+    e.preventDefault();
+    const list = [...state.menu];
+    list.splice(-1)[0];
+
+    setState({ ...state, menu: list });
+  };
+
+  const chooseEmailGroup = () => (
+    <>
+      <div className="form-group col-md-4">
+        <div className="">
+          <select
+            type="select"
+            onChange={(e) => setGroup(e.target.value)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Student Group
+            </option>
+            <option value="all-students">All Students</option>
+            <option value="distance-learning">Distance Learning</option>
+            <option value="a-group">A - Group</option>
+            <option value="b-group">B - Group</option>
+          </select>
+          <div className=""></div>
+        </div>
+      </div>
+    </>
+  );
+
   const createCategoryForm = () => (
     <form action="" onSubmit={handleSubmit}>
       <div className="form-group col-md-4">
@@ -185,6 +229,7 @@ const Create = ({ user, token }) => {
           required
         />
       </div>
+
       {chooseEmailGroup()}
 
       <div className="form-group">
@@ -199,6 +244,80 @@ const Create = ({ user, token }) => {
         />
       </div>
 
+      {/* table menu */}
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Breakfast</th>
+            <th scope="col">Lunch</th>
+            <th scope="col">Vegetarian Lunch</th>
+          </tr>
+        </thead>
+        <tbody>
+          {menu.map((l, i) => (
+            <>
+              <tr key={i}>
+                <td>
+                  <input
+                    data-index={i}
+                    value={l.row1.value}
+                    onChange={handleMenu('row1')}
+                  />
+                </td>
+                <td>
+                  <input
+                    data-index={i}
+                    value={l.row1.value}
+                    onChange={handleMenu('row2')}
+                  />
+                </td>
+                <td>
+                  <input
+                    data-index={i}
+                    value={l.row1.value}
+                    onChange={handleMenu('row3')}
+                  />
+                </td>
+                <td>
+                  <input
+                    data-index={i}
+                    value={l.row1.value}
+                    onChange={handleMenu('row4')}
+                  />
+                </td>
+                {/* <td>{l.row2}</td>
+                <td>{l.row3}</td>
+                <td>{l.row4}</td> */}
+              </tr>
+              <div className="p-2"></div>
+            </>
+          ))}
+        </tbody>
+      </table>
+      <div className="">
+        {
+          <button
+            className={'btn  btn-outline-info ' + styles.buttonshadow}
+            type="button"
+            onClick={() => menu.map((e) => addRow(e))}
+          >
+            <i class="fas fa-utensils"></i>
+            &nbsp;&nbsp; Add Row
+          </button>
+        }
+
+        {menu.length !== 1 && (
+          <button
+            type="button"
+            className={'btn float-right ' + styles.buttonshadow}
+            onClick={(e) => removeRow(e)}
+          >
+            Remove
+          </button>
+        )}
+      </div>
+      <div className="p-2"></div>
       <div className="form-group">
         <label className="btn btn-outline-secondary">
           {imageUploadButtonName}

@@ -97,8 +97,8 @@ const userSchema = new mongoose.Schema(
       }
     ],
     special: {
-      special: {
-        type: Boolean
+      sendEmail: {
+        type: {}
       }
     },
     categories: [ 

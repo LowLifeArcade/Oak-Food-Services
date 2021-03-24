@@ -1,10 +1,20 @@
 const Category = require('../models/category');
+const { linkPublishedParams } = require('../helpers/email');
+const User = require('../models/user');
 const Link = require('../models/link');
 const slugify = require('slugify');
 const formidable = require('formidable');
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_ID,
+  region: process.env.AWS_REGION,
+});
+
+const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 // s3
 const s3 = new AWS.S3({
@@ -61,11 +71,11 @@ const s3 = new AWS.S3({
 
 exports.create = (req, res) => {
   // base64 taking off beginning of data
-  const { name, content, image, group, postedBy } = req.body;
+  const { name, content, image, group, postedBy, menu } = req.body;
 
   // taking req.body name and making a slug for image name url i think
   const slug = slugify(name);
-  let category = new Category({ name, content, slug, image, group, postedBy });
+  let category = new Category({ name, content, slug, image, group, postedBy, menu });
 
   if (image) {
     // image data
@@ -93,20 +103,74 @@ exports.create = (req, res) => {
       category.image.key = data.Key;
 
       // save to db
-      category.save((err, success) => {
+      category.save((err, data) => {
         console.log('error information', err);
         if (err) res.status(400).json({ error: 'Duplicate post' });
-        return res.json(success);
+        res.json(data);
+        
+        User.find({ special: { sendEmail: true } }).exec((err, users) => {
+          // console.log('emailable users', users);
+          if (err) {
+            console.log('send email err', err);
+            throw new Error(err);
+          } else {
+            // data.categories = result;
+  
+            for (let i = 0; i < users.length; i++) {
+              // console.log("user email stuff", users[i].email, data)
+              const params = linkPublishedParams(users[i].email, data); // email mod
+              const sendEmail = ses.sendEmail(params).promise();
+  
+              sendEmail
+                .then((success) => {
+                  console.log('email submitted to SES', success);
+                  return;
+                })
+                .catch((failure) => {
+                  console.log('error on email submitted to SES', failure);
+                  return;
+                });
+            }
+          }
+        });
       });
     });
   } else {
     // save to db
-    category.save((err, success) => {
+    category.save((err, data) => {
       if (err) res.status(400).json({ error: 'Duplicate post' });
-      console.log(err);
-      return res.json(success);
+
+      res.json(data);
+
+      User.find({ special: { sendEmail: true } }).exec((err, users) => {
+        // console.log('emailable users', users);
+        if (err) {
+          console.log('send email err', err);
+          throw new Error(err);
+        } else {
+          // data.categories = result;
+
+          for (let i = 0; i < users.length; i++) {
+            // console.log("user email stuff", users[i].email, data)
+            const params = linkPublishedParams(users[i].email, data); // email mod
+            const sendEmail = ses.sendEmail(params).promise();
+
+            sendEmail
+              .then((success) => {
+                console.log('email submitted to SES', success);
+                return;
+              })
+              .catch((failure) => {
+                console.log('error on email submitted to SES', failure);
+                return;
+              });
+          }
+        }
+      });
     });
   }
+
+  // $in is a mongoose thing letting you find one or many in something like categories which here comes from the newly posted link
 
   // if new blog post with a-group is posted this will email users in a group (i think)
   //  User.find({ categories: { $in: group } }).exec((err, users) => {
@@ -218,7 +282,7 @@ exports.update = (req, res) => {
         error: 'Could find not category to update',
       });
     }
-    console.log('UPDATED', updated);
+    // console.log('UPDATED', updated);
 
     // incase of image
     if (image) {

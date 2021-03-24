@@ -48,11 +48,19 @@ const User = ({ user, token, l, userLinks }) => {
           <div
             key={i}
             className={
-              l.orderStatus === false
-                ? 'p-4 alert  alert-warning ' + styles.subcard
-                : 'p-4 alert  alert-secondary ' + styles.subcard
+              l.orderStatus === true || moment(l.pickupDate).format('MDD').toString() <
+              moment(new Date()).format('MDD').toString()
+                ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
+                : 
+                'p-4 alert  alert-warning ' + styles.subcard // completed order
+
             }
           >
+            {console.log(
+              'date comparison',
+              moment(l.pickupDate).format('MDD').toString() <
+                moment(new Date()).format('MDD').toString()
+            )}
             <h4>
               {l.orderStatus && (
                 <b className="text-danger ">
@@ -60,6 +68,17 @@ const User = ({ user, token, l, userLinks }) => {
                     * PICKED UP *
                     <br />
                     on {moment(l.updatedAt).format('MMM Do')}
+                  </h2>
+                  <hr />
+                </b>
+              )}
+              {moment(l.pickupDate).format('MDD').toString() <
+              moment(new Date()).format('MDD').toString() && (
+                <b className="text-danger ">
+                  <h2>
+                    * EXPIRED *
+                    <br />
+                    {/* on {moment(l.updatedAt).format('MMM Do')} */}
                   </h2>
                   <hr />
                 </b>
@@ -212,21 +231,28 @@ const User = ({ user, token, l, userLinks }) => {
             </div>
 
             <div className=" pb-3 pt-3">
-              {l.postedBy.students[i] === undefined ? null : (
-                <Link href={`/user/link/${l._id}`}>
-                  <button className="btn btn-sm btn-outline-dark text float-left">
-                    <i class="far fa-edit"></i> &nbsp;Edit
+              {
+                // l.postedBy.students[i] === undefined ? null :
+                l.orderStatus === false && moment(l.pickupDate).format('MDD').toString() >
+                moment(new Date()).format('MDD').toString() && (
+                  <Link href={`/user/link/${l._id}`}>
+                    <button className="btn btn-sm btn-outline-dark text float-left">
+                      <i class="far fa-edit"></i> &nbsp;Edit
+                    </button>
+                  </Link>
+                )
+              }
+              {l.orderStatus === false && moment(l.pickupDate).format('MDD').toString() >
+              moment(new Date()).format('MDD').toString() &&(
+                <Link href="">
+                  <button
+                    onClick={(e) => confirmDelete(e, l._id)}
+                    className="text-white btn btn-sm btn-danger float-right"
+                  >
+                    Cancel
                   </button>
                 </Link>
               )}
-              <Link href="">
-                <button
-                  onClick={(e) => confirmDelete(e, l._id)}
-                  className="text-white btn btn-sm btn-danger float-right"
-                >
-                  Cancel
-                </button>
-              </Link>
               <div className="pb-4"></div>
             </div>
           </div>

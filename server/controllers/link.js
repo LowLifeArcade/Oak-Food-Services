@@ -74,11 +74,11 @@ exports.create = (req, res) => {
     // if new link posted has a category the user has in profile we send an email. Change to categories posted where categories will be weekly menu.
 
     // // if new blog post with a-group is posted this will email users in a group (i think)
-    // User.find({ students: { group: 'a-group' } }).exec((err, users) => {
+    // User.find({ special: { sendEmail: true  } }).exec((err, users) => {
     //   if (err) {
     //     throw new Error(err);
     //   } else {
-    //     data.categories = result;
+    //     // data.categories = result;
 
     //     for (let i = 0; i < users.length; i++) {
     //       const params = linkPublishedParams(users[i].email, data); // email mod

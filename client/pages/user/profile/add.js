@@ -37,7 +37,7 @@ const Profile = ({ user, token }) => {
     success: '',
     buttonText: 'Register',
     addButtonText: 'Add Student',
-    special: { special: false },
+    special: { sendEmail: true },
     groups: [],
     teachers: [],
     loadedGroups: [],

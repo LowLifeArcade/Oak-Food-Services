@@ -55,6 +55,11 @@ exports.forgotPasswordEmailParams = (email, token) => {
     },
   };
 };
+// ${data.egories.map((c) => {
+// }).join('---------------')}
+{
+  /* <img src="${data.image.url}" alt="${data.name}" style"height:50px" /> */
+}
 
 exports.linkPublishedParams = (email, data, token) => {
   // send email
@@ -71,23 +76,20 @@ exports.linkPublishedParams = (email, data, token) => {
           Data: `
           <html>
           <h1>New Weeks Menu | Oakfoods </h1> 
-          <p>A new menu <b>${
-            data.title
-          }</b> has just been posted! Submit your request before Monday at 8am.</p>
-
-          ${data.categories.map((c) => {
-            return `
+          <p>A new menu <b>${data.name}</b> has just been posted! Check it out and submit your request at least two weeks in advance.</p>
+          
+          <h2>${data.name}</h2>
+          <div>
+              ${data.content}
+              </div>
              <div>
-              <h2>${c.name}</h2>
-              <img src="${c.image.url}" alt="${c.name}" style"height:50px" />
-              <h3><a href="${process.env.CLIENT_URL}/links/${c.slug} ">Check it out here!</a></h3>
+              <h3><a href="${process.env.CLIENT_URL}/links/${data.slug} ">Check it out here!</a></h3>
              </div>
-            `;
-          }).join('---------------')} 
+            
+          
           <br/>
-          <p>Do not want notifications?</p>
-          <p>Turn off notifications by going to <b>dashboard</b> > <b>updated profile</b> and <b>uncheck the categories</b> </p>
-          <p>${process.env.CLIENT_URL}/user/profile/update </p>
+          <p>Don't want notifications? <a href=${process.env.CLIENT_URL}/user/profile/update>Click Here</a> </p>
+          <p>Or go turn off notifications by going to <b>dashboard</b> > <b>updated profile</b> and <b>uncheck the categories</b> </p>
           </html>
           `,
         },
