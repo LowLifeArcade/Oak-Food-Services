@@ -18,11 +18,11 @@ const Layout = ({ children }) => {
   const [pageloaded, setPageloaded] = useState(false);
   const [input, setInput] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setPageloaded(true);
-    }, 500);
-  }, [input]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setPageloaded(true);
+  //   }, 500);
+  // }, [input]);
 
   const head = () => (
     <>
@@ -468,7 +468,9 @@ const Layout = ({ children }) => {
           </React.Fragment>
         )}
 
-        {pageloaded && process.browser && isAuth() && (
+        {
+        // pageloaded && 
+        process.browser && isAuth() && (
           <li
             onClick={() => setShowSidebar(false)}
             key="8"
@@ -480,7 +482,9 @@ const Layout = ({ children }) => {
           </li>
         )}
 
-        {pageloaded && process.browser && isAuth() && (
+        {
+        // pageloaded && 
+        process.browser && isAuth() && (
           <li
             onClick={() => setShowSidebar(false)}
             key="7"
