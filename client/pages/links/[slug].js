@@ -241,7 +241,7 @@ const Links = ({
           </div>
         </div>
         <br />
-          {/* {process.browser && isAuth().role === 'admin' && (
+          {process.browser && isAuth().role === 'admin' && (
             <div className="">
               <Link href={`/admin/category/${category.slug}`}>
                 <button className="badge btn btn-sm btn-outline-warning  mb-1">
@@ -256,7 +256,7 @@ const Links = ({
                 Delete
               </button>
             </div>
-          )} */}
+          )}
         {/* formated link area */}
         {/* <div className="row">
         <div className="col-md-8">{listOfLinks()}</div>
