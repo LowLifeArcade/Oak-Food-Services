@@ -153,7 +153,7 @@ const Layout = ({ children }) => {
           </li>
         )} */}
 
-        {isAuth() && isAuth().role === 'admin' && process.browser && (
+        {process.browser && isAuth() && isAuth().role === 'admin' &&  (
           <li key="5" className="nav-item ml-auto">
             <a
               onClick={() => setShowSideMenu(!showSideMenu)}
@@ -163,7 +163,7 @@ const Layout = ({ children }) => {
             </a>
           </li>
         )}
-        {isAuth() && isAuth().role === 'subscriber' && process.browser && (
+        {process.browser &&isAuth() && isAuth().role === 'subscriber' &&  (
           <li key="6" className="nav-item ml-auto">
             <a
               onClick={() => setShowSideMenu(!showSideMenu)}
