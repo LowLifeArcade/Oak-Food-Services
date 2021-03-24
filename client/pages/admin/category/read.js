@@ -76,6 +76,7 @@ const Read = ({ user, token }) => {
               <div className="col-md-6">
                 <h3>{c.name}</h3>
               </div>
+
               <div className="col-md-3">
                 <Link href={`/admin/category/${c.slug}`}>
                   <button className="btn btn-sm btn-outline-success btn-block mb-1">
@@ -89,6 +90,7 @@ const Read = ({ user, token }) => {
                   Delete
                 </button>
               </div>
+              
             </div>
           </a>
         </Link>

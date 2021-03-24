@@ -241,7 +241,7 @@ const Links = ({
           </div>
         </div>
         <br />
-          {isAuth().role === 'admin' && (
+          {process.browser && isAuth().role === 'admin' && (
             <div className="">
               <Link href={`/admin/category/${category.slug}`}>
                 <button className="badge btn btn-sm btn-outline-warning  mb-1">
