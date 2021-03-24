@@ -241,7 +241,7 @@ const Links = ({
           </div>
         </div>
         <br />
-          {process.browser && isAuth().role === 'admin' && (
+          {/* {process.browser && isAuth().role === 'admin' && (
             <div className="">
               <Link href={`/admin/category/${category.slug}`}>
                 <button className="badge btn btn-sm btn-outline-warning  mb-1">
@@ -249,14 +249,14 @@ const Links = ({
                 </button>
               </Link>
               &nbsp;
-              {/* <button
+              <button
                 onClick={(e) => confirmDelete(e, category.slug)}
                 className="badge btn btn-sm btn-outline-danger "
               >
                 Delete
-              </button> */}
+              </button>
             </div>
-          )}
+          )} */}
         {/* formated link area */}
         {/* <div className="row">
         <div className="col-md-8">{listOfLinks()}</div>
