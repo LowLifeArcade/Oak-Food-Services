@@ -262,7 +262,7 @@ const Layout = ({ children }) => {
           </React.Fragment>
         )}
 
-        {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li key="4" className="nav-item ml-auto">
             <Link href="/admin/link/list">
               <a className="nav-link text-white">Admin: {isAuth().name}</a>
@@ -276,7 +276,7 @@ const Layout = ({ children }) => {
               <a className="nav-link text-white"> {isAuth().name}'s Receipts</a>
             </Link>
           </li>
-        )}
+        )} */}
       </ul>
     </accordion>
   );
@@ -327,8 +327,6 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )}
-        
-        {/* 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSidebar(false)}
@@ -492,7 +490,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )
-        } */}
+        } 
       </ul>
     </div>
   );
