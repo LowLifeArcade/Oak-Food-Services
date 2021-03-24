@@ -381,7 +381,7 @@ const Update = ({ oldCategory, token }) => {
       </div>
       <button className="btn btn-outline-warning">{buttonText}</button>
       <div className="p-2"></div>
-      {isAuth().role === 'admin' && (
+      {(
         <div className="">
           <Link href={`/admin/category/${oldCategory.slug}`}>
             <button className="badge btn btn-sm btn-outline-warning  mb-1">

@@ -130,14 +130,16 @@ const Menus = ({ categories }) => {
                         Posted {moment(c.createdAt).format('MMMM Do YYYY')}
                         {/* {popular.map((l, i) => l.postedBy.name)} */}
                         {/* {c.username} */}
-                        {process.browser && isAuth().role === 'admin' && (
+                        {
+                        // process.browser && isAuth().role === 'admin' && 
+                        (
                           <div className="">
-                            <Link href={`/admin/category/${c.slug}`}>
+                            {/* <Link href={`/admin/category/${c.slug}`}>
                               <button className="badge btn btn-sm btn-outline-warning  mb-1 float-right">
                                 Update
                               </button>
                             </Link>
-                            &nbsp;
+                            &nbsp; */}
                             {/* <button
                 onClick={(e) => confirmDelete(e, category.slug)}
                 className="badge btn btn-sm btn-outline-danger "
