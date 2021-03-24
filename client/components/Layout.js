@@ -460,7 +460,7 @@ const Layout = ({ children }) => {
           </React.Fragment>
         )}
 
-        {
+        {/* {
           // pageloaded &&
           process.browser && isAuth() && (
             <li
@@ -473,9 +473,9 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )
-        }
+        } */}
 
-        {
+        {/* {
           // pageloaded &&
           process.browser && isAuth() && (
             <li
@@ -490,7 +490,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )
-        }
+        } */}
       </ul>
     </div>
   );
