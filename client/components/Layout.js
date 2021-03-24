@@ -315,7 +315,7 @@ const Layout = ({ children }) => {
           </li>
         )}
 
-        {/* {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+        {process.browser && isAuth() && isAuth().role === 'subscriber' && (
           <li
             onClick={() => setShowSidebar(false)}
             className="nav-item pointer-hand"
@@ -327,6 +327,8 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )}
+        
+        {/* 
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSidebar(false)}
@@ -338,7 +340,7 @@ const Layout = ({ children }) => {
               </a>
             </Link>
           </li>
-        )} */}
+        )}
         {
           // process.browser && isAuth() && isAuth().role === 'subscriber' &&
           <li
@@ -490,7 +492,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )
-        }
+        } */}
       </ul>
     </div>
   );
