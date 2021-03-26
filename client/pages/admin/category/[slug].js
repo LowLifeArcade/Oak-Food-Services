@@ -388,7 +388,7 @@ const Update = ({ oldCategory, token }) => {
           </Link> */}
           <button
             onClick={(e) => confirmDelete(e, oldCategory.slug)}
-            className="badge btn btn btn-outline-danger float-right"
+            className="btn btn-outline-danger float-right"
           >
             Delete
           </button>

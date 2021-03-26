@@ -44,7 +44,17 @@ const Update = ({ oldLink, token, user, _id }) => {
         <div className="p-4"></div>
         <>
           {
-            <div className={' p-4 alert alert-warning ' + styles.receipt}>
+            // <div className={' p-4 alert alert-warning ' + styles.receipt}>
+            <div
+              key={242}
+              className={
+                oldLink.orderStatus === true ||
+                moment(oldLink.pickupDate).format('MDD').toString() <
+                  moment(new Date()).format('MDD').toString()
+                  ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
+                  : 'p-4 alert  alert-warning ' + styles.subcard // completed order
+              }
+            >
               <h4>
                 {oldLink.orderStatus && (
                   <b className="text-danger ">
@@ -56,38 +66,54 @@ const Update = ({ oldLink, token, user, _id }) => {
                     <hr />
                   </b>
                 )}
+                {moment(oldLink.pickupDate).format('MDD').toString() <
+                  moment(new Date()).format('MDD').toString() && (
+                  <b className="text-danger ">
+                    <h2>
+                      * EXPIRED *
+                      <br />
+                      {/* on {moment(l.updatedAt).format('MMM Do')} */}
+                    </h2>
+                    <hr />
+                  </b>
+                )}
               </h4>
-
+ {console.log('old link', oldLink)}
               {oldLink.mealRequest.filter(
                 (l) =>
-                  oldLink.meal == 'Standard' ||
-                  oldLink.meal == 'Vegetarian' ||
-                  oldLink.meal == 'Gluten Free' ||
-                  oldLink.meal == 'Vegan' ||
-                  l.meal == 'Standard DF' ||
-                  l.meal == 'GlutenFree DF' ||
-                  oldLink.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+                  // l.meal == 'Standard' ||
+                  // l.meal == 'Vegetarian' ||
+                  // l.meal == 'Gluten Free' ||
+                  // l.meal == 'Vegan' ||
+                  // l.meal == 'Standard DF' ||
+                  // l.meal == 'GlutenFree DF' ||
+                  l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                  l.pickupOption === 'Lunch Only' ||
+                  l.pickupOption === 'Breakfast and Lunch'
               ).length != 0 && (
-                <React.Fragment>
+                <>
                   <h4 className="pt-2 ">
                     PICKUP DATE
                     <br />
                     <b>{moment(oldLink.pickupDate).format('MMMM Do')}</b>
                   </h4>
                   Between <b className="pb-2 ">{oldLink.pickupTime} </b>
-                </React.Fragment>
+                </>
               )}
               <hr className={styles.hr} />
               <h3>
                 {oldLink.mealRequest.filter(
                   (l) =>
-                    oldLink.meal == 'Standard' ||
-                    oldLink.meal == 'Vegetarian' ||
-                    oldLink.meal == 'Gluten Free' ||
-                    oldLink.meal == 'Vegan' ||
-                    l.meal == 'Standard DF' ||
-                    l.meal == 'GlutenFree DF' ||
-                    oldLink.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+                    // l.meal == 'Standard' ||
+                    // l.meal == 'Vegetarian' ||
+                    // l.meal == 'Gluten Free' ||
+                    // l.meal == 'Vegan' ||
+                    // l.meal == 'Standard DF' ||
+                    // l.meal == 'GlutenFree DF' ||
+                    l.pickupOption ===
+                      'Lunch Onsite / Breakfast Pickup' ||
+                    l.pickupOption === 'Lunch Only' ||
+                    l.pickupOption === 'Breakfast and Lunch'
                 ).length != 0 ? (
                   <b className="d-flex justify-content-center">
                     {oldLink.pickupCode}{' '}
@@ -184,7 +210,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                           ) : (
                             <>
                               <div className="p-1">
-                                Curbside {k.meal}{' '}
+                                Curbside: {k.meal}{' '}
                                 <div
                                   className="p-2"
                                   style={{ fontSize: '16px' }}
@@ -214,6 +240,33 @@ const Update = ({ oldLink, token, user, _id }) => {
 
               <div className=" pb-3 pt-3">
                 {
+                  // l.postedBy.students[i] === undefined ? null :
+                  oldLink.orderStatus === false &&
+                    moment(oldLink.pickupDate).format('MDD').toString() >
+                      moment(new Date()).format('MDD').toString() && (
+                      <Link href={`/user/link/${oldLink._id}`}>
+                        <button className="btn btn-sm btn-outline-dark text float-left">
+                          <i class="far fa-edit"></i> &nbsp;Edit
+                        </button>
+                      </Link>
+                    )
+                }
+                {oldLink.orderStatus === false &&
+                  moment(oldLink.pickupDate).format('MDD').toString() >
+                    moment(new Date()).format('MDD').toString() && (
+                    <Link href="">
+                      <button
+                        onClick={(e) => confirmDelete(e, oldLink._id)}
+                        className="text-white btn btn-sm btn-danger float-right"
+                      >
+                        Cancel
+                      </button>
+                    </Link>
+                  )}
+                <div className="pb-4"></div>
+              </div>
+              {/* <div className=" pb-3 pt-3">
+                {
                   <Link href={`/user/link/${oldLink._id}`}>
                     <button className="btn btn-sm btn-outline-dark text float-left">
                       <i class="far fa-edit"></i> &nbsp;Edit
@@ -229,7 +282,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                   </button>
                 </Link>
                 <div className="pb-4"></div>
-              </div>
+              </div> */}
             </div>
           }
         </>

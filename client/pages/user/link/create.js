@@ -23,17 +23,51 @@ const Create = ({ token, user }) => {
           user.students[0].group === 'a-group' ||
           user.students[0].group === 'b-group'
             ? 'Standard Onsite'
-            : user.students[0].foodAllergy.dairy === true &&
+            : user.students[0].foodAllergy.dairy === false &&
+              user.students[0].foodAllergy.gluten === false &&
+              user.students[0].foodAllergy.soy === true &&
+              user.students[0].foodAllergy.sesame === true
+            ? 'Soy and Sesame Free'
+            : user.students[0].foodAllergy.soy === false &&
+              user.students[0].foodAllergy.sesame === false &&
+              user.students[0].foodAllergy.dairy === true &&
               user.students[0].foodAllergy.gluten === true
-            ? 'GlutenFree DF'
-            : user.students[0].foodAllergy.dairy === true
-            ? 'Standard DF'
-            : user.students[0].foodAllergy.gluten === true
-            ? 'GlutenFree'
-            : user.students[0].foodAllergy.soy === true
-            ? 'Standard Syf'
-            : user.students[0].foodAllergy.sesame === true
-            ? 'Standard Smf'
+            ? 'Gluten Free Dairy Free'
+            : user.students[0].foodAllergy.soy === false &&
+              user.students[0].foodAllergy.sesame === false &&
+              user.students[0].foodAllergy.dairy === true &&
+              user.students[0].foodAllergy.gluten === false
+            ? 'Standard Dairy Free'
+            : user.students[0].foodAllergy.soy === false &&
+              user.students[0].foodAllergy.sesame === false &&
+              user.students[0].foodAllergy.dairy === false &&
+              user.students[0].foodAllergy.gluten === true
+            ? 'Gluten Free'
+            : user.students[0].foodAllergy.soy === true &&
+              user.students[0].foodAllergy.sesame === false &&
+              user.students[0].foodAllergy.dairy === false &&
+              user.students[0].foodAllergy.gluten === false
+            ? 'Standard Soy Free'
+            : user.students[0].foodAllergy.soy === false &&
+              user.students[0].foodAllergy.sesame === true &&
+              user.students[0].foodAllergy.dairy === false &&
+              user.students[0].foodAllergy.gluten === false
+            ? 'Standard Sesame Free'
+            : user.students[0].foodAllergy.soy === true &&
+              user.students[0].foodAllergy.sesame === true &&
+              user.students[0].foodAllergy.dairy === true &&
+              user.students[0].foodAllergy.gluten === false
+            ? 'Soy Sesame Dairy Free'
+            : user.students[0].foodAllergy.soy === true &&
+              user.students[0].foodAllergy.sesame === true &&
+              user.students[0].foodAllergy.dairy === false &&
+              user.students[0].foodAllergy.gluten === true
+            ? 'Soy Sesame Gluten Free'
+            : user.students[0].foodAllergy.soy === true &&
+              user.students[0].foodAllergy.sesame === true &&
+              user.students[0].foodAllergy.dairy === true &&
+              user.students[0].foodAllergy.gluten === true
+            ? 'Soy Sesame Dairy Gluten Free'
             : 'Standard',
         student: user.students[0]._id,
         studentName: user.students[0].name,
@@ -46,7 +80,9 @@ const Create = ({ token, user }) => {
           user.students[0].group === 'b-group'
             ? 'Lunch Onsite'
             : user.students[0].foodAllergy.egg === true ||
-              user.students[0].foodAllergy.soy === true
+              user.students[0].foodAllergy.soy === true ||
+              user.students[0].foodAllergy.dairy === true ||
+              user.students[0].foodAllergy.gluten === true
             ? 'Lunch Only'
             : 'Breakfast and Lunch',
         foodAllergy: user.students[0].foodAllergy,
@@ -120,47 +156,59 @@ const Create = ({ token, user }) => {
         item.pickupOption != 'Breakfast Only'
       ) {
         switch (item.meal) {
-          case 'Vegetarian':
-            frontCode.push('Vt');
-            break;
           case 'Standard':
             frontCode.push('');
             break;
+          // case 'Vegetarian' && !item.pickupOption === 'Lunch Only':
+          //   frontCode.push('Vt');
+          //   break;
           case 'Vegan':
             frontCode.push('Vg');
             break;
           case 'Vegan B':
             frontCode.push('Vg+b');
             break;
-          case 'GlutenFree':
+          case 'Gluten Free':
             frontCode.push('Gf');
             break;
-          case 'GlutenFree B':
+          case 'Gluten Free with Breakfast':
             frontCode.push('Gf+b');
             break;
-          case 'Standard DF':
+          case 'Standard Dairy Free':
             frontCode.push('Df');
             break;
-          case 'GlutenFree DF':
+          case 'Gluten Free Dairy Free':
             frontCode.push('Gfdf');
             break;
-          case 'Standard SF':
-            frontCode.push('Smf');
+          case 'Standard Sesame Free':
+            frontCode.push('Sm');
             break;
-          case 'Vegetarian SF':
-            frontCode.push('Smfvt');
+          case 'Vegetarian Sesame Free':
+            frontCode.push('Vtsm');
             break;
-          case 'Vegan SF':
-            frontCode.push('Smfvg');
+          case 'Vegan Sesame Free':
+            frontCode.push('Vgsm');
             break;
-          case 'Standard SyF':
-            frontCode.push('Syf');
+          case 'Standard Soy Free':
+            frontCode.push('Sy');
             break;
-          case 'Vegetarian SyF':
-            frontCode.push('Syfvt');
+          case 'Vegetarian Soy Free':
+            frontCode.push('Vtsy');
             break;
-          case 'Vegan SyF':
-            frontCode.push('Syfvg');
+          case 'Vegan Soy Free':
+            frontCode.push('Vgsy');
+            break;
+          case 'Soy and Sesame Free':
+            frontCode.push('Sp');
+            break;
+          case 'Soy Sesame Dairy Free':
+            frontCode.push('Sp');
+            break;
+          case 'Soy Sesame Gluten Free':
+            frontCode.push('Sp');
+            break;
+          case 'Soy Sesame Dairy Gluten Free':
+            frontCode.push('Sp');
             break;
           case '2on 3off':
             frontCode.push('H');
@@ -173,13 +221,14 @@ const Create = ({ token, user }) => {
       //   case 'Vegan':
       //     frontCode.push('Vg');
       //     break;
-      //   case 'GlutenFree':
+      //   case 'Gluten Free':
       //     frontCode.push('Gf');
       //     break;
       //   default:
       //     break;
       // }
     });
+
     mealRequest.forEach((item) => {
       switch (item.pickupOption) {
         case 'Breakfast Only':
@@ -196,6 +245,9 @@ const Create = ({ token, user }) => {
         : null;
       item.pickupOption === 'Lunch Only' && item.meal === 'Vegetarian'
         ? frontCode.push('Lv')
+        : null;
+      item.pickupOption === 'Breakfast and Lunch' && item.meal === 'Vegetarian'
+        ? frontCode.push('Vt')
         : null;
     });
     console.log('use effect front code', frontCode);
@@ -263,11 +315,11 @@ const Create = ({ token, user }) => {
         frontCode = 'Vg+b';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
-      case 'GlutenFree':
+      case 'Gluten Free':
         frontCode = 'Gf';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'GlutenFree B':
+      case 'Gluten Free with Breakfast':
         frontCode = 'Gf+b';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
@@ -275,41 +327,57 @@ const Create = ({ token, user }) => {
         frontCode = '';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
-      case 'Standard DF':
+      case 'Standard Dairy Free':
         frontCode = 'Df';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Lunch Only';
         break;
-      case 'GlutenFree DF':
+      case 'Gluten Free Dairy Free':
         frontCode = 'Gfdf';
+        pickupOptionLO = 'Lunch Only';
+        break;
+      case 'Standard Sesame Free':
+        frontCode = 'Sm';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
-      case 'Standard SF':
-        frontCode = 'Smf';
+      case 'Vegetarian Sesame Free':
+        frontCode = 'Vtsm';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
-      case 'Vegetarian SF':
-        frontCode = 'Smfvt';
+      case 'Vegan Sesame Free':
+        frontCode = 'Vgsm';
         pickupOptionLO = state.mealRequest[i].pickupOption;
         break;
-      case 'Vegan SF':
-        frontCode = 'Smfvg';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Standard Soy Free':
+        frontCode = 'Sy';
+        pickupOptionLO = 'Lunch Only';
         break;
-      case 'Standard SyF':
-        frontCode = 'Syf';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Vegetarian Soy Free':
+        frontCode = 'Vtsy';
+        pickupOptionLO = 'Lunch Only';
         break;
-      case 'Vegetarian SyF':
-        frontCode = 'Syfvt';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Vegan Soy Free':
+        frontCode = 'Vgsy';
+        pickupOptionLO = 'Lunch Only';
         break;
-      case 'Vegan SyF':
-        frontCode = 'Syfvg';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Soy and Sesame Free':
+        frontCode = 'Sp';
+        pickupOptionLO = 'Lunch Only';
+        break;
+      case 'Soy Sesame Dairy Free':
+        frontCode = 'Sp';
+        pickupOptionLO = 'Lunch Only';
+        break;
+      case 'Soy Sesame Gluten Free':
+        frontCode = 'Sp';
+        pickupOptionLO = 'Lunch Only';
+        break;
+      case 'Soy Sesame Dairy Gluten Free':
+        frontCode = 'Sp';
+        pickupOptionLO = 'Lunch Only';
         break;
       case 'Standard Onsite':
         frontCode = 'Onsite';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Lunch Onsite';
         break;
       case '2on 3off':
         frontCode = 'H';
@@ -344,7 +412,7 @@ const Create = ({ token, user }) => {
       ...state,
       mealRequest: [...meals],
       buttonText: 'Submit',
-      pickupCodeAdd: codes,
+      // pickupCodeAdd: codes,
       success: '',
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
@@ -387,10 +455,19 @@ const Create = ({ token, user }) => {
             <option disabled value="">
               Choose an option
             </option>
-            {user.special.twothree == 'true' && <option value={'2on 3off'}>Standard 2 onite meals 3 offsite meals</option>}
-            {user.special.vtplus == 'true' && <option value={'GlutenFree B'}>Gluten Free plus Vegetarian Breakfast</option>}
-            {user.special.vgplus == 'true' && <option value={'Vegan B'}>Vegan plus Vegetarian Breakfast</option>}
-
+            {user.special.twothree == 'true' && (
+              <option value={'2on 3off'}>
+                Standard 2 onite meals 3 offsite meals
+              </option>
+            )}
+            {user.special.vtplus == 'true' && (
+              <option value={'Gluten Free with Breakfast'}>
+                Gluten Free plus Vegetarian Breakfast
+              </option>
+            )}
+            {user.special.vgplus == 'true' && (
+              <option value={'Vegan B'}>Vegan plus Vegetarian Breakfast</option>
+            )}
             {isAuth().role === 'admin' && (
               <option value={'Standard '}>Standard</option>
             )}
@@ -401,89 +478,185 @@ const Create = ({ token, user }) => {
               <option value={'Vegan'}>Vegan</option>
             )}
             {isAuth().role === 'admin' && (
-              <option value={'GlutenFree'}>Gluten Free</option>
+              <option value={'Gluten Free'}>Gluten Free</option>
             )}
             {isAuth().role === 'admin' && (
-              <option value={'GlutenFree DF'}>Gluten Free Dairy Free</option>
+              <option value={'Gluten Free Dairy Free'}>
+                Gluten Free Dairy Free
+              </option>
             )}
             {isAuth().role === 'admin' && (
-              <option value={'Standard DF'}>Standard Dairy Free</option>
+              <option value={'Standard Dairy Free'}>Standard Dairy Free</option>
             )}
             {isAuth().role === 'admin' && (
-              <option value={'Standard SF'}>Standard Sesame Free</option>
+              <option value={'Standard Sesame Free'}>
+                Standard Sesame Free
+              </option>
             )}
             {isAuth().role === 'admin' && (
-              <option value={'Standard SyF'}>Standard Soy Free</option>
+              <option value={'Vegetarian Sesame Free'}>
+                Vegetarian Sesame Free
+              </option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Vegan Sesame Free'}>Vegan Sesame Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Standard Soy Free'}>Standard Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Vegetarian Soy Free'}>Vegetarian Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Vegan Soy Free'}>Vegan Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Soy Sesame Free'}>Vegan Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Soy Sesame Dairy Free'}>Vegan Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Soy Sesame Gluten Free'}>Vegan Soy Free</option>
+            )}
+            {isAuth().role === 'admin' && (
+              <option value={'Soy Sesame Dairy Gluten Free'}>
+                Vegan Soy Free
+              </option>
             )}
             {isAuth().role === 'admin' && (
               <option value={'2on 3off'}>Standard 2 on 3 off</option>
             )}
-            
             {/* standard options */}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.gluten === false &&
-              state.mealRequest[i].foodAllergy.sesame === false &&
-              state.mealRequest[i].foodAllergy.dairy === false &&
-              state.mealRequest[i].foodAllergy.soy === false && (
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.sesame === false &&
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.soy === false && (
                 <option value={'Standard'}>Standard</option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.gluten === false &&
-              state.mealRequest[i].foodAllergy.sesame === false &&
-              state.mealRequest[i].foodAllergy.dairy === false &&
-              state.mealRequest[i].foodAllergy.soy === false && (
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.sesame === false &&
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.soy === false && (
                 <option value={'Vegetarian'}>Vegetarian</option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.gluten === false &&
-              state.mealRequest[i].foodAllergy.sesame === false &&
-              state.mealRequest[i].foodAllergy.dairy === false &&
-              state.mealRequest[i].foodAllergy.soy === false && (
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.sesame === false &&
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.soy === false && (
                 <option value={'Vegan'}>Vegan (lunch only)</option>
               )}
             {/* allergy options */}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.dairy === false &&
-              state.mealRequest[i].foodAllergy.gluten === true && (
-                <option value={'GlutenFree'}>Gluten Free (lunch only)</option>
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === true &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === false && (
+                <option value={'Gluten Free'}>Gluten Free (lunch only)</option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.dairy === true &&
-              state.mealRequest[i].foodAllergy.gluten === false && (
-                <option value={'Standard DF'}>
+              students[i].foodAllergy.dairy === true &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === false && (
+                <option value={'Standard Dairy Free'}>
                   Standard Dairy Free (lunch only)
                 </option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.sesame === true && (
-                <option value={'Standard SF'}>Standard Sesame Free</option>
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Standard Sesame Free'}>
+                  Standard Sesame Free
+                </option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.sesame === true && (
-                <option value={'Vegetarian SF'}>Vegetarian Sesame Free</option>
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Vegetarian Sesame Free'}>
+                  Vegetarian Sesame Free
+                </option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.sesame === true && (
-                <option value={'Vegan SF'}>Vegan Sesame Free</option>
-              )}
-
-            {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.soy === true && (
-                <option value={'Standard SyF'}>Standard Soy Free</option>
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Vegan Sesame Free'}>Vegan Sesame Free</option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.soy === true && (
-                <option value={'Vegetarian SyF'}>Vegetarian Soy Free</option>
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === false && (
+                <option value={'Standard Soy Free'}>Standard Soy Free</option>
               )}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.soy === true && (
-                <option value={'Vegan SyF'}>Vegan Soy Free</option>
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === false && (
+                <option value={'Vegetarian Soy Free'}>
+                  Vegetarian Soy Free
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === false && (
+                <option value={'Vegan Soy Free'}>Vegan Soy Free</option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Soy and Sesame Free'}>
+                  Soy and Sesame Free (Lunch Only)
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === true &&
+              students[i].foodAllergy.gluten === false &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Soy Sesame Dairy Free'}>
+                  Soy and Sesame Free (Lunch Only)
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === false &&
+              students[i].foodAllergy.gluten === true &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Soy Sesame Gluten Free'}>
+                  Soy and Sesame Free (Lunch Only)
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === true &&
+              students[i].foodAllergy.gluten === true &&
+              students[i].foodAllergy.soy === true &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Soy Sesame Dairy Gluten Free'}>
+                  Soy and Sesame Free (Lunch Only)
+                </option>
               )}
             {/* special  */}
             {isAuth().role === 'subscriber' &&
-              state.mealRequest[i].foodAllergy.gluten === true &&
-              state.mealRequest[i].foodAllergy.dairy === true && (
-                <option value={'GlutenFree DF'}>
+              students[i].foodAllergy.dairy === true &&
+              students[i].foodAllergy.gluten === true &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === false && (
+                <option value={'Gluten Free Dairy Free'}>
                   Gluten Free Dairy Free (lunch only)
                 </option>
               )}
@@ -781,17 +954,51 @@ const Create = ({ token, user }) => {
           meal:
             group === 'a-group' || group === 'b-group'
               ? 'Standard Onsite'
-              : foodAllergy.dairy === true &&
+              : foodAllergy.dairy === false &&
+                foodAllergy.gluten === false &&
+                foodAllergy.soy === true &&
+                foodAllergy.sesame === true
+              ? 'Soy and Sesame Free'
+              : foodAllergy.soy === false &&
+                foodAllergy.sesame === false &&
+                foodAllergy.dairy === true &&
                 foodAllergy.gluten === true
-              ? 'GlutenFree DF'
-              : foodAllergy.dairy === true
-              ? 'Standard DF'
-              : foodAllergy.gluten === true
-              ? 'GlutenFree'
-              : foodAllergy.soy === true
-              ? 'Standard Syf'
-              : foodAllergy.sesame === true
-              ? 'Standard Smf'
+              ? 'Gluten Free Dairy Free'
+              : foodAllergy.soy === false &&
+                foodAllergy.sesame === false &&
+                foodAllergy.dairy === true &&
+                foodAllergy.gluten === false
+              ? 'Standard Dairy Free'
+              : foodAllergy.soy === false &&
+                foodAllergy.sesame === false &&
+                foodAllergy.dairy === false &&
+                foodAllergy.gluten === true
+              ? 'Gluten Free'
+              : foodAllergy.soy === true &&
+                foodAllergy.sesame === false &&
+                foodAllergy.dairy === false &&
+                foodAllergy.gluten === false
+              ? 'Standard Soy Free'
+              : foodAllergy.soy === false &&
+                foodAllergy.sesame === true &&
+                foodAllergy.dairy === false &&
+                foodAllergy.gluten === false
+              ? 'Standard Sesame Free'
+              : foodAllergy.soy === true &&
+                foodAllergy.sesame === true &&
+                foodAllergy.dairy === true &&
+                foodAllergy.gluten === false
+              ? 'Soy Sesame Dairy Free'
+              : foodAllergy.soy === true &&
+                foodAllergy.sesame === true &&
+                foodAllergy.dairy === false &&
+                foodAllergy.gluten === true
+              ? 'Soy Sesame Gluten Free'
+              : foodAllergy.soy === true &&
+                foodAllergy.sesame === true &&
+                foodAllergy.dairy === true &&
+                foodAllergy.gluten === true
+              ? 'Soy Sesame Dairy Gluten Free'
               : 'Standard',
           student: student,
           studentName: studentName,
@@ -802,6 +1009,11 @@ const Create = ({ token, user }) => {
           pickupOption:
             group === 'a-group' || group === 'b-group'
               ? 'Lunch Onsite'
+              : foodAllergy.egg === true ||
+                foodAllergy.soy === true ||
+                foodAllergy.dairy === true ||
+                foodAllergy.gluten === true
+              ? 'Lunch Only'
               : 'Breakfast and Lunch',
           foodAllergy: foodAllergy,
           parentEmail: user.email,
@@ -1078,6 +1290,7 @@ const Create = ({ token, user }) => {
               </div>
             </div>
             <hr />
+            {/* Admin can change code */}
             {isAuth().role === 'admin' && (
               <div className=" form-group">
                 <input
@@ -1137,20 +1350,25 @@ const Create = ({ token, user }) => {
                             state.students[i].foodAllergy
                           )}
                       </div>
-                      {isAuth().role === 'admin'
-                        ? selectAdminPickupOptions()
-                        : x.meal != 'None'
-                        ? state.students[i].group === 'distance-learning'
-                          ? x.meal === 'GlutenFree' ||
-                            x.meal === 'GlutenFree DF' ||
-                            x.meal === 'Standard DF' ||
-                            x.meal === 'Vegan' ||
-                            user.students[i].foodAllergy.egg === true ||
-                            user.students[i].foodAllergy.soy === true
-                            ? selectPickupLunchOnlyOption(i)
-                            : selectPickupOption(i)
-                          : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
-                        : selectNonePickupOption(i)}
+                      {
+                        isAuth().role === 'admin'
+                          ? selectAdminPickupOptions()
+                          : x.meal != 'None'
+                          ? state.students[i].group === 'distance-learning'
+                            ? x.meal === 'Gluten Free' ||
+                              x.meal === 'Gluten Free Dairy Free' ||
+                              x.meal === 'Standard Dairy Free' ||
+                              x.meal === 'Vegan' ||
+                              user.students[i].foodAllergy.egg === true ||
+                              user.students[i].foodAllergy.soy === true ||
+                              user.students[i].foodAllergy.dairy === true ||
+                              user.students[i].foodAllergy.gluten === true
+                              ? selectPickupLunchOnlyOption(i)
+                              : selectPickupOption(i)
+                            : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
+                          : null
+                        // selectNonePickupOption(i)
+                      }
                       <hr />
                     </>
                   );
