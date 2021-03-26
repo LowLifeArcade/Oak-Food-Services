@@ -734,6 +734,7 @@ const Profile = ({ user, token }) => {
                       />
                     </div>
                   )}
+              <hr className={'p-2 ' +styles.hrstudents} />
                 </div>
               );
             })}

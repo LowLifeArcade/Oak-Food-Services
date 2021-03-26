@@ -38,9 +38,7 @@ const User = ({ user, token, l, userLinks }) => {
       console.log('ERROR DELETING LINK', error);
     }
   };
-  {
-    console.log('pages user index', userLinks.mealRequest);
-  }
+
   const listOfLinks = () =>
     userLinks.map((l, i) => (
       <>

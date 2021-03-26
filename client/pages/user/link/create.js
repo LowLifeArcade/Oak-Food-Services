@@ -875,7 +875,7 @@ const Create = ({ token, user }) => {
 
   const selectPickupTime = (i) => (
     <>
-      <div key={i} className="form-group">
+      <div key={i} >
         <div className="">
           <select
             type="select"
@@ -905,7 +905,7 @@ const Create = ({ token, user }) => {
 
   const selectPickupTimeCafeteriaOnly = (i) => (
     <>
-      <div key={i} className="form-group">
+      <div key={i} >
         <div className="">
           <select
             type="select"
@@ -1127,7 +1127,6 @@ const Create = ({ token, user }) => {
         `${API}/mock-link`,
         {
           mealRequest,
-          // pickupOption,
           pickupTime,
           pickupDate,
           username,
@@ -1135,7 +1134,6 @@ const Create = ({ token, user }) => {
           pickupCodeAdd,
           orderStatus,
         },
-        // { title, url, categories, type, medium },
         {
           headers: {
             Authorization: `Bearer ${token}`,

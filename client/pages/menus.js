@@ -159,7 +159,7 @@ const Menus = ({ categories }) => {
         </>
       ));
   return (
-    <div key={2000} className={styles.background}>
+    <div className={styles.background}>
       <div className={styles.mobilehome}>
         <Layout>
           {/* <div className=" pt-4">
@@ -169,7 +169,6 @@ const Menus = ({ categories }) => {
       </div> */}
 
           <div
-            key={1000}
             className=" row flex-column justify-content-center pt-3 "
           >
             {listCategories()}

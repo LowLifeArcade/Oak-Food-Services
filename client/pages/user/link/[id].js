@@ -65,35 +65,88 @@ const Update = ({ oldLink, token, user, _id }) => {
   //   });
   // }, [mealRequest]);
 
+  // checks to see if parent has changed students allergy or group in update profile and applied changes here.
   useEffect(() => {
-    // I need to make a switch case that checks the current user students and applies the default meal to mealRequest if the student has changed attributes such as allergy changes or group change. Currently it changes in the select menus but not in state. I can do this on load with useEffect by checking each student for allergy options and apply the default to that student in a shallow copy of the mealRequest.
-
     setTimeout(() => {
       let someArray = [];
-      // let meal = {...[i]meals}
+
       mealRequest.map((request, index) => {
         let meals = [...mealRequest];
         let meal = { ...meals[index] };
         console.log(
           `${index} student food allergy compare`,
-          students[index].foodAllergy
+          meal.group !== students[index].group
         );
 
+        // if allergies or group has changed we run the switch case to apply default selections on the form
         if (
           meal.foodAllergy.soy !== students[index].foodAllergy.soy ||
           meal.foodAllergy.sesame !== students[index].foodAllergy.sesame ||
           meal.foodAllergy.dairy !== students[index].foodAllergy.dairy ||
           meal.foodAllergy.gluten !== students[index].foodAllergy.gluten ||
-          meal.foodAllergy.egg !== students[index].foodAllergy.egg 
+          meal.foodAllergy.egg !== students[index].foodAllergy.egg ||
+          meal.group !== students[index].group
         ) {
           meal.foodAllergy = students[index].foodAllergy;
-          // meal.foodAllergy = students[index] && students[index].foodAllergy;
+          meal.group = students[index].group
 
           if (
             students[index] &&
             students[index].group === 'distance-learning'
           ) {
             switch (true) {
+              case meal.group === 'a-group' || meal.group === 'b-group':
+                meal.meal = 'Lunch Onsite';
+                meal.pickupOption = 'Lunch Only';
+              case meal.group === 'distance-learning':
+                (meal.meal =
+                  user.students[0].foodAllergy.dairy === false &&
+                  user.students[0].foodAllergy.gluten === false &&
+                  user.students[0].foodAllergy.soy === true &&
+                  user.students[0].foodAllergy.sesame === true
+                    ? 'Soy and Sesame Free'
+                    : user.students[0].foodAllergy.soy === false &&
+                      user.students[0].foodAllergy.sesame === false &&
+                      user.students[0].foodAllergy.dairy === true &&
+                      user.students[0].foodAllergy.gluten === true
+                    ? 'Gluten Free Dairy Free'
+                    : user.students[0].foodAllergy.soy === false &&
+                      user.students[0].foodAllergy.sesame === false &&
+                      user.students[0].foodAllergy.dairy === true &&
+                      user.students[0].foodAllergy.gluten === false
+                    ? 'Standard Dairy Free'
+                    : user.students[0].foodAllergy.soy === false &&
+                      user.students[0].foodAllergy.sesame === false &&
+                      user.students[0].foodAllergy.dairy === false &&
+                      user.students[0].foodAllergy.gluten === true
+                    ? 'Gluten Free'
+                    : user.students[0].foodAllergy.soy === true &&
+                      user.students[0].foodAllergy.sesame === false &&
+                      user.students[0].foodAllergy.dairy === false &&
+                      user.students[0].foodAllergy.gluten === false
+                    ? 'Standard Soy Free'
+                    : user.students[0].foodAllergy.soy === false &&
+                      user.students[0].foodAllergy.sesame === true &&
+                      user.students[0].foodAllergy.dairy === false &&
+                      user.students[0].foodAllergy.gluten === false
+                    ? 'Standard Sesame Free'
+                    : user.students[0].foodAllergy.soy === true &&
+                      user.students[0].foodAllergy.sesame === true &&
+                      user.students[0].foodAllergy.dairy === true &&
+                      user.students[0].foodAllergy.gluten === false
+                    ? 'Soy Sesame Dairy Free'
+                    : user.students[0].foodAllergy.soy === true &&
+                      user.students[0].foodAllergy.sesame === true &&
+                      user.students[0].foodAllergy.dairy === false &&
+                      user.students[0].foodAllergy.gluten === true
+                    ? 'Soy Sesame Gluten Free'
+                    : user.students[0].foodAllergy.soy === true &&
+                      user.students[0].foodAllergy.sesame === true &&
+                      user.students[0].foodAllergy.dairy === true &&
+                      user.students[0].foodAllergy.gluten === true
+                    ? 'Soy Sesame Dairy Gluten Free'
+                    : 'Standard'),
+                  (meal.pickupOption = 'Breakfast and Lunch');
               case students[index].foodAllergy.sesame &&
                 students[index].foodAllergy.soy &&
                 students[index].foodAllergy.dairy &&
@@ -169,39 +222,42 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.foodAllergy = students[index].foodAllergy;
                 break;
               default:
-                // request.pickupOption = 'Breakfast and Lunch';
-
                 break;
             }
           } else {
             meal.pickupOption = 'Lunch Onsite';
           }
         }
+        // checks if parent has changed what group the student is in
+        // if (meal.group !== students[index].group) {
+        //   newPickuptime =
+        //     isAuth().role === 'admin'
+        //       ? '11am-1pm'
+        //       : mealRequest
+        //           .filter((meal) => meal.meal !== 'None')
+        //           .every((meal) => meal.meal === 'Standard Onsite') &&
+        //         mealRequest
+        //           .filter((meal) => meal.meal !== 'None')
+        //           .some((meal) => meal.pickupOption === 'Lunch Onsite')
+        //       ? 'Cafeteria'
+        //       : oldLink.pickupTime
+        //       ? oldLink.pickupTime
+        //       : '';
+        // }
+
         someArray.push(meal);
       });
       console.log('some someArray', someArray);
       setState({
         ...state,
         mealRequest: [...someArray],
-        pickupTime:
-          isAuth().role === 'admin'
-            ? '11am-1pm'
-            : mealRequest
-                .filter((meal) => meal.meal !== 'None')
-                .every((meal) => meal.meal === 'Standard Onsite') &&
-              mealRequest
-                .filter((meal) => meal.meal !== 'None')
-                .some((meal) => meal.pickupOption === 'Lunch Onsite')
-            ? 'Cafeteria'
-            : oldLink.pickupTime
-            ? oldLink.pickupTime
-            : '',
+        // pickupTime: newPickuptime,
       });
 
       return () => {
         cleanup;
       };
-    }, 1000);
+    }, 200);
   }, []);
 
   // console.log('all meals', mealRequest)

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
+import Footer from './Footer'
 import { useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import { isAuth, logout } from '../helpers/auth';
-
 import styles from '../styles/Home.module.css';
 
 // progressbar
@@ -713,6 +713,7 @@ const Layout = ({ children }) => {
       {sideBar()}
       {' '}
       <div className={'container pt-5 '}>{children}</div>
+      <Footer></Footer>
     </React.Fragment>
   );
 };

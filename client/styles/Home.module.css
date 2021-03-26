@@ -141,6 +141,10 @@
   border: 3px dotted #b91f1f;
   border-style: none none dotted;
 }
+.hrstudents {
+  border: 2px dotted #419ca8;
+  border-style: none none dotted;
+}
 
 .title {
   box-shadow: 0px 1.2px 3px 0px rgba(0, 0, 0, 0.2);

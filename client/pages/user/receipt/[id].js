@@ -38,6 +38,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     }
   };
 
+
   return (
     <div className={styles.background}>
       <Layout>
@@ -48,7 +49,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             <div
               key={242}
               className={
-                oldLink.orderStatus === true ||
+                oldLink && oldLink.orderStatus === true ||
                 moment(oldLink.pickupDate).format('MDD').toString() <
                   moment(new Date()).format('MDD').toString()
                   ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
