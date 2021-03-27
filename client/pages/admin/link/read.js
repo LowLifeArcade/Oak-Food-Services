@@ -19,7 +19,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const [limit, setLimit] = useState(linksLimit);
   const [skip, setSkip] = useState(0);
   const [size, setSize] = useState(totalLinks);
-  const [loadmeals, setLoadmeals] = useState(false);
+  // const [loadmeals, setLoadmeals] = useState(false);
   const [orderStatus, setOrderStatus] = useState(true);
   const [state, setState] = useState({
     pickupDateLookup: moment(new Date()).format('l'),
@@ -97,12 +97,24 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
     }
   };
 
-  const listOfLinks = (search) =>
+  const listOfLinks = (search) => {
+    allLinks
+    .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
+    .filter((l) => l.pickupDate === pickupDateLookup)
+    .map((l, i) => (
+      <>
+      {console.log('pickup date', l.pickupDate, pickupDateLookup)}
+       <div className="p-2">hi</div>
+       </>
+    ))}
+
+  const listOfLinkss = (search) =>
     allLinks
       .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()))
       .filter((l) => l.pickupDate === pickupDateLookup)
       .map((l, i) => (
         <>
+        {console.log('pickup date', l.pickupDate, pickupDateLookup)}
           <div className={'d-flex justify-content-center  ' + styles.desktop}>
             <div
               className={'col-md-6  justify-content-center ' + styles.desktop}
@@ -316,7 +328,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
         },
       }
     );
-
+console.log('res length', response.data.length)
     setAllLinks([...allLinks, ...response.data]);
     setSize(response.data.length);
     setSkip(toSkip);
@@ -326,7 +338,7 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
   const onDateChange = (pickupDate) => {
     setState({ ...state, pickupDateLookup: moment(pickupDate).format('l') });
     setShowSearch(!showSearch);
-    setLoadmeals(!loadMeals);
+    // setLoadmeals(!loadMeals);
   };
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
@@ -377,7 +389,9 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
       <br />
 
       {/* i can probably remove loadmeals as each date should have lots of data there already to stop infinite scroll from overloading */}
-      {loadmeals && (
+      {
+      // loadmeals && 
+      (
         <InfiniteScroll
           pageStart={0}
           loadMore={loadMore}
@@ -392,55 +406,56 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
             <div className="col-md-12">{listOfLinks(state.search)}</div>
           </div>
         </InfiniteScroll>
-      )}
+      )
+      }
     </Layout>
   );
 };
 
-Links.getInitialProps = async ({ req }) => {
-  let skip = 0;
-  let limit = 2;
-
-  const token = getCookie('token', req);
-
-  const response = await axios.post(
-    `${API}/links`,
-    {
-      skip,
-      limit,
-    },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return {
-    links: response.data,
-    totalLinks: response.data.length,
-    linksLimit: limit,
-    linkSkip: skip,
-    token,
-  };
-};
 // Links.getInitialProps = async ({ req }) => {
 //   let skip = 0;
 //   let limit = 2;
 
 //   const token = getCookie('token', req);
 
-//   const dateLookup = moment(new Date()).format('l');
 //   const response = await axios.post(
-//     `${API}/links-by-date`,
-//     { dateLookup },
+//     `${API}/links`,
+//     {
+//       skip,
+//       limit,
+//     },
 //     { headers: { Authorization: `Bearer ${token}` } }
 //   );
-
-//   let initRequests = response.data;
 //   return {
 //     links: response.data,
 //     totalLinks: response.data.length,
 //     linksLimit: limit,
 //     linkSkip: skip,
 //     token,
-//     initRequests,
 //   };
 // };
+Links.getInitialProps = async ({ req }) => {
+  let skip = 0;
+  let limit = 2;
+
+  const token = getCookie('token', req);
+
+  const dateLookup = moment(new Date()).format('l');
+  const response = await axios.post(
+    `${API}/links-by-date`,
+    { dateLookup },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+
+  let initRequests = response.data;
+  return {
+    links: response.data,
+    totalLinks: response.data.length,
+    linksLimit: limit,
+    linkSkip: skip,
+    token,
+    initRequests,
+  };
+};
 
 export default withAdmin(Links);

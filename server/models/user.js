@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const { ObjectId } = mongoose.Schema;
 
-
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -26,7 +25,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       max: 32,
     },
-   
+
     email: {
       type: String,
       trim: true,
@@ -47,66 +46,66 @@ const userSchema = new mongoose.Schema(
       data: String,
       default: '',
     },
-    students: [ 
-      { 
+    students: [
+      {
         name: {
           type: String,
-          required: true
+          required: true,
         },
         schoolName: {
           type: String,
-          required: true
+          required: true,
         },
-        group:{
+        group: {
           type: String,
-          required: true
+          required: true,
         },
         foodAllergy: {
-           peanuts: {
-            type: Boolean
+          peanuts: {
+            type: Boolean,
           },
-           treeNuts: {
-            type: Boolean
+          treeNuts: {
+            type: Boolean,
           },
-           dairy: {
-            type: Boolean
+          dairy: {
+            type: Boolean,
           },
-           gluten: {
-            type: Boolean
+          gluten: {
+            type: Boolean,
           },
-           egg: {
-            type: Boolean
+          egg: {
+            type: Boolean,
           },
-           sesame: {
-            type: Boolean
+          sesame: {
+            type: Boolean,
           },
-           soy: {
-            type: Boolean
+          soy: {
+            type: Boolean,
           },
-           seafood: {
-            type: Boolean
+          seafood: {
+            type: Boolean,
           },
         },
-        teacher:{
+        teacher: {
           type: String,
           // required: true
         },
         age: {
-          type: String
-        }
-      }
+          type: String,
+        },
+      },
     ],
     special: {
       sendEmail: {
-        type: {}
-      }
+        type: {},
+      },
     },
-    categories: [ 
+    categories: [
       {
         type: ObjectId,
         ref: 'Category',
-        required: true
-      }
+        required: true,
+      },
     ],
     userCode: {
       type: String,
@@ -141,7 +140,7 @@ userSchema.methods = {
     if (!password) return '';
     try {
       return crypto
-        .createHmac('sha256', this.salt) // possible algorithm problem RS256 might have to go here instead or bcrypt 
+        .createHmac('sha256', this.salt) // possible algorithm problem RS256 might have to go here instead or bcrypt
         .update(password)
         .digest('hex');
       console.log(hash);

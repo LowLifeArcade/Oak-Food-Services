@@ -180,14 +180,14 @@ exports.mockCreate = (req, res) => {
 
 exports.listAll = (req, res) => {
   // infinite scroll
-  let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+  let limit = req.body.limit ? parseInt(req.body.limit) : 2;
   let skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
   // look for items and populate
   Link.find({})
     .populate('postedBy', 'name lastName')
-    .populate('pickupCode', 'name')
-    .populate('categories', 'name slug')
+    // .populate('pickupCode', 'name')
+    // .populate('categories', 'name slug')
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit)
@@ -203,14 +203,14 @@ exports.listAll = (req, res) => {
 
 exports.list = (req, res) => {
   // infinite scroll
-  let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+  let limit = req.body.limit ? parseInt(req.body.limit) : 2;
   let skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
   // look for items and populate
   Link.find({})
     .populate('postedBy', 'name lastName students')
     // .populate('pickupCode', 'pickupCode')
-    .populate('categories', 'name slug')
+    // .populate('categories', 'name slug')
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit)

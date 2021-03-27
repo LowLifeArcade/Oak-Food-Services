@@ -35,6 +35,7 @@ const Requests = ({ token }) => {
     searchByTeacher2: 'filter', // used to defualt to a searchword that wouldn't return anything
     searchByTeacher3: 'filter', // used to defualt to a searchword that wouldn't return anything
     searchByTeacher4: 'filter', // used to defualt to a searchword that wouldn't return anything
+    CSVData: [],
     ageGroup1: '',
     ageGroup2: '',
     ageGroup3: '',
@@ -46,6 +47,7 @@ const Requests = ({ token }) => {
   const [allMealsArray, setAllMealsArray] = useState([]);
 
   const {
+    CSVData,
     orderType,
     searchBySchool,
     searchByGroup,
@@ -75,13 +77,74 @@ const Requests = ({ token }) => {
     orderType === 'Onsite' ? setShowStatus(false) : setShowStatus(true);
   }, [orderType]);
 
+  // takes 'none' meals out of allMealsArray
   useEffect(() => {
-    let allMealsArray2 = [];
-    linksByDate.map((r, i) =>
-      r.mealRequest.map((meal) => allMealsArray2.push(meal))
-    );
-    setAllMealsArray(allMealsArray2.filter((meal) => meal.meal !== 'None'));
+    setTimeout(() => {
+      let requestsArrayByDate = [...linksByDate];
+
+      linksByDate.map((r, i) => {
+        let request = { ...requestsArrayByDate[i] };
+
+        // lists allergies for both offsite and onsite data
+        r.mealRequest.map((meal, i) => {
+          let oneMeal = { ...request.mealRequest[i] };
+          oneMeal.allergies = [];
+
+          meal.foodAllergy.peanuts && oneMeal.allergies.push('peanuts');
+          meal.foodAllergy.treeNuts && oneMeal.allergies.push('treenuts');
+          meal.foodAllergy.dairy && oneMeal.allergies.push('dairy');
+          meal.foodAllergy.gluten && oneMeal.allergies.push('gluten');
+          meal.foodAllergy.soy && oneMeal.allergies.push('soy');
+          meal.foodAllergy.sesame && oneMeal.allergies.push('sesame');
+          meal.foodAllergy.seafood && oneMeal.allergies.push('seafood');
+          meal.foodAllergy.egg && oneMeal.allergies.push('egg');
+
+          request.mealRequest[i] = oneMeal;
+
+        });
+
+        // adds special order to offsite data
+        request.specialOrder = [];
+        r.mealRequest.map((meal, i) => {
+          let oneMeal = { ...request.mealRequest[i] };
+
+          if (
+            oneMeal.meal === 'Soy and Sesame Free' ||
+            oneMeal.meal === 'Soy Sesame Dairy Free' ||
+            oneMeal.meal === 'Soy Sesame Gluten Free' ||
+            oneMeal.meal === 'Soy Sesame Dairy Gluten Free'
+          ) {
+            request.specialOrder.push(' ||' + oneMeal.allergies.join(',') + '|| ');
+          }
+
+          request.mealRequest[i] = oneMeal;
+
+        });
+
+        // add students to request
+        request.students = []
+        r.mealRequest.map((meal, i) => {
+          request.students.push(meal.studentName)
+        })
+        
+
+        requestsArrayByDate[i] = request;
+        console.log('csv requestsArrayByDate', requestsArrayByDate);
+        setState({ ...state, CSVData: [...requestsArrayByDate] });
+      });
+    }, 1000);
+
+    setTimeout(() => {
+      let allMealsArray2 = [];
+      CSVData.map((r, i) =>
+        r.mealRequest.map((meal) => allMealsArray2.push(meal))
+      );
+      setAllMealsArray(allMealsArray2.filter((meal) => meal.meal !== 'None'));
+    }, 2000);
+
   }, [linksByDate]);
+
+  console.log('all meals array', allMealsArray);
 
   const loadUsers = async () => {
     const response = await axios.get(`${API}/user-list`, {
@@ -91,6 +154,7 @@ const Requests = ({ token }) => {
   };
   // change date
   const onDateChange = (pickupDate) => {
+    // e.preventDefault()
     setState({ ...state, pickupDateLookup: moment(pickupDate).format('l') });
     handleDateChange(pickupDate);
     setShowSearch(!showSearch);
@@ -104,7 +168,6 @@ const Requests = ({ token }) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setLinksByDate(response.data);
-
     compileOrderStatusArray(pickupDate);
   };
 
@@ -154,26 +217,107 @@ const Requests = ({ token }) => {
     }
   };
 
-  let csvOffsiteData = [];
-  useEffect(() => {
-    let allergiesList = [];
-    let newList = [];
+  // clean up csv data here by adding student names and allergy lists
+  const handleCSVData = () => {
+    let requestsArrayByDate = [...linksByDate];
 
-    csvOffsiteData = linksByDate
-      .filter((l) => l.pickupTime.includes(searchPickupTime))
-      .filter((l) => l.pickupTime != 'Cafeteria')
-      .filter((l) => l.orderStatus.toString().includes(searchByStatus))
-      .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
-  }, [linksByDate]);
+    linksByDate.map((r, i) => {
+      let request = { ...requestsArrayByDate[i] };
+      let allergies = [];
+
+      r.mealRequest.map((meal, i) => {
+        let oneMeal = { ...request.mealRequest[i] };
+        console.log(`${i} oneMeal before switch`, oneMeal);
+        oneMeal.allergies = [];
+        // switch (true) {
+        //   case meal.foodAllergy.peanuts:
+        //     oneMeal.allergies.push('peanuts');
+        //   // break;
+        //   case meal.foodAllergy.treeNuts:
+        //     oneMeal.allergies.push('treenuts');
+        //   // break;
+        //   case meal.foodAllergy.dairy:
+        //     oneMeal.allergies.push('dairy');
+        //   // break;
+        //   case meal.foodAllergy.gluten:
+        //     oneMeal.allergies.push('gluten');
+        //   // break;
+        //   case meal.foodAllergy.soy:
+        //     oneMeal.allergies.push('soy');
+        //   // break;
+        //   case meal.foodAllergy.sesame:
+        //     oneMeal.allergies.push('sesame');
+        //   // break;
+        //   case meal.foodAllergy.seafood:
+        //     oneMeal.allergies.push('seafood');
+        //   // break;
+        //   case meal.foodAllergy.egg:
+        //     oneMeal.allergies.push('egg');
+        //   // break;
+        //   default:
+        //     break;
+        // }
+
+        meal.foodAllergy.peanuts && oneMeal.allergies.push('peanuts');
+        meal.foodAllergy.treeNuts && oneMeal.allergies.push('treenuts');
+        meal.foodAllergy.dairy && oneMeal.allergies.push('dairy');
+        meal.foodAllergy.gluten && oneMeal.allergies.push('gluten');
+        meal.foodAllergy.soy && oneMeal.allergies.push('soy');
+        meal.foodAllergy.sesame && oneMeal.allergies.push('sesame');
+        meal.foodAllergy.seafood && oneMeal.allergies.push('seafood');
+        meal.foodAllergy.egg && oneMeal.allergies.push('egg');
+        // oneMeal.allergies = allergies;
+        console.log(`${i} meal`, meal.foodAllergy.egg);
+        request.mealRequest[i] = oneMeal;
+        console.log('oneMeal after switch', oneMeal);
+      });
+      requestsArrayByDate[i] = request;
+      console.log('csv requestsArrayByDate', requestsArrayByDate);
+      setState({ ...state, CSVData: [...requestsArrayByDate] });
+    });
+  };
+
+  console.log('csv CSVData', CSVData);
+  // const csvOffsiteData = linksByDate
+  //   .filter((l) => l.pickupTime.includes(searchPickupTime))
+  //   // .filter((l) => l.meal != 'None')
+  //   .filter((l) => l.pickupTime != 'Cafeteria')
+  //   .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //   .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
+
+  // const csvOnsiteData = allMealsArray
+  //   // .filter((l) => l.pickupTime.includes(searchPickupTime))
+  //   .filter((l) => l.group != 'distance-learning')
+  //   // .filter((l) => l.meal != 'None')
+  //   .filter(
+  //     (l, i) =>
+  //       l.teacher.includes(searchByTeacher) ||
+  //       l.teacher.includes(searchByTeacher2) ||
+  //       l.teacher.includes(searchByTeacher3) ||
+  //       l.teacher.includes(searchByTeacher4)
+  //   )
+  //   .filter((l, i) => l.group.includes(searchByGroup))
+  //   .filter((l, i) => l.schoolName.includes(searchBySchool));
+
+  // refigure out how to get individaul meals into an array
+
+  // trying useeffect but probably going with just a function
+  const csvOffsiteData = CSVData.filter((l) =>
+    l.pickupTime.includes(searchPickupTime)
+  )
+    // .filter((l) => l.meal != 'None')
+    .filter((l) => l.pickupTime != 'Cafeteria')
+    .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+    .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
 
   const csvOnsiteData = allMealsArray
     .filter((l) => l.group != 'distance-learning')
     .filter(
       (l, i) =>
-        l.teacher.includes(searchByTeacher) ||
-        l.teacher.includes(searchByTeacher2) ||
-        l.teacher.includes(searchByTeacher3) ||
-        l.teacher.includes(searchByTeacher4)
+        (l.teacher && l.teacher.includes(searchByTeacher)) ||
+        (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+        (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+        (l.teacher && l.teacher.includes(searchByTeacher4))
     )
     .filter((l, i) => l.group.includes(searchByGroup))
     .filter((l, i) => l.schoolName.includes(searchBySchool));
@@ -184,7 +328,7 @@ const Requests = ({ token }) => {
     { label: 'Last Name', key: 'lastName' },
     { label: 'Teacher', key: 'teacher' },
     { label: 'Group', key: 'group' },
-    { label: 'Food Allergy', key: 'foodAllergy' },
+    { label: 'Food Allergy', key: 'allergies' },
     { label: 'Complete', key: 'complete' },
   ];
 
@@ -192,8 +336,10 @@ const Requests = ({ token }) => {
     { label: 'Code', key: 'pickupCode' },
     { label: 'Pickup Time', key: 'pickupTime' },
     { label: 'Pickup Date', key: 'pickupDate' },
-    { label: 'First Name', key: 'postedBy.name' },
+    // { label: 'First Name', key: 'postedBy.name' },
     { label: 'Last Name', key: 'postedBy.lastName' },
+    { label: 'Student Names', key: 'students' },
+    { label: 'Special Orders', key: 'specialOrder' },
   ];
 
   const handleComplete = async (id, orderStatus, mealRequest) => {
@@ -651,7 +797,7 @@ const Requests = ({ token }) => {
               >
                 <i className="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
               </button>
-
+              {console.log('csv offsite data', csvOffsiteData)}
               {orderType === 'Onsite' ? (
                 <CSVLink
                   className="float-right"

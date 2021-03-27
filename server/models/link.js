@@ -55,7 +55,7 @@ const linkSchema = new mongoose.Schema(
           max: 256,
         },
         foodAllergy: {
-          peanutes: {
+          peanuts: {
             type: Boolean,
           },
           treeNuts: {
@@ -74,6 +74,9 @@ const linkSchema = new mongoose.Schema(
             type: Boolean,
           },
           soy: {
+            type: Boolean,
+          },
+          seafood: {
             type: Boolean,
           },
         },
