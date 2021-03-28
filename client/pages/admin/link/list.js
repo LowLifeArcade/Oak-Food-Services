@@ -12,13 +12,9 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
 
-const Requests = ({ token }) => {
-  const [completeDate, setCompleteDate] = useState('');
+const Requests = ({ token, initRequests }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showStatus, setShowStatus] = useState(true);
-  const [skip, setSkip] = useState(0);
-  const [loadmeals, setLoadmeals] = useState(false);
-  const [orderStatus, setOrderStatus] = useState(Boolean);
   const [state, setState] = useState({
     pickupDateLookup: moment(new Date()).format('l'),
     loadedUsers: [],
@@ -42,11 +38,22 @@ const Requests = ({ token }) => {
     ageGroup4: '',
     error: '',
     success: '',
+    linksByDate: [],
+    allMealsArray: [],
+    // csvOnsiteData: [],
+    // csvOffsiteData: [],
   });
-  const [linksByDate, setLinksByDate] = useState([]);
-  const [allMealsArray, setAllMealsArray] = useState([]);
+  
+  // const [linksByDate, setLinksByDate] = useState([]);
+  // const [allMealsArray, setAllMealsArray] = useState([]);
+  const [csvOffsiteData, setCsvOffsiteData] = useState([]);
+  const [csvOnsiteData, setCsvOnsiteData] = useState([]);
 
   const {
+    // csvOffsiteData,
+    // csvOnsiteData,
+    allMealsArray,
+    linksByDate,
     CSVData,
     orderType,
     searchBySchool,
@@ -68,90 +75,255 @@ const Requests = ({ token }) => {
     search,
   } = state;
 
-  useEffect(() => {
-    loadUsers();
-    handleDateChange(pickupDateLookup);
-  }, []);
+  // useEffect(() => {
+  //   loadUsers();
+  //   handleDateChange(pickupDateLookup);
+  // }, []);
 
   useEffect(() => {
     orderType === 'Onsite' ? setShowStatus(false) : setShowStatus(true);
   }, [orderType]);
 
-  // takes 'none' meals out of allMealsArray
   useEffect(() => {
-    setTimeout(() => {
-      let requestsArrayByDate = [...linksByDate];
+      
+    let requestsArrayByDate = [...linksByDate];
+    linksByDate.map((r, i) => {
+      let request = { ...requestsArrayByDate[i] };
 
-      linksByDate.map((r, i) => {
-        let request = { ...requestsArrayByDate[i] };
+      // lists allergies for both offsite and onsite data
+      r.mealRequest.map((meal, i) => {
+        let oneMeal = { ...request.mealRequest[i] };
+        oneMeal.allergies = [];
 
-        // lists allergies for both offsite and onsite data
-        r.mealRequest.map((meal, i) => {
-          let oneMeal = { ...request.mealRequest[i] };
-          oneMeal.allergies = [];
+        meal.foodAllergy.peanuts && oneMeal.allergies.push(' peanuts');
+        meal.foodAllergy.treeNuts && oneMeal.allergies.push(' treenuts');
+        meal.foodAllergy.dairy && oneMeal.allergies.push(' dairy');
+        meal.foodAllergy.gluten && oneMeal.allergies.push(' gluten');
+        meal.foodAllergy.soy && oneMeal.allergies.push(' soy');
+        meal.foodAllergy.sesame && oneMeal.allergies.push(' sesame');
+        meal.foodAllergy.seafood && oneMeal.allergies.push(' seafood');
+        meal.foodAllergy.egg && oneMeal.allergies.push(' egg');
 
-          meal.foodAllergy.peanuts && oneMeal.allergies.push('peanuts');
-          meal.foodAllergy.treeNuts && oneMeal.allergies.push('treenuts');
-          meal.foodAllergy.dairy && oneMeal.allergies.push('dairy');
-          meal.foodAllergy.gluten && oneMeal.allergies.push('gluten');
-          meal.foodAllergy.soy && oneMeal.allergies.push('soy');
-          meal.foodAllergy.sesame && oneMeal.allergies.push('sesame');
-          meal.foodAllergy.seafood && oneMeal.allergies.push('seafood');
-          meal.foodAllergy.egg && oneMeal.allergies.push('egg');
-
-          request.mealRequest[i] = oneMeal;
-
-        });
-
-        // adds special order to offsite data
-        request.specialOrder = [];
-        r.mealRequest.map((meal, i) => {
-          let oneMeal = { ...request.mealRequest[i] };
-
-          if (
-            oneMeal.meal === 'Soy and Sesame Free' ||
-            oneMeal.meal === 'Soy Sesame Dairy Free' ||
-            oneMeal.meal === 'Soy Sesame Gluten Free' ||
-            oneMeal.meal === 'Soy Sesame Dairy Gluten Free'
-          ) {
-            request.specialOrder.push(' ||' + oneMeal.allergies.join(',') + '|| ');
-          }
-
-          request.mealRequest[i] = oneMeal;
-
-        });
-
-        // add students to request
-        request.students = []
-        r.mealRequest.map((meal, i) => {
-          request.students.push(meal.studentName)
-        })
-        
-
-        requestsArrayByDate[i] = request;
-        console.log('csv requestsArrayByDate', requestsArrayByDate);
-        setState({ ...state, CSVData: [...requestsArrayByDate] });
+        request.mealRequest[i] = oneMeal;
       });
-    }, 1000);
 
-    setTimeout(() => {
-      let allMealsArray2 = [];
-      CSVData.map((r, i) =>
-        r.mealRequest.map((meal) => allMealsArray2.push(meal))
-      );
-      setAllMealsArray(allMealsArray2.filter((meal) => meal.meal !== 'None'));
-    }, 2000);
+      // adds special order to offsite data
+      request.specialOrder = [];
+      r.mealRequest.map((meal, i) => {
+        let oneMeal = { ...request.mealRequest[i] };
 
-  }, [linksByDate]);
+        if (
+          oneMeal.meal === 'Soy and Sesame Free' ||
+          oneMeal.meal === 'Soy Sesame Dairy Free' ||
+          oneMeal.meal === 'Soy Sesame Gluten Free' ||
+          oneMeal.meal === 'Soy Sesame Dairy Gluten Free'
+        ) {
+          request.specialOrder.push(
+            ' ||' +
+              oneMeal.allergies.map((allergy) => allergy.trim()).join(',') +
+              '|| '
+          );
+        }
+
+        request.mealRequest[i] = oneMeal;
+      });
+
+      // add students to request
+      request.students = [];
+      r.mealRequest.map((meal, i) => {
+        request.students.push(meal.studentName + ' ');
+      });
+
+      requestsArrayByDate[i] = request;
+
+      let newOffsiteData = requestsArrayByDate.filter((l) =>
+      l.pickupTime.includes(searchPickupTime)
+    )
+      // .filter((l) => l.meal != 'None')
+      .filter((l) => l.pickupTime != 'Cafeteria')
+      .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+      .filter((l) =>
+        l.pickupCode.toLowerCase().includes(search.toLowerCase())
+      )
+      
+      setCsvOffsiteData(newOffsiteData)
+      setState({
+        ...state,
+        CSVData: [...requestsArrayByDate],
+        // csvOffsiteData: newOffsiteData
+      });
+    });
+
+
+      let newOnsiteData = allMealsArray.filter((meal) => meal.meal !== 'None')
+      .filter((l) => l.group != 'distance-learning')
+      .filter(
+        (l, i) =>
+          (l.teacher && l.teacher.includes(searchByTeacher)) ||
+          (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+          (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+          (l.teacher && l.teacher.includes(searchByTeacher4))
+      )
+      .filter((l, i) => l.group.includes(searchByGroup))
+      .filter((l, i) => l.schoolName.includes(searchBySchool))
+        console.log('NEW onsite data', newOnsiteData)
+        setCsvOnsiteData(newOnsiteData)
+      setState({
+        ...state,
+        // allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
+        // linksByDate: await response.data ,
+        // pickupDateLookup: pickupDate,
+        // csvOnsiteData: newOnsiteData
+      });
+
+  }, [linksByDate])
+
+  // takes 'none' meals out of allMealsArray
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     let requestsArrayByDate = [...linksByDate];
+
+  //     linksByDate.map((r, i) => {
+  //       let request = { ...requestsArrayByDate[i] };
+
+  //       // lists allergies for both offsite and onsite data
+  //       r.mealRequest.map((meal, i) => {
+  //         let oneMeal = { ...request.mealRequest[i] };
+  //         oneMeal.allergies = [];
+
+  //         meal.foodAllergy.peanuts && oneMeal.allergies.push(' peanuts');
+  //         meal.foodAllergy.treeNuts && oneMeal.allergies.push(' treenuts');
+  //         meal.foodAllergy.dairy && oneMeal.allergies.push(' dairy');
+  //         meal.foodAllergy.gluten && oneMeal.allergies.push(' gluten');
+  //         meal.foodAllergy.soy && oneMeal.allergies.push(' soy');
+  //         meal.foodAllergy.sesame && oneMeal.allergies.push(' sesame');
+  //         meal.foodAllergy.seafood && oneMeal.allergies.push(' seafood');
+  //         meal.foodAllergy.egg && oneMeal.allergies.push(' egg');
+
+  //         request.mealRequest[i] = oneMeal;
+  //       });
+
+  //       // adds special order to offsite data
+  //       request.specialOrder = [];
+  //       r.mealRequest.map((meal, i) => {
+  //         let oneMeal = { ...request.mealRequest[i] };
+
+  //         if (
+  //           oneMeal.meal === 'Soy and Sesame Free' ||
+  //           oneMeal.meal === 'Soy Sesame Dairy Free' ||
+  //           oneMeal.meal === 'Soy Sesame Gluten Free' ||
+  //           oneMeal.meal === 'Soy Sesame Dairy Gluten Free'
+  //         ) {
+  //           request.specialOrder.push(
+  //             ' ||' +
+  //               oneMeal.allergies.map((allergy) => allergy.trim()).join(',') +
+  //               '|| '
+  //           );
+  //         }
+
+  //         request.mealRequest[i] = oneMeal;
+  //       });
+
+  //       // add students to request
+  //       request.students = [];
+  //       r.mealRequest.map((meal, i) => {
+  //         request.students.push(meal.studentName + ' ');
+  //       });
+
+  //       requestsArrayByDate[i] = request;
+  //       console.log('csv requestsArrayByDate', requestsArrayByDate);
+  //       setState({
+  //         ...state,
+  //         CSVData: [...requestsArrayByDate],
+  //         csvOffsiteData: CSVData.filter((l) =>
+  //           l.pickupTime.includes(searchPickupTime)
+  //         )
+  //           // .filter((l) => l.meal != 'None')
+  //           .filter((l) => l.pickupTime != 'Cafeteria')
+  //           .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //           .filter((l) =>
+  //             l.pickupCode.toLowerCase().includes(search.toLowerCase())
+  //           ),
+  //       });
+  //     });
+
+  //     // setCsvOffsiteData(
+  //     //   CSVData.filter((l) => l.pickupTime.includes(searchPickupTime))
+  //     //     // .filter((l) => l.meal != 'None')
+  //     //     .filter((l) => l.pickupTime != 'Cafeteria')
+  //     //     .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //     //     .filter((l) =>
+  //     //       l.pickupCode.toLowerCase().includes(search.toLowerCase())
+  //     //     )
+  //     // );
+  //   }, 100);
+
+  //   // setTimeout(() => {
+  //   //   let allMealsArray2 = [];
+  //   //   CSVData.map((r, i) =>
+  //   //     r.mealRequest.map((meal) => allMealsArray2.push(meal))
+  //   //   );
+  //   //   setState({
+  //   //     ...state,
+  //   //     allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
+  //   //     csvOnsiteData: allMealsArray
+  //   //       .filter((l) => l.group != 'distance-learning')
+  //   //       .filter(
+  //   //         (l, i) =>
+  //   //           (l.teacher && l.teacher.includes(searchByTeacher)) ||
+  //   //           (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+  //   //           (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+  //   //           (l.teacher && l.teacher.includes(searchByTeacher4))
+  //   //       )
+  //   //       .filter((l, i) => l.group.includes(searchByGroup))
+  //   //       .filter((l, i) => l.schoolName.includes(searchBySchool)),
+  //   //   });
+  //   //   // setAllMealsArray(allMealsArray2.filter((meal) => meal.meal !== 'None'));
+  //   //   // setCsvOnsiteData(
+  //   //   //   allMealsArray
+  //   //   //     .filter((l) => l.group != 'distance-learning')
+  //   //   //     .filter(
+  //   //   //       (l, i) =>
+  //   //   //         (l.teacher && l.teacher.includes(searchByTeacher)) ||
+  //   //   //         (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+  //   //   //         (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+  //   //   //         (l.teacher && l.teacher.includes(searchByTeacher4))
+  //   //   //     )
+  //   //   //     .filter((l, i) => l.group.includes(searchByGroup))
+  //   //   //     .filter((l, i) => l.schoolName.includes(searchBySchool))
+  //   //   // );
+  //   // }, 300);
+  // }, [linksByDate]);
+
+  // useEffect(() => {
+  //   let allMealsArray2 = [];
+  //   CSVData.map((r, i) =>
+  //     r.mealRequest.map((meal) => allMealsArray2.push(meal))
+  //   );
+  //   setAllMealsArray(allMealsArray2.filter((meal) => meal.meal !== 'None'));
+  //   setCsvOnsiteData(
+  //     allMealsArray
+  //       .filter((l) => l.group != 'distance-learning')
+  //       .filter(
+  //         (l, i) =>
+  //           (l.teacher && l.teacher.includes(searchByTeacher)) ||
+  //           (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+  //           (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+  //           (l.teacher && l.teacher.includes(searchByTeacher4))
+  //       )
+  //       .filter((l, i) => l.group.includes(searchByGroup))
+  //       .filter((l, i) => l.schoolName.includes(searchBySchool))
+  //   );
+  // }, [linksByDate])
 
   console.log('all meals array', allMealsArray);
 
-  const loadUsers = async () => {
-    const response = await axios.get(`${API}/user-list`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setState({ ...state, loadedUsers: response.data });
-  };
+  // const loadUsers = async () => {
+  //   const response = await axios.get(`${API}/user-list`, {
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
+  //   setState({ ...state, loadedUsers: response.data });
+  // };
   // change date
   const onDateChange = (pickupDate) => {
     // e.preventDefault()
@@ -167,8 +339,19 @@ const Requests = ({ token }) => {
       { pickupDateLookup },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    setLinksByDate(response.data);
-    compileOrderStatusArray(pickupDate);
+      
+      // makes all meals a serpate array usable for onsite order data 
+      let allMealsArray2 = [];
+      await response.data.map((r, i) =>
+        r.mealRequest.map((meal) => allMealsArray2.push(meal))
+      );
+
+      setState({
+        ...state,
+        allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
+        linksByDate: await response.data ,
+        pickupDateLookup: pickupDate,
+      });
   };
 
   const compileOrderStatusArray = (pickupDate) => {
@@ -227,36 +410,7 @@ const Requests = ({ token }) => {
 
       r.mealRequest.map((meal, i) => {
         let oneMeal = { ...request.mealRequest[i] };
-        console.log(`${i} oneMeal before switch`, oneMeal);
         oneMeal.allergies = [];
-        // switch (true) {
-        //   case meal.foodAllergy.peanuts:
-        //     oneMeal.allergies.push('peanuts');
-        //   // break;
-        //   case meal.foodAllergy.treeNuts:
-        //     oneMeal.allergies.push('treenuts');
-        //   // break;
-        //   case meal.foodAllergy.dairy:
-        //     oneMeal.allergies.push('dairy');
-        //   // break;
-        //   case meal.foodAllergy.gluten:
-        //     oneMeal.allergies.push('gluten');
-        //   // break;
-        //   case meal.foodAllergy.soy:
-        //     oneMeal.allergies.push('soy');
-        //   // break;
-        //   case meal.foodAllergy.sesame:
-        //     oneMeal.allergies.push('sesame');
-        //   // break;
-        //   case meal.foodAllergy.seafood:
-        //     oneMeal.allergies.push('seafood');
-        //   // break;
-        //   case meal.foodAllergy.egg:
-        //     oneMeal.allergies.push('egg');
-        //   // break;
-        //   default:
-        //     break;
-        // }
 
         meal.foodAllergy.peanuts && oneMeal.allergies.push('peanuts');
         meal.foodAllergy.treeNuts && oneMeal.allergies.push('treenuts');
@@ -267,17 +421,13 @@ const Requests = ({ token }) => {
         meal.foodAllergy.seafood && oneMeal.allergies.push('seafood');
         meal.foodAllergy.egg && oneMeal.allergies.push('egg');
         // oneMeal.allergies = allergies;
-        console.log(`${i} meal`, meal.foodAllergy.egg);
         request.mealRequest[i] = oneMeal;
-        console.log('oneMeal after switch', oneMeal);
       });
       requestsArrayByDate[i] = request;
-      console.log('csv requestsArrayByDate', requestsArrayByDate);
       setState({ ...state, CSVData: [...requestsArrayByDate] });
     });
   };
 
-  console.log('csv CSVData', CSVData);
   // const csvOffsiteData = linksByDate
   //   .filter((l) => l.pickupTime.includes(searchPickupTime))
   //   // .filter((l) => l.meal != 'None')
@@ -302,25 +452,26 @@ const Requests = ({ token }) => {
   // refigure out how to get individaul meals into an array
 
   // trying useeffect but probably going with just a function
-  const csvOffsiteData = CSVData.filter((l) =>
-    l.pickupTime.includes(searchPickupTime)
-  )
-    // .filter((l) => l.meal != 'None')
-    .filter((l) => l.pickupTime != 'Cafeteria')
-    .filter((l) => l.orderStatus.toString().includes(searchByStatus))
-    .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
 
-  const csvOnsiteData = allMealsArray
-    .filter((l) => l.group != 'distance-learning')
-    .filter(
-      (l, i) =>
-        (l.teacher && l.teacher.includes(searchByTeacher)) ||
-        (l.teacher && l.teacher.includes(searchByTeacher2)) ||
-        (l.teacher && l.teacher.includes(searchByTeacher3)) ||
-        (l.teacher && l.teacher.includes(searchByTeacher4))
-    )
-    .filter((l, i) => l.group.includes(searchByGroup))
-    .filter((l, i) => l.schoolName.includes(searchBySchool));
+  // const csvOffsiteData = CSVData.filter((l) =>
+  //   l.pickupTime.includes(searchPickupTime)
+  // )
+  //   // .filter((l) => l.meal != 'None')
+  //   .filter((l) => l.pickupTime != 'Cafeteria')
+  //   .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+  //   .filter((l) => l.pickupCode.toLowerCase().includes(search.toLowerCase()));
+
+  // const csvOnsiteData = allMealsArray
+  //   .filter((l) => l.group != 'distance-learning')
+  //   .filter(
+  //     (l, i) =>
+  //       (l.teacher && l.teacher.includes(searchByTeacher)) ||
+  //       (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+  //       (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+  //       (l.teacher && l.teacher.includes(searchByTeacher4))
+  //   )
+  //   .filter((l, i) => l.group.includes(searchByGroup))
+  //   .filter((l, i) => l.schoolName.includes(searchBySchool));
 
   const onsiteHeaders = [
     { label: 'School Name', key: 'schoolName' },
@@ -409,7 +560,8 @@ const Requests = ({ token }) => {
         request.orderStatus,
         request.mealRequest
       );
-      setLinksByDate(requests);
+      setState({ ...state, linksByDate: requests });
+      // setLinksByDate(requests);
     }
   };
 
@@ -445,8 +597,8 @@ const Requests = ({ token }) => {
       });
       console.log(request);
       handleComplete(request._id, request.complete, request.mealRequest);
-      setAllMealsArray(requests);
-      // setState({ ...state, orderStatusArray: statuses });
+      // setAllMealsArray(requests);
+      setState({ ...state, allMealsArray: requests });
     }
   };
 
@@ -797,7 +949,7 @@ const Requests = ({ token }) => {
               >
                 <i className="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
               </button>
-              {console.log('csv offsite data', csvOffsiteData)}
+              {console.log('csv offsite data near button', csvOffsiteData)}
               {orderType === 'Onsite' ? (
                 <CSVLink
                   className="float-right"
@@ -1053,7 +1205,7 @@ Requests.getInitialProps = async ({ req, user }) => {
   );
 
   let initRequests = response.data;
-  return { initRequests };
+  return { token, initRequests };
 };
 
 export default withAdmin(Requests);

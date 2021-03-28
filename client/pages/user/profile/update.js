@@ -33,7 +33,8 @@ const Profile = ({ user, token }) => {
       { showAllergey: false },
     ],
     special: {
-      sendEmail: user.special && user.special.sendEmail ? true :user.special.sendEmail, // checks if there's a value, if not sets to true
+      sendEmail:
+        user.special && user.special.sendEmail ? true : user.special.sendEmail, // checks if there's a value, if not sets to true
     },
     groups: [],
     teachers: [],
@@ -41,7 +42,7 @@ const Profile = ({ user, token }) => {
     loadedTeachers: [],
   });
   // console.log('on load', user.students);
-// console.log('type of send email',typeof user.special.sendEmail)
+  // console.log('type of send email',typeof user.special.sendEmail)
   const {
     showAllergies,
     addButtonText,
@@ -519,6 +520,21 @@ const Profile = ({ user, token }) => {
     setState({ ...state, showAllergies: [...allShow] });
   };
 
+  const handleShowAllergiesOff = (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    let allShow = [...state.showAllergies];
+
+    let showOne = { ...allShow[i] };
+
+    showOne.showAllergy = false;
+
+    allShow[i] = showOne;
+    console.log(allShow);
+
+    setState({ ...state, showAllergies: [...allShow] });
+  };
+
   const registerForm = () => (
     <form
       onSubmit={handleSubmit}
@@ -573,8 +589,6 @@ const Profile = ({ user, token }) => {
         ></Toggle>
       </div>
 
-      
-
       <br />
       <div className="row">
         <div className="col-md-12 pt-2">
@@ -623,83 +637,169 @@ const Profile = ({ user, token }) => {
                 }
 
                 <div className="pb-2"></div>
-                {showAllergies[i].showAllergy && (
-                  <div className="form-control ">
-                    <div className="row p-1">
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.peanuts}
-                        toggleId="peanuts"
-                        toggleName="Peanuts"
-                        handleToggle={handleAllergy('peanuts')}
-                      ></Toggle>
+                {
+                  x.foodAllergy.peanuts === true ||
+                  x.foodAllergy.treeNuts === true ||
+                  x.foodAllergy.dairy === true ||
+                  x.foodAllergy.gluten === true ||
+                  x.foodAllergy.soy === true ||
+                  x.foodAllergy.sesame === true ||
+                  x.foodAllergy.seafood === true ||
+                  x.foodAllergy.egg === true ? 
+                    <div className="form-control ">
+                      <div className="row p-1">
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.peanuts}
+                          toggleId="peanuts"
+                          toggleName="Peanuts"
+                          handleToggle={handleAllergy('peanuts')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.treeNuts}
-                        toggleId="treenuts"
-                        toggleName="Tree Nuts"
-                        handleToggle={handleAllergy('treeNuts')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.treeNuts}
+                          toggleId="treenuts"
+                          toggleName="Tree Nuts"
+                          handleToggle={handleAllergy('treeNuts')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.dairy}
-                        toggleId="dairy"
-                        toggleName="Dairy"
-                        handleToggle={handleAllergy('dairy')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.dairy}
+                          toggleId="dairy"
+                          toggleName="Dairy"
+                          handleToggle={handleAllergy('dairy')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.gluten}
-                        toggleId="gluten"
-                        toggleName="Gluten"
-                        handleToggle={handleAllergy('gluten')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.gluten}
+                          toggleId="gluten"
+                          toggleName="Gluten"
+                          handleToggle={handleAllergy('gluten')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.egg}
-                        toggleId="egg"
-                        toggleName="Egg"
-                        handleToggle={handleAllergy('egg')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.egg}
+                          toggleId="egg"
+                          toggleName="Egg"
+                          handleToggle={handleAllergy('egg')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.sesame}
-                        toggleId="sesame"
-                        toggleName="Sesame"
-                        handleToggle={handleAllergy('sesame')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.sesame}
+                          toggleId="sesame"
+                          toggleName="Sesame"
+                          handleToggle={handleAllergy('sesame')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.soy}
-                        toggleId="soy"
-                        toggleName="Soy"
-                        handleToggle={handleAllergy('soy')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.soy}
+                          toggleId="soy"
+                          toggleName="Soy"
+                          handleToggle={handleAllergy('soy')}
+                        ></Toggle>
 
-                      <Toggle
-                        toggleKey={i}
-                        dataIndex={i}
-                        isOn={students[i].foodAllergy.seafood}
-                        toggleId="seafood"
-                        toggleName="Seafood"
-                        handleToggle={handleAllergy('seafood')}
-                      ></Toggle>
+                        <Toggle
+                          toggleKey={`${i+15}`}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.seafood}
+                          toggleId="seafood"
+                          toggleName="Seafood"
+                          handleToggle={handleAllergy('seafood')}
+                        ></Toggle>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  :
+                  showAllergies[i].showAllergy && 
+                  
+                    <div className="form-control ">
+                      <div className="row p-1">
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.peanuts}
+                          toggleId="peanuts"
+                          toggleName="Peanuts"
+                          handleToggle={handleAllergy('peanuts')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.treeNuts}
+                          toggleId="treenuts"
+                          toggleName="Tree Nuts"
+                          handleToggle={handleAllergy('treeNuts')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.dairy}
+                          toggleId="dairy"
+                          toggleName="Dairy"
+                          handleToggle={handleAllergy('dairy')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.gluten}
+                          toggleId="gluten"
+                          toggleName="Gluten"
+                          handleToggle={handleAllergy('gluten')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.egg}
+                          toggleId="egg"
+                          toggleName="Egg"
+                          handleToggle={handleAllergy('egg')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.sesame}
+                          toggleId="sesame"
+                          toggleName="Sesame"
+                          handleToggle={handleAllergy('sesame')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.soy}
+                          toggleId="soy"
+                          toggleName="Soy"
+                          handleToggle={handleAllergy('soy')}
+                        ></Toggle>
+
+                        <Toggle
+                          toggleKey={i}
+                          dataIndex={i}
+                          isOn={students[i].foodAllergy.seafood}
+                          toggleId="seafood"
+                          toggleName="Seafood"
+                          handleToggle={handleAllergy('seafood')}
+                        ></Toggle>
+                      </div>
+                    </div>
+                  }
 
                 {students[i].foodAllergy.dairy === true
                   ? showSuccessMessage(
@@ -835,7 +935,7 @@ const Profile = ({ user, token }) => {
                     />
                   </div>
                 )}
-                <hr className={'p-2 ' +styles.hrstudents} />
+                <hr className={'p-2 ' + styles.hrstudents} />
               </div>
             );
           })}
