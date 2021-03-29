@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
 
   const nav = () => (
     <nav className={'fixed-top ' + styles.nav}>
-      <ul className={'nav  ' + styles.nav}>
+      <ul className={'nav nav-tabs ' + styles.nav}>
         <li key="1" className="nav-item pointer-hand">
           <Link href="/">
             <a className="nav-link text-white">Home</a>
@@ -193,7 +193,7 @@ const Layout = ({ children }) => {
 
   const accordian = () => (
     <div className={'fixed-top ' + styles.accordion}>
-      <ul className={'nav  ' + styles.accordion}>
+      <ul className={'nav nav-tabs ' + styles.accordion}>
         <li key="1" className="nav-item pointer-hand">
           <a
             onClick={() => setShowSidebar(!showSidebar)}

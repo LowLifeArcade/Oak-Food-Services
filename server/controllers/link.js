@@ -26,6 +26,7 @@ exports.create = (req, res) => {
     pickupCode,
     pickupCodeAdd,
     orderStatus,
+    userCode,
   } = req.body;
   // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
@@ -38,6 +39,7 @@ exports.create = (req, res) => {
     pickupCode,
     pickupCodeAdd,
     orderStatus,
+    userCode,
   });
   // posted by user. We save this for use in user dashboard etc
   const postedBy = (link.postedBy = req.user._id);
@@ -139,7 +141,9 @@ exports.mockCreate = (req, res) => {
     pickupCode,
     pickupCodeAdd,
     orderStatus,
+    userCode,
   } = req.body;
+
   // const { title, url, categories, type, medium } = req.body;
   // console.table({ title, url, categories, type, medium });
   // const slug = url;
@@ -151,6 +155,7 @@ exports.mockCreate = (req, res) => {
     pickupCode,
     pickupCodeAdd,
     orderStatus,
+    userCode
   });
   // posted by user. We save this for use in user dashboard etc
   const postedBy = (link.postedBy = req.user._id);
@@ -299,6 +304,7 @@ exports.update = (req, res) => {
     pickupCode,
     pickupCodeAdd,
     orderStatus,
+    userCode,
   } = req.body);
   // const updatedLink = {title, url, categories, type, medium}
 

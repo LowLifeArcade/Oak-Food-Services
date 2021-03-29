@@ -125,6 +125,12 @@ const linkSchema = new mongoose.Schema(
       required: true,
       max: 256,
     },
+    userCode: {
+      type: String,
+      trim: true,
+      required: true,
+      max: 256
+    },
     pickupCodeAdd: [
       {
         type: String,

@@ -158,7 +158,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
       requestsArrayByDate[i] = request;
 
-      let newOffsiteData = requestsArrayByDate
+      let newOffsiteData = (requestsArrayByDate)
         .filter((l) => l.pickupTime.includes(searchPickupTime))
         // .filter((l) => l.meal != 'None')
         .filter((l) => l.pickupTime != 'Cafeteria')
@@ -366,10 +366,13 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       r.mealRequest.map((meal) => allMealsArray2.push(meal))
     );
 
+    let links = await response.data.sort((a, b) => a.userCode > b.userCode ? 1 :-1)
+console.log('links', links)
+
     setState({
       ...state,
       allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
-      linksByDate: await response.data,
+      linksByDate: links,
       pickupDateLookup: pickupDate,
     });
   };
@@ -639,7 +642,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           .filter((l) => l.pickupTime != 'Cafeteria')
           .filter((l) => l.orderStatus.toString().includes(searchByStatus))
           .filter((l) =>
-            l.pickupCode.toLowerCase().includes(search.toLowerCase())
+            l.userCode.toLowerCase().includes(search.toLowerCase())
           )
           .map((l, i) => (
             <>

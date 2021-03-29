@@ -21,6 +21,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     buttonText: 'Update',
     pickupCode: '', // fix. this doesn't work.
     pickupCodeAdd: [],
+    userCode: oldLink.userCode,
     mealWeek: oldLink.pickupWeek,
     success: '',
     error: '',
@@ -28,6 +29,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   });
 
   const {
+    userCode,
     pickupCodeInput,
     pickupOption,
     pickupTime,
@@ -1218,6 +1220,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           pickupCode,
           pickupCodeAdd,
           orderStatus,
+          userCode,
         },
         // { title, url, categories, type, medium },
         {
@@ -1455,6 +1458,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     setState({
       ...state,
       pickupCodeInput: e.target.value.toUpperCase(),
+      userCode: e.target.value.toUpperCase(),
     });
   };
 

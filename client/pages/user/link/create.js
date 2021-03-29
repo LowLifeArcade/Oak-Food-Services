@@ -93,6 +93,7 @@ const Create = ({ token, user }) => {
       },
     ],
     orderStatus: false,
+    userCode: user.userCode,
     pickupCode: user.userCode + '-01',
     pickupCodeInput: '',
     pickupCodeAdd: [''],
@@ -110,6 +111,7 @@ const Create = ({ token, user }) => {
     pickupCode,
     foodAllergy,
     orderStatus,
+    userCode,
     pickupCodeInput,
     students,
     pickupCodeAdd,
@@ -1090,6 +1092,7 @@ const Create = ({ token, user }) => {
           pickupCode,
           pickupCodeAdd,
           orderStatus,
+          userCode,
         },
         {
           headers: {
@@ -1133,6 +1136,7 @@ const Create = ({ token, user }) => {
           pickupCode,
           pickupCodeAdd,
           orderStatus,
+          userCode
         },
         {
           headers: {
@@ -1143,7 +1147,7 @@ const Create = ({ token, user }) => {
       // reset state
       setState({
         ...state,
-        success: 'Request was created',
+        success: 'Admin request was created',
         error: '',
       });
 
@@ -1198,9 +1202,10 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       pickupCodeInput: e.target.value.toUpperCase(),
+      userCode: e.target.value.toUpperCase(),
     });
   };
-  console.log(pickupCodeInput);
+  console.log(userCode);
 
   // create form
   const submitLinkForm = (student) => (
