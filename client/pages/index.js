@@ -3,17 +3,16 @@ import styles from '../styles/Pages.module.css';
 import Layout from '../components/Layout';
 
 const Home = () => {
-
   return (
     <React.Fragment>
       <Layout>
         <div className={styles.body}>
           <div className={styles.section}>
-              <h3 className={styles.h4}>Here's how it works</h3>
-              <p className={'pb-3 ' + styles.bodyregular}>
-                Make a request for your student(s) for <b>Onsite</b> or{' '}
-                <b>Curbside</b> at least two weeks in advance.
-              </p>
+            <h3 className={styles.h4}>Here's how it works</h3>
+            <p className={'pb-3 ' + styles.bodyregular}>
+              Make a meal request for your student(s) at least two weeks in
+              advance.
+            </p>
           </div>
 
           <div className={styles.sectioncolumns}>
@@ -27,11 +26,11 @@ const Home = () => {
               />
 
               <div className={styles.bodyregular}>
-                <b> Use the Meal Request icons</b>
+                <b> Use the Meal Request button</b>
               </div>
               <div className={styles.bodyregular}>
-                After looking over the menu, use the Meal Request buttons located on your navagation bar, your menu
-                page, and your receipts page.
+                Use one of the <b>yellow Meal Request buttons</b> located either
+                on your nav bar, the weekly menu, or your receipts page.
               </div>
             </div>
 
@@ -45,13 +44,14 @@ const Home = () => {
               />
 
               <div className={styles.bodyregular}>
-                <b> Pickup Your Request</b>
+                <b> Make Your Request</b>
               </div>
               <p className={styles.bodyregular}>
-                Make your selections and look over your receipt. If it's an
-                Onsite request, you're all done! Your child simply goes to
-                school and is on the cafeteria list for free meals for the week
-                on your receipt.
+                <b>Make your selections </b>for each student and hit submit.
+                Meal options available depend on allergies and cohort.
+                <br />
+                <br />
+                {/* You can edit your student's cohort and allery group for differnt meal options in  <b>update profile</b>.  */}
               </p>
             </div>
 
@@ -69,11 +69,13 @@ const Home = () => {
                 <b> Pickup Your Request</b>
               </div>
               <p className={'pb-5 ' + styles.bodyregular}>
-                If it's a <b>Curbside</b> order you simply take your virutal
-                receipt to the pickup location at OPHS and on the date found on
-                your receipt. Put the order code somewhere visible on yoru
-                dashboard or show them the order receipt on your phone through
-                your car window.
+              <b>If it's an Onsite request</b> , your child is now on the cafeteria list for free
+                meals of the <b>week indicated on your receipt</b>.
+                <br />
+                <br />
+                <b>If it's a Curbside request</b> you simply take your virutal
+                receipt to the <b>pickup location at OPHS</b> on the date found
+                on your receipt.
               </p>
             </div>
 
@@ -83,10 +85,15 @@ const Home = () => {
                 <b>Exampe:</b>
                 <h2>Gf-NESS-03</h2>
                 <div className={'p-5 ' + styles.bodyregular}>
-                  Show the code or your receipt with the code to the staff as
-                  you drive up.
+                  Show the code or your receipt to the staff as you drive up.
                 </div>
               </div>
+            </div>
+
+            <div className={'pb-5 ' + styles.bodyregular}>
+              <p>
+              NOTE: For the most efficient service, <b>print or write out the order code found on your receipt</b> and display it somewhere visible on your dashboard. Or show them the virtual order receipt from your phone through your car window.
+              </p>
             </div>
 
             <div className={'pt-5 ' + styles.bodyregular}>
@@ -98,7 +105,6 @@ const Home = () => {
             </p>
           </div>
         </div>
-
       </Layout>
       <div className={styles.footer}>
         <div className={'pt-4 ' + styles.sectioncontainer}>

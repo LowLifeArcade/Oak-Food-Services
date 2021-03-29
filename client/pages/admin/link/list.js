@@ -12,16 +12,20 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
 
-const Requests = ({ token, initRequests }) => {
+const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showStatus, setShowStatus] = useState(true);
   const [state, setState] = useState({
-    pickupDateLookup: moment(new Date()).format('l'),
+    pickupDateLookup: localStorage.getItem('search-date')
+      ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
+      : moment(new Date()).format('l'),
     loadedUsers: [],
     orderStatusArray: [],
     allMealsArray: [],
     search: '',
-    orderType: 'Pickup',
+    orderType: localStorage.getItem('curbsideToggle')
+      ? JSON.parse(localStorage.getItem('curbsideToggle'))
+      : 'Pickup',
     linksByDateFiltered: [],
     searchByStatus: '',
     searchBySchool: '',
@@ -39,11 +43,11 @@ const Requests = ({ token, initRequests }) => {
     error: '',
     success: '',
     linksByDate: [],
-    allMealsArray: [],
+    // allMealsArray: [],
     // csvOnsiteData: [],
     // csvOffsiteData: [],
   });
-  
+
   // const [linksByDate, setLinksByDate] = useState([]);
   // const [allMealsArray, setAllMealsArray] = useState([]);
   const [csvOffsiteData, setCsvOffsiteData] = useState([]);
@@ -74,18 +78,36 @@ const Requests = ({ token, initRequests }) => {
     searchPickupTime,
     search,
   } = state;
-
+  console.log('init all meals array', allMealsArray);
   // useEffect(() => {
   //   loadUsers();
   //   handleDateChange(pickupDateLookup);
   // }, []);
+
+  // reads date into local storage
+  useEffect(() => {
+    const data = localStorage.getItem('search-date');
+    console.log('data', data);
+    if (data) {
+      try {
+        handleDateChange(JSON.parse(data));
+      } catch (error) {
+        setState({ ...state, error: error });
+      }
+    }
+  }, []);
+
+  // puts date into localstorage
+  useEffect(() => {
+    localStorage.setItem('search-date', JSON.stringify(pickupDateLookup));
+    localStorage.setItem('curbsideToggle', JSON.stringify(orderType));
+  });
 
   useEffect(() => {
     orderType === 'Onsite' ? setShowStatus(false) : setShowStatus(true);
   }, [orderType]);
 
   useEffect(() => {
-      
     let requestsArrayByDate = [...linksByDate];
     linksByDate.map((r, i) => {
       let request = { ...requestsArrayByDate[i] };
@@ -136,17 +158,16 @@ const Requests = ({ token, initRequests }) => {
 
       requestsArrayByDate[i] = request;
 
-      let newOffsiteData = requestsArrayByDate.filter((l) =>
-      l.pickupTime.includes(searchPickupTime)
-    )
-      // .filter((l) => l.meal != 'None')
-      .filter((l) => l.pickupTime != 'Cafeteria')
-      .filter((l) => l.orderStatus.toString().includes(searchByStatus))
-      .filter((l) =>
-        l.pickupCode.toLowerCase().includes(search.toLowerCase())
-      )
-      
-      setCsvOffsiteData(newOffsiteData)
+      let newOffsiteData = requestsArrayByDate
+        .filter((l) => l.pickupTime.includes(searchPickupTime))
+        // .filter((l) => l.meal != 'None')
+        .filter((l) => l.pickupTime != 'Cafeteria')
+        .filter((l) => l.orderStatus.toString().includes(searchByStatus))
+        .filter((l) =>
+          l.pickupCode.toLowerCase().includes(search.toLowerCase())
+        );
+
+      setCsvOffsiteData(newOffsiteData);
       setState({
         ...state,
         CSVData: [...requestsArrayByDate],
@@ -154,8 +175,8 @@ const Requests = ({ token, initRequests }) => {
       });
     });
 
-
-      let newOnsiteData = allMealsArray.filter((meal) => meal.meal !== 'None')
+    let newOnsiteData = allMealsArray
+      .filter((meal) => meal.meal !== 'None')
       .filter((l) => l.group != 'distance-learning')
       .filter(
         (l, i) =>
@@ -165,18 +186,17 @@ const Requests = ({ token, initRequests }) => {
           (l.teacher && l.teacher.includes(searchByTeacher4))
       )
       .filter((l, i) => l.group.includes(searchByGroup))
-      .filter((l, i) => l.schoolName.includes(searchBySchool))
-        console.log('NEW onsite data', newOnsiteData)
-        setCsvOnsiteData(newOnsiteData)
-      setState({
-        ...state,
-        // allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
-        // linksByDate: await response.data ,
-        // pickupDateLookup: pickupDate,
-        // csvOnsiteData: newOnsiteData
-      });
-
-  }, [linksByDate])
+      .filter((l, i) => l.schoolName.includes(searchBySchool));
+    console.log('NEW onsite data', newOnsiteData);
+    setCsvOnsiteData(newOnsiteData);
+    setState({
+      ...state,
+      // allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
+      // linksByDate: await response.data ,
+      // pickupDateLookup: pickupDate,
+      // csvOnsiteData: newOnsiteData
+    });
+  }, [linksByDate]);
 
   // takes 'none' meals out of allMealsArray
   // useEffect(() => {
@@ -339,20 +359,22 @@ const Requests = ({ token, initRequests }) => {
       { pickupDateLookup },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-      
-      // makes all meals a serpate array usable for onsite order data 
-      let allMealsArray2 = [];
-      await response.data.map((r, i) =>
-        r.mealRequest.map((meal) => allMealsArray2.push(meal))
-      );
 
-      setState({
-        ...state,
-        allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
-        linksByDate: await response.data ,
-        pickupDateLookup: pickupDate,
-      });
+    // makes all meals a serpate array usable for onsite order data
+    let allMealsArray2 = [];
+    await response.data.map((r, i) =>
+      r.mealRequest.map((meal) => allMealsArray2.push(meal))
+    );
+
+    setState({
+      ...state,
+      allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
+      linksByDate: await response.data,
+      pickupDateLookup: pickupDate,
+    });
   };
+
+  // initRequests
 
   const compileOrderStatusArray = (pickupDate) => {
     setState({
@@ -728,7 +750,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Teacher
             </option>
-            ,<option value="k-annino/lee">K - Annino/Lee</option>
+            <option value="filter">Clear Selection</option>
+            <option value="k-annino/lee">K - Annino/Lee</option>
             <option value="k-milbourn">K - Milbourn</option>
             <option value="1st-hirano">1st - Hirano</option>
             <option value="1st-morrow">1st - Morrow</option>
@@ -762,7 +785,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Teacher
             </option>
-            ,<option value="k-sloan">K - Sloan</option>
+            <option value="filter">Clear Selection</option>
+            <option value="k-sloan">K - Sloan</option>
             <option value="k-foy">K - Foy</option>
             <option value="1st-aaronson">1st - Aaronson</option>
             <option value="1st-bretzing">1st - Bretzing</option>
@@ -793,7 +817,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Teacher
             </option>
-            ,<option value="k-lobianco">K - LoBianco</option>
+            <option value="filter">Clear Selection</option>
+            <option value="k-lobianco">K - LoBianco</option>
             <option value="1st-bird">1st - Bird</option>
             <option value="1st-ewing">1st - Ewing</option>
             <option value="1st-holland">1st - Holland</option>
@@ -824,7 +849,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="6th-grade">6th grade </option>
+            <option value="filter">Clear Selection</option>
+            <option value="6th-grade">6th grade </option>
             <option value="7th-grade">7th grade </option>
             <option value="8th-grade">8th grade </option>
           </select>
@@ -847,7 +873,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="9th-grade">9th grade</option>
+            <option value="filter">Clear Selection</option>
+            <option value="9th-grade">9th grade</option>
             <option value="10th-grade">10th grade </option>
             <option value="11th-grade">11th grade </option>
             <option value="12th-grade">12th grade </option>
@@ -870,7 +897,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="9th-grade">9th grade</option>
+            <option value="filter">Clear Selection</option>
+            <option value="9th-grade">9th grade</option>
             <option value="10th-grade">10th grade </option>
             <option value="11th-grade">11th grade </option>
             <option value="12th-grade">12th grade </option>
@@ -892,7 +920,8 @@ const Requests = ({ token, initRequests }) => {
             <option selected disabled value="">
               Choose Grade Level
             </option>
-            ,<option value="9th-grade">9th grade</option>
+            <option value="filter">Clear Selection</option>
+            <option value="9th-grade">9th grade</option>
             <option value="10th-grade">10th grade </option>
             <option value="11th-grade">11th grade </option>
             <option value="12th-grade">12th grade </option>
@@ -935,7 +964,7 @@ const Requests = ({ token, initRequests }) => {
               moment(state.pickupDateLookup).format('MMM Do')}{' '}
           </h3>
           <div className="lead alert alert-seconary pb-3">
-            <div className="form-group">
+            <div className="">
               {showSearch && (
                 <Calendar
                   onChange={(e) => onDateChange(e)}
@@ -985,7 +1014,7 @@ const Requests = ({ token, initRequests }) => {
               <br />
               {orderType === 'Pickup' && (
                 <button
-                  className="btn  btn-outline-secondary fas fa-car-side"
+                  className="btn btn-warning fas fa-car-side"
                   onClick={handleSearch('orderType')}
                   value="Onsite"
                 >
@@ -994,7 +1023,7 @@ const Requests = ({ token, initRequests }) => {
               )}
               {orderType === 'Onsite' && (
                 <button
-                  className="btn btn-outline-secondary fas fa-school"
+                  className="btn  btn-warning fas fa-school"
                   onClick={handleSearch('orderType')}
                   value="Pickup"
                 >
@@ -1003,7 +1032,7 @@ const Requests = ({ token, initRequests }) => {
               )}
               {orderType === 'Pickup' && (
                 <select
-                  className="btn btn-sm btn-outline-primary"
+                  className="btn btn-sm btn-outline-secondary"
                   onChange={handleSearch(
                     'searchPickupTime',
                     state.search,
@@ -1017,6 +1046,7 @@ const Requests = ({ token, initRequests }) => {
                   <option disabled value="">
                     Time
                   </option>
+                  <option value="">All</option>
                   <option value="7am-9am">7-9am</option>
                   <option value="11am-1pm">11-1pm</option>
                   <option value="4pm-6pm">4-6pm</option>
@@ -1024,7 +1054,7 @@ const Requests = ({ token, initRequests }) => {
               )}
               {orderType === 'Pickup' && (
                 <button
-                  className=" btn btn-sm btn-outline-primary"
+                  className=" btn btn-sm btn-outline-secondary"
                   onClick={() => setShowStatus(!showStatus)}
                 >
                   Show Status
@@ -1032,7 +1062,7 @@ const Requests = ({ token, initRequests }) => {
               )}
               {orderType === 'Pickup' && showStatus && (
                 <select
-                  className="btn btn-sm btn-outline-primary"
+                  className="btn btn-sm btn-outline-secondary"
                   onChange={handleSearch(
                     'searchByStatus',
                     state.search,
@@ -1053,7 +1083,7 @@ const Requests = ({ token, initRequests }) => {
               )}
               {orderType === 'Onsite' && (
                 <select
-                  className="btn btn-sm btn-outline-primary"
+                  className="btn btn-sm btn-outline-secondary"
                   onChange={handleSearch(
                     'searchBySchool',
                     state.search,
@@ -1064,19 +1094,27 @@ const Requests = ({ token, initRequests }) => {
                   type="text"
                   id=""
                 >
-                  <option value="">Choose School</option>
+                  <option value="">School</option>
+                  <option value="BES">BES</option>
+                  <option value="OHES">OHES</option>
+                  <option value="ROES">ROES</option>
+                  <option value="MCMS">MCMS</option>
+                  <option value="OPHS">OPHS</option>
+                  <option value="OVHS">OVHS</option>
+                  {/* <option value="NON">Non</option> */}
+                  {/* <option value="">Choose School</option>
                   <option value="BES">Brookside Elementary School</option>
                   <option value="OHES">Oak Hills Elementary School</option>
                   <option value="ROES">Red Oak Elementary School</option>
                   <option value="MCMS">Medea Creek Middle School</option>
                   <option value="OPHS">Oak Park High School</option>
                   <option value="OVHS">Oak View High School</option>
-                  <option value="NON">Non OPUSD</option>
+                  <option value="NON">Non OPUSD</option> */}
                 </select>
               )}
               {orderType === 'Onsite' && (
                 <select
-                  className="btn btn-sm btn-outline-primary"
+                  className="btn btn-sm btn-outline-secondary"
                   onChange={handleSearch(
                     'searchByGroup',
                     state.search,
@@ -1087,9 +1125,9 @@ const Requests = ({ token, initRequests }) => {
                   type="text"
                   id=""
                 >
-                  <option value="">Cohort A & B</option>
-                  <option value="a-group">Cohort A</option>
-                  <option value="b-group">Cohort B</option>
+                  <option value="">A & B</option>
+                  <option value="a-group">A</option>
+                  <option value="b-group">B</option>
                 </select>
               )}
 
@@ -1176,7 +1214,7 @@ const Requests = ({ token, initRequests }) => {
               <div className="p-2"></div>
 
               <button
-                className=" btn text-white btn-sm btn-warning"
+                className="badge btn text-red btn-sm btn-outline-danger"
                 onClick={() => resetSearch()}
               >
                 Reset Filters
@@ -1194,18 +1232,24 @@ const Requests = ({ token, initRequests }) => {
   );
 };
 
-Requests.getInitialProps = async ({ req, user }) => {
+Requests.getInitialProps = async ({ req }) => {
   const token = getCookie('token', req);
 
-  const dateLookup = moment(new Date()).format('l');
-  const response = await axios.post(
-    `${API}/links-by-date`,
-    { dateLookup },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  // const dateLookup = localStorage.getItem('search-date') ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l') : moment(new Date()).format('l');
+  // const response = await axios.post(
+  //   `${API}/links-by-date`,
+  //   { dateLookup },
+  //   { headers: { Authorization: `Bearer ${token}` } }
+  // );
+  // let initRequests = response.data;
 
-  let initRequests = response.data;
-  return { token, initRequests };
+  //  // makes all meals a serpate array usable for onsite order data
+  //  let allMealsArray2 =
+  //   await initRequests.map((r, i) =>
+  //    r.mealRequest.map((meal) => allMealsArray2.push(meal))
+  //  );
+
+  return { token };
 };
 
 export default withAdmin(Requests);

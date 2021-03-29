@@ -89,7 +89,7 @@ exports.linkPublishedParams = (email, data, token) => {
           
           <br/>
           <p>Don't want notifications? <a href=${process.env.CLIENT_URL}/user/profile/update>Click Here</a> </p>
-          <p>Or go turn off notifications by going to <b>dashboard</b> > <b>updated profile</b> and <b>uncheck the categories</b> </p>
+          <p>Or turn off notifications by going to <b>dashboard</b> > <b>updated profile</b> and <b>uncheck the categories</b> </p>
           </html>
           `,
         },

@@ -6,7 +6,7 @@ export const setCookie = (key, value) => {
   if (process.browser) {
     // if window.
     cookie.set(key, value, {
-      expires: 7,
+      expires: 8,
     });
   }
 };

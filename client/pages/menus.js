@@ -117,37 +117,49 @@ const Menus = ({ categories }) => {
                     >
                       {renderHTML(c.content || '')}
                     </div>
+
                     <div className="">
-                      {c.image && (
-                        <img
-                          src={c.image.url}
-                          alt={c.name}
-                          style={{ width: '280px', maxHeight: 'auto' }}
-                        />
-                      )}
-                      <div className="">
+                      <div className="pb-4">
+                        {c.image && (
+                          <img
+                            src={c.image.url}
+                            alt={c.name}
+                            style={{ width: '280px', maxHeight: 'auto' }}
+                          />
+                        )}
+                      </div>
+
+                      <div className="pb-3">
                         {/* <h3>{c.name}</h3> {c.createdAt} */}
                         Posted {moment(c.createdAt).format('MMMM Do YYYY')}
                         {/* {popular.map((l, i) => l.postedBy.name)} */}
                         {/* {c.username} */}
-                        {
-                        process.browser && isAuth() && isAuth().role === 'admin' && 
-                        (
-                          <div className="">
-                            <Link href={`/admin/category/${c.slug}`}>
-                              <button className="badge btn btn-sm btn-outline-warning  mb-1 float-right">
-                                Update
-                              </button>
-                            </Link>
-                            &nbsp;
-                            {/* <button
+                        <Link href="/user/link/create">
+                          <button
+                            className={'btn float-right ' + styles.button}
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                            &nbsp; Request
+                          </button>
+                        </Link>
+                        {process.browser &&
+                          isAuth() &&
+                          isAuth().role === 'admin' && (
+                            <div className="">
+                              <Link href={`/admin/category/${c.slug}`}>
+                                <button className="badge btn btn-sm btn-outline-warning  mb-1 float-right">
+                                  Update
+                                </button>
+                              </Link>
+                              &nbsp;
+                              {/* <button
                 onClick={(e) => confirmDelete(e, category.slug)}
                 className="badge btn btn-sm btn-outline-danger "
               >
                 Delete
               </button> */}
-                          </div>
-                        )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -168,9 +180,7 @@ const Menus = ({ categories }) => {
         </div>
       </div> */}
 
-          <div
-            className=" row flex-column justify-content-center pt-3 "
-          >
+          <div className=" row flex-column justify-content-center pt-3 ">
             {listCategories()}
           </div>
 

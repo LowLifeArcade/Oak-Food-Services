@@ -7,6 +7,11 @@ import NProgress from 'nprogress';
 import { isAuth, logout } from '../helpers/auth';
 import styles from '../styles/Home.module.css';
 
+
+// if(typeof window !== 'undefined') {
+//   hydrate(window.___NEXT_DATA__.ids)
+// }
+
 // progressbar
 Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();
@@ -45,7 +50,7 @@ const Layout = ({ children }) => {
 
   const nav = () => (
     <nav className={'fixed-top ' + styles.nav}>
-      <ul className={'nav nav-tabs ' + styles.nav}>
+      <ul className={'nav  ' + styles.nav}>
         <li key="1" className="nav-item pointer-hand">
           <Link href="/">
             <a className="nav-link text-white">Home</a>
@@ -187,15 +192,16 @@ const Layout = ({ children }) => {
   );
 
   const accordian = () => (
-    <accordion className={'fixed-top ' + styles.accordion}>
-      <ul className={'nav nav-tabs ' + styles.accordion}>
+    <div className={'fixed-top ' + styles.accordion}>
+      <ul className={'nav  ' + styles.accordion}>
         <li key="1" className="nav-item pointer-hand">
           <a
             onClick={() => setShowSidebar(!showSidebar)}
             className="nav-link text-white"
           >
             <span>
-              <i className="fas fa-bars"></i>
+              {/* <i className="fas fa-bars"></i>&nbsp; */}
+              <i class="fas fa-hamburger"></i>
             </span>
           </a>
         </li>
@@ -204,7 +210,7 @@ const Layout = ({ children }) => {
           <Link href="/user/link/create">
             <a
               className={'nav-link text-white btn btn-warning '}
-              style={{ borderRadius: '0px' }}
+              style={{ borderRadius: '3px' }}
             >
               <i class="fas fa-pencil-alt"></i>
             </a>
@@ -214,7 +220,7 @@ const Layout = ({ children }) => {
           <Link href="/user/link/create">
             <a
               className="nav-link text-white btn btn-warning"
-              style={{ borderRadius: '0px' }}
+              style={{ borderRadius: '3px' }}
             >
               <i class="fas fa-pencil-alt"></i>
             </a>
@@ -227,7 +233,20 @@ const Layout = ({ children }) => {
           >
             <Link href="/admin/link/data">
               <a className="nav-link text-white">
-                <i class="fas fa-calculator"></i>
+                {/* <i class="fas fa-calculator"></i> */}
+                <i class="fas fa-chart-bar"></i>
+              </a>
+            </Link>
+          </li>
+        )}
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <li
+            onClick={() => setShowSidebar(false)}
+            className="nav-item pointer-hand"
+          >
+             <Link href="/admin/link/list">
+              <a className="nav-link text-white">
+                <i class="far fa-folder-open"></i> 
               </a>
             </Link>
           </li>
@@ -279,7 +298,7 @@ const Layout = ({ children }) => {
           </li>
         )}
       </ul>
-    </accordion>
+    </div>
   );
 
   const sideBar = () => (
@@ -422,7 +441,7 @@ const Layout = ({ children }) => {
           </li>
         )}
 
-        {process.browser && isAuth() && isAuth().role === 'admin' && (
+        {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
           <li
             onClick={() => setShowSideMenu(false)}
             className="nav-item pointer-hand"
@@ -434,7 +453,7 @@ const Layout = ({ children }) => {
               </a>
             </Link>
           </li>
-        )}
+        )} */}
         <hr />
 
         {process.browser && !isAuth() && (
