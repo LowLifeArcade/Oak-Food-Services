@@ -628,7 +628,7 @@ console.log('links', links)
   };
 
   const listOfLinks = (search, searchPickupTime, searchByStatus) => (
-    <table className="table table-striped">
+    <table className="table table-striped table-sm table-bordered">
       <thead>
         <tr>
           <th scope="col">Code</th>
@@ -679,7 +679,7 @@ console.log('links', links)
   );
 
   const listOfOnsiteLinks = (search, searchPickupTime, searchByStatus) => (
-    <table className="table table-striped">
+    <table className="table table-striped table-bordered">
       <thead>
         <tr>
           <th scope="col">Student</th>

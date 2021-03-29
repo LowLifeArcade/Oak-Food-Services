@@ -66,6 +66,9 @@ const Update = ({ oldLink, token, user, _id }) => {
   //         : '',
   //   });
   // }, [mealRequest]);
+  useEffect(() => {
+    !isAuth() && Router.push('/');
+  });
 
   // checks to see if parent has changed students allergy or group in update profile and applied changes here.
   useEffect(() => {
@@ -90,7 +93,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           meal.group !== students[index].group
         ) {
           meal.foodAllergy = students[index].foodAllergy;
-          meal.group = students[index].group
+          meal.group = students[index].group;
 
           if (
             students[index] &&

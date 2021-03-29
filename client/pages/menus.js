@@ -73,6 +73,9 @@ const Menus = ({ categories }) => {
   //   ));
   // CODE for admin /
 
+  let twoWeeksFromNow = new Date();
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+
   const listCategories = () =>
     categories
       .slice(0)
@@ -99,7 +102,7 @@ const Menus = ({ categories }) => {
               >
                 <a
                   style={{
-                    color: 'grey',
+                    color: '#444444',
                     textDecoration: 'none',
                     // border: '1px solid grey',
                     // padding: '10px',
@@ -118,6 +121,36 @@ const Menus = ({ categories }) => {
                       {renderHTML(c.content || '')}
                     </div>
 
+                    <div className="alert-seconary pt-2">
+                      
+
+                      <table className="table table-sm table-striped table-bordered " style={{ fontSize: '10px' }}>
+                        {c.menu.length > 0 && (
+                          <thead>
+                            <tr>
+                              <th scope="col">Day</th>
+                              <th scope="col">Breakfast</th>
+                              <th scope="col">Lunch</th>
+                              <th scope="col">Vegetarian Lunch</th>
+                            </tr>
+                          </thead>
+                        )}
+                        <tbody>
+                          {c.menu.map((l, i) => (
+                            <>
+                              <tr key={i}>
+                                <td>{l.row1}</td>
+                                <td>{l.row2}</td>
+                                <td>{l.row3}</td>
+                                <td>{l.row4}</td>
+                              </tr>
+                            </>
+                          )) || ''}
+                        </tbody>
+                      </table>
+
+                    </div>
+
                     <div className="">
                       <div className="pb-4">
                         {c.image && (
@@ -134,20 +167,20 @@ const Menus = ({ categories }) => {
                         Posted {moment(c.createdAt).format('MMMM Do YYYY')}
                         {/* {popular.map((l, i) => l.postedBy.name)} */}
                         {/* {c.username} */}
-                        <Link href="/user/link/create">
+                        {c.menu.length > 0 &&  new Date < twoWeeksFromNow && <Link href="/user/link/create">
                           <button
                             className={'btn float-right ' + styles.button}
                           >
                             <i class="fas fa-pencil-alt"></i>
                             &nbsp; Request
                           </button>
-                        </Link>
+                        </Link>}
                         {process.browser &&
                           isAuth() &&
                           isAuth().role === 'admin' && (
                             <div className="">
                               <Link href={`/admin/category/${c.slug}`}>
-                                <button className="badge btn btn-sm btn-outline-warning  mb-1 float-right">
+                                <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
                                   Update
                                 </button>
                               </Link>

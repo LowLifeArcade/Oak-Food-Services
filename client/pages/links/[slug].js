@@ -157,6 +157,9 @@ const Links = ({
       </div>
     ));
 
+  let twoWeeksFromNow = new Date();
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+
   const loadMore = async () => {
     let toSkip = skip + limit;
     const response = await axios.post(`${API}/category/${query.slug}`, {
@@ -185,26 +188,26 @@ const Links = ({
       {head()}
       <Layout>
         <div className="row ">
-          
           <div className="col-md-12 pt-2">
-          
             <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1>
-            
+
             <hr />
             <div className="alert-seconary pt-2">
               {renderHTML(category.content || '')}
             </div>
-            
+
             <div className="alert-seconary pt-2">
-               <table className="table table-striped">
-                {category.menu.length > 0 && <thead>
-                  <tr>
-                    <th scope="col">Day</th>
-                    <th scope="col">Breakfast</th>
-                    <th scope="col">Lunch</th>
-                    <th scope="col">Vegetarian Lunch</th>
-                  </tr>
-                </thead>}
+              <table className="table table-striped table-bordered">
+                {category.menu.length > 0 && (
+                  <thead>
+                    <tr>
+                      <th scope="col">Day</th>
+                      <th scope="col">Breakfast</th>
+                      <th scope="col">Lunch</th>
+                      <th scope="col">Vegetarian Lunch</th>
+                    </tr>
+                  </thead>
+                )}
                 <tbody>
                   {category.menu.map((l, i) => (
                     <>
@@ -217,9 +220,7 @@ const Links = ({
                     </>
                   )) || ''}
                 </tbody>
-              </table> 
-
-
+              </table>
             </div>
           </div>
           <div className="col-md">
@@ -232,31 +233,33 @@ const Links = ({
             )}
             <div className="pt-5"></div>
             Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
-            <Link href="/user/link/create">
-              <button className={'btn float-right ' + styles.button}>
-                <i class="fas fa-pencil-alt"></i>
-                &nbsp;&nbsp; Request
-              </button>
-            </Link>
+            {category.menu.length > 0 && new Date() < twoWeeksFromNow && (
+              <Link href="/user/link/create">
+                <button className={'btn float-right ' + styles.button}>
+                  <i class="fas fa-pencil-alt"></i>
+                  &nbsp;&nbsp; Request
+                </button>
+              </Link>
+            )}
           </div>
         </div>
         <br />
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
-            <div className="">
-              <Link href={`/admin/category/${category.slug}`}>
-                <button className="badge btn btn-sm btn-outline-warning  mb-1">
-                  Update
-                </button>
-              </Link>
-              &nbsp;
-              <button
-                onClick={(e) => confirmDelete(e, category.slug)}
-                className="badge btn btn-sm btn-outline-danger "
-              >
-                Delete
+        {process.browser && isAuth() && isAuth().role === 'admin' && (
+          <div className="">
+            <Link href={`/admin/category/${category.slug}`}>
+              <button className="badge btn btn-sm btn-outline-warning  mb-1">
+                Update
               </button>
-            </div>
-          )}
+            </Link>
+            &nbsp;
+            <button
+              onClick={(e) => confirmDelete(e, category.slug)}
+              className="badge btn btn-sm btn-outline-danger "
+            >
+              Delete
+            </button>
+          </div>
+        )}
         {/* formated link area */}
         {/* <div className="row">
         <div className="col-md-8">{listOfLinks()}</div>

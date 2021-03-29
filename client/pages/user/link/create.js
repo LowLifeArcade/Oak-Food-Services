@@ -11,6 +11,7 @@ import Router from 'next/router';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
+
 const Create = ({ token, user }) => {
   const username = user.username;
   const [showSearch, setShowSearch] = useState(false);
@@ -125,6 +126,10 @@ const Create = ({ token, user }) => {
     type,
     medium,
   } = state;
+
+  useEffect(() => {
+    !isAuth() && Router.push('/');
+  });
 
   // conditions: mealRequest has only Onsite Standard meals. So if nothing other than that exists than true.
   useEffect(() => {
@@ -877,7 +882,7 @@ const Create = ({ token, user }) => {
 
   const selectPickupTime = (i) => (
     <>
-      <div key={i} >
+      <div key={i}>
         <div className="">
           <select
             type="select"
@@ -907,7 +912,7 @@ const Create = ({ token, user }) => {
 
   const selectPickupTimeCafeteriaOnly = (i) => (
     <>
-      <div key={i} >
+      <div key={i}>
         <div className="">
           <select
             type="select"
@@ -1136,7 +1141,7 @@ const Create = ({ token, user }) => {
           pickupCode,
           pickupCodeAdd,
           orderStatus,
-          userCode
+          userCode,
         },
         {
           headers: {

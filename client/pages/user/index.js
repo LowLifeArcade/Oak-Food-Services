@@ -6,8 +6,8 @@ import withUser from '../withUser';
 import Link from 'next/link';
 import moment from 'moment';
 import Router from 'next/router';
-
 import Layout from '../../components/Layout';
+import { isAuth } from '../../helpers/auth';
 
 const User = ({ user, token, l, userLinks }) => {
   const confirmDelete = (e, id) => {
@@ -21,7 +21,10 @@ const User = ({ user, token, l, userLinks }) => {
     }
   };
 
+  
+
   useEffect(() => {
+    !isAuth() && Router.push('/')
     user.students.length === 0 && Router.push('/user/profile/add');
   }, []);
 
