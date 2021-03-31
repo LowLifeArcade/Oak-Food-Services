@@ -60,6 +60,7 @@
 }
 
 .sectionair {
+  /* background-color: rgb(72, 151, 151); */
   background-color: rgb(201, 241, 241);
   box-shadow: 0px 1.2px 5px 0px rgba(0, 0, 0, 0.2);
 display: flex;
@@ -69,9 +70,19 @@ flex-direction: column;
   width: 100%;
   max-width: 30em;
   width: auto;
-  height: 300px;
+  height: 350px;
   margin: 0 auto;
 
+}
+
+.hr {
+  display: inline;
+  border: 3px dotted #b91f1f;
+  border-style: none none dotted;
+}
+.hrstudents {
+  border: 2px dotted #419ca8;
+  border-style: none none dotted;
 }
 
 .footer {

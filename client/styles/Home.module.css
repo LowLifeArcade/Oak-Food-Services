@@ -333,4 +333,8 @@
     left: 0;
     top: 0;
   }
+  /* @page {
+    size: 25cm 35.7cm;
+    margin: 5mm 5mm 5mm 5mm; 
+  } */
 }
