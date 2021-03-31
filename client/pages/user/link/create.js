@@ -1265,14 +1265,17 @@ const Create = ({ token, user }) => {
                 <h3 className="text-dark">
                   Meal Request For:{' '}
                   {pickupDate && (
+                    <>
                     <span onClick={() => setShowSearch(!showSearch)}>
                       {moment(state.pickupDate).format('MMMM Do')}
+                    &nbsp; <i class="far fa-calendar-check"></i>
                     </span>
+                    </>
                   )}
                 </h3>
                 {pickupDate === '' && (
                   <button
-                    className={'btn btn-sm  ' + styles.buttonshadow}
+                    className={'btn btn-sm btn-outline-secondary ' + styles.buttonshadow}
                     onClick={() => setShowSearch(!showSearch)}
                   >
                     <i class="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date

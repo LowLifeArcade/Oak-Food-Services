@@ -12,27 +12,31 @@ import Link from 'next/link';
 const Update = ({ oldLink, token, user, _id }) => {
   const confirmDelete = (e, id) => {
     e.preventDefault();
-    let answer = window.confirm('WARNING! Delete this order?');
+    let answer = window.confirm(
+      'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
+    );
     if (answer) {
+      window.confirm('Request is cancelled. No further action required.');
       handleDelete(id);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${API}/link/admin/${id}`, {
+      const response = await axios.delete(`${API}/link/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       console.log('LINK DELETE SUCCESS', response);
-      process.browser && window.location.reload();
+      Router.replace('/user');
+      // process.browser && window.location.reload();
 
-      isAuth() && isAuth().role === 'admin'
-        ? Router.push('admin')
-        : isAuth() && isAuth().role === 'subscriber'
-        ? Router.push('user')
-        : Router.push('/login');
+      // isAuth() && isAuth().role === 'admin'
+      //   ? Router.push('admin')
+      //   : isAuth() && isAuth().role === 'subscriber'
+      //   ? Router.push('user')
+      //   : Router.push('/login');
     } catch (error) {
       console.log('ERROR LINK CATEGORY', error);
     }
@@ -137,9 +141,13 @@ const Update = ({ oldLink, token, user, _id }) => {
               ).length != 0 ? (
                 <b
                   id="printCode"
-                  onClick={oldLink.orderStatus === false &&
+                  onClick={
+                    oldLink.orderStatus === false &&
                     moment(oldLink.pickupDate).format('MDD').toString() >
-                    moment(new Date()).format('MDD').toString() ? printData : null}
+                      moment(new Date()).format('MDD').toString()
+                      ? printData
+                      : null
+                  }
                   className="code d-flex justify-content-center"
                 >
                   {oldLink.pickupCode}{' '}

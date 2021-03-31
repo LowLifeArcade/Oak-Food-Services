@@ -60,11 +60,11 @@ const Home = () => {
                 <b>Start a Meal Request</b>
               </div>
               <div className={'pb-5 ' + styles.bodyregular}>
-                Look over the menu, then use one of the{' '}
+                Look over the menu, then start a request with one of the{' '}
                 <b>
                   yellow <i>Meal Request</i> buttons
                 </b>{' '}
-                found throughout the site to start a request.
+                found throughout the site.
                 {/* located either
                 on your nav bar, the weekly menu, or your receipts page. */}
               </div>
