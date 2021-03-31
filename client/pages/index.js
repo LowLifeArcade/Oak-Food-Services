@@ -30,9 +30,19 @@ const Home = () => {
       <Layout>
         <div className={styles.body}>
           <div className={styles.section}>
-            <h3 className={styles.h4}>Meals by the Week</h3>
-            <p className={'pb-3 ' + styles.bodyregular}>
-              Request school meals for each student at least 2 weeks in advance.
+            <div className="pt-4 pb-">
+
+            <h3 className={ styles.h4}>Your Weekly Request</h3>
+            <div className={' ' + styles.columnscontainer}>
+
+            <div className={styles.bodyregular}>
+
+            here's how it works
+            </div>
+            </div>
+            </div>
+            <p className={'pb-4 ' + styles.bodyregular}>
+              {/* Request school meals for each student at least 2 weeks in advance. */}
             </p>
           </div>
 
@@ -50,11 +60,11 @@ const Home = () => {
                 <b>Start a Meal Request</b>
               </div>
               <div className={'pb-5 ' + styles.bodyregular}>
-                Use one of the{' '}
+                Look over the menu, then use one of the{' '}
                 <b>
                   yellow <i>Meal Request</i> buttons
                 </b>{' '}
-                found throughout the site.
+                found throughout the site to start a request.
                 {/* located either
                 on your nav bar, the weekly menu, or your receipts page. */}
               </div>
@@ -73,7 +83,7 @@ const Home = () => {
                 <b> Make Your Selections</b>
               </div>
               <p className={styles.bodyregular}>
-                Make your <b>student's meal selections</b> for the week and
+                Select pickup date, make your <b>student's meal selections</b> for the week, select a pickup time, and
                 submit your request.
                 <br />
                 <br />
@@ -115,12 +125,12 @@ const Home = () => {
                 <b>For Curbside Requests</b>
               </div>
               <p className={'pb-2 ' + styles.bodyregular}>
-                Simply drive to the <b>pickup location</b> on the date and time
+                Simply <b>print out your code</b> and drive to the <b>pickup location</b> on the date and time
                 found on your receipt.
               </p>
             </div>
             {/* <p className={'pb-2 ' + styles.bodyregular}> */}
-            <h3 className={'pb-5 ' + styles.h4}> Display Your Code</h3>
+            <h1 className={'pb-3 ' + styles.h4}> Display Code</h1>
             {/* </p> */}
 
             <div className={'pt-4 alert-warning ' + styles.sectionair}>
