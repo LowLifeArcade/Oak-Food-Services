@@ -123,9 +123,9 @@ const Update = ({ oldLink, token, user, _id }) => {
           </h3>
           <hr className={styles.hr} />
           <h6>
-            Display the above code{' '}
+            Pick up is at <b className="text">Brookside Elemenery</b>. Display the above code{' '}
             <b className="text-danger">on your dashboard </b>or show from
-            your phone to the staff.
+            your phone.
           </h6>
           <p></p>
           <div className="p-2">
