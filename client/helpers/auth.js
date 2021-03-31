@@ -3,12 +3,16 @@ import Router from 'next/router';
 
 // set in cookie
 export const setCookie = (key, value) => {
+  let now = new Date();
+  now.setTime(now.getTime() + 1 * 3600 * 1000);
+
   if (process.browser) {
     // if window.
     cookie.set(key, value, {
-      expires: 8,
+      expires: 1,
     });
   }
+  console.log('jwt expires in ', now.toUTCString())
 };
 
 // remove from cookie
@@ -81,9 +85,11 @@ export const isAuth = () => {
 export const logout = () => {
   let answer = window.confirm('Logout Now?');
   if (answer) {
-    removeCookie('token');
-    removeLocalStorage('user');
-    Router.push('/login');
+    setTimeout(() => {
+      removeCookie('token');
+      removeLocalStorage('user');
+      Router.push('/login');
+    }, 700);
   }
 };
 export const autoLogout = () => {

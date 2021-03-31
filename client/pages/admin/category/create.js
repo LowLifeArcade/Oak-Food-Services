@@ -92,6 +92,24 @@ const Create = ({ user, token }) => {
     });
   };
 
+  const resetMenuType = (menuTypeStatus) => {
+    setMenuType(menuTypeStatus)
+    console.log('menu type', menuType)
+    let currentMenuType = menuTypeStatus === 'Pickup' ? { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' } : { row1: 'day', row2: 'breakfast food', row3: 'lunch' }
+    setState({...state,
+    menu: [currentMenuType]
+    })
+  }
+
+  const resetMenuPost = (menuPostStatus) => {
+      setMenuPost(menuPostStatus)
+      setState({...state,
+        menu: [
+          { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
+        ],
+      })
+  }
+
   const handleContent = (e) => {
     setContent(e);
     setState({ ...state, content: { content }, success: '', error: '' });
@@ -242,7 +260,7 @@ const Create = ({ user, token }) => {
         />
       </div>
 
-      {chooseEmailGroup()}
+      {/* {chooseEmailGroup()} */}
 
       <div className="form-group">
         <label className="text-muted">Content</label>
@@ -255,28 +273,38 @@ const Create = ({ user, token }) => {
           style={{ border: '1px solid #333' }}
         />
       </div>
-      {(
+      {menuPost === false && 
         <button
           className="btn btn-warning"
-          type='button'
+          type="button"
           onClick={(e) => setMenuPost(!menuPost)}
           // value="Onsite"
         >
           <i class="fas fa-book"></i>
-          &nbsp; Add Menu?
+          &nbsp; Add Menu to Post?
         </button>
-      )}
-      <br/>
-      <br/>
+      }
+      {menuPost && 
+        <button
+          className="btn btn-warning"
+          type="button"
+          onClick={(e) => resetMenuPost(!menuPost)}
+          // value="Onsite"
+        >
+          <i class="fas fa-book"></i>
+          &nbsp; Delete Menu from Post?
+        </button>
+      }
+      <br />
+      <br />
       {menuPost && (
         <>
           <div>
             {menuType === 'Pickup' && (
               <button
-              type='button'
-
+                type="button"
                 className="btn btn-warning fas fa-car-side"
-                onClick={(e) => setMenuType('Onsite')}
+                onClick={(e) => resetMenuType('Onsite')}
                 // value="Onsite"
               >
                 &nbsp; Curbside Menu
@@ -284,10 +312,9 @@ const Create = ({ user, token }) => {
             )}
             {menuType === 'Onsite' && (
               <button
-              type='button'
-
+                type="button"
                 className="btn  btn-warning fas fa-school"
-                onClick={(e) => setMenuType('Pickup')}
+                onClick={(e) => resetMenuType('Pickup')}
                 // value="Pickup"
               >
                 &nbsp; Onsite Menu
@@ -298,7 +325,7 @@ const Create = ({ user, token }) => {
           <br />
 
           {/* table menu */}
-          <table className="table table-striped table-sm table-bordered table-responsive">
+          <table className="table table-striped table-sm table-bordered">
             {menuType === 'Pickup' ? (
               <thead>
                 <tr>
@@ -319,6 +346,7 @@ const Create = ({ user, token }) => {
               </thead>
             )}
             <tbody>
+              {console.log('what"s in menu', menu)}
               {menuType === 'Pickup'
                 ? menu.map((l, i) => (
                     <>
@@ -428,7 +456,8 @@ const Create = ({ user, token }) => {
           />
         </label>
       </div>
-
+      {success && showSuccessMessage(success)}
+      {error && showErrorMessage(error)}
       <button className="btn btn-outline-warning">{buttonText}</button>
     </form>
   );
@@ -439,8 +468,7 @@ const Create = ({ user, token }) => {
         <div className="col-md-10 offset-md-1 pt-3">
           <h1>Create Post</h1>
           <br />
-          {success && showSuccessMessage(success)}
-          {error && showErrorMessage(error)}
+
           {createCategoryForm()}
         </div>
       </div>

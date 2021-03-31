@@ -310,3 +310,27 @@
     display: none;
   }
 }
+
+@media print {
+  /* body * {
+    font-size: 10pt;
+  } */
+  .noPrint {
+    visibility: hidden;
+  }
+
+  .print {
+    visibility: visible;
+  }
+
+  .printReceipt {
+    /* font-size: 30px; */
+    /* line-height: 1.2; */
+    visibility: visible;
+  }
+  .print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}

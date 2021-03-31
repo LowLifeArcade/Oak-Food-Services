@@ -21,7 +21,7 @@ const categorySchema = new mongoose.Schema(
     },
     content: {
       type: {},
-      min: 20,
+      // min: 5,
       max: 2000000,
     },
     menu: [

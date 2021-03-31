@@ -20,10 +20,10 @@ const Login = () => {
 
   useEffect(() => {
     isAuth() && isAuth().role === 'admin'
-      ? Router.push('admin')
+      ? Router.push('admin/link/list')
       : isAuth() && isAuth().role === 'subscriber'
-      ? Router.push('user')
-      : Router.push('/login');
+      && Router.push('user')
+      // : Router.push('/login');
   }, []);
 
   const { email, password, error, success, buttonText } = state;
@@ -48,7 +48,7 @@ const Login = () => {
       });
       authenticate(response, () =>
         isAuth() && isAuth().role === 'admin'
-          ? Router.push('admin')
+          ? Router.push('admin/link/list')
           : Router.push('user')
       );
     } catch (error) {

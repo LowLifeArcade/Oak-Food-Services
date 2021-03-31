@@ -49,6 +49,8 @@ const Layout = ({ children }) => {
   );
 
   const nav = () => (
+    <div className={styles.noPrint}>
+
     <nav className={'fixed-top ' + styles.nav}>
       <ul className={'nav nav-tabs ' + styles.nav}>
         <li key="1" className="nav-item pointer-hand">
@@ -189,9 +191,12 @@ const Layout = ({ children }) => {
         )} */}
       </ul>
     </nav>
+    </div>
   );
 
   const accordian = () => (
+    <div className={styles.noPrint}>
+
     <div className={'fixed-top ' + styles.accordion}>
       <ul className={'nav nav-tabs ' + styles.accordion}>
         <li key="1" className="nav-item pointer-hand">
@@ -299,9 +304,12 @@ const Layout = ({ children }) => {
         )}
       </ul>
     </div>
+    </div>
   );
 
   const sideBar = () => (
+    <div className={styles.noPrint}>
+
     <div className={showSidebar ? styles.sidebarVisible : styles.sidebar}>
       <ul className={'sidebar list-unstyled pt-5 p-4'}>
         <span onClick={() => setShowSidebar(false)}>
@@ -513,9 +521,13 @@ const Layout = ({ children }) => {
         } 
       </ul>
     </div>
+    </div>
   );
 
   const sideMenu = () => (
+    <div className={styles.noPrint}>
+
+    
     <div className={showSideMenu ? styles.sideMenuVisible : styles.sideMenu}>
       <ul className={'sidebar list-unstyled pt-5 p-4'}>
         <span onClick={() => setShowSideMenu(false)}>
@@ -720,6 +732,7 @@ const Layout = ({ children }) => {
           </li>
         )}
       </ul>
+    </div>
     </div>
   );
 

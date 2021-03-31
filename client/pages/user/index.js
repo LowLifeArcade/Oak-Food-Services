@@ -47,6 +47,7 @@ const User = ({ user, token, l, userLinks }) => {
       <>
         {
           <Link href={`/user/receipt/${l._id}`}>
+            <a style={{ textDecoration: 'none' }}>
             <div
               key={i}
               className={
@@ -135,7 +136,7 @@ const User = ({ user, token, l, userLinks }) => {
               <h6>
                 Display the above code{' '}
                 <b className="text-danger">on your dashboard </b>or show from
-                your phone to the server
+                your phone to the staff.
               </h6>
               <p></p>
               <div className="p-2">
@@ -273,6 +274,7 @@ const User = ({ user, token, l, userLinks }) => {
                 <div className="pb-4"></div>
               </div>
             </div>
+            </a>
           </Link>
         }
       </>

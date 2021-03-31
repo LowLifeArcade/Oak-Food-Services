@@ -20,6 +20,7 @@ const withUser = (Page) => {
         user = response.data.user;
         userLinks = response.data.mealRequest
       } catch (error) {
+        console.log('withUser error', error)
         if (error.response.status === 401) {
           user = null;
         }
@@ -27,7 +28,8 @@ const withUser = (Page) => {
     }
 
     if (user === null) {
-      // redirect
+      // redirect server side
+      console.log('context', context)
       context.res.writeHead(302, {
         Location: '/',
       });

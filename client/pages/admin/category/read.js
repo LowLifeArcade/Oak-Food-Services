@@ -80,7 +80,7 @@ const Read = ({ user, token }) => {
               <div className="col-md-3">
                 <Link href={`/admin/category/${c.slug}`}>
                   <button className="btn btn-sm btn-outline-success btn-block mb-1">
-                    Update
+                    Edit
                   </button>
                 </Link>
                 <button

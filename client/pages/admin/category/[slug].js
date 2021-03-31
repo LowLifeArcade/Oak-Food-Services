@@ -335,6 +335,7 @@ const Update = ({ oldCategory, token }) => {
                 {/* <td>{l.row2}</td>
                 <td>{l.row3}</td>
                 <td>{l.row4}</td> */}
+                {console.log('what is l', l)}
               </tr>
               <div className="p-2"></div>
             </>

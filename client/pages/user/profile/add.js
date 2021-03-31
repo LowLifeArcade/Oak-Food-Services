@@ -115,30 +115,28 @@ const Profile = ({ user, token }) => {
           >
             {' '}
             <option selected disabled value="">
-              Choose Cohort
+              Curbside or Onsite?
             </option>
-            <option value="distance-learning">
-              Distance Learning (pickup)
-            </option>
+            <option value="distance-learning">Curbside Pickup</option>
             {students[i].foodAllergy.gluten === true ||
             students[i].foodAllergy.egg === true ||
             students[i].foodAllergy.dairy === true ||
             students[i].foodAllergy.soy === true ? (
               <option disabled value="a-group">
-                A (onsite)
+                Onsite - Cohort A
               </option>
             ) : (
-              <option value="a-group">A (onsite)</option>
+              <option value="a-group">Onsite - Cohort A</option>
             )}
             {students[i].foodAllergy.gluten === true ||
             students[i].foodAllergy.egg === true ||
             students[i].foodAllergy.dairy === true ||
             students[i].foodAllergy.soy === true ? (
               <option disabled value="b-group">
-                B (onsite)
+                Onsite - Cohort B
               </option>
             ) : (
-              <option value="b-group">B (onsite)</option>
+              <option value="b-group">Onsite - Cohort B</option>
             )}
           </select>
           <div className=""></div>
@@ -676,7 +674,8 @@ const Profile = ({ user, token }) => {
 
                   {students[i].schoolName != 'NON' &&
                     students[i].schoolName != 'DK' &&
-                    students[i].schoolName != 'OVHS' && (
+                    students[i].schoolName != 'OVHS' &&
+                    students[i].schoolName != 'OPHS' && (
                       <div key={i + 14} className="">
                         {addStudentGroup(i)}
                       </div>
@@ -734,7 +733,7 @@ const Profile = ({ user, token }) => {
                       />
                     </div>
                   )}
-              <hr className={'p-2 ' +styles.hrstudents} />
+                  <hr className={'p-2 ' + styles.hrstudents} />
                 </div>
               );
             })}
@@ -784,7 +783,6 @@ const Profile = ({ user, token }) => {
         </div>
       </Layout>
       <div className="p-5"></div>
-
     </div>
   );
 };

@@ -248,7 +248,7 @@ const Links = ({
           <div className="">
             <Link href={`/admin/category/${category.slug}`}>
               <button className="badge btn btn-sm btn-outline-warning  mb-1">
-                Update
+                Edit
               </button>
             </Link>
             &nbsp;

@@ -181,7 +181,7 @@ const Menus = ({ categories }) => {
                             <div className="">
                               <Link href={`/admin/category/${c.slug}`}>
                                 <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
-                                  Update
+                                  Edit
                                 </button>
                               </Link>
                               &nbsp;

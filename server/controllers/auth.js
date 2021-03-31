@@ -165,14 +165,16 @@ exports.login = (req, res) => {
       });
     }
     // generate token and send to client
+    // const refreshToken = jwt.sign({ _id: user._id}, process.env.REFRESH_TOKEN_SECRET)
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '3d',
+      expiresIn: '8d',
     });
     const { _id, name, email, role } = user;
 
     return res.json({
       token,
       user: { _id, name, email, role },
+      // refreshToken
     });
   });
 };
@@ -221,7 +223,7 @@ exports.forgotPassword = (req, res) => {
   User.findOne({ email }).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({
-        error: 'User with that email does not exit',
+        error: 'User with that email does not exist. Please register.',
       });
     }
     // generate token and email to user

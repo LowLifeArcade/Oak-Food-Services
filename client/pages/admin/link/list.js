@@ -158,7 +158,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
       requestsArrayByDate[i] = request;
 
-      let newOffsiteData = (requestsArrayByDate)
+      let newOffsiteData = requestsArrayByDate
         .filter((l) => l.pickupTime.includes(searchPickupTime))
         // .filter((l) => l.meal != 'None')
         .filter((l) => l.pickupTime != 'Cafeteria')
@@ -366,8 +366,10 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       r.mealRequest.map((meal) => allMealsArray2.push(meal))
     );
 
-    let links = await response.data.sort((a, b) => a.userCode > b.userCode ? 1 :-1)
-console.log('links', links)
+    let links = await response.data.sort((a, b) =>
+      a.userCode > b.userCode ? 1 : -1
+    );
+    console.log('links', links);
 
     setState({
       ...state,
@@ -957,10 +959,18 @@ console.log('links', links)
     });
   };
 
+  // function printData() {
+  //   let divToPrint = document.getElementById('printTable');
+  //   let newWin = window.open('');
+  //   newWin.document.write(divToPrint.outerHTML);
+  //   newWin.print();
+  //   // newWin.close();
+  // }
+
   return (
-    <Layout>
-      <div className="row">
-        <div className="col-md-8 pt-4">
+    <Layout >
+      <div className={"row " + styles.noPrint}>
+        <div className="col-md-12 pt-4">
           <h3>
             Meal Lists for{' '}
             {pickupDateLookup &&
@@ -983,22 +993,35 @@ console.log('links', links)
               </button>
               {console.log('csv offsite data near button', csvOffsiteData)}
               {orderType === 'Onsite' ? (
+                // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
                 <CSVLink
-                  className="float-right"
+                  className="btn btn-sm btn-outline-dark text float-right"
                   headers={onsiteHeaders}
                   data={csvOnsiteData}
                 >
-                  Download csv
+                  <i class="fas fa-file-export"></i>
+                  &nbsp;Export csv
                 </CSVLink>
               ) : (
                 <CSVLink
-                  className="float-right"
+                  className="btn btn-sm btn-outline-dark text float-right"
                   headers={pickupHeaders}
                   data={csvOffsiteData}
                 >
-                  Download csv
+                  <i class="fas fa-file-export"></i>
+                  &nbsp;Export csv
                 </CSVLink>
               )}
+              {
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-dark text float-right print"
+                  onClick={(e) => window.print()}
+                >
+                  <i class="fas fa-print"></i>
+                  &nbsp;Print
+                </button>
+              }
               <br />
               <br />
               <input
@@ -1227,10 +1250,11 @@ console.log('links', links)
         </div>
       </div>
       <br />
-
-      {orderType === 'Pickup'
-        ? listOfLinks(state.search, searchPickupTime, searchByStatus)
-        : listOfOnsiteLinks(state.search, searchPickupTime, searchByStatus)}
+      <div id="printTable" className={styles.print}>
+        {orderType === 'Pickup'
+          ? listOfLinks(state.search, searchPickupTime, searchByStatus)
+          : listOfOnsiteLinks(state.search, searchPickupTime, searchByStatus)}
+      </div>
     </Layout>
   );
 };

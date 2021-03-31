@@ -115,9 +115,14 @@ exports.create = (req, res) => {
             throw new Error(err);
           } else {
             // data.categories = result;
+
+            // TODO make updatePost in blog create for update emails and reminders 
+
+            // TODO if menuPost === true then send email 
   
             for (let i = 0; i < users.length; i++) {
               // console.log("user email stuff", users[i].email, data)
+              // TODO if user.special.cohort === 'offsite' then they get offsite menu etc...
               const params = linkPublishedParams(users[i].email, data); // email mod
               const sendEmail = ses.sendEmail(params).promise();
   

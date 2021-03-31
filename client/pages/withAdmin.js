@@ -24,14 +24,13 @@ const withAdmin = (Page) => {
       } catch (error) {
         if (error.response.status === 401) {
           user = null;
-          // console.log('with Admin get error', response.data)
         }
       }
     }
 
     if (user === null) {
-      // redirect
-      console.log(context.res)
+      // redirect server side
+      console.log('context', context)
       context.res.writeHead(302, {
         Location: '/',
       });
