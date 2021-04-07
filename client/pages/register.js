@@ -15,7 +15,6 @@ const Register = () => {
   const [state, setState] = useState({
     name: '',
     lastName: '',
-    addButtonText: 'Add student',
     email: '',
     password: '',
     confirmPassword: '',
@@ -24,9 +23,8 @@ const Register = () => {
     goodMessage: '',
     success: '',
     buttonText: 'Register',
+    addButtonText: 'Add student',
     students: [],
-    loadedCategories: [],
-    categories: [], // categories selected by user for signup
     groups: [],
     loadedGroups: [],
   });
@@ -36,7 +34,6 @@ const Register = () => {
   }, []);
 
   const {
-    addButtonText,
     name,
     lastName,
     message,
@@ -45,13 +42,8 @@ const Register = () => {
     password,
     confirmPassword,
     error,
-    students,
     success,
     buttonText,
-    loadedCategories,
-    categories,
-    groups,
-    loadedGroups,
   } = state;
 
   useEffect(() => {
@@ -116,7 +108,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.table({ name, email, password });
+
     setState({ ...state, buttonText: 'Registering' });
     if (password !== confirmPassword) {
       setState({ ...state, error: "Passwords don't match" });
