@@ -44,7 +44,8 @@ exports.register = (req, res) => {
     const userCode =
       lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
 
-    // checks to see if anyone has usercode
+    // checks to see if anyone has usercode // should be .exec((err, user)) 
+    // I need to fix the logic here. It should do a loop to recheck if there's a user with this userCode and remake the code again if so
     User.findOne({ userCode }).exec((err, userCode) => {
       if (userCode) {
         const makeUserCode = (length) => {

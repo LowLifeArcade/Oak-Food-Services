@@ -49,7 +49,7 @@ const Home = () => {
           <div className={styles.sectioncolumns}>
             <div className={' ' + styles.columnscontainer}>
               <img
-                src="https://assets-global.website-files.com/5ea378188ad6b602798e00b8/601b98df30b50cf0c32f46b0_Group%20341.png"
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step1.png"
                 loading="lazy"
                 alt=""
                 class="stepimage"
@@ -72,7 +72,7 @@ const Home = () => {
 
             <div className={styles.columnscontainer}>
               <img
-                src="https://assets-global.website-files.com/5ea378188ad6b602798e00b8/601b98e2cdd21687761d118f_Group%20342.png"
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step2.png"
                 loading="lazy"
                 alt=""
                 class="stepimage"
@@ -93,7 +93,7 @@ const Home = () => {
 
             <div className={styles.columnscontainer}>
               <img
-                src="https://assets-global.website-files.com/5ea378188ad6b602798e00b8/601b98e5f3402d2b78c91286_Group%20343.png"
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3a.png"
                 loading="lazy"
                 loading="lazy"
                 alt=""
@@ -113,7 +113,7 @@ const Home = () => {
             </div>
             <div className={styles.columnscontainer}>
               <img
-                src="https://assets-global.website-files.com/5ea378188ad6b602798e00b8/601b98e5f3402d2b78c91286_Group%20343.png"
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
                 loading="lazy"
                 loading="lazy"
                 alt=""

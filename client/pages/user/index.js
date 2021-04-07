@@ -163,7 +163,7 @@ const User = ({ user, token, l, userLinks }) => {
                 </h3>
                 <hr className={styles.hr} />
                 <h6>
-                  Pick up is at <b className="text">Brookside Elemenery</b>.
+                  Pick up is at <b className="text">Brookside Elementary</b>.
                   Display the above code{' '}
                   <b className="text-danger">on your dashboard </b>or show from
                   your phone.
