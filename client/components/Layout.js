@@ -19,6 +19,13 @@ Router.onRouteChangeError = (url) => NProgress.done();
 const Layout = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showSideMenu, setShowSideMenu] = useState(false);
+  // const [loaded, setLoaded] = useState(false);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLoaded(true)
+  //   }, 800);
+  // }, []);
 
   const head = () => (
     <>
@@ -195,6 +202,46 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )} */}
+        </ul>
+      </nav>
+    </div>
+  );
+  
+  const fakeNav = () => (
+    <div className={styles.noPrint}>
+      <nav className={'fixed-top ' + styles.nav}>
+        <ul className={'nav nav-tabs ' + styles.nav}>
+          <li key="1" className="nav-item pointer-hand">
+            <Link href="/">
+              <a className="nav-link text-white">
+                <i class="fas fa-chalkboard-teacher"></i>
+              </a>
+            </Link>
+          </li>
+
+
+            <li className="nav-item pointer-hand">
+              <Link href="/user/link/create">
+                <a
+                  className="nav-link text-white btn btn-warning"
+                  style={{ borderRadius: '3px' }}
+                >
+                  {' 📝'}
+                </a>
+              </Link>
+            </li>
+
+
+
+
+
+            <li key="6" className="nav-item ml-auto">
+              <a
+                className="btn nav-link text-white"
+              >
+                <span>Loading...</span>
+              </a>
+            </li>
         </ul>
       </nav>
     </div>
@@ -760,6 +807,7 @@ const Layout = ({ children }) => {
   return (
     <React.Fragment>
       {head()}
+      {/* {!fakeNav()} */}
       {nav()}
       {accordian()}
       {sideMenu()}

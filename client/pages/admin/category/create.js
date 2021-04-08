@@ -49,6 +49,7 @@ const Create = ({ user, token }) => {
     image: '',
   });
 
+
   const [menuChange, setMenuChange] = useState('');
   const [content, setContent] = useState('');
   const [group, setGroup] = useState('');
@@ -58,6 +59,7 @@ const Create = ({ user, token }) => {
   const [imageUploadButtonName, setImageUploadButtonName] = useState(
     'Upload image'
   );
+  
 
   const {
     menu,

@@ -96,6 +96,48 @@ flex-direction: column;
   /* background-color: #f8c623 !important; */
 }
 
+.subcard {
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: rgb(250, 252, 253);
+  padding: 30px;
+  border-radius: 5px;
+  height: 60vh;
+  /* transform: translateY(-800px); */
+}
+
+.animatedBg {
+  /* background: #f6f7f8; */
+  /* background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 10%, #f6f7f8 20%, #f6f7f8 100%); */
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 10%,
+    #f6f7f8 20%,
+    #f6f7f8 100%
+  );
+  margin-top: 20px;
+  background-size: 200% 100%;
+  animation: bgPos 1s linear infinite;
+}
+
+.animatedBgText {
+  border-radius: 50px;
+  display: inline-block;
+  margin: 0;
+  height: 10px;
+  width: 100%;
+}
+
+@keyframes bgPos {
+  0% {
+    background-position: 50% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+
 .lists {
   list-style-type:none;
 }
