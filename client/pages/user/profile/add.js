@@ -194,10 +194,10 @@ const Profile = ({ user, token }) => {
             students[i].foodAllergy.dairy === true ||
             students[i].foodAllergy.soy === true ? (
               <option disabled value="a-group">
-                Onsite Meals
+                Onsite Lunch
               </option>
             ) : (
-              <option value="a-group">Onsite Meals</option>
+              <option value="a-group">Onsite Lunch</option>
             )}
             {/*             
             {students[i].foodAllergy.gluten === true ||

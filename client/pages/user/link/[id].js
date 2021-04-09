@@ -538,67 +538,77 @@ const Update = ({ oldLink, token, user, _id }) => {
     switch (input) {
       case 'Lunch Only' && code.meal === 'Vegetarian':
         frontCode = 'Lv';
+        pickupOptionLO = 'Lunch Only';
         break;
       case 'Lunch Only' && code.meal === 'Standard':
         frontCode = 'Sl';
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Breakfast Only':
-        frontCode = 'B'; // this wasnt there and worked fine. Not sure why i had it out
-        break;
+        frontCode = 'B';
+        pickupOptionLO = 'Breakfast Only';
+        break; // this wasnt there and worked fine. Not sure why i had it out
       case 'Vegetarian':
         frontCode = 'Vt';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan':
         frontCode = 'Vg';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'Vegan B':
+      case 'Vegan B': // Vegan with breakfast
         frontCode = 'Vg+b';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
-      case 'GlutenFree':
+      case 'Gluten Free':
         frontCode = 'Gf';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'GlutenFree B':
-        frontCode = 'Gf+b';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Gluten Free with Breakfast':
+        frontCode = 'Gf+b'; // gf with breakfast 
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Standard':
         frontCode = '';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
-      case 'Standard DF':
+      case 'Standard Dairy Free':
         frontCode = 'Df';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'GlutenFree DF':
+      case 'Gluten Free Dairy Free':
         frontCode = 'Gfdf';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'Standard SF':
-        frontCode = 'Smf';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Standard Sesame Free':
+        frontCode = 'Sm';
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
-      case 'Vegetarian SF':
-        frontCode = 'Smfvt';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+      case 'Vegetarian Sesame Free':
+        frontCode = 'Vtsm';
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
-      case 'Vegan SF':
-        frontCode = 'Smfvg';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
-        break;
-      case 'Standard SyF':
-        frontCode = 'Syf';
+      case 'Vegan Sesame Free':
+        frontCode = 'Vgsm';
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'Vegetarian SyF':
-        frontCode = 'Syfvt';
+      case 'Standard Soy Free':
+        frontCode = 'Sy';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'Vegan SyF':
-        frontCode = 'Syfvg';
+      case 'Vegetarian Soy Free':
+        frontCode = 'Vtsy';
+        pickupOptionLO = 'Lunch Only';
+        break;
+      case 'Vegan Soy Free':
+        frontCode = 'Vgsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy and Sesame Free':
@@ -613,7 +623,7 @@ const Update = ({ oldLink, token, user, _id }) => {
         frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'Soy Sesame Dairy GlutenFree':
+      case 'Soy Sesame Dairy Gluten Free':
         frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
@@ -630,6 +640,100 @@ const Update = ({ oldLink, token, user, _id }) => {
         pickupOptionLO = 'None';
         group = 'None';
         break;
+      // case 'Lunch Only' && code.meal === 'Vegetarian':
+      //   frontCode = 'Lv';
+      //   break;
+      // case 'Lunch Only' && code.meal === 'Standard':
+      //   frontCode = 'Sl';
+      //   break;
+      // case 'Breakfast Only':
+      //   frontCode = 'B'; // this wasnt there and worked fine. Not sure why i had it out
+      //   break;
+      // case 'Vegetarian':
+      //   frontCode = 'Vt';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'Vegan':
+      //   frontCode = 'Vg';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Vegan B':
+      //   frontCode = 'Vg+b';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'GlutenFree':
+      //   frontCode = 'Gf';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'GlutenFree B':
+      //   frontCode = 'Gf+b';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'Standard':
+      //   frontCode = '';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'Standard DF':
+      //   frontCode = 'Df';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'GlutenFree DF':
+      //   frontCode = 'Gfdf';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Standard SF':
+      //   frontCode = 'Smf';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'Vegetarian SF':
+      //   frontCode = 'Smfvt';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'Vegan SF':
+      //   frontCode = 'Smfvg';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'Standard SyF':
+      //   frontCode = 'Syf';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Vegetarian SyF':
+      //   frontCode = 'Syfvt';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Vegan SyF':
+      //   frontCode = 'Syfvg';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Soy and Sesame Free':
+      //   frontCode = 'Sp';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Soy Sesame Dairy Free':
+      //   frontCode = 'Sp';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Soy Sesame Gluten Free':
+      //   frontCode = 'Sp';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Soy Sesame Dairy GlutenFree':
+      //   frontCode = 'Sp';
+      //   pickupOptionLO = 'Lunch Only';
+      //   break;
+      // case 'Standard Onsite':
+      //   frontCode = 'Onsite';
+      //   pickupOptionLO = 'Lunch Onsite';
+      //   break;
+      // case '2on 3off':
+      //   frontCode = 'H';
+      //   pickupOptionLO = state.mealRequest[i].pickupOption;
+      //   break;
+      // case 'None':
+      //   frontCode = 'None';
+      //   pickupOptionLO = 'None';
+      //   group = 'None';
+      //   break;
 
       default:
         break;
@@ -1704,10 +1808,14 @@ const Update = ({ oldLink, token, user, _id }) => {
                           <label key={i} className="text-secondary">
                             <h6>
                               {' '}
-                              <b>
-                                {`${students[i] && students[i].name}`}'s
-                              </b>{' '}
-                              meal
+                              <b>{`${state.students[i].name}`}'s</b>{' '}
+                              {state.students[i].group ===
+                              'distance-learning' ? (
+                                <>Curbside</>
+                              ) : (
+                                <>Onsite</>
+                              )}{' '}
+                              Meals
                             </h6>
                           </label>
                         </div>

@@ -241,16 +241,6 @@ const Create = ({ token, user }) => {
             break;
         }
       }
-      // switch (item.meal) {
-      //   case 'Vegan':
-      //     frontCode.push('Vg');
-      //     break;
-      //   case 'Gluten Free':
-      //     frontCode.push('Gf');
-      //     break;
-      //   default:
-      //     break;
-      // }
     });
 
     mealRequest.forEach((item) => {
@@ -316,40 +306,47 @@ const Create = ({ token, user }) => {
     let frontCode = '';
     let pickupOptionLO = '';
     let groupLO = '';
-
+    console.log('fixing none problem', input)
     switch (input) {
       case 'Lunch Only' && code.meal === 'Vegetarian':
         frontCode = 'Lv';
+        pickupOptionLO = 'Lunch Only';
         break;
       case 'Lunch Only' && code.meal === 'Standard':
         frontCode = 'Sl';
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Breakfast Only':
         frontCode = 'B';
+        pickupOptionLO = 'Breakfast Only';
         break; // this wasnt there and worked fine. Not sure why i had it out
       case 'Vegetarian':
         frontCode = 'Vt';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan':
         frontCode = 'Vg';
         pickupOptionLO = 'Lunch Only';
         break;
-      case 'Vegan B':
+      case 'Vegan B': // Vegan with breakfast
         frontCode = 'Vg+b';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Gluten Free':
         frontCode = 'Gf';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Gluten Free with Breakfast':
-        frontCode = 'Gf+b';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        frontCode = 'Gf+b'; // gf with breakfast 
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Standard':
         frontCode = '';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Standard Dairy Free':
         frontCode = 'Df';
@@ -361,15 +358,18 @@ const Create = ({ token, user }) => {
         break;
       case 'Standard Sesame Free':
         frontCode = 'Sm';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegetarian Sesame Free':
         frontCode = 'Vtsm';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan Sesame Free':
         frontCode = 'Vgsm';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        // pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Lunch Only';
         break;
       case 'Standard Soy Free':
         frontCode = 'Sy';
@@ -1342,7 +1342,9 @@ const Create = ({ token, user }) => {
                         <label key={i} className="text-secondary">
                           <h6>
                             {' '}
-                            <b>{`${state.students[i].name}`}'s</b> meal
+                            <b>{`${state.students[i].name}`}'s</b> {
+                            state.students[i].group === 'distance-learning' ? <>Curbside</> : <>Onsite</>
+                            } Meals
                           </h6>
                         </label>
                       </div>
