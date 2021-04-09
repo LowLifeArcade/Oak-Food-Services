@@ -135,6 +135,10 @@ const Create = ({ token, user }) => {
   // }, []);
 
   useEffect(() => {
+    // window.addEventListener('load', (event) => {
+    //   setLoaded(true)
+    //   console.log('loaded')
+    // });
     setTimeout(() => {
       setLoaded(true)
     }, 600);

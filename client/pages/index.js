@@ -6,6 +6,14 @@ const Home = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    // window.addEventListener('load', (event) => {
+    //   setLoaded(true)
+    //   console.log('loaded')
+    // });
+    // window.onload = (event) => {
+    //   setLoaded(true)
+    //   console.log('page is fully loaded');
+    // };
     setTimeout(() => {
       setLoaded(true)
     }, 800);

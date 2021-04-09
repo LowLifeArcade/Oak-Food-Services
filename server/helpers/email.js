@@ -12,8 +12,7 @@ exports.registerEmailParams = (email, token) => {
           Charset: 'UTF-8',
           Data: `
               <html>
-              <h1>Verify Email</h1>
-              <p>Use the link to verify your email</p>
+              <p><b>To complete your registration, click on the link below to verify your email:</b></p>
               <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
               </html>
               `,
@@ -21,7 +20,7 @@ exports.registerEmailParams = (email, token) => {
       },
       Subject: {
         Charset: 'UTF-8',
-        Data: 'Complete your registration',
+        Data: 'Complete Your Oak Park School Meals Registration',
       },
     },
   };
@@ -50,7 +49,7 @@ exports.forgotPasswordEmailParams = (email, token) => {
       },
       Subject: {
         Charset: 'UTF-8',
-        Data: 'Password Reset Link',
+        Data: 'Oak Park School Meals Password Reset Link',
       },
     },
   };
@@ -75,8 +74,8 @@ exports.linkPublishedParams = (email, data, token) => {
           Charset: 'UTF-8',
           Data: `
           <html>
-          <h1>New Weeks Menu | Oakfoods </h1> 
-          <p>A new menu <b>${data.name}</b> has just been posted! Check it out and submit your request at least two weeks in advance.</p>
+          <h1>New Menu Posted | Oak Park School Meals </h1> 
+          <p>A new menu has just been posted! Check it out and submit your request at least two weeks in advance.</p>
           
           <h2>${data.name}</h2>
           <div>
@@ -89,7 +88,7 @@ exports.linkPublishedParams = (email, data, token) => {
           
           <br/>
           <p>Don't want notifications? <a href=${process.env.CLIENT_URL}/user/profile/update>Click Here</a> </p>
-          <p>Or turn off notifications by going to <b>dashboard</b> > <b>updated profile</b> and <b>uncheck the categories</b> </p>
+          <p>Or turn off notifications by going to <b>dashboard</b> > <b>updated profile</b> and <b>untoggle email</b> </p>
           </html>
           `,
         },
@@ -97,7 +96,7 @@ exports.linkPublishedParams = (email, data, token) => {
       // ADD a feature where the admin can modify this email or populate it as they configure the menu post to go up
       Subject: {
         Charset: 'UTF-8',
-        Data: 'New Menu Published',
+        Data: 'Oak Park School Meals New Menu Published',
       },
     },
   };

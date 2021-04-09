@@ -82,13 +82,13 @@ const Register = () => {
     let shallowGoodMessage = '';
 
     if (password.length < 7) {
-      shallowMessage = 'Password must be at least 8 characters';
+      shallowMessage = 'Password must be at least 8 characters long and have at least one capital letter, one special character, and one number';
     } else if (!e.target.value.match(/[A-Z]/g)) {
-      shallowMessage = 'Password must contain at least one capitol letter';
+      shallowMessage = 'Password must contain at least one capital letter';
     } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
       shallowMessage = 'Password must contain at least one special character';
     } else if (!e.target.value.match(/[0-9]/g)) {
-      shallowMessage = 'Password must contain at least one special number';
+      shallowMessage = 'Password must contain at least one number';
     } else if (password.length < 13) {
       shallowGoodMessage = 'Good password';
     } else if (password.length > 12) {
@@ -147,7 +147,7 @@ const Register = () => {
           success: response.data.message,
         });
       } catch (error) {
-        console.log(error);
+        console.log('submit error',error);
         setState({
           ...state,
           buttonText: 'Register',
@@ -172,6 +172,7 @@ const Register = () => {
           type="text"
           className="form-control"
           placeholder="Parent First Name"
+          disabled={success}
           required
         />
       </div>
@@ -182,6 +183,7 @@ const Register = () => {
           type="text"
           className="form-control"
           placeholder="Parent Last Name"
+          disabled={success}
           required
         />
       </div>
@@ -192,6 +194,7 @@ const Register = () => {
           type="email"
           className="form-control"
           placeholder="Email"
+          disabled={success}
           required
         />
       </div>
@@ -202,6 +205,7 @@ const Register = () => {
           type="password"
           className="form-control"
           placeholder="New password"
+          disabled={success}
           required
         />
       </div>
@@ -212,6 +216,7 @@ const Register = () => {
           type="password"
           className="form-control"
           placeholder="Repeat password"
+          disabled={success}
           required
         />
       </div>

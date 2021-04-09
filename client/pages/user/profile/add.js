@@ -172,6 +172,51 @@ const Profile = ({ user, token }) => {
     </>
   );
 
+  const addStudentGroupHS = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            value={students[i].group}
+            data-index={i}
+            onChange={(e) => handleSelectGroupChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Curbside or Onsite?
+            </option>
+            <option value="distance-learning">Curbside Pickup</option>
+            {students[i].foodAllergy.gluten === true ||
+            students[i].foodAllergy.egg === true ||
+            students[i].foodAllergy.dairy === true ||
+            students[i].foodAllergy.soy === true ? (
+              <option disabled value="a-group">
+                Onsite Meals
+              </option>
+            ) : (
+              <option value="a-group">Onsite Meals</option>
+            )}
+            {/*             
+            {students[i].foodAllergy.gluten === true ||
+            students[i].foodAllergy.egg === true ||
+            students[i].foodAllergy.dairy === true ||
+            students[i].foodAllergy.soy === true ? (
+              <option disabled value="b-group">
+                Onsite - Cohort B
+              </option>
+            ) : (
+              <option value="b-group">Onsite - Cohort B</option>
+            )} */}
+          </select>
+          <div className=""></div>
+        </div>
+      </div>
+    </>
+  );
+
   const handleSelectTeacherChange = (e) => {
     let i = e.target.getAttribute('data-index');
 
@@ -707,6 +752,16 @@ const Profile = ({ user, token }) => {
                         {addStudentGroup(i)}
                       </div>
                     )}
+                  {students[i].schoolName == 'OPHS' && (
+                    <div key={i + 14} className="">
+                      {addStudentGroupHS(i)}
+                    </div>
+                  )}
+                  {students[i].schoolName == 'OVHS' && (
+                    <div key={i + 14} className="">
+                      {addStudentGroupHS(i)}
+                    </div>
+                  )}
                   {students[i].schoolName != 'NON' &&
                     students[i].group != 'distance-learning' && (
                       <div key={i + 15} className="">
@@ -745,6 +800,9 @@ const Profile = ({ user, token }) => {
                         placeholder="Age"
                         required={true}
                       />
+                      <div className="p-2"></div>
+
+                      {showSuccessMessage('Curbside Pickup Only for Preschool')}
                     </div>
                   )}
                   {students[i].schoolName === 'NON' && (
@@ -758,6 +816,9 @@ const Profile = ({ user, token }) => {
                         placeholder="Age (must be under 18)"
                         required={true}
                       />
+                      <div className="p-2"></div>
+
+                      {showSuccessMessage('Curbside Pickup Only for Non OPUSD')}
                     </div>
                   )}
                   <hr className={'p-2 ' + styles.hrstudents} />
@@ -784,7 +845,7 @@ const Profile = ({ user, token }) => {
         {error && showErrorMessage(error)}
         {!state.students.length < 1 && (
           <button type="text" className="btn btn-warning">
-            <i class="far fa-folder-open"></i>  &nbsp;
+            <i class="far fa-folder-open"></i> &nbsp;
             {buttonText}
           </button>
         )}
@@ -796,19 +857,19 @@ const Profile = ({ user, token }) => {
     <div className={styles.background}>
       {/* <Layout> */}
       {head()}
-        <div className={styles.body}>
-          <div className="pt-5 pb-2"></div>
+      <div className={styles.body}>
+        <div className="pt-5 pb-2"></div>
 
-          <div className="col-md-6 offset-md-3 pt-4">
-            <div className={styles.subcard}>
-              <h4 className={'text-muted ' + styles.title}>
-                Register Students for Meal Requests
-              </h4>
-              <br />
-              {registerForm()}
-            </div>
+        <div className="col-md-6 offset-md-3 pt-4">
+          <div className={styles.subcard}>
+            <h4 className={'text-muted ' + styles.title}>
+              Register Students for Meal Requests
+            </h4>
+            <br />
+            {registerForm()}
           </div>
         </div>
+      </div>
       {/* </Layout> */}
       {/* {head()} */}
       <div className="p-5"></div>

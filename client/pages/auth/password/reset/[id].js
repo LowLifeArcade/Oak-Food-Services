@@ -84,11 +84,11 @@ const ResetPassword = ({ router }) => {
     if (newPassword !== confirmPassword) {
       setState({ ...state, error: "Passwords don't match" });
     } else if (newPassword.length < 7) {
-      setState({ ...state, error: 'Password MUST be at least 8 characters' });
+      setState({ ...state, error: 'Password must be at least 8 characters long and have at least one capital letter, one special character, and one number' });
     } else if (newPassword.match(/[A-Z]/g) === null) {
       setState({
         ...state,
-        error: 'Password MUST contain at least one capitol letter',
+        error: 'Password MUST contain at least one capital letter',
       });
     } else if (!newPassword.match(/[^A-Za-z0-9]/g)) {
       setState({
@@ -98,7 +98,7 @@ const ResetPassword = ({ router }) => {
     } else if (newPassword.match(/[0-9]/g) === null) {
       setState({
         ...state,
-        error: 'Password MUST contain at least one special number',
+        error: 'Password MUST contain at least one number',
       });
     } else {
       try {
