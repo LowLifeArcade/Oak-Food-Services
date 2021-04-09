@@ -21,12 +21,18 @@ const Login = () => {
   useEffect(() => {
     isAuth() && isAuth().role === 'admin'
       ? Router.push('admin/link/list')
-      : isAuth() && isAuth().role === 'subscriber'
-      && Router.push('user')
-      // : Router.push('/login');
+      : isAuth() && isAuth().role === 'subscriber' && Router.push('user');
+    // : Router.push('/login');
   }, []);
 
   const { email, password, error, success, buttonText } = state;
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true);
+    }, 200);
+  }, []);
 
   const handleChange = (name) => (e) => {
     setState({
@@ -61,6 +67,29 @@ const Login = () => {
     }
   };
 
+  const fakeForm = () => (
+    <div className="col-md-6 offset-md-3 pt-4">
+      <div className={styles.subcard}>
+        <div className="row">
+          <div className="col-md-12">
+            <div className={'p-5 ' + styles.animatedBg}></div>
+            <h3 className="text-dark"></h3>
+            &nbsp;
+            <div className={'p-3 ' + styles.animatedBg}></div>
+            <div className={'p-3 ' + styles.animatedBg}></div>
+            <div className="p-1"></div>
+            <div className="p-1"></div>
+            <div className="p-1"></div>
+            {/* <div className={'p-3 ' + styles.animatedBg}></div> */}
+            {/* <div className={'p-5 ' + styles.animatedBg}></div>
+            <div className={'p-3 ' + styles.animatedBg}></div>
+            <div className={'p-3 ' + styles.animatedBg}></div> */}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const loginForm = () => (
     <form onSubmit={handleSubmit} action="POST">
       <div className="form-group">
@@ -86,16 +115,15 @@ const Login = () => {
         />
       </div>
       <div className="form-group">
-
-
         <button type="text" className="btn btn-outline-warning">
-            <i className="far fa-paper-plane"></i> &nbsp;
-            {buttonText}
-          </button>
+          <i className="far fa-paper-plane"></i> &nbsp;
+          {buttonText}
+        </button>
 
-
-        <Link href="/auth/password/forgot" >
-          <a className="text-danger float-right" style={{ fontSize: '13px' }}>Forgot Password?</a>
+        <Link href="/auth/password/forgot">
+          <a className="text-danger float-right" style={{ fontSize: '13px' }}>
+            Forgot Password?
+          </a>
         </Link>
       </div>
     </form>
@@ -111,16 +139,20 @@ const Login = () => {
       <Layout>
         <div className={styles.body}>
           <div className="pt-5 pb-5"></div>
-          <div className="col-md-6 offset-md-3 pt-4">
-            <div className={styles.subcard}>
 
-              <h2 className={'text-muted ' + styles.title}>Login</h2>
-              <br />
-              {success && showSuccessMessage(success)}
-              {error && showErrorMessage(error)}
-              {loginForm()}
+          {loaded ? (
+            <div className="col-md-6 offset-md-3 pt-4">
+              <div className={styles.subcard}>
+                <h2 className={'text-muted ' + styles.title}>Login</h2>
+                <br />
+                {success && showSuccessMessage(success)}
+                {error && showErrorMessage(error)}
+                {loginForm()}
+              </div>
             </div>
-          </div>
+          ) : (
+                fakeForm()
+          )}
         </div>
       </Layout>
     </div>

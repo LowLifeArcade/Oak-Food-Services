@@ -46,8 +46,21 @@
   top: 0;
   left: 0;
   right: 0;
+  height: 43px;
   /* overflow: hidden; */
   /* display: none; */
+}
+
+.accordion {
+  font-family: 'Arimo';
+  background-color: #215963 !important;
+  z-index: 1;
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 43px;
 }
 
 .nav a:hover {
@@ -161,17 +174,7 @@
   overflow: scroll;
 }
 
-.accordion {
-  font-family: 'Arimo';
-  background-color: #215963 !important;
-  z-index: 1;
-  position: fixed;
-  display: flex;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 44px;
-}
+
 
 .tabbar {
   background-color: #4d6e74 !important;

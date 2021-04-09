@@ -61,7 +61,7 @@ const Layout = ({ children }) => {
           <li key="1" className="nav-item pointer-hand">
             <Link href="/">
               <a className="nav-link text-white">
-                <i class="fas fa-chalkboard-teacher"></i>
+                <i class="fas fa-chalkboard-teacher"></i>&nbsp;
               </a>
             </Link>
           </li>
@@ -73,7 +73,7 @@ const Layout = ({ children }) => {
                   className="nav-link text-white btn btn-warning"
                   style={{ borderRadius: '3px' }}
                 >
-                  {' 📝'}
+                  {' 📝 '}
                 </a>
               </Link>
             </li>
@@ -113,14 +113,20 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/link/data">
-                <a className="nav-link text-white">{'Order Data'}</a>
+                
+                <a className="nav-link text-white">
+                <span>&nbsp;&nbsp;</span>
+                <i class="fas fa-chart-bar"></i>&nbsp;
+                {'Order Data'}</a>
               </Link>
             </li>
           )}
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/link/list">
-                <a className="nav-link text-white">{'Lists'}</a>
+                <a className="nav-link text-white">
+                <i class="far fa-folder-open"></i>&nbsp;
+                {'Lists'}</a>
               </Link>
             </li>
           )}
@@ -134,7 +140,9 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/category/create">
-                <a className="nav-link text-white">{'Create Menu'}</a>
+                <a className="nav-link text-white">
+                <i class="fas fa-book-open"></i>&nbsp;
+                {'Create Menu'}</a>
               </Link>
             </li>
           )}
