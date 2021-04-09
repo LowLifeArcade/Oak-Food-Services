@@ -129,6 +129,11 @@ const Create = ({ token, user }) => {
 
   const [loaded, setLoaded] = useState(false);
 
+  // useEffect(() => {
+  //   !isAuth() && Router.push('/');
+  //   user.students.length === 0 && Router.push('/user/profile/add');
+  // }, []);
+
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true)

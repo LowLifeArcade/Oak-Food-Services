@@ -27,6 +27,7 @@ const Register = () => {
     students: [],
     groups: [],
     loadedGroups: [],
+    // special: {sendEmail: true}
   });
 
   useEffect(() => {
@@ -224,10 +225,16 @@ const Register = () => {
           {message && showMessageMessage(message)}
           <br />
 
-          <button type="text" className="text-white btn btn-warning">
+          {success ?
+            <button disabled='true' type="text" className="text-warning btn btn-outline-warning">
+            <i className="far fa-paper-plane"></i> &nbsp;
+            {buttonText}
+          </button> :
+            <button type="text" className="text-white btn btn-warning">
             <i className="far fa-paper-plane"></i> &nbsp;
             {buttonText}
           </button>
+          }
         </div>
       </div>
     </form>

@@ -72,6 +72,11 @@ const Profile = ({ user, token }) => {
   //   }
   // }, [groups]);
 
+  // useEffect(() => {
+  //   !isAuth() && Router.push('/');
+  //   user.students.length === 0 && Router.push('/user/profile/add');
+  // }, []);
+
   useEffect(() => {
     success === "You've successfully updated your profile" &&
       setTimeout(() => {
