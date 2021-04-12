@@ -1,5 +1,5 @@
 import styles from '../../../styles/Home.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Layout from '../../../components/Layout';
 import { getCookie, isAuth } from '../../../helpers/auth';
 import { API } from '../../../config';
@@ -10,7 +10,6 @@ import moment from 'moment';
 import Router from 'next/router';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-
 
 const Create = ({ token, user }) => {
   const username = user.username;
@@ -129,18 +128,25 @@ const Create = ({ token, user }) => {
 
   const [loaded, setLoaded] = useState(false);
 
-  // useEffect(() => {
-  //   !isAuth() && Router.push('/');
-  //   user.students.length === 0 && Router.push('/user/profile/add');
-  // }, []);
+  const calanderButton = useRef();
 
   useEffect(() => {
-    // window.addEventListener('load', (event) => {
-    //   setLoaded(true)
-    //   console.log('loaded')
-    // });
+    const handleClick = (event) => {
+      if (
+        calanderButton.current &&
+        !calanderButton.current.contains(event.target)
+      ) {
+        console.log('show search')
+        setShowSearch(false);
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  });
+
+  useEffect(() => {
     setTimeout(() => {
-      setLoaded(true)
+      setLoaded(true);
     }, 600);
   }, []);
 
@@ -284,7 +290,7 @@ const Create = ({ token, user }) => {
     setShowSearch(!showSearch);
   };
 
-  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
   // meal request select
   const handleSelectChange = (
@@ -306,7 +312,7 @@ const Create = ({ token, user }) => {
     let frontCode = '';
     let pickupOptionLO = '';
     let groupLO = '';
-    console.log('fixing none problem', input)
+    console.log('fixing none problem', input);
     switch (input) {
       case 'Lunch Only' && code.meal === 'Vegetarian':
         frontCode = 'Lv';
@@ -339,7 +345,7 @@ const Create = ({ token, user }) => {
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Gluten Free with Breakfast':
-        frontCode = 'Gf+b'; // gf with breakfast 
+        frontCode = 'Gf+b'; // gf with breakfast
         // pickupOptionLO = state.mealRequest[i].pickupOption;
         pickupOptionLO = 'Breakfast and Lunch';
         break;
@@ -1275,196 +1281,208 @@ const Create = ({ token, user }) => {
   return (
     <div className={styles.background}>
       <Layout>
-    {loaded ? 
-    
-
-        <div className="col-md-6 offset-md-3 pt-4">
-          <div className={styles.subcard}>
-            <div className="row">
-              <div className="col-md-12">
-                <h3 className="text-dark">
-                  Meal Request For:{' '}
-                  {pickupDate && (
-                    <>
-                    <span onClick={() => setShowSearch(!showSearch)}>
-                      {moment(state.pickupDate).format('MMMM Do')}
-                    &nbsp; <i class="far fa-calendar-check"></i>
-                    </span>
-                    </>
+        {loaded ? (
+          <div className="col-md-6 offset-md-3 pt-4">
+            <div className={styles.subcard}>
+              <div className="row">
+                <div ref={calanderButton} className="col-md-12">
+                  <h4 className="text-dark">
+                    Meal Request for the Week of:{' '}
+                    {pickupDate && (
+                      <>
+                        <span ref={calanderButton} onClick={() => setShowSearch(!showSearch)}>
+                          {moment(state.pickupDate).format('MMMM Do')}
+                          &nbsp; <i class="far fa-calendar-check"></i>
+                        </span>
+                      </>
+                    )}
+                  </h4>
+                  {pickupDate === '' && (
+                    <button
+                      
+                      className={
+                        'btn btn-sm btn-outline-secondary ' +
+                        styles.buttonshadow
+                      }
+                      onClick={() => setShowSearch(!showSearch)}
+                    >
+                      <i class="far fa-calendar-alt"></i> &nbsp;&nbsp; Select
+                      Date
+                    </button>
                   )}
-                </h3>
-                {pickupDate === '' && (
-                  <button
-                    className={'btn btn-sm btn-outline-secondary ' + styles.buttonshadow}
-                    onClick={() => setShowSearch(!showSearch)}
-                  >
-                    <i class="far fa-calendar-alt"></i> &nbsp;&nbsp; Select Date
-                  </button>
-                )}
-                {isAuth().role === 'admin'
-                  ? showSearch && (
+
+                  {isAuth().role === 'admin'
+                    ? showSearch && (
+
                       <Calendar
-                        onChange={(e) => onDateChange(e)}
-                        tileDisabled={handleDisabledDates}
-                        value={''}
+                      onChange={(e) => onDateChange(e)}
+                      tileDisabled={handleDisabledDates}
+                      value={''}
                       />
-                    )
-                  : showSearch && (
-                      <Calendar
+
+                      )
+                      : showSearch && (
+                        <Calendar
                         onChange={(e) => onDateChange(e)}
                         tileDisabled={handleDisabledDates}
                         defaultValue={twoWeeksFromNow}
                         minDate={twoWeeksFromNow}
                         value={''}
-                      />
-                    )}
-              </div>
-            </div>
-            <hr />
-            {/* Admin can change code */}
-            {isAuth().role === 'admin' && (
-              <div className=" form-group">
-                <input
-                  type="text"
-                  className=" form-control"
-                  placeholder="Enter a 4 digit User Code"
-                  onChange={(e) => handleCodeChange(e)}
-                />
-              </div>
-            )}
-
-            <div className="row">
-              <div className="col-md-12">
-                {state.mealRequest.map((x, i) => {
-                  return (
-                    <>
-                      <div>
-                        <label key={i} className="text-secondary">
-                          <h6>
-                            {' '}
-                            <b>{`${state.students[i].name}`}'s</b> {
-                            state.students[i].group === 'distance-learning' ? <>Curbside</> : <>Onsite</>
-                            } Meals
-                          </h6>
-                        </label>
-                      </div>
-                      <div key={i} className="">
-                        {state.students[i].group === 'a-group' &&
-                          selectOnsiteMealRequest(
-                            i,
-                            state.students[i]._id,
-                            state.students[i].name,
-                            state.students[i].schoolName,
-                            state.students[i].group,
-                            state.students[i].teacher,
-                            state.students[i].pickupOption,
-                            state.students[i].foodAllergy
-                          )}
-                        {state.students[i].group === 'b-group' &&
-                          selectOnsiteMealRequest(
-                            i,
-                            state.students[i]._id,
-                            state.students[i].name,
-                            state.students[i].schoolName,
-                            state.students[i].group,
-                            state.students[i].teacher,
-                            state.students[i].pickupOption,
-                            state.students[i].foodAllergy
-                          )}
-                        {state.students[i].group === 'distance-learning' &&
-                          selectMealRequest(
-                            i,
-                            state.students[i]._id,
-                            state.students[i].name,
-                            state.students[i].schoolName,
-                            state.students[i].group,
-                            state.students[i].teacher,
-                            state.students[i].pickupOption,
-                            state.students[i].foodAllergy
-                          )}
-                      </div>
-                      {
-                        isAuth().role === 'admin'
-                          ? selectAdminPickupOptions()
-                          : x.meal != 'None'
-                          ? state.students[i].group === 'distance-learning'
-                            ? x.meal === 'Gluten Free' ||
-                              x.meal === 'Gluten Free Dairy Free' ||
-                              x.meal === 'Standard Dairy Free' ||
-                              x.meal === 'Vegan' ||
-                              user.students[i].foodAllergy.egg === true ||
-                              user.students[i].foodAllergy.soy === true ||
-                              user.students[i].foodAllergy.dairy === true ||
-                              user.students[i].foodAllergy.gluten === true
-                              ? selectPickupLunchOnlyOption(i)
-                              : selectPickupOption(i)
-                            : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
-                          : null
-                        // selectNonePickupOption(i)
-                      }
-                      <hr />
-                    </>
-                  );
-                })}
-
-                <div className="">
-                  {state.mealRequest.length < state.students.length && (
-                    <button
-                      className={'btn  btn-outline-info ' + styles.buttonshadow}
-                      onClick={() =>
-                        state.mealRequest.map((x, i) =>
-                          addMeal(
-                            i,
-                            state.students[`${i + 1}`]._id,
-                            state.students[`${i + 1}`].name,
-                            state.students[`${i + 1}`].schoolName,
-                            state.students[`${i + 1}`].group,
-                            state.students[`${i + 1}`].teacher,
-                            state.students[`${i + 1}`].pickupOption,
-                            state.students[`${i + 1}`].foodAllergy
-                          )
-                        )
-                      }
-                    >
-                      <i class="fas fa-utensils"></i>
-                      &nbsp;&nbsp; Next Student
-                    </button>
-                  )}
-
-                  {state.mealRequest.length !== 1 && (
-                    <button
-                      className={'btn float-right ' + styles.buttonshadow}
-                      onClick={() => removeMeal()}
-                    >
-                      Remove
-                    </button>
-                  )}
+                        />
+                        )}
                 </div>
               </div>
-              <div className="col-md-6 p-3">{submitLinkForm()}</div>
+              <hr />
+              {/* Admin can change code */}
+              {isAuth().role === 'admin' && (
+                <div className=" form-group">
+                  <input
+                    type="text"
+                    className=" form-control"
+                    placeholder="Enter a 4 digit User Code"
+                    onChange={(e) => handleCodeChange(e)}
+                  />
+                </div>
+              )}
+
+              <div className="row">
+                <div className="col-md-12">
+                  {state.mealRequest.map((x, i) => {
+                    return (
+                      <>
+                        <div>
+                          <label key={i} className="text-secondary">
+                            <h6>
+                              {' '}
+                              <b>{`${state.students[i].name}`}'s</b>{' '}
+                              {state.students[i].group ===
+                              'distance-learning' ? (
+                                <>Curbside</>
+                              ) : (
+                                <>Onsite</>
+                              )}{' '}
+                              Meals
+                            </h6>
+                          </label>
+                        </div>
+                        <div key={i} className="">
+                          {state.students[i].group === 'a-group' &&
+                            selectOnsiteMealRequest(
+                              i,
+                              state.students[i]._id,
+                              state.students[i].name,
+                              state.students[i].schoolName,
+                              state.students[i].group,
+                              state.students[i].teacher,
+                              state.students[i].pickupOption,
+                              state.students[i].foodAllergy
+                            )}
+                          {state.students[i].group === 'b-group' &&
+                            selectOnsiteMealRequest(
+                              i,
+                              state.students[i]._id,
+                              state.students[i].name,
+                              state.students[i].schoolName,
+                              state.students[i].group,
+                              state.students[i].teacher,
+                              state.students[i].pickupOption,
+                              state.students[i].foodAllergy
+                            )}
+                          {state.students[i].group === 'distance-learning' &&
+                            selectMealRequest(
+                              i,
+                              state.students[i]._id,
+                              state.students[i].name,
+                              state.students[i].schoolName,
+                              state.students[i].group,
+                              state.students[i].teacher,
+                              state.students[i].pickupOption,
+                              state.students[i].foodAllergy
+                            )}
+                        </div>
+                        {
+                          isAuth().role === 'admin'
+                            ? selectAdminPickupOptions()
+                            : x.meal != 'None'
+                            ? state.students[i].group === 'distance-learning'
+                              ? x.meal === 'Gluten Free' ||
+                                x.meal === 'Gluten Free Dairy Free' ||
+                                x.meal === 'Standard Dairy Free' ||
+                                x.meal === 'Vegan' ||
+                                user.students[i].foodAllergy.egg === true ||
+                                user.students[i].foodAllergy.soy === true ||
+                                user.students[i].foodAllergy.dairy === true ||
+                                user.students[i].foodAllergy.gluten === true
+                                ? selectPickupLunchOnlyOption(i)
+                                : selectPickupOption(i)
+                              : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
+                            : null
+                          // selectNonePickupOption(i)
+                        }
+                        <hr />
+                      </>
+                    );
+                  })}
+
+                  <div className="">
+                    {state.mealRequest.length < state.students.length && (
+                      <button
+                        className={
+                          'btn  btn-outline-info ' + styles.buttonshadow
+                        }
+                        onClick={() =>
+                          state.mealRequest.map((x, i) =>
+                            addMeal(
+                              i,
+                              state.students[`${i + 1}`]._id,
+                              state.students[`${i + 1}`].name,
+                              state.students[`${i + 1}`].schoolName,
+                              state.students[`${i + 1}`].group,
+                              state.students[`${i + 1}`].teacher,
+                              state.students[`${i + 1}`].pickupOption,
+                              state.students[`${i + 1}`].foodAllergy
+                            )
+                          )
+                        }
+                      >
+                        <i class="fas fa-utensils"></i>
+                        &nbsp;&nbsp; Next Student
+                      </button>
+                    )}
+
+                    {state.mealRequest.length !== 1 && (
+                      <button
+                        className={'btn float-right ' + styles.buttonshadow}
+                        onClick={() => removeMeal()}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-6 p-3">{submitLinkForm()}</div>
+              </div>
             </div>
           </div>
-        </div>
-        :
-        <div className="col-md-6 offset-md-3 pt-4">
-          <div className={styles.subcard}>
-            <div className="row">
-              <div className="col-md-12">
-                <h3 className="text-dark"></h3>
-                &nbsp;
-                <div className={'p-5 ' + styles.animatedBg} ></div>
-                <div className={'p-3 ' + styles.animatedBg} ></div>
-                <div className={'p-3 ' + styles.animatedBg} ></div>
-                <div className={'p-3 ' + styles.animatedBg} ></div>
-                <div className={'p-5 ' + styles.animatedBg} ></div>
-                <div className={'p-3 ' + styles.animatedBg} ></div>
-                <div className={'p-3 ' + styles.animatedBg} ></div>
+        ) : (
+          <div className="col-md-6 offset-md-3 pt-4">
+            <div className={styles.subcard}>
+              <div className="row">
+                <div className="col-md-12">
+                  <h3 className="text-dark"></h3>
+                  &nbsp;
+                  <div className={'p-5 ' + styles.animatedBg}></div>
+                  <div className={'p-3 ' + styles.animatedBg}></div>
+                  <div className={'p-3 ' + styles.animatedBg}></div>
+                  <div className={'p-3 ' + styles.animatedBg}></div>
+                  <div className={'p-5 ' + styles.animatedBg}></div>
+                  <div className={'p-3 ' + styles.animatedBg}></div>
+                  <div className={'p-3 ' + styles.animatedBg}></div>
                 </div>
-                </div>
-                </div>
-                </div>
-        
-        }
+              </div>
+            </div>
+          </div>
+        )}
       </Layout>
       <div className="p-5"></div>
       {/* <div className="p-5"></div> */}

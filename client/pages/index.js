@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/Pages.module.css';
+import Link from 'next/link';
 import Layout from '../components/Layout';
 
 const Home = () => {
@@ -15,7 +16,7 @@ const Home = () => {
     //   console.log('page is fully loaded');
     // };
     setTimeout(() => {
-      setLoaded(true)
+      setLoaded(true);
     }, 800);
   }, []);
 
@@ -48,10 +49,10 @@ const Home = () => {
             <div className={styles.body}>
               <div className={styles.section}>
                 <div className="pt-4 pb-">
-                  <h3 className={styles.h4}>Your Weekly Request</h3>
+                  <h3 className={styles.h4}>Weekly OPUSD Meals Request</h3>
                   <div className={' ' + styles.columnscontainer}>
                     <div className={styles.bodyregular}>
-                      here's how it works
+                      Here's how it works
                     </div>
                   </div>
                 </div>
@@ -139,7 +140,7 @@ const Home = () => {
                   <div className={styles.bodyregular}>
                     <b>For Curbside Requests</b>
                   </div>
-                  <p className={'pb-2 ' + styles.bodyregular}>
+                  <p className={'pb-5 ' + styles.bodyregular}>
                     Simply <b>print out your code</b> and drive to the{' '}
                     <b>pickup location</b> on the date and time found on your
                     receipt.
@@ -185,61 +186,67 @@ const Home = () => {
             </div>
           ) : (
             <>
-            <div className={'d-flex justify-content-center  '}>
+              <div className={'d-flex justify-content-center  '}>
+                <div className="col-md-8">
+                  <div className="p-2"></div>
+                  &nbsp;
+                  <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
+                  <div className={styles.animatedBg}>&nbsp;</div>
+                  <div className={styles.animatedBg}>&nbsp;</div>
+                  <div className={styles.animatedBg}>&nbsp;</div>
+                </div>
+              </div>
+              <div className="p-4"></div>
 
-            <div className="col-md-8">
-
-            <div className="p-2"></div>
-                &nbsp;
-              <div className={' p-5 ' + styles.animatedBg}>
-                &nbsp;
+              <div
+                className={'d-flex justify-content-center  ' + styles.desktop}
+              >
+                <div className="col-md-8">
+                  <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
+                  <div className="p-2"></div>
+                  &nbsp;
+                  <div className={styles.animatedBg}>&nbsp;</div>
+                  <div className={styles.animatedBg}>&nbsp;</div>
+                  <div className={styles.animatedBg}>&nbsp;</div>
+                </div>
               </div>
-              <div className={ styles.animatedBg}>
-                &nbsp;
-              </div>
-              <div className={ styles.animatedBg}>
-                &nbsp;
-              </div>
-              <div className={ styles.animatedBg}>
-                &nbsp;
-              </div>
-            </div>
-            </div>
-            <div className="p-4"></div>
-
-            <div className={'d-flex justify-content-center  ' + styles.desktop}>
-            
-            <div className="col-md-8">
-              <div className={'p-5 ' + styles.animatedBg}>
-                &nbsp;
-              </div>
-
-            <div className="p-2"></div>
-                &nbsp;
-              <div className={ styles.animatedBg}>
-                &nbsp;
-              </div>
-              <div className={ styles.animatedBg}>
-                &nbsp;
-              </div>
-              <div className={ styles.animatedBg}>
-                &nbsp;
-              </div>
-            </div>
-            </div>
             </>
           )}
         </>
       </Layout>
       {loaded && (
         <div className={styles.footer}>
-          <div className={'pt-4 ' + styles.sectioncontainer}>
-            <div className={'text-white ' + styles.bodyregular}>
+          <div className={'pt-4 d-flex justify-content-center ' + styles.sectioncontainer}>
+            <div className={'text-white col-md-9 ' + styles.bodyregular}>
+              <div className="p-2"></div>
               <ul className={styles.lists}>
-                <li>School Info</li>
-                <li>Contact</li>
-                <li>Help</li>
-                <li>FAQ</li>
+                <li>
+                  <Link href="https://www.oakparkusd.org/Page/10593">
+                    <a className='text-white  ' target="_blank">Program Info</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="https://www.oakparkusd.org/Page/6499">
+                    <a className='text-white  ' target="_blank">Who is Eligible</a>
+                  </Link>
+                </li>
+                <li>
+                  <a className='text-white  ' id="mailto" href="mailto:schoolmeals@opusd.org" target="_blank">
+                  Contact
+                  </a>
+                  
+                  </li>
+                <li>
+                  <Link href="https://www.oakparkusd.org/Page/1">
+                    <a className='text-white  ' target="_blank">OPUSD</a>
+                  </Link>
+                </li>
+                {/* <li>
+                  <Link href="https://www.oakparkusd.org/Page/10809">
+                    <a className='text-white  ' target="_blank">Help</a>
+                  </Link>
+                </li> */}
+                {/* <li>FAQ</li> */}
               </ul>
             </div>
           </div>

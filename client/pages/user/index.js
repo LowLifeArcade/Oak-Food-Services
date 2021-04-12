@@ -1,5 +1,5 @@
 import styles from '../../styles/Home.module.css';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API } from '../../config';
 import withUser from '../withUser';
@@ -10,6 +10,14 @@ import Layout from '../../components/Layout';
 import { isAuth } from '../../helpers/auth';
 
 const User = ({ user, token, l, userLinks }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true);
+    }, 800);
+  }, []);
+
   const confirmDelete = (e, id) => {
     e.preventDefault();
     let answer = window.confirm(
@@ -125,7 +133,11 @@ const User = ({ user, token, l, userLinks }) => {
                     <h4 className="pt-2 ">
                       PICKUP DATE
                       <br />
-                      <b>{moment(l.pickupDate).format('MMMM Do')}</b>
+                      <b>
+                        {moment(l.pickupDate)
+                          .subtract(3, 'day')
+                          .format('MMMM Do')}
+                      </b>
                     </h4>
                     Between <b className="pb-2 ">{l.pickupTime} </b>
                   </React.Fragment>
@@ -147,9 +159,13 @@ const User = ({ user, token, l, userLinks }) => {
                     <b
                       id={`${i}+printCode`}
                       data-index={`${i}+printCode`}
-                      onClick={l.orderStatus === false &&
+                      onClick={
+                        l.orderStatus === false &&
                         moment(l.pickupDate).format('MDD').toString() >
-                        moment(new Date()).format('MDD').toString() ? e => printData(e) : null}
+                          moment(new Date()).format('MDD').toString()
+                          ? (e) => printData(e)
+                          : null
+                      }
                       className="code d-flex justify-content-center"
                     >
                       {l.pickupCode}{' '}
@@ -157,7 +173,8 @@ const User = ({ user, token, l, userLinks }) => {
                   ) : (
                     <b>
                       Onsite School Lunch for week of{' '}
-                      {moment(l.pickupDate).add(3, 'day').format('MMMM Do')}
+                      {moment(l.pickupDate).format('MMMM Do')}
+                      {/* {moment(l.pickupDate).add(3, 'day').format('MMMM Do')} */}
                     </b>
                   )}
                 </h3>
@@ -332,31 +349,67 @@ const User = ({ user, token, l, userLinks }) => {
   return (
     <div>
       <Layout>
-        <h2 className=" pt-3">{user.name}'s Meal Requests </h2>
-        <hr />
-        <div className="p-1">
-          <div className="">
-            <Link href="/user/profile/update">
-              <a className="nav-item">Update profile</a>
-            </Link>
+        <div>
+          <h2 className=" pt-3">{user.name}'s Meal Requests </h2>
+          <hr />
+          <div className="p-1">
+            <div className="">
+              <Link href="/user/profile/update">
+                <a className="nav-item">Update Profile</a>
+              </Link>
 
-            <Link href="/user/link/create">
-              <button className={'btn float-right ' + styles.button}>
-                <i class="fas fa-pencil-alt"></i>
-                &nbsp;&nbsp; Submit a Request
-              </button>
-            </Link>
+              <Link href="/user/link/create">
+                <button className={'btn float-right ' + styles.button}>
+                  <i class="fas fa-pencil-alt"></i>
+                  &nbsp;&nbsp; Submit a Request
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
-        <br />
+          <br />
 
-        <div className={'d-flex justify-content-center  ' + styles.desktop}>
-          <div className={'col-md-6  justify-content-center ' + styles.desktop}>
-            <br />
-
-            <div className="pb-3">
+          <div className={'d-flex justify-content-center  ' + styles.desktop}>
+            <div
+              className={'col-md-6  justify-content-center ' + styles.desktop}
+            >
               <br />
-              {listOfLinks()}
+
+              <div className="pb-3">
+                <br />
+              </div>
+
+              {loaded ? (
+                listOfLinks()
+              ) : (
+                <>
+                  <div className={'d-flex justify-content-center  '}>
+                    <div className="col-md-8">
+                      <div className="p-2"></div>
+                      &nbsp;
+                      <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                    </div>
+                  </div>
+                  <div className="p-4"></div>
+
+                  <div
+                    className={
+                      'd-flex justify-content-center  ' + styles.desktop
+                    }
+                  >
+                    <div className="col-md-8">
+                      <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
+                      <div className="p-2"></div>
+                      &nbsp;
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -366,7 +419,38 @@ const User = ({ user, token, l, userLinks }) => {
             <br />
             <div className="pb-3">
               <br />
-              {listOfLinks()}
+              {loaded ? (
+                listOfLinks()
+              ) : (
+                <>
+                  <div className={'d-flex justify-content-center  '}>
+                    <div className="col-md-8">
+                      <div className="p-2"></div>
+                      &nbsp;
+                      <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                    </div>
+                  </div>
+                  <div className="p-4"></div>
+
+                  <div
+                    className={
+                      'd-flex justify-content-center  ' + styles.desktop
+                    }
+                  >
+                    <div className="col-md-8">
+                      <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
+                      <div className="p-2"></div>
+                      &nbsp;
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                      <div className={styles.animatedBg}>&nbsp;</div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -120,7 +120,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 <h4 className="pt-2 ">
                   PICKUP DATE
                   <br />
-                  <b>{moment(oldLink.pickupDate).format('MMMM Do')}</b>
+                  <b>{moment(oldLink.pickupDate).subtract(3, 'day').format('MMMM Do')}</b>
                 </h4>
                 Between <b className="pb-2 ">{oldLink.pickupTime} </b>
               </>

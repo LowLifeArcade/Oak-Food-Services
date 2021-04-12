@@ -145,14 +145,17 @@ const Admin = ({ token, user, initRequests }) => {
     });
   };
 
-  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
   return (
     <Layout>
       <br />
       <div className="row">
         <div className="col-md-4">
-          <h3>Order Data {`for ${pickupDate}`}</h3>
+          <h3>Order Data Friday Pickup {`${moment(pickupDate).subtract(3, 'day').format('MMMM d')}`}
+          <br/>
+          Onsite meals week of {`${pickupDate}`}
+          </h3>
           <hr />
           <div className="">
             <div className="">
@@ -254,7 +257,7 @@ const Admin = ({ token, user, initRequests }) => {
 
 Admin.getInitialProps = async ({ req, user }) => {
   const token = getCookie('token', req);
-
+  // find way to handle it the way i do the calendar where certain days are blanked out so it auto fills data just from monday
   const dateLookup = moment(new Date()).format('l');
   const response = await axios.post(
     `${API}/links-by-date`,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Footer from './Footer';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -20,12 +20,50 @@ const Layout = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showSideMenu, setShowSideMenu] = useState(false);
   // const [loaded, setLoaded] = useState(false);
+  // window.addEventListener('Click', setShowSideMenu(false));
+
+  // document.addEventListener('DOMContentLoaded', ready);
+
+  // function ready() {
+  //   alert('DOM is ready');
+
+  //   // image is not yet loaded (unless it was cached), so the size is 0x0
+  //   // alert(`Image size: ${img.offsetWidth}x${img.offsetHeight}`);
+  // }
 
   // useEffect(() => {
   //   setTimeout(() => {
   //     setLoaded(true)
   //   }, 800);
   // }, []);
+  const sideBarRef = useRef();
+  const sideMenuRef = useRef()
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (sideBarRef.current && !sideBarRef.current.contains(event.target)) {
+        // window.addEventListener('click', setShowSideMenu(false));
+        console.log('set false')
+        setShowSidebar(false)
+        // setShowSideMenu(false)
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  });
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (sideMenuRef.current && !sideMenuRef.current.contains(event.target)) {
+        // window.addEventListener('click', setShowSideMenu(false));
+        console.log('set false')
+        // setShowSidebar(false)
+        setShowSideMenu(false)
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  });
 
   const head = () => (
     <>
@@ -59,18 +97,36 @@ const Layout = ({ children }) => {
       <nav className={'fixed-top ' + styles.nav}>
         <ul className={'nav nav-tabs ' + styles.nav}>
           <li key="1" className="nav-item pointer-hand">
-            <Link href="/">
+            {/* <Link href="/">
               <a className="nav-link text-white">
                 <i class="fas fa-chalkboard-teacher"></i>&nbsp;
               </a>
-            </Link>
+            </Link> */}
+            <li>
+              <Link href="/">
+                <a
+                  className={'nav-link text-white  '}
+                  style={{ borderRadius: '3px' }}
+                >
+                  &nbsp;
+                  <img
+                    src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
+                    loading="lazy"
+                    loading="lazy"
+                    alt=""
+                    class="stepimage"
+                    width="40"
+                  />
+                </a>
+              </Link>
+            </li>
           </li>
 
           {process.browser && isAuth() && isAuth().role === 'subscriber' && (
             <li className="nav-item pointer-hand">
               <Link href="/user/link/create">
                 <a
-                  className="nav-link text-white btn btn-warning"
+                  className="nav-link text-white btn btn-warning "
                   style={{ borderRadius: '3px' }}
                 >
                   {' 📝 '}
@@ -82,7 +138,7 @@ const Layout = ({ children }) => {
             <li className="nav-item pointer-hand">
               <Link href="/user/link/create">
                 <a
-                  className="nav-link text-white btn btn-warning"
+                  className="nav-link text-white btn btn-warning "
                   style={{ borderRadius: '3px' }}
                 >
                   {'🍱'}
@@ -113,11 +169,11 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/link/data">
-                
                 <a className="nav-link text-white">
-                <span>&nbsp;&nbsp;</span>
-                <i class="fas fa-chart-bar"></i>&nbsp;
-                {'Order Data'}</a>
+                  <span>&nbsp;&nbsp;</span>
+                  <i class="fas fa-chart-bar"></i>&nbsp;
+                  {'Order Data'}
+                </a>
               </Link>
             </li>
           )}
@@ -125,8 +181,9 @@ const Layout = ({ children }) => {
             <li className="nav-item pointer-hand">
               <Link href="/admin/link/list">
                 <a className="nav-link text-white">
-                <i class="far fa-folder-open"></i>&nbsp;
-                {'Lists'}</a>
+                  <i class="far fa-folder-open"></i>&nbsp;
+                  {'Lists'}
+                </a>
               </Link>
             </li>
           )}
@@ -141,8 +198,9 @@ const Layout = ({ children }) => {
             <li className="nav-item pointer-hand">
               <Link href="/admin/category/create">
                 <a className="nav-link text-white">
-                <i class="fas fa-book-open"></i>&nbsp;
-                {'Create Menu'}</a>
+                  <i class="fas fa-book-open"></i>&nbsp;
+                  {'Create Menu'}
+                </a>
               </Link>
             </li>
           )}
@@ -176,6 +234,7 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li key="5" className="nav-item ml-auto">
               <a
+              ref={sideMenuRef}
                 onClick={() => setShowSideMenu(!showSideMenu)}
                 className="btn nav-link text-white"
               >
@@ -186,6 +245,7 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'subscriber' && (
             <li key="6" className="nav-item ml-auto">
               <a
+              ref={sideMenuRef}
                 onClick={() => setShowSideMenu(!showSideMenu)}
                 className="btn nav-link text-white"
               >
@@ -214,7 +274,7 @@ const Layout = ({ children }) => {
       </nav>
     </div>
   );
-  
+
   const fakeNav = () => (
     <div className={styles.noPrint}>
       <nav className={'fixed-top ' + styles.nav}>
@@ -227,29 +287,22 @@ const Layout = ({ children }) => {
             </Link>
           </li>
 
-
-            <li className="nav-item pointer-hand">
-              <Link href="/user/link/create">
-                <a
-                  className="nav-link text-white btn btn-warning"
-                  style={{ borderRadius: '3px' }}
-                >
-                  {' 📝'}
-                </a>
-              </Link>
-            </li>
-
-
-
-
-
-            <li key="6" className="nav-item ml-auto">
+          <li className="nav-item pointer-hand">
+            <Link href="/user/link/create">
               <a
-                className="btn nav-link text-white"
+                className="nav-link text-white btn btn-warning"
+                style={{ borderRadius: '3px' }}
               >
-                <span>Loading...</span>
+                {' 📝'}
               </a>
-            </li>
+            </Link>
+          </li>
+
+          <li key="6" className="nav-item ml-auto">
+            <a className="btn nav-link text-white">
+              <span>Loading...</span>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -259,38 +312,49 @@ const Layout = ({ children }) => {
     <div className={styles.noPrint}>
       <div className={'fixed-top ' + styles.accordion}>
         <ul className={'nav nav-tabs ' + styles.accordion}>
-          <li key="1" className="nav-item pointer-hand">
-            <a
-              onClick={() => setShowSidebar(!showSidebar)}
-              className="nav-link text-white"
-            >
-              <span>
-              &nbsp;<i className="fas fa-bars"></i>&nbsp;
-                {/* <i class="fas fa-hamburger"></i> */}
-              </span>
-            </a>
-          </li>
-
-          {process.browser && isAuth() && isAuth().role === 'subscriber' && (
-            <Link href="/user/link/create">
+          <li>
+            <Link href="/">
               <a
-                className={'nav-link text-white btn btn-warning '}
+                className={'nav-link text-white  '}
                 style={{ borderRadius: '3px' }}
               >
-                <i class="fas fa-pencil-alt"></i>
+                &nbsp;
+                <img
+                  src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
+                  loading="lazy"
+                  loading="lazy"
+                  alt=""
+                  class="stepimage"
+                  width="40"
+                />
               </a>
             </Link>
-          )}
+          </li>
+          <li>
+            {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+              <Link href="/user/link/create">
+                <a
+                  className={'nav-link text-white btn btn-warning '}
+                  style={{ borderRadius: '3px' }}
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+              </Link>
+            )}
+          </li>
+          <li>
+
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <Link href="/user/link/create">
               <a
                 className="nav-link text-white btn btn-warning"
                 style={{ borderRadius: '3px' }}
-              >
+                >
                 <i class="fas fa-pencil-alt"></i>
               </a>
             </Link>
           )}
+          </li>
           &nbsp;&nbsp;
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li
@@ -339,7 +403,6 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-
           {process.browser && !isAuth() && (
             <React.Fragment>
               <li key="2" className="nav-item ml-auto">
@@ -355,29 +418,44 @@ const Layout = ({ children }) => {
               </li>
             </React.Fragment>
           )}
-
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li key="4" className="nav-item ml-auto">
               <Link href="/admin/link/list">
                 <a className="nav-link text-white">
-                <><i class="fas fa-user-alt"></i></>&nbsp;&nbsp;
-                  {/* Admin: {isAuth().name} */}
-                  </a>
+                  <>
+                    <i class="fas fa-user-alt"></i>
+                  </>
+                  &nbsp;&nbsp;
+
+                </a>
               </Link>
             </li>
+          )} */}
+          {process.browser && isAuth() && (
+            <li key="1" className="nav-item pointer-hand ml-auto">
+              <a
+                ref={sideBarRef}
+                onClick={() => setShowSidebar(!showSidebar)}
+                className="nav-link text-white"
+              >
+                <span>
+                  &nbsp;<i className="fas fa-bars"></i>&nbsp;
+                  {/* <i class="fas fa-hamburger"></i> */}
+                </span>
+              </a>
+            </li>
           )}
-
-          {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          {/* {process.browser && isAuth() && isAuth().role === 'subscriber' && (
             <li key="5" className="nav-item ml-auto">
               <Link href="/user/profile/update">
                 <a className="nav-link text-white">
                   {' '}
-                  {/* {isAuth().name}'s Profile */}
+
                   <><i class="fas fa-user-alt"></i></>&nbsp;&nbsp;
                 </a>
               </Link>
             </li>
-          )}
+          )} */}
         </ul>
       </div>
     </div>

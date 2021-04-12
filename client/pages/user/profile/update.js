@@ -1055,7 +1055,7 @@ const Profile = ({ user, token }) => {
 
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
-              <h2 className={'text-muted ' + styles.title}>Update</h2>
+              <h2 className={'text-muted ' + styles.title}>User Profile</h2>
               <br />
               {registerForm()}
             </div>
