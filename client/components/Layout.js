@@ -43,7 +43,6 @@ const Layout = ({ children }) => {
     const handleClick = (event) => {
       if (sideBarRef.current && !sideBarRef.current.contains(event.target)) {
         // window.addEventListener('click', setShowSideMenu(false));
-        console.log('set false')
         setShowSidebar(false)
         // setShowSideMenu(false)
       }

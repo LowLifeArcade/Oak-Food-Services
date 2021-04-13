@@ -13,14 +13,19 @@ import 'react-calendar/dist/Calendar.css';
 import PickupDate from '../../../helpers/pickupDate';
 
 const Create = ({ token, user }) => {
+  // useEffect(() => {
+  //   // !isAuth() && Router.push('/');
+  //   user.students.length === 0 && Router.push('/user/profile/add');
+  // }, []);
   const username = user.username;
   const [showSearch, setShowSearch] = useState(false);
 
   // state
-  const [state, setState] = useState({
+  
+  const [state, setState] = useState({ 
     mealRequest: [
       {
-        meal:
+        meal: 
           user.students[0].group === 'a-group' ||
           user.students[0].group === 'b-group'
             ? 'Standard Onsite'

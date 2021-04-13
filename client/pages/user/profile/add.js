@@ -2,7 +2,11 @@ import Layout from '../../../components/Layout';
 import Toggle from '../../../components/Toggle';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { showErrorMessage, showSuccessMessage, showMessageMessage } from '../../../helpers/alerts';
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  showMessageMessage,
+} from '../../../helpers/alerts';
 import { API } from '../../../config';
 import styles from '../../../styles/Home.module.css';
 import { updateUser } from '../../../helpers/auth';
@@ -150,20 +154,20 @@ const Profile = ({ user, token }) => {
             students[i].foodAllergy.dairy === true ||
             students[i].foodAllergy.soy === true ? (
               <option disabled value="a-group">
-                Onsite - Cohort A
+                Onsite Lunch - Cohort A
               </option>
             ) : (
-              <option value="a-group">Onsite - Cohort A</option>
+              <option value="a-group">Onsite Lunch - Cohort A</option>
             )}
             {students[i].foodAllergy.gluten === true ||
             students[i].foodAllergy.egg === true ||
             students[i].foodAllergy.dairy === true ||
             students[i].foodAllergy.soy === true ? (
               <option disabled value="b-group">
-                Onsite - Cohort B
+                Onsite Lunch - Cohort B
               </option>
             ) : (
-              <option value="b-group">Onsite - Cohort B</option>
+              <option value="b-group">Onsite Lunch - Cohort B</option>
             )}
           </select>
           <div className=""></div>
@@ -587,7 +591,7 @@ const Profile = ({ user, token }) => {
                 <div key={i}>
                   <h6 className="p-2">
                     <label key={i} className="form-check-label text-muted">
-                      Student # {`${i + 1}`} information
+                      Student #{`${i + 1}`} Information
                     </label>
                   </h6>
 
@@ -707,19 +711,19 @@ const Profile = ({ user, token }) => {
                   )}
                   {students[i].foodAllergy.dairy === true
                     ? showMessageMessage(
-                        'Curbside pickup only for your allergy group'
+                        'Curbside Pickup Only for this Food Allergy'
                       )
                     : students[i].foodAllergy.gluten === true
                     ? showMessageMessage(
-                        'Curbside pickup only for your allergy group'
+                        'Curbside Pickup Only for this Food Allergy'
                       )
                     : students[i].foodAllergy.soy === true
                     ? showMessageMessage(
-                        'Curbside pickup only for your allergy group'
+                        'Curbside Pickup Only for this Food Allergy'
                       )
                     : students[i].foodAllergy.egg === true &&
-                    showMessageMessage(
-                        'Curbside pickup only for your allergy group'
+                      showMessageMessage(
+                        'Curbside Pickup Only for this Food Allergy'
                       )}
                   <div className="form-group pt-3">
                     <select

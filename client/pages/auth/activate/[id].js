@@ -62,10 +62,10 @@ const ActivateAccount = ({ router }) => {
       <div className="row">
         {/* <div className="p-5"></div> */}
         <div className="p-4 pt-5 col-md-8 offset-md-2">
-          <h2>Hello, {name}, click on the button to activate your account.</h2>
+          <h2>Hello, {name}, click the button below to activate your account.</h2>
           <h6 className="pt-4 p-2 text-muted">
             On your first login, please register your participating students.
-            You can modify this information in <i>Profile Update</i>.
+            You can edit this information at any time in <i>Profile Update</i>.
           </h6>
           <br />
           {success && showSuccessMessage(success)}

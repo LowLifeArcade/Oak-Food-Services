@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/Pages.module.css';
 import Link from 'next/link';
 import Layout from '../components/Layout';
+// import { isAuth } from '../helpers/auth';
 
 const Home = () => {
   const [loaded, setLoaded] = useState(false);
@@ -19,7 +20,7 @@ const Home = () => {
       setLoaded(true);
     }, 800);
   }, []);
-
+  
   // useEffect(() => {
   //   isAuth() && 
   //   user.students.length === 0 && Router.push('/user/profile/add');
@@ -40,6 +41,10 @@ const Home = () => {
 
     let newWin = window.open('');
     newWin.document.write(head.outerHTML, divToPrint.outerHTML);
+    if (newWin == null || typeof newWin == 'undefined')
+      alert(
+        'Turn off your pop-up blocker to print code'
+      );
     newWin.document.close();
     newWin.print();
     setTimeout(() => {

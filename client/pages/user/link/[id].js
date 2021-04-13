@@ -103,55 +103,57 @@ const Update = ({ oldLink, token, user, _id }) => {
               case meal.group === 'a-group' || meal.group === 'b-group':
                 meal.meal = 'Lunch Onsite';
                 meal.pickupOption = 'Lunch Only';
+                break;
               case meal.group === 'distance-learning':
                 (meal.meal =
-                  user.students[0].foodAllergy.dairy === false &&
-                  user.students[0].foodAllergy.gluten === false &&
-                  user.students[0].foodAllergy.soy === true &&
-                  user.students[0].foodAllergy.sesame === true
+                  user.students[index].foodAllergy.dairy === false &&
+                  user.students[index].foodAllergy.gluten === false &&
+                  user.students[index].foodAllergy.soy === true &&
+                  user.students[index].foodAllergy.sesame === true
                     ? 'Soy and Sesame Free'
-                    : user.students[0].foodAllergy.soy === false &&
-                      user.students[0].foodAllergy.sesame === false &&
-                      user.students[0].foodAllergy.dairy === true &&
-                      user.students[0].foodAllergy.gluten === true
+                    : user.students[index].foodAllergy.soy === false &&
+                      user.students[index].foodAllergy.sesame === false &&
+                      user.students[index].foodAllergy.dairy === true &&
+                      user.students[index].foodAllergy.gluten === true
                     ? 'Gluten Free Dairy Free'
-                    : user.students[0].foodAllergy.soy === false &&
-                      user.students[0].foodAllergy.sesame === false &&
-                      user.students[0].foodAllergy.dairy === true &&
-                      user.students[0].foodAllergy.gluten === false
+                    : user.students[index].foodAllergy.soy === false &&
+                      user.students[index].foodAllergy.sesame === false &&
+                      user.students[index].foodAllergy.dairy === true &&
+                      user.students[index].foodAllergy.gluten === false
                     ? 'Standard Dairy Free'
-                    : user.students[0].foodAllergy.soy === false &&
-                      user.students[0].foodAllergy.sesame === false &&
-                      user.students[0].foodAllergy.dairy === false &&
-                      user.students[0].foodAllergy.gluten === true
+                    : user.students[index].foodAllergy.soy === false &&
+                      user.students[index].foodAllergy.sesame === false &&
+                      user.students[index].foodAllergy.dairy === false &&
+                      user.students[index].foodAllergy.gluten === true
                     ? 'Gluten Free'
-                    : user.students[0].foodAllergy.soy === true &&
-                      user.students[0].foodAllergy.sesame === false &&
-                      user.students[0].foodAllergy.dairy === false &&
-                      user.students[0].foodAllergy.gluten === false
+                    : user.students[index].foodAllergy.soy === true &&
+                      user.students[index].foodAllergy.sesame === false &&
+                      user.students[index].foodAllergy.dairy === false &&
+                      user.students[index].foodAllergy.gluten === false
                     ? 'Standard Soy Free'
-                    : user.students[0].foodAllergy.soy === false &&
-                      user.students[0].foodAllergy.sesame === true &&
-                      user.students[0].foodAllergy.dairy === false &&
-                      user.students[0].foodAllergy.gluten === false
+                    : user.students[index].foodAllergy.soy === false &&
+                      user.students[index].foodAllergy.sesame === true &&
+                      user.students[index].foodAllergy.dairy === false &&
+                      user.students[index].foodAllergy.gluten === false
                     ? 'Standard Sesame Free'
-                    : user.students[0].foodAllergy.soy === true &&
-                      user.students[0].foodAllergy.sesame === true &&
-                      user.students[0].foodAllergy.dairy === true &&
-                      user.students[0].foodAllergy.gluten === false
+                    : user.students[index].foodAllergy.soy === true &&
+                      user.students[index].foodAllergy.sesame === true &&
+                      user.students[index].foodAllergy.dairy === true &&
+                      user.students[index].foodAllergy.gluten === false
                     ? 'Soy Sesame Dairy Free'
-                    : user.students[0].foodAllergy.soy === true &&
-                      user.students[0].foodAllergy.sesame === true &&
-                      user.students[0].foodAllergy.dairy === false &&
-                      user.students[0].foodAllergy.gluten === true
+                    : user.students[index].foodAllergy.soy === true &&
+                      user.students[index].foodAllergy.sesame === true &&
+                      user.students[index].foodAllergy.dairy === false &&
+                      user.students[index].foodAllergy.gluten === true
                     ? 'Soy Sesame Gluten Free'
-                    : user.students[0].foodAllergy.soy === true &&
-                      user.students[0].foodAllergy.sesame === true &&
-                      user.students[0].foodAllergy.dairy === true &&
-                      user.students[0].foodAllergy.gluten === true
+                    : user.students[index].foodAllergy.soy === true &&
+                      user.students[index].foodAllergy.sesame === true &&
+                      user.students[index].foodAllergy.dairy === true &&
+                      user.students[index].foodAllergy.gluten === true
                     ? 'Soy Sesame Dairy Gluten Free'
                     : 'Standard'),
                   (meal.pickupOption = 'Breakfast and Lunch');
+                  break;
               case students[index].foodAllergy.sesame &&
                 students[index].foodAllergy.soy &&
                 students[index].foodAllergy.dairy &&

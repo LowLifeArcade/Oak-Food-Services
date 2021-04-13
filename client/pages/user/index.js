@@ -45,6 +45,7 @@ const User = ({ user, token, l, userLinks }) => {
         'body { display: flex; flex-direction: column; align-items: center; justify-content: center;  } @page { size: landscape } .code { font-size: 10rem;}',
       head = document.createElement('head'),
       style = document.createElement('style');
+    
 
     // style.type = 'text/css';
     // style.media = 'print';
@@ -54,6 +55,10 @@ const User = ({ user, token, l, userLinks }) => {
 
     let newWin = window.open('');
     newWin.document.write(head.outerHTML, divToPrint.outerHTML);
+    if (newWin == null || typeof newWin == 'undefined')
+      alert(
+        'Turn off your pop-up blocker to print code'
+      );
     newWin.document.close();
     newWin.print();
     setTimeout(() => {
@@ -159,9 +164,10 @@ const User = ({ user, token, l, userLinks }) => {
                         <div className="d-flex justify-content-center">
                           {/* {'On '} */}
                           <b>
-                            {'On ' + moment(l.pickupDate)
-                              .subtract(3, 'day')
-                              .format('MMMM Do')}
+                            {'On ' +
+                              moment(l.pickupDate)
+                                .subtract(3, 'day')
+                                .format('MMMM Do')}
                           </b>
                         </div>
                       </h4>
@@ -342,7 +348,10 @@ const User = ({ user, token, l, userLinks }) => {
                         // l.postedBy.students[i] === undefined ? null :
                         l.orderStatus === false &&
                           moment(l.pickupDate).format('MDD').toString() >
-                            moment(new Date()).add(2, 'day').format('MDD').toString() && (
+                            moment(new Date())
+                              .add(2, 'day')
+                              .format('MDD')
+                              .toString() && (
                             <Link href={`/user/link/${l._id}`}>
                               <button className="btn btn-sm btn-outline-dark text float-left">
                                 <i class="far fa-edit"></i> &nbsp;Edit
@@ -414,13 +423,17 @@ const User = ({ user, token, l, userLinks }) => {
           <div className="p-1">
             <div className="">
               <Link href="/user/profile/update">
-                <a className="nav-item">Update Profile</a>
+              <button className={'btn btn-outline-secondary ' }>
+              <i class="fas fa-user-alt"></i>
+                  &nbsp;&nbsp; Profile Update
+                </button>
+                {/* <a className="nav-item">Profile Update</a> */}
               </Link>
 
               <Link href="/user/link/create">
                 <button className={'btn float-right ' + styles.button}>
                   <i class="fas fa-pencil-alt"></i>
-                  &nbsp;&nbsp; Submit a Request
+                  &nbsp;&nbsp; Request
                 </button>
               </Link>
             </div>

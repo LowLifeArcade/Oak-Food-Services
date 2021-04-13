@@ -74,7 +74,7 @@ const Menus = ({ categories }) => {
   // CODE for admin /
 
   let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 13);
 
   const listCategories = () =>
     categories
@@ -82,6 +82,9 @@ const Menus = ({ categories }) => {
       .reverse()
       .map((c, i) => (
         <>
+        {console.log(moment(new Date()).subtract(13, 'day').format('l'))}
+        {c.pickupWeek < moment(new Date()).subtract(13, 'day').format('l') && 
+       
           <div className="">
             <div
               key={i}
@@ -202,6 +205,7 @@ const Menus = ({ categories }) => {
             </div>
             <div className="p-2"></div>
           </div>
+           }
         </>
       ));
   return (

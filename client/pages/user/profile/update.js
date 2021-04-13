@@ -3,7 +3,11 @@ import Toggle from '../../../components/Toggle';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
-import { showErrorMessage, showSuccessMessage, showMessageMessage } from '../../../helpers/alerts';
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  showMessageMessage,
+} from '../../../helpers/alerts';
 import { API } from '../../../config';
 import styles from '../../../styles/Home.module.css';
 import { isAuth, updateUser } from '../../../helpers/auth';
@@ -74,6 +78,11 @@ const Profile = ({ user, token }) => {
 
   // useEffect(() => {
   //   !isAuth() && Router.push('/');
+  //   user.students.length === 0 && Router.push('/user/profile/add');
+  // }, []);
+
+  // useEffect(() => {
+  //   // !isAuth() && Router.push('/');
   //   user.students.length === 0 && Router.push('/user/profile/add');
   // }, []);
 
@@ -602,7 +611,7 @@ const Profile = ({ user, token }) => {
               <div key={i}>
                 <h6 className="p-2">
                   <label key={i} className="form-check-label text-muted">
-                    Student # {`${i + 1}`} information
+                    Student #{`${i + 1}`} Information
                   </label>
                 </h6>
 
@@ -807,19 +816,19 @@ const Profile = ({ user, token }) => {
 
                 {students[i].foodAllergy.dairy === true
                   ? showMessageMessage(
-                      'Curbside pickup only for your allergy group'
+                      'Curbside Pickup Only for this Food Allergy'
                     )
                   : students[i].foodAllergy.gluten === true
                   ? showMessageMessage(
-                      'Curbside pickup only for your allergy group'
+                      'Curbside Pickup Only for this Food Allergy'
                     )
                   : students[i].foodAllergy.soy === true
                   ? showMessageMessage(
-                      'Curbside pickup only for your allergy group'
+                      'Curbside Pickup Only for this Food Allergy'
                     )
                   : students[i].foodAllergy.egg === true &&
                     showMessageMessage(
-                      'Curbside pickup only for your allergy group'
+                      'Curbside Pickup Only for this Food Allergy'
                     )}
 
                 <div className="form-group pt-1">
@@ -869,93 +878,91 @@ const Profile = ({ user, token }) => {
                           students[i].foodAllergy.dairy === true ||
                           students[i].foodAllergy.soy === true ? (
                             <option disabled value="a-group">
-                              Onsite - Cohort A
+                              Onsite Lunch- Cohort A
                             </option>
                           ) : (
-                            <option value="a-group">Onsite - Cohort A</option>
+                            <option value="a-group">Onsite Lunch- Cohort A</option>
                           )}
                           {students[i].foodAllergy.gluten === true ||
                           students[i].foodAllergy.egg === true ||
                           students[i].foodAllergy.dairy === true ||
                           students[i].foodAllergy.soy === true ? (
                             <option disabled value="b-group">
-                              Onsite - Cohort B
+                              Onsite Lunch- Cohort B
                             </option>
                           ) : (
-                            <option value="b-group">Onsite - Cohort B</option>
+                            <option value="b-group">Onsite Lunch- Cohort B</option>
                           )}
                         </select>
                         <div className=""></div>
                       </div>
                     </div>
                   )}
-                
-                {
-                  students[i].schoolName == 'OPHS' && (
-                    <div key={1} className="form-group">
-                      <div className="">
-                        <select
-                          value={students[i].group}
-                          data-index={i}
-                          onChange={(e) => handleGroupSelectChange(e)}
-                          type="text"
-                          className="form-control"
-                          required
-                        >
-                          <option disabled value="">
-                            Curbside or Onsite?
+
+                {students[i].schoolName == 'OPHS' && (
+                  <div key={1} className="form-group">
+                    <div className="">
+                      <select
+                        value={students[i].group}
+                        data-index={i}
+                        onChange={(e) => handleGroupSelectChange(e)}
+                        type="text"
+                        className="form-control"
+                        required
+                      >
+                        <option disabled value="">
+                          Curbside or Onsite?
+                        </option>
+                        <option value="distance-learning">
+                          Curbside Pickup
+                        </option>
+                        {students[i].foodAllergy.gluten === true ||
+                        students[i].foodAllergy.egg === true ||
+                        students[i].foodAllergy.dairy === true ||
+                        students[i].foodAllergy.soy === true ? (
+                          <option disabled value="a-group">
+                            Onsite Lunch
                           </option>
-                          <option value="distance-learning">
-                            Curbside Pickup
-                          </option>
-                          {students[i].foodAllergy.gluten === true ||
-                          students[i].foodAllergy.egg === true ||
-                          students[i].foodAllergy.dairy === true ||
-                          students[i].foodAllergy.soy === true ? (
-                            <option disabled value="a-group">
-                              Onsite Lunch
-                            </option>
-                          ) : (
-                            <option value="a-group">Onsite Lunch</option>
-                          )}
-                        </select>
-                        <div className=""></div>
-                      </div>
+                        ) : (
+                          <option value="a-group">Onsite Lunch</option>
+                        )}
+                      </select>
+                      <div className=""></div>
                     </div>
-                  )}
-                {
-                  students[i].schoolName == 'OVHS' && (
-                    <div key={1} className="form-group">
-                      <div className="">
-                        <select
-                          value={students[i].group}
-                          data-index={i}
-                          onChange={(e) => handleGroupSelectChange(e)}
-                          type="text"
-                          className="form-control"
-                          required
-                        >
-                          <option disabled value="">
-                            Curbside or Onsite?
+                  </div>
+                )}
+                {students[i].schoolName == 'OVHS' && (
+                  <div key={1} className="form-group">
+                    <div className="">
+                      <select
+                        value={students[i].group}
+                        data-index={i}
+                        onChange={(e) => handleGroupSelectChange(e)}
+                        type="text"
+                        className="form-control"
+                        required
+                      >
+                        <option disabled value="">
+                          Curbside or Onsite?
+                        </option>
+                        <option value="distance-learning">
+                          Curbside Pickup
+                        </option>
+                        {students[i].foodAllergy.gluten === true ||
+                        students[i].foodAllergy.egg === true ||
+                        students[i].foodAllergy.dairy === true ||
+                        students[i].foodAllergy.soy === true ? (
+                          <option disabled value="a-group">
+                            Onsite Lunch
                           </option>
-                          <option value="distance-learning">
-                            Curbside Pickup
-                          </option>
-                          {students[i].foodAllergy.gluten === true ||
-                          students[i].foodAllergy.egg === true ||
-                          students[i].foodAllergy.dairy === true ||
-                          students[i].foodAllergy.soy === true ? (
-                            <option disabled value="a-group">
-                              Onsite Lunch
-                            </option>
-                          ) : (
-                            <option value="a-group">Onsite Lunch</option>
-                          )}
-                        </select>
-                        <div className=""></div>
-                      </div>
+                        ) : (
+                          <option value="a-group">Onsite Lunch</option>
+                        )}
+                      </select>
+                      <div className=""></div>
                     </div>
-                  )}
+                  </div>
+                )}
                 {students[i].group != 'distance-learning' &&
                   students[i].schoolName != 'NON' && (
                     <div key={2} className="">

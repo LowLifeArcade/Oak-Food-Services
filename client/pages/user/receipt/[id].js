@@ -56,7 +56,12 @@ const Update = ({ oldLink, token, user, _id }) => {
     head.appendChild(style);
 
     let newWin = window.open('');
+    
     newWin.document.write(head.outerHTML, divToPrint.outerHTML);
+    if (newWin == null || typeof newWin == 'undefined')
+      alert(
+        'Turn off your pop-up blocker to print code'
+      );
     newWin.document.close();
     newWin.print();
     setTimeout(() => {
