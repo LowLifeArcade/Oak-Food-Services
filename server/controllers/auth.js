@@ -26,7 +26,7 @@ exports.register = (req, res) => {
     if (user) {
       console.log(err);
       return res.status(400).json({
-        error: 'Email is taken',
+        error: 'This email is taken',
       });
     }
 
@@ -101,7 +101,7 @@ exports.registerActivate = (req, res) => {
     function (err, decoded) {
       if (err) {
         return res.status(403).json({
-          error: 'Expired link. Try again.',
+          error: 'Expired link. Try again by submitting another registration form.',
         });
       }
 

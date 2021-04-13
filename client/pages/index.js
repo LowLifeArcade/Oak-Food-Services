@@ -19,6 +19,11 @@ const Home = () => {
       setLoaded(true);
     }, 800);
   }, []);
+  
+  useEffect(() => {
+    isAuth() && 
+    user.students.length === 0 && Router.push('/user/profile/add');
+  }, []);
 
   function printData() {
     let divToPrint = document.getElementById('printCode');

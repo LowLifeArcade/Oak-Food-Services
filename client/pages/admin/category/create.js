@@ -88,6 +88,11 @@ const Create = ({ user, token }) => {
       : console.log('none');
   }, [buttonText]);
 
+  useEffect(() => {
+    isAuth() && 
+    user.students.length === 0 && Router.push('/user/profile/add');
+  }, []);
+
   const handleChange = (name) => (e) => {
     setState({
       ...state,
