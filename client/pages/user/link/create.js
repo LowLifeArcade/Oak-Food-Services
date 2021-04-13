@@ -99,8 +99,8 @@ const Create = ({ token, user }) => {
     pickupCodeInput: '',
     pickupCodeAdd: [''],
     pickupDate: localStorage.getItem('search-date')
-    ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
-    : '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
+      ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
+      : '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupTime: '',
     mealWeek: '',
     buttonText: 'Submit',
@@ -175,7 +175,6 @@ const Create = ({ token, user }) => {
     localStorage.removeItem('search-date');
     // localStorage.setItem('search-date', JSON.stringify(pickupDate));
     // localStorage.setItem('curbsideToggle', JSON.stringify(orderType));
-    
   }, []);
 
   // conditions: mealRequest has only Onsite Standard meals. So if nothing other than that exists than true.
@@ -1092,10 +1091,10 @@ const Create = ({ token, user }) => {
 
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
 
   const submit = () => {
-    localStorage.removeItem('search-date')
+    localStorage.removeItem('search-date');
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
     let length =
@@ -1310,17 +1309,21 @@ const Create = ({ token, user }) => {
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
               <div className="row">
-                <div ref={calanderButton} className="col-md-12">
+                <div className="col-md-9">
+                  <span ref={calanderButton} >
+
+                  
                   <h4 className="text-dark">
                     Meal Request for the Week of:{' '}
                     {pickupDate && (
                       <>
                         <span
-                          ref={calanderButton}
+                          // ref={calanderButton}
                           onClick={() => setShowSearch(!showSearch)}
                         >
                           {moment(state.pickupDate).format('MMMM Do')}
-                          &nbsp; <i className="text-danger far fa-calendar-check"></i>
+                          &nbsp;{' '}
+                          <i className="text-danger far fa-calendar-check"></i>
                         </span>
                       </>
                     )}
@@ -1354,7 +1357,8 @@ const Create = ({ token, user }) => {
                           minDate={twoWeeksFromNow}
                           value={''}
                         />
-                      )}
+                        )}
+                        </span>
                 </div>
               </div>
               <hr />

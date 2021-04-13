@@ -81,7 +81,7 @@ exports.register = (req, res) => {
       .then((data) => {
         console.log('email submitted to SES', data);
         res.json({
-          message: `Email has been sent to ${email}, follow the instructions to complete your registration.`,
+          message: `An email has been sent to ${email}. Follow the instructions in the email to complete your registration.`,
         });
       })
       .catch((error) => {

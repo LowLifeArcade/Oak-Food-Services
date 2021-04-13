@@ -35,4 +35,4 @@ const Toggle = ({
 
 export default Toggle;
 
-<div className="toggle-container"></div>;
+{/* <div className="toggle-container"></div>; */}

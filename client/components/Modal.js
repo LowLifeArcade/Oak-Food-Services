@@ -47,6 +47,8 @@ const Modal = (props) => {
     //     </div>
     //   </div>
     // </div>
+
+    
   );
 };
 

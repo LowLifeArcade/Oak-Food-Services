@@ -342,7 +342,7 @@ const User = ({ user, token, l, userLinks }) => {
                         // l.postedBy.students[i] === undefined ? null :
                         l.orderStatus === false &&
                           moment(l.pickupDate).format('MDD').toString() >
-                            moment(new Date()).format('MDD').toString() && (
+                            moment(new Date()).add(2, 'day').format('MDD').toString() && (
                             <Link href={`/user/link/${l._id}`}>
                               <button className="btn btn-sm btn-outline-dark text float-left">
                                 <i class="far fa-edit"></i> &nbsp;Edit

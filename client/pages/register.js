@@ -48,13 +48,18 @@ const Register = () => {
   } = state;
 
   useEffect(() => {
-    isAuth() && isAuth().role === 'admin'
-      ? Router.push('admin')
-      : isAuth() && isAuth().role === 'subscriber'
-      ? Router.push('user')
-      : !isAuth()
-      ? console.log('not registered or signed in')
-      : Router.push('/');
+    // isAuth() && isAuth().role === 'admin'
+    //   ? Router.push('admin')
+    //   : isAuth() && isAuth().role === 'subscriber'
+    //   ? Router.push('user')
+    //   : !isAuth()
+    //   ? console.log('not registered or signed in')
+    //   : Router.push('/');
+    success && 
+    setTimeout(() => {
+        Router.push('/login')
+    }, 50000)
+    setState({...state, goodMessage: ''})
   }, [success]);
 
   // const makeUserCode = (length) => {

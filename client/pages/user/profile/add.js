@@ -2,7 +2,7 @@ import Layout from '../../../components/Layout';
 import Toggle from '../../../components/Toggle';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
+import { showErrorMessage, showSuccessMessage, showMessageMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
 import styles from '../../../styles/Home.module.css';
 import { updateUser } from '../../../helpers/auth';
@@ -706,19 +706,19 @@ const Profile = ({ user, token }) => {
                     </div>
                   )}
                   {students[i].foodAllergy.dairy === true
-                    ? showSuccessMessage(
+                    ? showMessageMessage(
                         'Curbside pickup only for your allergy group'
                       )
                     : students[i].foodAllergy.gluten === true
-                    ? showSuccessMessage(
+                    ? showMessageMessage(
                         'Curbside pickup only for your allergy group'
                       )
                     : students[i].foodAllergy.soy === true
-                    ? showSuccessMessage(
+                    ? showMessageMessage(
                         'Curbside pickup only for your allergy group'
                       )
                     : students[i].foodAllergy.egg === true &&
-                      showSuccessMessage(
+                    showMessageMessage(
                         'Curbside pickup only for your allergy group'
                       )}
                   <div className="form-group pt-3">
@@ -802,7 +802,7 @@ const Profile = ({ user, token }) => {
                       />
                       <div className="p-2"></div>
 
-                      {showSuccessMessage('Curbside Pickup Only for Preschool')}
+                      {showMessageMessage('Curbside Pickup Only for Preschool')}
                     </div>
                   )}
                   {students[i].schoolName === 'NON' && (
@@ -818,7 +818,7 @@ const Profile = ({ user, token }) => {
                       />
                       <div className="p-2"></div>
 
-                      {showSuccessMessage('Curbside Pickup Only for Non OPUSD')}
+                      {showMessageMessage('Curbside Pickup Only for Non OPUSD')}
                     </div>
                   )}
                   <hr className={'p-2 ' + styles.hrstudents} />
