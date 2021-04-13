@@ -99,7 +99,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   //   handleDateChange(pickupDateLookup);
   // }, []);
 
-  // reads date into local storage
+  // reads date in local storage
   useEffect(() => {
     const data = localStorage.getItem('search-date');
     console.log('data', data);

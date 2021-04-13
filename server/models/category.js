@@ -40,6 +40,12 @@ const categorySchema = new mongoose.Schema(
         },
       },
     ],
+    pickupWeek: {
+      type: String,
+      trim: true,
+      // required: true,
+      max: 256,
+    },
     group: {
       type: String,
     },

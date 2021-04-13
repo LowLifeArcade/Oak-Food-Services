@@ -102,7 +102,7 @@ const Layout = ({ children }) => {
                 <i class="fas fa-chalkboard-teacher"></i>&nbsp;
               </a>
             </Link> */}
-            <li>
+            {/* <li> */}
               <Link href="/">
                 <a
                   className={'nav-link text-white  '}
@@ -120,9 +120,13 @@ const Layout = ({ children }) => {
                 </a>
               </Link>
             </li>
-          </li>
+          {/* </li> */}
 
-          {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          
+
+          {process.browser && isAuth() && 
+          // isAuth().role === 'subscriber' && 
+          (
             <li className="nav-item pointer-hand">
               <Link href="/user/link/create">
                 <a
@@ -134,18 +138,18 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/user/link/create">
                 <a
                   className="nav-link text-white btn btn-warning "
                   style={{ borderRadius: '3px' }}
                 >
-                  {'🍱'}
+                  {' 🍱 '}
                 </a>
               </Link>
             </li>
-          )}
+          )} */}
           {process.browser && isAuth() && isAuth().role === 'subscriber' && (
             <li key="2" className="nav-item">
               <Link href="/user">

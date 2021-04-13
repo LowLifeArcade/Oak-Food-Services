@@ -1766,14 +1766,28 @@ const Update = ({ oldLink, token, user, _id }) => {
           <div className={styles.subcard}>
             <div className="row">
               <div className="col-md-12">
-                <h3>
+                {/* <h3>
                   Meal Request for:{' '}
                   {pickupDate && (
                     <span onClick={() => setShowSearch(!showSearch)}>
                       {moment(oldLink.pickupDate).format('MMMM Do')}
                     </span>
                   )}
-                </h3>
+                </h3> */}
+                <h4 className="text-secondary">
+                    Meal Request for the Week of:{' '}
+                    {pickupDate && (
+                      <>
+                        <span
+                          // ref={calanderButton}
+                          onClick={() => setShowSearch(!showSearch)}
+                        >
+                          {moment(state.pickupDate).format('MMMM Do')}
+                          &nbsp; <i className="text-warning far fa-calendar-check"></i>
+                        </span>
+                      </>
+                    )}
+                  </h4>
                 {pickupDate === '' && (
                   <button
                     className={'btn btn-sm  ' + styles.buttonshadow}

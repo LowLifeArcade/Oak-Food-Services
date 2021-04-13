@@ -71,11 +71,11 @@ const s3 = new AWS.S3({
 
 exports.create = (req, res) => {
   // base64 taking off beginning of data
-  const { name, content, image, group, postedBy, menu } = req.body;
+  const { name, content, image, group, postedBy, menu, pickupWeek } = req.body;
 
   // taking req.body name and making a slug for image name url i think
   const slug = slugify(name);
-  let category = new Category({ name, content, slug, image, group, postedBy, menu });
+  let category = new Category({ name, content, slug, image, group, postedBy, menu, pickupWeek });
 
   if (image) {
     // image data

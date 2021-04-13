@@ -170,6 +170,7 @@ const Menus = ({ categories }) => {
                         {c.menu.length > 0 &&  new Date < twoWeeksFromNow && <Link href="/user/link/create">
                           <button
                             className={'btn float-right ' + styles.button}
+                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(c.pickupWeek).format('l')))}
                           >
                             <i class="fas fa-pencil-alt"></i>
                             &nbsp; Request

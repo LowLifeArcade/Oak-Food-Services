@@ -1,8 +1,11 @@
 import styles from '../../../styles/Home.module.css';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Resizer from 'react-image-file-resizer';
+import moment from 'moment';
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
   modules: {
@@ -43,12 +46,12 @@ const Create = ({ user, token }) => {
       { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
     ],
     postedBy: user._id,
+    pickupWeek: '',
     error: '',
     success: '',
     buttonText: 'Post',
     image: '',
   });
-
 
   const [menuChange, setMenuChange] = useState('');
   const [content, setContent] = useState('');
@@ -59,9 +62,9 @@ const Create = ({ user, token }) => {
   const [imageUploadButtonName, setImageUploadButtonName] = useState(
     'Upload image'
   );
-  
 
   const {
+    pickupWeek,
     menu,
     postedBy,
     name,
@@ -95,22 +98,34 @@ const Create = ({ user, token }) => {
   };
 
   const resetMenuType = (menuTypeStatus) => {
-    setMenuType(menuTypeStatus)
-    console.log('menu type', menuType)
-    let currentMenuType = menuTypeStatus === 'Pickup' ? { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' } : { row1: 'day', row2: 'breakfast food', row3: 'lunch' }
-    setState({...state,
-    menu: [currentMenuType]
-    })
-  }
+    setMenuType(menuTypeStatus);
+    console.log('menu type', menuType);
+    let currentMenuType =
+      menuTypeStatus === 'Pickup'
+        ? {
+            row1: 'day',
+            row2: 'breakfast food',
+            row3: 'lunch',
+            row4: 'vege food',
+          }
+        : { row1: 'day', row2: 'breakfast food', row3: 'lunch' };
+    setState({ ...state, menu: [currentMenuType] });
+  };
 
   const resetMenuPost = (menuPostStatus) => {
-      setMenuPost(menuPostStatus)
-      setState({...state,
-        menu: [
-          { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
-        ],
-      })
-  }
+    setMenuPost(menuPostStatus);
+    setState({
+      ...state,
+      menu: [
+        {
+          row1: 'day',
+          row2: 'breakfast food',
+          row3: 'lunch',
+          row4: 'vege food',
+        },
+      ],
+    });
+  };
 
   const handleContent = (e) => {
     setContent(e);
@@ -174,7 +189,7 @@ const Create = ({ user, token }) => {
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, group, image, postedBy, menu },
+        { name, content, group, image, postedBy, menu, pickupWeek },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -249,6 +264,13 @@ const Create = ({ user, token }) => {
     </>
   );
 
+  const onDateChange = (pickupWeek) => {
+    setState({ ...state, pickupWeek: moment(pickupWeek).format('l') });
+    // handleDateChange(pickupWeek);
+  };
+
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
+
   const createCategoryForm = () => (
     <form action="" onSubmit={handleSubmit}>
       <div className="form-group col-md-4">
@@ -261,9 +283,20 @@ const Create = ({ user, token }) => {
           required
         />
       </div>
-
       {/* {chooseEmailGroup()} */}
-
+      <div className="">
+        <Calendar
+          onChange={(e) => onDateChange(e)}
+          tileDisabled={handleDisabledDates}
+          value={pickupWeek}
+          value={''}
+        />
+      </div>
+      <br />
+      Menu is for week of {`${pickupWeek}`}
+      {console.log('pickup week', pickupWeek)}
+      <br />
+      <br/>
       <div className="form-group">
         <label className="text-muted">Content</label>
         <ReactQuill
@@ -275,7 +308,7 @@ const Create = ({ user, token }) => {
           style={{ border: '1px solid #333' }}
         />
       </div>
-      {menuPost === false && 
+      {menuPost === false && (
         <button
           className="btn btn-warning"
           type="button"
@@ -285,8 +318,8 @@ const Create = ({ user, token }) => {
           <i class="fas fa-book"></i>
           &nbsp; Add Menu to Post?
         </button>
-      }
-      {menuPost && 
+      )}
+      {menuPost && (
         <button
           className="btn btn-warning"
           type="button"
@@ -296,7 +329,7 @@ const Create = ({ user, token }) => {
           <i class="fas fa-book"></i>
           &nbsp; Delete Menu from Post?
         </button>
-      }
+      )}
       <br />
       <br />
       {menuPost && (

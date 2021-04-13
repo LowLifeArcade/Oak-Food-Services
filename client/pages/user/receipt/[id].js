@@ -117,12 +117,20 @@ const Update = ({ oldLink, token, user, _id }) => {
                 l.pickupOption === 'Breakfast and Lunch'
             ).length != 0 && (
               <>
-                <h4 className="pt-2 ">
-                  PICKUP DATE
-                  <br />
-                  <b>{moment(oldLink.pickupDate).subtract(3, 'day').format('MMMM Do')}</b>
+                <h3 className="pt-2 d-flex justify-content-center ">CURBSIDE PICKUP</h3>
+                <h4>
+                  <div className="d-flex justify-content-center">
+                    <b>
+                      {'On ' + moment(oldLink.pickupDate)
+                        .subtract(3, 'day')
+                        .format('MMMM Do')}
+                    </b>
+                  </div>
                 </h4>
-                Between <b className="pb-2 ">{oldLink.pickupTime} </b>
+                <span className="d-flex justify-content-center " >
+                  
+                <b className="pb-2 ">{'Between '+ oldLink.pickupTime} </b>
+                </span>
               </>
             )}
             <hr className={styles.hr} />
@@ -154,17 +162,31 @@ const Update = ({ oldLink, token, user, _id }) => {
                 </b>
               ) : (
                 <b>
-                  Onsite School Lunch for week of{' '}
-                  {moment(oldLink.pickupDate).add(3, 'day').format('MMMM Do')}
+                  Onsite School Lunch for Week of{' '}
+                  {moment(oldLink.pickupDate).format('MMMM Do')}
                 </b>
               )}
             </h3>
             <hr className={styles.hr} />
-            <h6>
-              Pick up is at <b className="text">Brookside Elemenery</b>. Display
-              the above code <b className="text-danger">on your dashboard </b>or
-              show from your phone.
-            </h6>
+            {oldLink.mealRequest.filter(
+              (l) =>
+                // l.meal == 'Standard' ||
+                // l.meal == 'Vegetarian' ||
+                // l.meal == 'Gluten Free' ||
+                // l.meal == 'Vegan' ||
+                // l.meal == 'Standard DF' ||
+                // l.meal == 'GlutenFree DF' ||
+                l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                l.pickupOption === 'Lunch Only' ||
+                l.pickupOption === 'Breakfast and Lunch'
+            ).length != 0 && (
+              <h6>
+                Pickup is at <b className="text">Brookside Elemenery</b>.
+                Display the above code{' '}
+                <b className="text-danger">on your dashboard </b>or show from
+                your phone.
+              </h6>
+            )}
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
@@ -208,7 +230,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                                   <br />
                                   *Week of{' '}
                                   {moment(oldLink.pickupDate)
-                                    .add(3, 'day')
+                                    // .add(3, 'day')
                                     .format('MMMM Do')}
                                   *
                                 </div>
@@ -232,7 +254,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                                   * <br />
                                   *Week of{' '}
                                   {moment(oldLink.pickupDate)
-                                    .add(3, 'day')
+                                    // .add(3, 'day')
                                     .format('MMMM Do')}
                                   *
                                 </div>
@@ -282,6 +304,12 @@ const Update = ({ oldLink, token, user, _id }) => {
               }
               <span>&nbsp;&nbsp;</span>
               {oldLink.orderStatus === false &&
+                oldLink.mealRequest.filter(
+                  (l) =>
+                    l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                    l.pickupOption === 'Lunch Only' ||
+                    l.pickupOption === 'Breakfast and Lunch'
+                ).length != 0 &&
                 moment(oldLink.pickupDate).format('MDD').toString() >
                   moment(new Date()).format('MDD').toString() && (
                   <button

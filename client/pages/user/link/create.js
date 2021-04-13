@@ -10,6 +10,7 @@ import moment from 'moment';
 import Router from 'next/router';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import PickupDate from '../../../helpers/pickupDate';
 
 const Create = ({ token, user }) => {
   const username = user.username;
@@ -97,7 +98,9 @@ const Create = ({ token, user }) => {
     pickupCode: user.userCode + '-01',
     pickupCodeInput: '',
     pickupCodeAdd: [''],
-    pickupDate: '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
+    pickupDate: localStorage.getItem('search-date')
+    ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
+    : '', //moment("2021-02-16").format('MM dd'), // get a state.pickupDate from a get request maybe from a created menu
     pickupTime: '',
     mealWeek: '',
     buttonText: 'Submit',
@@ -136,7 +139,7 @@ const Create = ({ token, user }) => {
         calanderButton.current &&
         !calanderButton.current.contains(event.target)
       ) {
-        console.log('show search')
+        console.log('show search');
         setShowSearch(false);
       }
     };
@@ -153,6 +156,27 @@ const Create = ({ token, user }) => {
   useEffect(() => {
     !isAuth() && Router.push('/');
   });
+
+  // reads date into local storage
+  useEffect(() => {
+    const data = localStorage.getItem('search-date');
+    console.log('data', data);
+    if (data) {
+      try {
+        handleDateChange(JSON.parse(data));
+      } catch (error) {
+        setState({ ...state, error: error });
+      }
+    }
+  }, []);
+
+  // puts date into localstorage
+  useEffect(() => {
+    localStorage.removeItem('search-date');
+    // localStorage.setItem('search-date', JSON.stringify(pickupDate));
+    // localStorage.setItem('curbsideToggle', JSON.stringify(orderType));
+    
+  }, []);
 
   // conditions: mealRequest has only Onsite Standard meals. So if nothing other than that exists than true.
   useEffect(() => {
@@ -1071,6 +1095,7 @@ const Create = ({ token, user }) => {
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
   const submit = () => {
+    localStorage.removeItem('search-date')
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
     let length =
@@ -1290,16 +1315,18 @@ const Create = ({ token, user }) => {
                     Meal Request for the Week of:{' '}
                     {pickupDate && (
                       <>
-                        <span ref={calanderButton} onClick={() => setShowSearch(!showSearch)}>
+                        <span
+                          ref={calanderButton}
+                          onClick={() => setShowSearch(!showSearch)}
+                        >
                           {moment(state.pickupDate).format('MMMM Do')}
-                          &nbsp; <i class="far fa-calendar-check"></i>
+                          &nbsp; <i className="text-danger far fa-calendar-check"></i>
                         </span>
                       </>
                     )}
                   </h4>
                   {pickupDate === '' && (
                     <button
-                      
                       className={
                         'btn btn-sm btn-outline-secondary ' +
                         styles.buttonshadow
@@ -1313,23 +1340,21 @@ const Create = ({ token, user }) => {
 
                   {isAuth().role === 'admin'
                     ? showSearch && (
-
-                      <Calendar
-                      onChange={(e) => onDateChange(e)}
-                      tileDisabled={handleDisabledDates}
-                      value={''}
-                      />
-
-                      )
-                      : showSearch && (
                         <Calendar
-                        onChange={(e) => onDateChange(e)}
-                        tileDisabled={handleDisabledDates}
-                        defaultValue={twoWeeksFromNow}
-                        minDate={twoWeeksFromNow}
-                        value={''}
+                          onChange={(e) => onDateChange(e)}
+                          tileDisabled={handleDisabledDates}
+                          value={''}
                         />
-                        )}
+                      )
+                    : showSearch && (
+                        <Calendar
+                          onChange={(e) => onDateChange(e)}
+                          tileDisabled={handleDisabledDates}
+                          defaultValue={twoWeeksFromNow}
+                          minDate={twoWeeksFromNow}
+                          value={''}
+                        />
+                      )}
                 </div>
               </div>
               <hr />
