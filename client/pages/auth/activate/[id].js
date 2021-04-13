@@ -60,19 +60,19 @@ const ActivateAccount = ({ router }) => {
   return (
     <Layout>
       <div className="row">
-        <div className="p-5"></div>
-        <div className="col-md-8 offset-md-3">
-          <h2>Hello, {name}. Click on the button to activate your account.</h2> 
-          <div className="p-2"></div>
-          <h6 className='col-md-6 offset-md-3 text-muted'>
-          After your first login you'll be asked to fill out the student registration form for all students participating in the OPUSD school meals program. Later, you can add students as well as change and update this information in Profile Update.
+        {/* <div className="p-5"></div> */}
+        <div className="p-4 pt-5 col-md-8 offset-md-2">
+          <h2>Hello, {name}, click on the button to activate your account.</h2>
+          <h6 className="pt-4 p-2 text-muted">
+            On your first login, please register your participating students.
+            You can modify this information in <i>Profile Update</i>.
           </h6>
           <br />
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}
           <button
-            className="btn btn-outline-warning btn-block"
-            onClick={clickSubmit}
+            className="btn btn-outline-warning"
+            // onClick={clickSubmit}
           >
             {buttonText}
           </button>
