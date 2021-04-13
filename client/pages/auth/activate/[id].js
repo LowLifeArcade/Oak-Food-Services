@@ -72,7 +72,7 @@ const ActivateAccount = ({ router }) => {
           {error && showErrorMessage(error)}
           <button
             className="btn btn-outline-warning"
-            // onClick={clickSubmit}
+            onClick={clickSubmit}
           >
             {buttonText}
           </button>
