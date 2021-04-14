@@ -97,6 +97,10 @@ const Profile = ({ user, token }) => {
   }, []);
 
   useEffect(() => {
+      localStorage.setItem('no-students', true) 
+  }, [])
+
+  useEffect(() => {
     success === "You've successfully registered your students"
       ? setTimeout(() => {
           Router.push('/user');
@@ -521,6 +525,7 @@ const Profile = ({ user, token }) => {
           },
         }
       );
+      localStorage.removeItem('no-students')
       updateUser(response.data, () => {
         setState({
           ...state,
@@ -848,7 +853,7 @@ const Profile = ({ user, token }) => {
         {success && showSuccessMessage(success)}
         {error && showErrorMessage(error)}
         {!state.students.length < 1 && (
-          <button type="text" className="btn btn-warning">
+          <button type="text" className="btn btn-warning" >
             <i class="far fa-folder-open"></i> &nbsp;
             {buttonText}
           </button>

@@ -530,7 +530,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     { label: 'Pickup Time', key: 'pickupTime' },
     { label: 'Pickup Date', key: 'pickupDate' },
     // { label: 'First Name', key: 'postedBy.name' },
-    { label: 'Last Name', key: 'postedBy.lastName' },
+    // linksByDate.map(link => link.postedBy != null)  && { label: 'Last Name', key: 'postedBy.lastName' }, // had to disable because causes an error if user is deleted 
     { label: 'Student Names', key: 'students' },
     { label: 'Special Orders', key: 'specialOrder' },
   ];

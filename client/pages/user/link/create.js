@@ -433,6 +433,10 @@ const Create = ({ token, user }) => {
         frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
+      case 'Sesame Dairy Gluten Free':
+        frontCode = 'Sp';
+        pickupOptionLO = 'Lunch Only';
+        break;
       case 'Standard Onsite':
         frontCode = 'Onsite';
         pickupOptionLO = 'Lunch Onsite';
@@ -706,6 +710,15 @@ const Create = ({ token, user }) => {
               students[i].foodAllergy.sesame === true && (
                 <option value={'Soy Sesame Dairy Gluten Free'}>
                   Soy and Sesame Free (Lunch Only)
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === true &&
+              students[i].foodAllergy.gluten === true &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Sesame Dairy Gluten Free'}>
+                  Gluten Free Dairy Free (lunch only)
                 </option>
               )}
             {/* special  */}

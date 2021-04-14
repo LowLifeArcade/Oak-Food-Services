@@ -3,10 +3,13 @@ import styles from '../styles/Pages.module.css';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 // import { isAuth } from '../helpers/auth';
+import Router from 'next/router';
 
 const Home = () => {
   const [loaded, setLoaded] = useState(false);
-
+  useEffect(() => {
+    localStorage.getItem('no-students') &&  Router.push('/user/profile/add');
+  })
   useEffect(() => {
     // window.addEventListener('load', (event) => {
     //   setLoaded(true)
@@ -20,9 +23,9 @@ const Home = () => {
       setLoaded(true);
     }, 800);
   }, []);
-  
+
   // useEffect(() => {
-  //   isAuth() && 
+  //   isAuth() &&
   //   user.students.length === 0 && Router.push('/user/profile/add');
   // }, []);
 
@@ -42,9 +45,7 @@ const Home = () => {
     let newWin = window.open('');
     newWin.document.write(head.outerHTML, divToPrint.outerHTML);
     if (newWin == null || typeof newWin == 'undefined')
-      alert(
-        'Turn off your pop-up blocker to print code'
-      );
+      alert('Turn off your pop-up blocker to print code');
     newWin.document.close();
     newWin.print();
     setTimeout(() => {
@@ -81,7 +82,7 @@ const Home = () => {
                     width="300"
                   />
 
-                  <div className={styles.bodyregular}>
+                  <div className={'pt-4 ' + styles.bodyregular}>
                     <b>Start a Meal Request</b>
                   </div>
                   <div className={'pb-5 ' + styles.bodyregular}>
@@ -104,7 +105,7 @@ const Home = () => {
                     width="300"
                   />
 
-                  <div className={styles.bodyregular}>
+                  <div className={'pt-4 ' + styles.bodyregular}>
                     <b> Make Your Selections</b>
                   </div>
                   <p className={styles.bodyregular}>
@@ -127,7 +128,7 @@ const Home = () => {
                     width="300"
                   />
 
-                  <div className={styles.bodyregular}>
+                  <div className={'pt-4 ' + styles.bodyregular}>
                     <b>For Onsite Requests</b>
                   </div>
                   <p className={'pb-2 ' + styles.bodyregular}>
@@ -144,10 +145,10 @@ const Home = () => {
                     loading="lazy"
                     alt=""
                     class="stepimage"
-                    width="300"
+                    width="340"
                   />
 
-                  <div className={styles.bodyregular}>
+                  <div className={'pt-4 ' + styles.bodyregular}>
                     <b>For Curbside Requests</b>
                   </div>
                   <p className={'pb-5 ' + styles.bodyregular}>
@@ -226,29 +227,53 @@ const Home = () => {
       </Layout>
       {loaded && (
         <div className={styles.footer}>
-          <div className={'pt-4 d-flex justify-content-center ' + styles.sectioncontainer}>
+          <div
+            className={
+              'pt-4 d-flex justify-content-center ' + styles.sectioncontainer
+            }
+          >
             <div className={'text-white col-md-9 ' + styles.bodyregular}>
               <div className="p-2"></div>
               <ul className={styles.lists}>
                 <li>
+                  <div className="float-right ">
+                    <img
+                      src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
+                      loading="lazy"
+                      alt=""
+                      width="100"
+                    />
+                  </div>
+                </li>
+                <li>
                   <Link href="https://www.oakparkusd.org/Page/10593">
-                    <a className='text-white  ' target="_blank">Program Info</a>
+                    <a className="text-white  " target="_blank">
+                      Program Info
+                    </a>
                   </Link>
                 </li>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/6499">
-                    <a className='text-white  ' target="_blank">Who is Eligible</a>
+                    <a className="text-white  " target="_blank">
+                      Who is Eligible
+                    </a>
                   </Link>
                 </li>
                 <li>
-                  <a className='text-white  ' id="mailto" href="mailto:schoolmeals@opusd.org" target="_blank">
-                  Contact
+                  <a
+                    className="text-white  "
+                    id="mailto"
+                    href="mailto:schoolmeals@opusd.org"
+                    target="_blank"
+                  >
+                    Contact
                   </a>
-                  
-                  </li>
+                </li>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/1">
-                    <a className='text-white  ' target="_blank">OPUSD</a>
+                    <a className="text-white  " target="_blank">
+                      OPUSD
+                    </a>
                   </Link>
                 </li>
                 {/* <li>
@@ -257,6 +282,11 @@ const Home = () => {
                   </Link>
                 </li> */}
                 {/* <li>FAQ</li> */}
+                {/* <div className="d-flex align-items-center p-3">
+
+                Address 5801 Conifer Street, Oak Park, CA 91377 | Phone (818)
+                735-3200 | Fax (818) 879-0372
+                </div> */}
               </ul>
             </div>
           </div>

@@ -78,13 +78,13 @@ const Update = ({ oldLink, token, user, _id }) => {
       mealRequest.map((request, index) => {
         let meals = [...mealRequest];
         let meal = { ...meals[index] };
-        console.log(
-          `${index} student food allergy compare`,
-          meal.group !== students[index].group
-        );
+        // console.log(
+        //   `${index} student food allergy compare`,
+        //   meal.group !== students[index].group
+        // );
 
         // if allergies or group has changed we run the switch case to apply default selections on the form
-        if (
+        if ( 
           meal.foodAllergy.soy !== students[index].foodAllergy.soy ||
           meal.foodAllergy.sesame !== students[index].foodAllergy.sesame ||
           meal.foodAllergy.dairy !== students[index].foodAllergy.dairy ||
@@ -146,6 +146,11 @@ const Update = ({ oldLink, token, user, _id }) => {
                       user.students[index].foodAllergy.dairy === false &&
                       user.students[index].foodAllergy.gluten === true
                     ? 'Soy Sesame Gluten Free'
+                    : user.students[index].foodAllergy.soy === false &&
+                      user.students[index].foodAllergy.sesame === true &&
+                      user.students[index].foodAllergy.dairy === true &&
+                      user.students[index].foodAllergy.gluten === true
+                    ? 'Sesame Dairy Gluten Free'
                     : user.students[index].foodAllergy.soy === true &&
                       user.students[index].foodAllergy.sesame === true &&
                       user.students[index].foodAllergy.dairy === true &&
@@ -629,6 +634,10 @@ const Update = ({ oldLink, token, user, _id }) => {
         frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
+      case 'Sesame Dairy Gluten Free':
+        frontCode = 'Sp';
+        pickupOptionLO = 'Lunch Only';
+        break;
       case 'Standard Onsite':
         frontCode = 'Onsite';
         pickupOptionLO = 'Lunch Onsite';
@@ -1031,6 +1040,15 @@ const Update = ({ oldLink, token, user, _id }) => {
               students[i].foodAllergy.sesame === true && (
                 <option value={'Soy Sesame Dairy Gluten Free'}>
                   Soy and Sesame Free (Lunch Only)
+                </option>
+              )}
+            {isAuth().role === 'subscriber' &&
+              students[i].foodAllergy.dairy === true &&
+              students[i].foodAllergy.gluten === true &&
+              students[i].foodAllergy.soy === false &&
+              students[i].foodAllergy.sesame === true && (
+                <option value={'Sesame Dairy Gluten Free'}>
+                  Gluten Free Dairy Free (lunch only)
                 </option>
               )}
             {/* special  */}
