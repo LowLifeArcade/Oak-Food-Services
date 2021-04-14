@@ -167,8 +167,8 @@ const Links = ({
       limit,
     });
     setAllLinks([...allLinks, ...response.data.links]);
-    console.log('allLinks', allLinks);
-    console.log('response.data.links.length', response.data.links.length);
+    // console.log('allLinks', allLinks);
+    // console.log('response.data.links.length', response.data.links.length);
     setSize(response.data.links.length);
     setSkip(toSkip);
   };
@@ -233,7 +233,31 @@ const Links = ({
             )}
             <div className="pt-5"></div>
             Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
-            {category.menu.length > 0 && new Date() < twoWeeksFromNow && (
+            {
+                        isAuth() ?
+                        category.menu.length > 0 &&  new Date < twoWeeksFromNow && 
+                        <Link href="/user/link/create">
+                          <button
+                            className={'btn float-right ' + styles.button}
+                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                            &nbsp; Request
+                          </button>
+                        </Link> :
+                        category.menu.length > 0 &&  new Date < twoWeeksFromNow && 
+                        <Link href="/login">
+                          <button
+                            className={'btn float-right ' + styles.button}
+                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                            &nbsp; Request
+                          </button>
+                        </Link> 
+                        
+                      }
+            {/* {category.menu.length > 0 && new Date() < twoWeeksFromNow && (
               <Link href="/user/link/create">
                 <button className={'btn float-right ' + styles.button}
                  onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
@@ -242,7 +266,7 @@ const Links = ({
                   &nbsp;&nbsp; Request
                 </button>
               </Link>
-            )}
+            )} */}
           </div>
         </div>
         <br />

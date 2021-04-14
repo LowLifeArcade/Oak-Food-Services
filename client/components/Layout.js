@@ -55,7 +55,6 @@ const Layout = ({ children }) => {
     const handleClick = (event) => {
       if (sideMenuRef.current && !sideMenuRef.current.contains(event.target)) {
         // window.addEventListener('click', setShowSideMenu(false));
-        console.log('set false')
         // setShowSidebar(false)
         setShowSideMenu(false)
       }
@@ -153,16 +152,19 @@ const Layout = ({ children }) => {
             <li key="2" className="nav-item">
               <Link href="/user">
                 <a className="nav-link text-white">
-                  <i class="far fa-file-alt"></i>&nbsp;&nbsp;Receipts{' '}
+                <i class="fas fa-receipt"></i>&nbsp;&nbsp;Receipts{' '}
                 </a>
               </Link>
             </li>
           )}
-          {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          {
+          // process.browser && isAuth() && isAuth().role === 'subscriber' && 
+          (
             <li key="200" className="nav-item">
               <Link href="/menus">
                 <a className="nav-link text-white">
-                  <i class="fas fa-book-open"></i>
+                  {/* <i class="fas fa-book-open"></i> */}
+                  <i class="fas fa-columns"></i>
                   <span>&nbsp;&nbsp;</span>
                   Weekly Menu{' '}
                 </a>
@@ -201,7 +203,8 @@ const Layout = ({ children }) => {
             <li className="nav-item pointer-hand">
               <Link href="/admin/category/create">
                 <a className="nav-link text-white">
-                  <i class="fas fa-book-open"></i>&nbsp;
+                <i class="fas fa-money-check"></i>&nbsp;&nbsp;
+                  {/* <i class="fas fa-book-open"></i>&nbsp; */}
                   {'Create Menu'}
                 </a>
               </Link>
@@ -388,12 +391,15 @@ const Layout = ({ children }) => {
             <li key="2" className="nav-item">
               <Link href="/user">
                 <a className="nav-link text-white">
-                  <i class="far fa-file-alt"></i>
+                  {/* <i class="far fa-file-alt"></i> */}
+                  <i class="fas fa-receipt"></i>
                 </a>
               </Link>
             </li>
           )}
-          {process.browser && isAuth() && (
+          {
+          // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
+          (
             <li
               key="1133"
               onClick={() => setShowSidebar(false)}
@@ -401,7 +407,8 @@ const Layout = ({ children }) => {
             >
               <Link href="/menus">
                 <a className="nav-link text-white">
-                  <i class="fas fa-book-open"></i>
+                  {/* <i class="fas fa-book-open"></i> */}
+                  <i class="fas fa-columns"></i>
                 </a>
               </Link>
             </li>
@@ -493,7 +500,7 @@ const Layout = ({ children }) => {
             >
               <Link href="/menus">
                 <a className="nav-link text-white">
-                  <i class="fas fa-book-open"></i>&nbsp;&nbsp;&nbsp; Weekly Menu
+                <i class="fas fa-columns"></i>&nbsp;&nbsp;&nbsp; Weekly Menu
                 </a>
               </Link>
             </li>
@@ -532,7 +539,7 @@ const Layout = ({ children }) => {
             >
               <Link href="/user">
                 <a className="nav-link text-white">
-                  <i class="far fa-file-alt"></i> &nbsp; &nbsp; Receipts
+                <i class="fas fa-receipt"></i> &nbsp; &nbsp; Receipts
                 </a>
               </Link>
             </li>
@@ -585,7 +592,8 @@ const Layout = ({ children }) => {
             >
               <Link href="/admin/category/create">
                 <a className="nav-link text-white">
-                  <i class="far fa-file-word"></i>&nbsp;&nbsp;&nbsp;
+                <i class="fas fa-money-check"></i>&nbsp;&nbsp;&nbsp;
+                  {/* <i class="far fa-file-word"></i>&nbsp;&nbsp;&nbsp; */}
                   {' Create Menu'}
                 </a>
               </Link>
@@ -710,7 +718,7 @@ const Layout = ({ children }) => {
             >
               <Link href="/menus">
                 <a className="nav-link text-white">
-                  <i class="fas fa-book-open"></i>&nbsp;&nbsp;&nbsp; Weekly Menu
+                <i class="fas fa-columns"></i>&nbsp;&nbsp;&nbsp; Weekly Menu
                 </a>
               </Link>
             </li>
@@ -750,7 +758,9 @@ const Layout = ({ children }) => {
             >
               <Link href="/user">
                 <a className="nav-link text-white">
-                  <i class="far fa-file-alt"></i> &nbsp; &nbsp; Receipts
+                  {/* <i class="far fa-file-alt"></i>  */}
+                  <i class="fas fa-receipt"></i>
+                  &nbsp; &nbsp; Receipts
                 </a>
               </Link>
             </li>

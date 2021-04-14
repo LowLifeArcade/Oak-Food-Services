@@ -82,7 +82,7 @@ const Menus = ({ categories }) => {
       .reverse()
       .map((c, i) => (
         <>
-        {console.log(moment(new Date()).subtract(13, 'day').format('l'))}
+        {/* {console.log(moment(new Date()).subtract(13, 'day').format('l'))} */}
         {c.pickupWeek < moment(new Date()).subtract(13, 'day').format('l') && 
        
           <div className="">
@@ -170,7 +170,10 @@ const Menus = ({ categories }) => {
                         Posted {moment(c.createdAt).format('MMMM Do YYYY')}
                         {/* {popular.map((l, i) => l.postedBy.name)} */}
                         {/* {c.username} */}
-                        {c.menu.length > 0 &&  new Date < twoWeeksFromNow && <Link href="/user/link/create">
+                        {
+                        isAuth() ?
+                        c.menu.length > 0 &&  new Date < twoWeeksFromNow && 
+                        <Link href="/user/link/create">
                           <button
                             className={'btn float-right ' + styles.button}
                             onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(c.pickupWeek).format('l')))}
@@ -178,7 +181,19 @@ const Menus = ({ categories }) => {
                             <i class="fas fa-pencil-alt"></i>
                             &nbsp; Request
                           </button>
-                        </Link>}
+                        </Link> :
+                        c.menu.length > 0 &&  new Date < twoWeeksFromNow && 
+                        <Link href="/login">
+                          <button
+                            className={'btn float-right ' + styles.button}
+                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(c.pickupWeek).format('l')))}
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                            &nbsp; Request
+                          </button>
+                        </Link> 
+                        
+                      }
                         {process.browser &&
                           isAuth() &&
                           isAuth().role === 'admin' && (

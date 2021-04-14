@@ -11,13 +11,13 @@ import { isAuth } from '../../helpers/auth';
 
 const User = ({ user, token, l, userLinks }) => {
   const [loaded, setLoaded] = useState(false);
-  console.log('userLinks', userLinks);
-  console.log(
-    'userLinks',
-    userLinks.sort(
-      (a, b) => Date.parse(b.pickupDate) - Date.parse(a.pickupDate)
-    )
-  );
+  // console.log('userLinks', userLinks);
+  // console.log(
+  //   'userLinks',
+  //   userLinks.sort(
+  //     (a, b) => Date.parse(b.pickupDate) - Date.parse(a.pickupDate)
+  //   )
+  // );
 
   // const orderByDateUserLinks = userLinks.filter
 
@@ -45,7 +45,6 @@ const User = ({ user, token, l, userLinks }) => {
         'body { display: flex; flex-direction: column; align-items: center; justify-content: center;  } @page { size: landscape } .code { font-size: 10rem;}',
       head = document.createElement('head'),
       style = document.createElement('style');
-    
 
     // style.type = 'text/css';
     // style.media = 'print';
@@ -56,9 +55,7 @@ const User = ({ user, token, l, userLinks }) => {
     let newWin = window.open('');
     newWin.document.write(head.outerHTML, divToPrint.outerHTML);
     if (newWin == null || typeof newWin == 'undefined')
-      alert(
-        'Turn off your pop-up blocker to print code'
-      );
+      alert('Turn off your pop-up blocker to print code');
     newWin.document.close();
     newWin.print();
     setTimeout(() => {
@@ -79,10 +76,10 @@ const User = ({ user, token, l, userLinks }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('LINK DELETE SUCCESS', response);
+      // console.log('LINK DELETE SUCCESS', response);
       Router.replace('/user');
     } catch (error) {
-      console.log('ERROR DELETING LINK', error);
+      // console.log('ERROR DELETING LINK', error);
     }
   };
 
@@ -91,15 +88,17 @@ const User = ({ user, token, l, userLinks }) => {
       .sort((a, b) => Date.parse(a.pickupDate) - Date.parse(b.pickupDate))
       .map((l, i) => (
         <>
-          {
-            <Link href={`/user/receipt/${l._id}`}>
-              <a style={{ textDecoration: 'none' }}>
+          { moment(l.pickupDate).format('MDD').toString() > // doesn't show receipts older than 3 days past pickupdate (actually mealweek date i need to change pickupdate to mealweek)
+            moment(new Date()).subtract(2, 'day').format('MDD').toString() && 
+            // <Link href={`/user/receipt/${l._id}`}>
+            //   <a style={{ textDecoration: 'none' }}>
                 <div
                   key={i}
+                  // style={{ textDecoration: 'none' }}
                   className={
                     l.orderStatus === true ||
                     moment(l.pickupDate).format('MDD').toString() <
-                      moment(new Date()).format('MDD').toString()
+                      moment(new Date()).add(2, 'day').format('MDD').toString()
                       ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
                       : 'p-4 alert  alert-warning ' + styles.subcard // completed order
                   }
@@ -109,6 +108,10 @@ const User = ({ user, token, l, userLinks }) => {
               moment(l.pickupDate).format('MDD').toString() <
                 moment(new Date()).format('MDD').toString()
             )} */}
+
+            <div className="wrapper ">
+            <Link href={`/user/receipt/${l._id}`}>
+              <a className=' ' style={{ color: 'inherit', textDecoration: 'none' }}>
                   <h4>
                     {l.orderStatus && (
                       <b className="text-danger ">
@@ -121,7 +124,7 @@ const User = ({ user, token, l, userLinks }) => {
                       </b>
                     )}
                     {moment(l.pickupDate).format('MDD').toString() <
-                      moment(new Date()).format('MDD').toString() && (
+                      moment(new Date()).add(2, 'day').format('MDD').toString() && (
                       <b className="text-danger ">
                         <h2>
                           * EXPIRED *
@@ -163,12 +166,21 @@ const User = ({ user, token, l, userLinks }) => {
                       <h4>
                         <div className="d-flex justify-content-center">
                           {/* {'On '} */}
-                          <b>
-                            {'On ' +
-                              moment(l.pickupDate)
-                                .subtract(3, 'day')
-                                .format('MMMM Do')}
-                          </b>
+                          {l.pickupDate === moment('05/31/2021').format('l') ? (
+                            <b>
+                              {
+                                moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                                  .subtract(5, 'day') // i can make the number a variable that is set in the menu creation phase or something
+                                  .format('dddd MMMM Do')}
+                            </b>
+                          ) : (
+                            <b>
+                              {
+                                moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                                  .subtract(3, 'day') // i can make the number a variable that is set in the menu creation phase or something
+                                  .format('dddd MMMM Do')}
+                            </b>
+                          )}
                         </div>
                       </h4>
                       <span className="d-flex justify-content-center ">
@@ -235,9 +247,17 @@ const User = ({ user, token, l, userLinks }) => {
                     </h6>
                   )}
                   <p></p>
-                  {/* fix something here */}
+                    </a>
+                    </Link>
+                  </div> {/* finish wrapper  */}
+                  
+
                   <div className="">
+                    {/* put link router here  */}
+
                     <div className="p-2">
+                  <Link href={`/user/receipt/${l._id}`}>
+              <a style={{ color: 'inherit', textDecoration: 'none' }}>
                       <h5 className="pb-1">
                         <div className="p-3">
                           {l.mealRequest
@@ -333,15 +353,15 @@ const User = ({ user, token, l, userLinks }) => {
                             ))}
                         </div>
                       </h5>
+                    </a>
+            </Link>
                     </div>
 
-                    <div className="pt-1 ">
-                      <span className="">
-                        {' '}
-                        {moment(l.createdAt).format('M/d/yy')} by{' '}
-                        {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
-                      </span>
-                    </div>
+
+                    Receipt for week of{' '}
+                    <b>Monday {moment(l.pickupDate).format('MMMM Do')}</b>
+                    {/* put link router here  */}
+
 
                     <div className=" pb-3 pt-3">
                       {
@@ -404,12 +424,21 @@ const User = ({ user, token, l, userLinks }) => {
                             </button>
                           </Link>
                         )}
-                      <div className="pb-4"></div>
+                      <div className="pt-3 ">
+                        <span className="">
+                          {' '}
+                          Requested {moment(l.createdAt).format('l')} by{' '}
+                          {l.postedBy == null
+                            ? 'user deleted'
+                            : l.postedBy.name}{' '}
+                          <br />
+                        </span>
+                      </div>
+                      <div className="pb-2"></div>
                     </div>
                   </div>
                 </div>
-              </a>
-            </Link>
+
           }
         </>
       ));
@@ -423,8 +452,8 @@ const User = ({ user, token, l, userLinks }) => {
           <div className="p-1">
             <div className="">
               <Link href="/user/profile/update">
-              <button className={'btn btn-outline-secondary ' }>
-              <i class="fas fa-user-alt"></i>
+                <button className={'btn btn-outline-secondary '}>
+                  <i class="fas fa-user-alt"></i>
                   &nbsp;&nbsp; Profile Update
                 </button>
                 {/* <a className="nav-item">Profile Update</a> */}

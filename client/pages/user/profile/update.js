@@ -416,7 +416,7 @@ const Profile = ({ user, token }) => {
       buttonText: 'Update',
     });
   };
-  console.log('email option', special.sendEmail);
+  // console.log('email option', special.sendEmail);
 
   const handleObjectNameChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
@@ -462,7 +462,7 @@ const Profile = ({ user, token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ ...state, buttonText: 'Updating...' });
-    console.log('submit', user.students);
+    // console.log('submit', user.students);
 
     try {
       const response = await axios.put(
@@ -488,7 +488,7 @@ const Profile = ({ user, token }) => {
         });
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setState({
         ...state,
         buttonText: 'Update failed',
@@ -501,7 +501,6 @@ const Profile = ({ user, token }) => {
     let value =
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     let i = e.target.getAttribute('data-index');
-    console.log('let students value', e.target);
 
     let students = [...state.students];
     let oneStudent = { ...students[i] };
@@ -514,7 +513,6 @@ const Profile = ({ user, token }) => {
       : null;
 
     students[i] = oneStudent;
-    console.log('one student', oneStudent);
 
     setState({ ...state, students: [...students] });
   };
@@ -529,7 +527,6 @@ const Profile = ({ user, token }) => {
     showOne.showAllergy = !showOne.showAllergy;
 
     allShow[i] = showOne;
-    console.log(allShow);
 
     setState({ ...state, showAllergies: [...allShow] });
   };
@@ -544,7 +541,6 @@ const Profile = ({ user, token }) => {
     showOne.showAllergy = false;
 
     allShow[i] = showOne;
-    console.log(allShow);
 
     setState({ ...state, showAllergies: [...allShow] });
   };

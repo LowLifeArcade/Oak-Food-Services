@@ -559,7 +559,6 @@ const Profile = ({ user, token }) => {
       ? (oneStudent.group = 'distance-learning')
       : null;
     students[i] = oneStudent;
-    console.log('group', students[i].group);
 
     setState({ ...state, students: [...students] });
   };

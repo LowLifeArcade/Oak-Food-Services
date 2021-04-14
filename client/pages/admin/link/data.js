@@ -152,9 +152,9 @@ const Admin = ({ token, user, initRequests }) => {
       <br />
       <div className="row">
         <div className="col-md-4">
-          <h3>Order Data Friday Pickup {`${moment(pickupDate).subtract(3, 'day').format('MMMM d')}`}
+          <h3>Friday Pickup {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
           <br/>
-          Onsite meals week of {`${pickupDate}`}
+          Week of {`${pickupDate}`}
           </h3>
           <hr />
           <div className="">

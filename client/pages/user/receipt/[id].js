@@ -28,7 +28,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('LINK DELETE SUCCESS', response);
+      // console.log('LINK DELETE SUCCESS', response);
       Router.replace('/user');
       // process.browser && window.location.reload();
 
@@ -38,7 +38,7 @@ const Update = ({ oldLink, token, user, _id }) => {
       //   ? Router.push('user')
       //   : Router.push('/login');
     } catch (error) {
-      console.log('ERROR LINK CATEGORY', error);
+      // console.log('ERROR LINK CATEGORY', error);
     }
   };
 
@@ -108,7 +108,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 </b>
               )}
             </h4>
-            {console.log('old link', oldLink)}
+            {/* {console.log('old link', oldLink)} */}
             {oldLink.mealRequest.filter(
               (l) =>
                 // l.meal == 'Standard' ||
@@ -284,15 +284,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                 </div>
               </h5>
             </div>
-            <div className="pt-1 ">
-              <span className="">
-                {' '}
-                {moment(oldLink.createdAt).format('M/d/yy')} by{' '}
-                {oldLink.postedBy == null
-                  ? 'user deleted'
-                  : oldLink.postedBy.name}{' '}
-              </span>
-            </div>
+            Receipt for week of{' '}
+                    <b>Monday {moment(oldLink.pickupDate).format('MMMM Do')}</b>
 
             <div className={' pb-3 pt-3 ' + styles.noPrint}>
               {
@@ -338,7 +331,17 @@ const Update = ({ oldLink, token, user, _id }) => {
                     </button>
                   </Link>
                 )}
-              <div className="pb-4"></div>
+                <div className="pt-3 ">
+                        <span className="">
+                          {' '}
+                          Requested {moment(oldLink.createdAt).format('l')} by{' '}
+                          {oldLink.postedBy == null
+                            ? 'user deleted'
+                            : oldLink.postedBy.name}{' '}
+                          <br />
+                        </span>
+                      </div>
+              <div className="pb-2"></div>
             </div>
             {/* <div className=" pb-3 pt-3">
                 {

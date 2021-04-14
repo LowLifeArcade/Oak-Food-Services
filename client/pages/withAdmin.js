@@ -30,7 +30,7 @@ const withAdmin = (Page) => {
 
     if (user === null) {
       // redirect server side
-      console.log('context', context)
+      // console.log('context', context)
       context.res.writeHead(302, {
         Location: '/',
       });

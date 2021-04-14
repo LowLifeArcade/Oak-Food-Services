@@ -86,7 +86,15 @@ const Home = () => {
                     <b>Start a Meal Request</b>
                   </div>
                   <div className={'pb-5 ' + styles.bodyregular}>
-                    Look over the menu, then start a request with one of the{' '}
+                    Look over the &nbsp;{
+                      <Link href='/menus'>
+                      <a className='text-' style={{ textDecorater: 'none', color: '#419ca8' }}>
+                      <i class="fas fa-columns"></i>
+                      <span>&nbsp;&nbsp;</span>
+                    <b>weekly menu</b>
+                      </a>
+                      </Link>
+                    }, then start a request with one of the{' '}
                     <b>
                       yellow <i>Meal Request</i> buttons
                     </b>{' '}

@@ -100,7 +100,7 @@ const Register = () => {
       shallowGoodMessage = 'Great Password!';
     }
 
-    console.log('regex check', e.target.value);
+    // console.log('regex check', e.target.value);
     setState({
       ...state,
       password: e.target.value,
@@ -143,7 +143,7 @@ const Register = () => {
           email,
           password,
         });
-        console.log(response);
+        // console.log(response);
         setState({
           ...state,
           password: '',
