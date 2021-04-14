@@ -693,14 +693,14 @@ const Profile = ({ user, token }) => {
                           handleToggle={handleAllergy('sesame')}
                         ></Toggle>
 
-                        <Toggle
+                        {/* <Toggle
                           toggleKey={i}
                           dataIndex={i}
                           isOn={students[i].foodAllergy.soy}
                           toggleId="soy"
                           toggleName="Soy"
                           handleToggle={handleAllergy('soy')}
-                        ></Toggle>
+                        ></Toggle> */}
 
                         <Toggle
                           toggleKey={i}
