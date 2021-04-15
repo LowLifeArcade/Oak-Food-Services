@@ -188,11 +188,20 @@ const Links = ({
       {head()}
       <Layout>
         <div className="row ">
-          <div className="col-md-12 pt-2">
-            <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1>
+          <div className="col-md-12 pt-4">
+            {/* <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1> */}
+            {/* <h3 className="font-weight-bold ">Menus for Week of {moment(category.pickupWeek).format('MMMM Do')}</h3> */}
+            {category.menu.length === 0 && (
+              <h3 className="font-weight-bold ">{category.name}</h3>
+            )}
+            {category.menu.length > 0 && (
+              <h3 className="font-weight-bold ">
+                Menus for Week of {moment(category.pickupWeek).format('MMMM Do')}
+              </h3>
+            )}
 
             <hr />
-            <div className="alert-seconary pt-2">
+            <div className="alert-seconary p-2 pt-2">
               {renderHTML(category.content || '')}
             </div>
 

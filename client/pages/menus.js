@@ -116,18 +116,18 @@ const Menus = ({ categories }) => {
                     }}
                   >
                     <div className="p-4">
-                      {/* <h3 className="font-weight-bold ">{c.name}</h3> */}
-                      <h3 className="font-weight-bold ">Menus for Week of {moment(c.pickupWeek).format('MMMM Do')}</h3>
+                      {c.menu.length === 0 && <h3 className="font-weight-bold ">{c.name}</h3>}
+                      {c.menu.length > 0 && <h3 className="font-weight-bold ">Menus for Week of {moment(c.pickupWeek).format('MMMM Do')}</h3>}
                       <hr />
                       <div
-                      // className="lead alert alert-seconary pt-4"
-                      // className={'col-md-12 pt-2'}
+                      className={'pt-2 p-2'}
                       >
                         {renderHTML(c.content || '')}
                       </div>
 
                       <div className="alert-seconary pt-2">
                         {c.menu.length > 0 && <h4>Curbside Menu</h4>}
+                        <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
                           style={{ fontSize: '10px' }}
@@ -158,6 +158,7 @@ const Menus = ({ categories }) => {
 
                         <br />
                         {c.menu2.length > 0 && <h4>Elementary Onsite Menu</h4>}
+                        <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
                           style={{ fontSize: '10px' }}
@@ -186,6 +187,7 @@ const Menus = ({ categories }) => {
 
                         <br />
                         {c.menu3.length > 0 && <h4>Highschool Onsite Menu</h4>}
+                        <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
                           style={{ fontSize: '10px' }}
