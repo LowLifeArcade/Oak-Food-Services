@@ -937,8 +937,13 @@ const Update = ({ oldLink, token, user, _id }) => {
                 Standard 2 onite meals 3 offsite meals
               </option>
             )}
-            {user.special.vtplus == 'true' && (
+            {/* {user.special.vtplus == 'true' && (
               <option value={'GlutenFree B'}>
+                Gluten Free plus Vegetarian Breakfast
+              </option>
+            )} */}
+             {user.special.gfplus == 'true' && (
+              <option value={'Gluten Free with Breakfast'}>
                 Gluten Free plus Vegetarian Breakfast
               </option>
             )}

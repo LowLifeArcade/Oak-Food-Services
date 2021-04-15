@@ -658,8 +658,13 @@ const Create = ({ token, user }) => {
                 Standard 2 onite meals 3 offsite meals
               </option>
             )}
-            {user.special.vtplus == 'true' && (
+            {/* {user.special.gfplus == 'true' && (
               <option value={'GlutenFree B'}>
+                Gluten Free plus Vegetarian Breakfast
+              </option>
+            )} */}
+            {user.special.gfplus == 'true' && (
+              <option value={'Gluten Free with Breakfast'}>
                 Gluten Free plus Vegetarian Breakfast
               </option>
             )}
