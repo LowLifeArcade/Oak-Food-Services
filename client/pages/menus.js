@@ -80,7 +80,7 @@ const Menus = ({ categories }) => {
     categories
       .slice(0)
       .reverse()
-      .sort((a, b) => Date.parse(b.pickupWeek) - Date.parse(a.pickupWeek))
+      .sort((a, b) => Date.parse(a.pickupWeek) - Date.parse(b.pickupWeek))
       .map((c, i) => (
         <>
           {/* {console.log(moment(new Date()).subtract(13, 'day').format('l'))} */}
@@ -126,7 +126,7 @@ const Menus = ({ categories }) => {
                       </div>
 
                       <div className="alert-seconary pt-2">
-                        {c.menu.length > 0 && <h4>Curbside Menu</h4>}
+                        {c.menu.length > 0 && <h4>Curbside Pickup</h4>}
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
@@ -135,7 +135,7 @@ const Menus = ({ categories }) => {
                           {c.menu.length > 0 && (
                             <thead>
                               <tr>
-                                <th scope="col">Day</th>
+                                <th scope="col"></th>
                                 <th scope="col">Breakfast</th>
                                 <th scope="col">Lunch</th>
                                 <th scope="col">Vegetarian Lunch</th>
@@ -146,7 +146,7 @@ const Menus = ({ categories }) => {
                             {c.menu.map((l, i) => (
                               <>
                                 <tr key={i}>
-                                  <td>{l.row1}</td>
+                                  <td><b>{l.row1}</b></td>
                                   <td>{l.row2}</td>
                                   <td>{l.row3}</td>
                                   <td>{l.row4}</td>
@@ -157,7 +157,7 @@ const Menus = ({ categories }) => {
                         </table>
 
                         <br />
-                        {c.menu2.length > 0 && <h4>Elementary Onsite Menu</h4>}
+                        {c.menu2.length > 0 && <h5>BES | OHES | ROES | MCMS</h5>}
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
@@ -166,9 +166,9 @@ const Menus = ({ categories }) => {
                           {c.menu2.length > 0 && (
                             <thead>
                               <tr>
-                                <th scope="col">Secondary</th>
-                                <th scope="col">Day 1</th>
-                                <th scope="col">Day 2</th>
+                                {/* <th scope="col">Secondary</th> */}
+                                <th scope="col">Monday/Wednesday</th>
+                  <th scope="col">Tuesday/Thursday</th>
                               </tr>
                             </thead>
                           )}
@@ -178,7 +178,7 @@ const Menus = ({ categories }) => {
                                 <tr key={i}>
                                   <td>{l.row1}</td>
                                   <td>{l.row2}</td>
-                                  <td>{l.row3}</td>
+                                  {/* <td>{l.row3}</td> */}
                                 </tr>
                               </>
                             )) || ''}
@@ -186,7 +186,7 @@ const Menus = ({ categories }) => {
                         </table>
 
                         <br />
-                        {c.menu3.length > 0 && <h4>Highschool Onsite Menu</h4>}
+                        {c.menu3.length > 0 && <h5>OPHS</h5>}
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
@@ -195,9 +195,10 @@ const Menus = ({ categories }) => {
                           {c.menu3.length > 0 && (
                             <thead>
                               <tr>
-                                <th scope="col">Secondary</th>
-                                <th scope="col">Day 1</th>
-                                <th scope="col">Day 2</th>
+                                <th scope="col">Monday</th>
+                                <th scope="col">Tuesday</th>
+                                <th scope="col">Wednesday</th>
+                                <th scope="col">Thursday</th>
                               </tr>
                             </thead>
                           )}
@@ -208,6 +209,7 @@ const Menus = ({ categories }) => {
                                   <td>{l.row1}</td>
                                   <td>{l.row2}</td>
                                   <td>{l.row3}</td>
+                                  <td>{l.row4}</td>
                                 </tr>
                               </>
                             )) || ''}

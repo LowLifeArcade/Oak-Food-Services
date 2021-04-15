@@ -6,7 +6,7 @@ const categorySchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      required: true,
+      // required: true,
       max: 32,
     },
     slug: {
@@ -48,9 +48,7 @@ const categorySchema = new mongoose.Schema(
         row2: {
           type: String,
         },
-        row3: {
-          type: String,
-        },
+       
       },
     ],
     menu3: [
@@ -62,6 +60,9 @@ const categorySchema = new mongoose.Schema(
           type: String,
         },
         row3: {
+          type: String,
+        },
+        row4: {
           type: String,
         },
       },

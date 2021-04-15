@@ -46,10 +46,10 @@ const Create = ({ user, token }) => {
       { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
     ],
     menu2: [
-      { row1: 'Secondary', row2: 'Day 1', row3: 'Day 2' },
+      { row1: 'Day 1', row2: 'Day 2' },
     ],
     menu3: [
-      { row1: 'Secondary', row2: 'Day 1', row3: 'Day 2' },
+      { row1: 'Monday', row2: 'Tuesday', row3: 'Wednesday', row3: 'Thursday' },
     ],
     postedBy: user._id,
     pickupWeek: '',
@@ -290,7 +290,7 @@ const Create = ({ user, token }) => {
         ...menu2,
         menuType === 'Onsite'
           ? { row1: '', row2: '', row3: '', row4: '' }
-          : { row1: '', row2: '', row3: '' },
+          : { row1: '', row2: '' },
       ],
     });
   };
@@ -615,9 +615,9 @@ const Create = ({ user, token }) => {
             ) : (
               <thead>
                 <tr>
-                  <th scope="col">Secondary</th>
-                  <th scope="col">Day 1</th>
-                  <th scope="col">Day 2</th>
+                  {/* <th scope="col">Secondary</th> */}
+                  <th scope="col">Monday/Wednesday</th>
+                  <th scope="col">Tuesday/Thursday</th>
                   {/* <th scope="col">Vegetarian Lunch</th> */}
                 </tr>
               </thead>
@@ -676,18 +676,18 @@ const Create = ({ user, token }) => {
                             onChange={handleMenu2('row2')}
                           />
                         </td>
-                        <td>
+                        {/* <td>
                           <input
                             data-index={i}
                             value={l.row1.value}
                             onChange={handleMenu2('row3')}
                           />
-                        </td>
+                        </td> */}
                         {/* <td>
                       <input
                         data-index={i}
                         value={l.row1.value}
-                        onChange={handleMenu('row4')}
+                        onChange={handleMenu2('row4')}
                       />
                     </td> */}
                       </tr>
@@ -752,13 +752,13 @@ const Create = ({ user, token }) => {
           <h3>Highschool Menu </h3>
           {/* table menu */}
           <table className="table table-striped table-sm table-bordered">
-            {menuType === 'Onsite' ? (
+            {menuType === 'Pickup' ? (
               <thead>
                 <tr>
-                  <th scope="col">Day</th>
-                  <th scope="col">Breakfast</th>
-                  <th scope="col">Lunch</th>
-                  <th scope="col">Vegetarian Lunch</th>
+                  <th scope="col">Monday</th>
+                  <th scope="col">Tuesday</th>
+                  <th scope="col">Wednesday</th>
+                  <th scope="col">Thursday</th>
                 </tr>
               </thead>
             ) : (
@@ -773,7 +773,7 @@ const Create = ({ user, token }) => {
             )}
             <tbody>
               {console.log('what"s in menu', menu)}
-              {menuType === 'Onsite'
+              {menuType === 'Pickup'
                 ? menu3.map((l, i) => (
                     <>
                       <tr key={i}>

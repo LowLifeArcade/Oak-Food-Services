@@ -77,9 +77,9 @@ exports.linkPublishedParams = (email, data, token) => {
           <h1>New Menu Posted | Oak Park School Meals </h1> 
           <p>A new menu has just been posted! Check it out and submit your request at least two weeks in advance.</p>
           
-          <h2>${data.name}</h2>
+          <h2>${data.name ? data.name : data.pickupWeek}</h2>
           <div>
-              ${data.content}
+              ${data.content && data.content}
               </div>
              <div>
               <h3><a href="${process.env.CLIENT_URL}/links/${data.slug} ">Check it out here!</a></h3>

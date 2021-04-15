@@ -196,7 +196,8 @@ const Links = ({
             )}
             {category.menu.length > 0 && (
               <h3 className="font-weight-bold ">
-                Menus for Week of {moment(category.pickupWeek).format('MMMM Do')}
+                Menus for Week of{' '}
+                {moment(category.pickupWeek).format('MMMM Do')}
               </h3>
             )}
 
@@ -206,13 +207,13 @@ const Links = ({
             </div>
 
             <div className="alert-seconary pt-2">
-              {category.menu.length > 0 && <h4>Curbside Menu</h4>}
+              {category.menu.length > 0 && <h4>Curbside Pickup</h4>}
               <div className="p-1"></div>
               <table className="table table-striped table-bordered">
                 {category.menu.length > 0 && (
                   <thead>
                     <tr>
-                      <th scope="col">Day</th>
+                      <th scope="col"></th>
                       <th scope="col">Breakfast</th>
                       <th scope="col">Lunch</th>
                       <th scope="col">Vegetarian Lunch</th>
@@ -233,7 +234,7 @@ const Links = ({
                 </tbody>
               </table>
               <br />
-              {category.menu2.length > 0 && <h4>Elementary Onsite Menu</h4>}
+              {category.menu2.length > 0 && <h5>BES | OHES | ROES | MCMS</h5>}
               <table
                 className="table table-sm table-striped table-bordered "
                 style={{ fontSize: '10px' }}
@@ -241,7 +242,6 @@ const Links = ({
                 {category.menu2.length > 0 && (
                   <thead>
                     <tr>
-                      <th scope="col">Secondary</th>
                       <th scope="col">Day 1</th>
                       <th scope="col">Day 2</th>
                     </tr>
@@ -253,7 +253,6 @@ const Links = ({
                       <tr key={i}>
                         <td>{l.row1}</td>
                         <td>{l.row2}</td>
-                        <td>{l.row3}</td>
                       </tr>
                     </>
                   )) || ''}
@@ -261,7 +260,7 @@ const Links = ({
               </table>
 
               <br />
-              {category.menu3.length > 0 && <h4>Highschool Onsite Menu</h4>}
+              {category.menu3.length > 0 && <h5>OPHS</h5>}
               <table
                 className="table table-sm table-striped table-bordered "
                 style={{ fontSize: '10px' }}
@@ -269,9 +268,10 @@ const Links = ({
                 {category.menu3.length > 0 && (
                   <thead>
                     <tr>
-                      <th scope="col">Secondary</th>
-                      <th scope="col">Day 1</th>
-                      <th scope="col">Day 2</th>
+                      <th scope="col">Monday</th>
+                      <th scope="col">Tuesday</th>
+                      <th scope="col">Wednesday</th>
+                      <th scope="col">Thursday</th>
                     </tr>
                   </thead>
                 )}
@@ -282,6 +282,7 @@ const Links = ({
                         <td>{l.row1}</td>
                         <td>{l.row2}</td>
                         <td>{l.row3}</td>
+                        <td>{l.row4}</td>
                       </tr>
                     </>
                   )) || ''}

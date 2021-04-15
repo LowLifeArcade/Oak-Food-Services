@@ -110,28 +110,28 @@ exports.create = (req, res) => {
         
         // send email disabled for test 
 
-        // User.find({ special: { sendEmail: true } }).exec((err, users) => {
-        //   if (err) {
-        //     console.log('send email err', err);
-        //     throw new Error(err);
-        //   } else {
+        User.find({ special: { sendEmail: true } }).exec((err, users) => {
+          if (err) {
+            console.log('send email err', err);
+            throw new Error(err);
+          } else {
   
-        //     for (let i = 0; i < users.length; i++) {
-        //       const params = linkPublishedParams(users[i].email, data); // email mod
-        //       const sendEmail = ses.sendEmail(params).promise();
+            for (let i = 0; i < users.length; i++) {
+              const params = linkPublishedParams(users[i].email, data); // email mod
+              const sendEmail = ses.sendEmail(params).promise();
   
-        //       sendEmail
-        //         .then((success) => {
-        //           console.log('email submitted to SES', success);
-        //           return;
-        //         })
-        //         .catch((failure) => {
-        //           console.log('error on email submitted to SES', failure);
-        //           return;
-        //         });
-        //     }
-        //   }
-        // });
+              sendEmail
+                .then((success) => {
+                  console.log('email submitted to SES', success);
+                  return;
+                })
+                .catch((failure) => {
+                  console.log('error on email submitted to SES', failure);
+                  return;
+                });
+            }
+          }
+        });
 
 
 
@@ -141,7 +141,7 @@ exports.create = (req, res) => {
     // save to db
     category.save((err, data) => {
       if (err) res.status(400).json({ error: 'Duplicate post' });
-
+      console.log('MENU SAVE ERROR',err)
       res.json(data);
 
       User.find({ special: { sendEmail: true } }).exec((err, users) => {
@@ -152,21 +152,22 @@ exports.create = (req, res) => {
         } else {
           // data.categories = result;
 
-          for (let i = 0; i < users.length; i++) {
-            // console.log("user email stuff", users[i].email, data)
-            const params = linkPublishedParams(users[i].email, data); // email mod
-            const sendEmail = ses.sendEmail(params).promise();
+          // disabled for testing
+          // for (let i = 0; i < users.length; i++) {
+          //   // console.log("user email stuff", users[i].email, data)
+          //   const params = linkPublishedParams(users[i].email, data); // email mod
+          //   const sendEmail = ses.sendEmail(params).promise();
 
-            sendEmail
-              .then((success) => {
-                console.log('email submitted to SES', success);
-                return;
-              })
-              .catch((failure) => {
-                console.log('error on email submitted to SES', failure);
-                return;
-              });
-          }
+          //   sendEmail
+          //     .then((success) => {
+          //       console.log('email submitted to SES', success);
+          //       return;
+          //     })
+          //     .catch((failure) => {
+          //       console.log('error on email submitted to SES', failure);
+          //       return;
+          //     });
+          // }
         }
       });
     });
