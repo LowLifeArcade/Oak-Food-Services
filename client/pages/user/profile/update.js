@@ -39,6 +39,12 @@ const Profile = ({ user, token }) => {
     special: {
       sendEmail:
         user.special && user.special.sendEmail ? true : user.special.sendEmail, // checks if there's a value, if not sets to true
+      gfplus:
+        user.special && user.special.gfplus ? user.special.gfplus : false ,
+      vgplus:
+        user.special && user.special.vgplus ? user.special.vgplus : false ,
+      twothree:
+        user.special && user.special.twothree ? user.special.twothree : false ,
     },
     groups: [],
     teachers: [],

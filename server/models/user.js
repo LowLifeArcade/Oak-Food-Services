@@ -99,6 +99,15 @@ const userSchema = new mongoose.Schema(
       sendEmail: {
         type: {},
       },
+      gfplus: {
+        type: {},
+      },
+      vgplus: {
+        type: {},
+      },
+      twothree: {
+        type: {},
+      },
     },
     categories: [
       {
