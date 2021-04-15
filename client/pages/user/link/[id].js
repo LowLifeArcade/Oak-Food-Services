@@ -944,11 +944,11 @@ const Update = ({ oldLink, token, user, _id }) => {
             )} */}
              {user.special.gfplus == 'true' && (
               <option value={'Gluten Free with Breakfast'}>
-                Gluten Free plus Vegetarian Breakfast
+                Gluten Free Lunch plus Breakfast
               </option>
             )}
             {user.special.vgplus == 'true' && (
-              <option value={'Vegan B'}>Vegan plus Vegetarian Breakfast</option>
+              <option value={'Vegan B'}>Vegan Lunch plus Breakfast</option>
             )}
             {isAuth().role === 'admin' && (
               <option value={'Standard '}>Standard</option>
@@ -1843,6 +1843,12 @@ const Update = ({ oldLink, token, user, _id }) => {
             <option disabled value={''}>
               Choose a meal
             </option>
+            {user.special.day1 == 'true' && (
+              <option value={'Onsite Day 1'}>Onsite Lunch Monday/Wednesday Only</option>
+            )}
+            {user.special.day2 == 'true' && (
+              <option value={'Onsite Day 2'}>Onsite Lunch Tuesday/Thursday Only</option>
+            )}
             <option value={'Standard Onsite'}>Standard (Onsite)</option>
             <option value={'None'}>None</option>
           </select>

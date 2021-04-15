@@ -665,11 +665,11 @@ const Create = ({ token, user }) => {
             )} */}
             {user.special.gfplus == 'true' && (
               <option value={'Gluten Free with Breakfast'}>
-                Gluten Free plus Vegetarian Breakfast
+                Gluten Free Lunch plus Breakfast
               </option>
             )}
             {user.special.vgplus == 'true' && (
-              <option value={'Vegan B'}>Vegan plus Vegetarian Breakfast</option>
+              <option value={'Vegan B'}>Vegan Lunch plus Breakfast</option>
             )}
             {isAuth().role === 'admin' && (
               <option value={'Standard '}>Standard</option>
@@ -976,6 +976,12 @@ const Create = ({ token, user }) => {
             {/* <option value="">Choose an option</option> */}
             {isAuth().role === 'subscriber' && (
               <option value={'Standard Onsite'}>Standard (Onsite)</option>
+            )}
+            {user.special.day1 == 'true' && (
+              <option value={'Onsite Day 1'}>Onsite Lunch Monday/Wednesday Only</option>
+            )}
+            {user.special.day2 == 'true' && (
+              <option value={'Onsite Day 2'}>Onsite Lunch Tuesday/Thursday Only</option>
             )}
             <option value={'None'}>None</option>
           </select>

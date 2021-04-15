@@ -122,10 +122,10 @@ const Layout = ({ children }) => {
 
           
 
+          <li className="nav-item pointer-hand">
           {process.browser && isAuth() && 
           // isAuth().role === 'subscriber' && 
           (
-            <li className="nav-item pointer-hand">
               <Link href="/user/link/create">
                 <a
                   className="nav-link text-white btn btn-warning "
@@ -134,8 +134,8 @@ const Layout = ({ children }) => {
                   {' 📝 '}
                 </a>
               </Link>
-            </li>
           )}
+          </li>
           {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/user/link/create">
@@ -148,15 +148,15 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )} */}
-          {process.browser && isAuth() &&  (
             <li key="2" className="nav-item">
+          {process.browser && isAuth() &&  (
               <Link href="/user">
                 <a className="nav-link text-white">
                 <i class="fas fa-receipt"></i>&nbsp;&nbsp;Receipts{' '}
                 </a>
               </Link>
-            </li>
           )}
+          </li>
           {
           // process.browser && isAuth() && isAuth().role === 'subscriber' && 
           (
