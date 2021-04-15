@@ -329,6 +329,7 @@ const Profile = ({ user, token }) => {
           <select
             type="select"
             data-index={i}
+            value={x.teacher}
             onChange={(e) => handleSelectTeacherChange(e)}
             className="form-control"
             required
