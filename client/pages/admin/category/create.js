@@ -43,13 +43,13 @@ const Create = ({ user, token }) => {
   const [state, setState] = useState({
     name: '',
     menu: [
-      { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
+      // { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
     ],
     menu2: [
-      { row1: 'Day 1', row2: 'Day 2' },
+      // { row1: 'Day 1', row2: 'Day 2' },
     ],
     menu3: [
-      { row1: 'Monday', row2: 'Tuesday', row3: 'Wednesday', row3: 'Thursday' },
+      // { row1: 'Monday', row2: 'Tuesday', row3: 'Wednesday', row4: 'Thursday' },
     ],
     postedBy: user._id,
     pickupWeek: '',

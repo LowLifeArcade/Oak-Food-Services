@@ -126,9 +126,9 @@ const Menus = ({ categories }) => {
                           {moment(c.pickupWeek).format('MMMM Do')}
                         </h3>
                       )}
-                      <hr />
 
-                      <div style={{ color: '#419ca8' }} className={'pt-1'}>
+                      {c.menu.length > 0 && <><div style={{ color: '#419ca8' }} className={'pt-1'}>
+                      <hr />
                         <b>
                           Meal requests must be made by 11:59pm{' '}
                           {moment(c.pickupWeek)
@@ -136,10 +136,10 @@ const Menus = ({ categories }) => {
                             .format('MMMM Do')}
                         </b>
                       </div>
-                            <div className="p-1"></div>
+                            <div className="p-1"></div></>}
                       <hr/>
-                      <div className="alert-seconary pt-3">
-                        {c.menu.length > 0 && <h4>Curbside Pickup</h4>}
+                      <div >
+                        {c.menu.length > 0 && <h4 className="alert-seconary pt-3">Curbside Pickup</h4>}
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "

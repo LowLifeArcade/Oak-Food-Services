@@ -404,7 +404,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     });
   };
 
-  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
   let twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
