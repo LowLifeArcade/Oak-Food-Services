@@ -60,10 +60,24 @@ const Home = () => {
             <div className={styles.body}>
               <div className={styles.section}>
                 <div className="pt-4 pb-">
-                  <h3 className={styles.h4}>Weekly OPUSD Meals Request</h3>
+                  <h3 className={styles.h4}>FAQ</h3>
                   <div className={' ' + styles.columnscontainer}>
                     <div className={styles.bodyregular}>
-                      Here's how it works
+<p>
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
+</p>
                     </div>
                   </div>
                 </div>
@@ -72,141 +86,6 @@ const Home = () => {
                 </p>
               </div>
 
-              <div className={styles.sectioncolumns}>
-                <div className={' ' + styles.columnscontainer}>
-                  <img
-                    src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step1.png"
-                    loading="lazy"
-                    alt=""
-                    class="stepimage"
-                    width="300"
-                  />
-
-                  <div className={'pt-4 ' + styles.bodyregular}>
-                    <b>Start a Meal Request</b>
-                  </div>
-                  <div className={'pb-5 ' + styles.bodyregular}>
-                    Look over the &nbsp;
-                    {
-                      <Link href="/menus">
-                        <a
-                          className="text-"
-                          style={{ textDecorater: 'none', color: '#419ca8' }}
-                        >
-                          <i class="fas fa-columns"></i>
-                          <span>&nbsp;&nbsp;</span>
-                          <b>weekly menu</b>
-                        </a>
-                      </Link>
-                    }
-                    , then start a request with one of the{' '}
-                    <b>
-                      yellow <i>Meal Request</i> buttons
-                    </b>{' '}
-                    found throughout the site.
-                    {/* located either
-                on your nav bar, the weekly menu, or your receipts page. */}
-                  </div>
-                </div>
-
-                <div className={styles.columnscontainer}>
-                  <img
-                    src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step2.png"
-                    loading="lazy"
-                    alt=""
-                    class="stepimage"
-                    width="300"
-                  />
-
-                  <div className={'pt-4 ' + styles.bodyregular}>
-                    <b> Make Your Selections</b>
-                  </div>
-                  <p className={styles.bodyregular}>
-                    Select the school week, make your{' '}
-                    <b>student's meal selections</b> for that week, select a
-                    pickup time, and submit your request.
-                    <br />
-                    <br />
-                    {/* You can edit your student's cohort and allery group for differnt meal options in  <b>update profile</b>.  */}
-                  </p>
-                </div>
-
-                <div className={styles.columnscontainer}>
-                  <img
-                    src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3a.png"
-                    loading="lazy"
-                    loading="lazy"
-                    alt=""
-                    class="stepimage"
-                    width="300"
-                  />
-
-                  <div className={'pt-4 ' + styles.bodyregular}>
-                    <b>For Onsite Requests</b>
-                  </div>
-                  <p className={'pb-2 ' + styles.bodyregular}>
-                    You're all done! Your hybrid student is now on the lunch
-                    roster for the <b>week found on your receipt</b>.
-                    <br />
-                    <br />
-                  </p>
-                </div>
-                <div className={styles.columnscontainer}>
-                  <img
-                    src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
-                    loading="lazy"
-                    loading="lazy"
-                    alt=""
-                    class="stepimage"
-                    width="340"
-                  />
-
-                  <div className={'pt-4 ' + styles.bodyregular}>
-                    <b>For Curbside Requests</b>
-                  </div>
-                  <p className={'pb-5 ' + styles.bodyregular}>
-                    Simply <b>print out your code</b> and drive to the{' '}
-                    <b>pickup location</b> on the date and time found on your
-                    receipt.
-                  </p>
-                </div>
-                {/* <p className={'pb-2 ' + styles.bodyregular}> */}
-                <h1 className={'pb-3 ' + styles.h4}> Display Code</h1>
-                {/* </p> */}
-
-                <div className={'pt-4 alert-warning ' + styles.sectionair}>
-                  <div className={styles.sectioncolumns}>
-                    <h3 className={'p-3 ' + styles.h4}>On Your Dashboard</h3>
-                    {/* <hr className={styles.hr} /> */}
-                    <b>Click Example:</b>
-                    <h1 id="printCode" className="code" onClick={printData}>
-                      Gf-NESS-03
-                    </h1>
-                    {/* <hr className={styles.hr} /> */}
-                    <div className={'p-4 ' + styles.bodyregular}>
-                      Print (or write out) your{' '}
-                      <b>code found on your receipt</b> and display it on your
-                      dashboard.
-                    </div>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-dark text float-left print"
-                      onClick={printData}
-                    >
-                      <i class="fas fa-print"></i>
-                      &nbsp;Print Code
-                    </button>
-                  </div>
-                </div>
-
-                <div className={'pt-5 ' + styles.bodyregular}>
-                  <b> That's it! </b>
-                </div>
-                <p className={styles.bodyregular}>
-                  Lastly, please don't forget to thank our hardworking staff as
-                  they work diligently to feed our students every week.
-                </p>
-              </div>
             </div>
           ) : (
             <>
@@ -294,8 +173,8 @@ const Home = () => {
                   </Link>
                 </li> */}
                 <li>
-                  <Link href="/faq">
-                    <a className="text-white  " >
+                  <Link href="https://www.oakparkusd.org/Page/1">
+                    <a className="text-white  " target="_blank">
                       FAQ
                     </a>
                   </Link>
