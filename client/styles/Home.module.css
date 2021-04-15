@@ -141,6 +141,13 @@
   border-radius: 5px;
   /* transform: translateY(-800px); */
 }
+.subcard2 {
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
+  background-color: rgb(250, 252, 253);
+  padding: 30px;
+  border-radius: 5px;
+  /* transform: translateY(-800px); */
+}
 
 .receipt {
   font-family: 'Roboto Mono', sans-serif;

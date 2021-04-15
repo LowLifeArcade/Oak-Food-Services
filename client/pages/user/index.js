@@ -378,12 +378,16 @@ const User = ({ user, token, l, userLinks }) => {
                       href={`https://drive.google.com/drive/folders/1rF6PSME6_yyWIdsmIhWng8x2Wo2xt4h9`}
                     >
                       <a target="_blank">
-                        <button className="btn btn-sm btn-outline-dark text float-left">
+                        <button className="btn btn-sm btn-outline-dark text float-left" style={{
+                              // boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
+                              fontSize: '20px'
+                            }}>
                           <i
                             className="text-warning fas fa-fire"
-                            // style={{
-                            //   boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
-                            // }}
+                            style={{
+                              // boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
+                              fontSize: '20px'
+                            }}
                           ></i>{' '}
                           &nbsp;Reheating Instructions
                         </button>

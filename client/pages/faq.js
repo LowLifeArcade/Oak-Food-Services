@@ -60,24 +60,162 @@ const Home = () => {
             <div className={styles.body}>
               <div className={styles.section}>
                 <div className="pt-4 pb-">
-                  <h3 className={styles.h4}>FAQ</h3>
-                  <div className={' ' + styles.columnscontainer}>
+                  <h2 className={styles.h4} style={{ fontSize: '50px' }}>
+                    FAQ
+                  </h2>
+                  <div className={'pt-3 ' + styles.columnscontainer}>
                     <div className={styles.bodyregular}>
-<p>
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati provident nemo, fugiat illum excepturi neque minus facilis, beatae architecto voluptate, suscipit iusto sequi totam amet nobis corrupti minima temporibus atque!
-</p>
+                      <div>
+                        <div
+                          className={'alert-primary ' + styles.subcard2}
+                          style={{ fontSize: '18px' }}
+                        >
+                          <b>
+                            We are required by federal rule to ensure that these
+                            meals are only provided to children age 18 and under
+                            and that only one set of meals is provided per child
+                            per day.
+                          </b>
+                        </div>
+                        <br />
+                        <br />
+                        <div
+                          className="text-danger p-4"
+                          style={{ fontSize: '20px' }}
+                        >
+                          <b>
+                            Please submit a meal request for EACH week that you
+                            desire meals for your child. Meal requests do not
+                            automatically roll over from week to week.
+                          </b>
+                        </div>
+                        <br />
+                        <br />
+                        <b>Q: Why do I have to pre-order so far in advance?</b>
+                        <br />
+                        A: Our cafeterias receive deliveries once a week and
+                        sometimes once every 2 weeks from our vendors. We want
+                        to ensure that we have the supplies and ingredients we
+                        need to prepare and package meals for every child who
+                        needs them.
+                        <br />
+                        <br />
+                        <b>Q: What is the cut-off time to order?</b>
+                        <br />
+                        A: The cut-off time is 11:59 pm on Mondays. For example,
+                        if you are ordering meals for the week of May 10th, you
+                        must submit a meal request before 11:59 pm on May 26th.
+                        We will state the cut-off time on every menu we post.
+                        <br />
+                        <br />
+                        <b>Q: How do I cancel a meal request?</b>
+                        <br />
+                        A: To cancel a meal request, please go to your Receipts
+                        page and click the red Cancel button. Please carefully
+                        consider if you are able to commit to picking up the
+                        meals before submitting a request. We cannot get
+                        reimbursed for the cost and time to produce meals if the
+                        meals do not get picked up. Similarly, our staff
+                        prepares onsite lunches for each child listed on the
+                        lunch roster each day. Please remind your child if you
+                        have requested meals for them.
+                        <br />
+                        <br />
+                        <b>
+                          Q: Is it possible to request meals for the rest of the
+                          school year?
+                        </b>
+                        <br />
+                        A: Yes, you can now pre-order for the rest of the school
+                        year. Please go to the Weekly Menu page and review all
+                        the menus that we have already posted. Click on the
+                        yellow Meal Request button at the bottom of each week’s
+                        menu to submit your request for that week.
+                        <br />
+                        <br />
+                        <b>Q: How do I reheat the frozen meals?</b>
+                        <br />
+                        A: On your Receipts page, click on the Reheating
+                        Instructions button toward the bottom of your receipt
+                        for curbside pickup meals. You will be taken to a shared
+                        Google Drive folder to access reheating instructions for
+                        each week.
+                        <br />
+                        <br />
+                        <b>
+                          Q: Where do I go to pick up meals for Curbside Pickup?
+                        </b>
+                        <br />
+                        A: Curbside pickup is at Brookside Elementary on
+                        Fridays. Please be sure to display your pickup code on
+                        your dashboard. When you get to the front of the line,
+                        please pop or unlock your trunk so our staff can load
+                        the bags into your car.
+                        <br />
+                        <br />
+                        <b>
+                          Q: I’ve requested onsite lunches for my child. Where
+                          do they go to pick up their meals?
+                        </b>
+                        <br />
+                        A: Please see below for pickup instructions at each
+                        school:
+                        <br />
+                        <br />
+                        <ul>
+                          <i class="fas fa-feather-alt"></i> &nbsp;&nbsp;
+                          <b>
+
+                          BES |
+                          OHES | ROES: &nbsp;
+                          </b>
+                          Meals will be brought to the lunch table
+                          designated for your child’s class and distributed
+                          directly.
+                          <br />
+                          <br />
+                          <i class="fas fa-feather-alt"></i> &nbsp;&nbsp;
+                          <b>
+
+                          MCMS:&nbsp;
+                          </b>
+                          There will be TWO pick-up locations. Your child will
+                          pick up their lunch at the location based on the first
+                          letter of their LAST name. Your child gives
+                          their name to the staff member. The staff member will
+                          check off your child's name on the lunch roster and
+                          hand your child their lunch.
+                          <br />
+                          <ul>
+                            <li>A to K : Snack bar window</li>
+                            <li>L to Z : Double door entry to the cafeteria</li>
+                          </ul>
+                          <br />
+                          <i class="fas fa-feather-alt"></i> &nbsp;&nbsp;
+                          <b>
+
+                          OPHS:&nbsp; 
+                          </b>
+                          There will
+                          be TWO tables set up outside the cafeteria. One table
+                          will service students whose LAST name begins with A to
+                          K; and the other L to Z. Your child will display their
+                          student ID card to the staff member. The staff member
+                          will check off your child's name on the lunch roster
+                          and hand your child their lunch.
+                          <br />
+                          <br />
+                          <i class="fas fa-feather-alt"></i> &nbsp;&nbsp;
+                          <b>
+
+                          OVHS:&nbsp;
+                          </b>
+                          Students
+                          retrieve meals at the administrative office at OVHS.
+                        </ul>
+                        <br />
+                        <br />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -85,7 +223,6 @@ const Home = () => {
                   {/* Request school meals for each student at least 2 weeks in advance. */}
                 </p>
               </div>
-
             </div>
           ) : (
             <>
@@ -126,7 +263,7 @@ const Home = () => {
           >
             <div className={'text-white col-md-9 ' + styles.bodyregular}>
               <div className="p-2"></div>
-              <ul style={{ fontSize: '14px' }}className={styles.lists}>
+              <ul style={{ fontSize: '14px' }} className={styles.lists}>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/10593">
                     <a className="text-white  " target="_blank">
@@ -136,15 +273,15 @@ const Home = () => {
                 </li>
                 <li>
                   <div className="float-right ">
-                  <Link href="https://www.oakparkusd.org/Page/1">
-                    <a className="text-white  " target="_blank">
-                    <img
-                      src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
-                      loading="lazy"
-                      alt=""
-                      width="100"
-                    />
-                    </a>
+                    <Link href="https://www.oakparkusd.org/Page/1">
+                      <a className="text-white  " target="_blank">
+                        <img
+                          src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
+                          loading="lazy"
+                          alt=""
+                          width="100"
+                        />
+                      </a>
                     </Link>
                   </div>
                 </li>
