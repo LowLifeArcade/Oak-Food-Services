@@ -117,8 +117,8 @@ const Home = () => {
                     <b> Make Your Selections</b>
                   </div>
                   <p className={styles.bodyregular}>
-                    Select pickup date, make your{' '}
-                    <b>student's meal selections</b> for the week, select a
+                    Select the school week, make your{' '}
+                    <b>student's meal selections</b> for that week, select a
                     pickup time, and submit your request.
                     <br />
                     <br />
@@ -244,6 +244,13 @@ const Home = () => {
               <div className="p-2"></div>
               <ul className={styles.lists}>
                 <li>
+                  <Link href="https://www.oakparkusd.org/Page/10593">
+                    <a className="text-white  " target="_blank">
+                      Program Info
+                    </a>
+                  </Link>
+                </li>
+                <li>
                   <div className="float-right ">
                     <img
                       src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
@@ -252,13 +259,6 @@ const Home = () => {
                       width="100"
                     />
                   </div>
-                </li>
-                <li>
-                  <Link href="https://www.oakparkusd.org/Page/10593">
-                    <a className="text-white  " target="_blank">
-                      Program Info
-                    </a>
-                  </Link>
                 </li>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/6499">
@@ -284,6 +284,8 @@ const Home = () => {
                     </a>
                   </Link>
                 </li>
+
+
                 {/* <li>
                   <Link href="https://www.oakparkusd.org/Page/10809">
                     <a className='text-white  ' target="_blank">Help</a>
@@ -296,6 +298,25 @@ const Home = () => {
                 735-3200 | Fax (818) 879-0372
                 </div> */}
               </ul>
+              <hr/>
+              <div className="p-1"></div>
+<div className='d-flex row justify-content-center' 
+// style={{ fontSize: '10px' }}
+>
+
+                This institution is an equal opportunity provider.
+                
+                
+</div>
+<div className="p-1"></div>
+<div className='d-flex row justify-content-center' 
+style={{ fontSize: '10px' }}
+>
+
+                Copyright 2021
+                
+                
+</div>
             </div>
           </div>
         </div>

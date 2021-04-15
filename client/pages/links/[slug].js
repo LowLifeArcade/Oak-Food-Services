@@ -202,11 +202,18 @@ const Links = ({
             )}
 
             <hr />
-            <div className="alert-seconary p-2 pt-2">
-              {renderHTML(category.content || '')}
-            </div>
 
-            <div className="alert-seconary pt-2">
+            <div style={{ color: '#419ca8' }}
+                      className={'pt-2 p-2'}
+                      >
+                        <b>
+
+                        Meal requests must be made by 11:59pm {moment(category.pickupWeek).subtract(14, 'day').format('MMMM Do')}
+                        </b>
+                      </div>
+            
+
+            <div className="alert-seconary pt-3">
               {category.menu.length > 0 && <h4>Curbside Pickup</h4>}
               <div className="p-1"></div>
               <table className="table table-striped table-bordered">
@@ -288,8 +295,14 @@ const Links = ({
                   )) || ''}
                 </tbody>
               </table>
+          <div className="alert-seconary">
+              {renderHTML(category.content || '')}
+            </div>
             </div>
           </div>
+
+            <br/>
+            <br/>
           <div className="col-md">
             {category.image && (
               <img
@@ -298,12 +311,14 @@ const Links = ({
                 style={{ width: '350px', maxHeight: '' }}
               />
             )}
-            <div className="pt-5"></div>
+            <div className="pt-2"></div>
+
+            <div className='' >
             Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
             {isAuth()
               ? category.menu.length > 0 &&
-                new Date() < twoWeeksFromNow && (
-                  <Link href="/user/link/create">
+              new Date() < twoWeeksFromNow && (
+                <Link href="/user/link/create">
                     <button
                       className={'btn float-right ' + styles.button}
                       onClick={(e) =>
@@ -311,16 +326,16 @@ const Links = ({
                           'search-date',
                           JSON.stringify(
                             moment(category.pickupWeek).format('l')
-                          )
-                        )
-                      }
-                    >
+                            )
+                            )
+                          }
+                          >
                       <i class="fas fa-pencil-alt"></i>
                       &nbsp; Request
                     </button>
                   </Link>
                 )
-              : category.menu.length > 0 &&
+                : category.menu.length > 0 &&
                 new Date() < twoWeeksFromNow && (
                   <Link href="/login">
                     <button
@@ -330,21 +345,22 @@ const Links = ({
                           'search-date',
                           JSON.stringify(
                             moment(category.pickupWeek).format('l')
-                          )
-                        )
-                      }
-                    >
+                            )
+                            )
+                          }
+                          >
                       <i class="fas fa-pencil-alt"></i>
                       &nbsp; Request
                     </button>
                   </Link>
                 )}
+                </div>
             {/* {category.menu.length > 0 && new Date() < twoWeeksFromNow && (
               <Link href="/user/link/create">
-                <button className={'btn float-right ' + styles.button}
-                 onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
-                 >
-                  <i class="fas fa-pencil-alt"></i>
+              <button className={'btn float-right ' + styles.button}
+              onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
+              >
+              <i class="fas fa-pencil-alt"></i>
                   &nbsp;&nbsp; Request
                 </button>
               </Link>

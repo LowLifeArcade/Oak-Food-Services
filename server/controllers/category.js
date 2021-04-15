@@ -74,7 +74,7 @@ exports.create = (req, res) => {
   const { name, content, image, group, postedBy, menu, menu2, menu3, pickupWeek } = req.body;
 
   // taking req.body name and making a slug for image name url i think
-  const slug = slugify(name);
+  const slug = slugify(pickupWeek);
   let category = new Category({ name, content, slug, image, group, postedBy, menu, menu2, menu3, pickupWeek });
 
   if (image) {

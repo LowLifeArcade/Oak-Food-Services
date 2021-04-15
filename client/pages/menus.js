@@ -115,17 +115,30 @@ const Menus = ({ categories }) => {
                       // borderBlock: '5px',
                     }}
                   >
-                    <div className="p-4">
-                      {c.menu.length === 0 && <h3 className="font-weight-bold ">{c.name}</h3>}
-                      {c.menu.length > 0 && <h3 className="font-weight-bold ">Menus for Week of {moment(c.pickupWeek).format('MMMM Do')}</h3>}
+                    <div className="p-2"></div>
+                    <div className="p-3">
+                      {c.menu.length === 0 && (
+                        <h3 className="font-weight-bold ">{c.name}</h3>
+                      )}
+                      {c.menu.length > 0 && (
+                        <h3 className="font-weight-bold ">
+                          Menus for Week of{' '}
+                          {moment(c.pickupWeek).format('MMMM Do')}
+                        </h3>
+                      )}
                       <hr />
-                      <div
-                      className={'pt-2 p-2'}
-                      >
-                        {renderHTML(c.content || '')}
-                      </div>
 
-                      <div className="alert-seconary pt-2">
+                      <div style={{ color: '#419ca8' }} className={'pt-1'}>
+                        <b>
+                          Meal requests must be made by 11:59pm{' '}
+                          {moment(c.pickupWeek)
+                            .subtract(14, 'day')
+                            .format('MMMM Do')}
+                        </b>
+                      </div>
+                            <div className="p-1"></div>
+                      <hr/>
+                      <div className="alert-seconary pt-3">
                         {c.menu.length > 0 && <h4>Curbside Pickup</h4>}
                         <div className="p-1"></div>
                         <table
@@ -146,7 +159,9 @@ const Menus = ({ categories }) => {
                             {c.menu.map((l, i) => (
                               <>
                                 <tr key={i}>
-                                  <td><b>{l.row1}</b></td>
+                                  <td>
+                                    <b>{l.row1}</b>
+                                  </td>
                                   <td>{l.row2}</td>
                                   <td>{l.row3}</td>
                                   <td>{l.row4}</td>
@@ -157,7 +172,9 @@ const Menus = ({ categories }) => {
                         </table>
 
                         <br />
-                        {c.menu2.length > 0 && <h5>BES | OHES | ROES | MCMS</h5>}
+                        {c.menu2.length > 0 && (
+                          <h5>BES | OHES | ROES | MCMS</h5>
+                        )}
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
@@ -168,7 +185,7 @@ const Menus = ({ categories }) => {
                               <tr>
                                 {/* <th scope="col">Secondary</th> */}
                                 <th scope="col">Monday/Wednesday</th>
-                  <th scope="col">Tuesday/Thursday</th>
+                                <th scope="col">Tuesday/Thursday</th>
                               </tr>
                             </thead>
                           )}
@@ -217,8 +234,10 @@ const Menus = ({ categories }) => {
                         </table>
                       </div>
 
+                      <div className={' '}>{renderHTML(c.content || '')}</div>
+
                       <div className="">
-                        <div className="pb-4">
+                        <div className="pb-2">
                           {c.image && (
                             <img
                               src={c.image.url}
