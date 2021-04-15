@@ -39,12 +39,10 @@ const Profile = ({ user, token }) => {
     special: {
       sendEmail:
         user.special && user.special.sendEmail ? true : user.special.sendEmail, // checks if there's a value, if not sets to true
-      gfplus:
-        user.special && user.special.gfplus ? user.special.gfplus : false ,
-      vgplus:
-        user.special && user.special.vgplus ? user.special.vgplus : false ,
+      gfplus: user.special && user.special.gfplus ? user.special.gfplus : false,
+      vgplus: user.special && user.special.vgplus ? user.special.vgplus : false,
       twothree:
-        user.special && user.special.twothree ? user.special.twothree : false ,
+        user.special && user.special.twothree ? user.special.twothree : false,
     },
     groups: [],
     teachers: [],
@@ -451,6 +449,12 @@ const Profile = ({ user, token }) => {
             ? // ? 'true': 'false',
               e.target.checked
             : e.target.checked,
+        gfplus:
+          user.special && user.special.gfplus ? user.special.gfplus : false,
+        vgplus:
+          user.special && user.special.vgplus ? user.special.vgplus : false,
+        twothree:
+          user.special && user.special.twothree ? user.special.twothree : false,
       },
       // [student]: e.target.value,
       error: '',
