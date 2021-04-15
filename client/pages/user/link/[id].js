@@ -934,7 +934,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             </option> */}
             {user.special.twothree == 'true' && (
               <option value={'2on 3off'}>
-                Standard 2 onite meals 3 offsite meals
+                Standard 2 Onsite / 3 Offsite Lunches plus 5 Breakfasts
               </option>
             )}
             {/* {user.special.vtplus == 'true' && (
