@@ -611,11 +611,11 @@ const Update = ({ oldLink, token, user, _id }) => {
         pickupOptionLO = 'Breakfast Only';
         break;
       case 'Vegan B': // Vegan with breakfast
-        frontCode = 'Vg+b';
+        frontCode = 'Vgb';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Gluten Free with Breakfast':
-        frontCode = 'Gf+b'; // gf with breakfast
+        frontCode = 'Gfb'; // gf with breakfast
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case '2on 3off':
@@ -932,7 +932,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             {/* <option selected value={state.mealRequest[i].meal}>
               {state.mealRequest[i].meal}
             </option> */}
-            {user.special.twothree == 'true' && (
+            {user.special.twothree == true && (
               <option value={'2on 3off'}>
                 Standard 2 Onsite / 3 Offsite Lunches plus 5 Breakfasts
               </option>
@@ -947,7 +947,12 @@ const Update = ({ oldLink, token, user, _id }) => {
                 Gluten Free Lunch plus Breakfast
               </option>
             )}
-            {user.special.vgplus == 'true' && (
+             {user.special.gfplus == true && (
+              <option value={'Gluten Free with Breakfast'}>
+                Gluten Free Lunch plus Breakfast
+              </option>
+            )}
+            {user.special.vgplus == true && (
               <option value={'Vegan B'}>Vegan Lunch plus Breakfast</option>
             )}
             {isAuth().role === 'admin' && (
@@ -1625,10 +1630,10 @@ const Update = ({ oldLink, token, user, _id }) => {
 
           // specials
           case 'Vegan B':
-            frontCode.push('Vg+b');
+            frontCode.push('Vgb');
             break;
           case 'Gluten Free with Breakfast':
-            frontCode.push('Gf+b')
+            frontCode.push('Gfb')
             break;
           case '2on 3off':
             frontCode.push('H');
