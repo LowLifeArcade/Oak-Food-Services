@@ -186,7 +186,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 l.pickupOption === 'Breakfast and Lunch'
             ).length != 0 && (
               <h6>
-                Pickup is at <b className="text">Brookside Elemenery</b>.
+                Pickup is at <b className="text">Brookside Elementary</b>.
                 Display the above code{' '}
                 <b className="text-danger">on your dashboard </b>or show from
                 your phone.

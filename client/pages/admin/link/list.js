@@ -168,7 +168,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       // add students to request
       request.students = [];
       r.mealRequest.map((meal, i) => {
-        request.students.push(meal.studentName + ' ');
+        request.students.push(' '  + meal.studentName + ' ' + meal.schoolName);
       });
 
       requestsArrayByDate[i] = request;
@@ -532,6 +532,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     // { label: 'First Name', key: 'postedBy.name' },
     // linksByDate.map(link => link.postedBy != null)  && { label: 'Last Name', key: 'postedBy.lastName' }, // had to disable because causes an error if user is deleted 
     { label: 'Student Names', key: 'students' },
+    { label: 'Student', key: 'school' },
     { label: 'Special Orders', key: 'specialOrder' },
   ];
 
