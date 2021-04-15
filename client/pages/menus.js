@@ -82,145 +82,221 @@ const Menus = ({ categories }) => {
       .reverse()
       .map((c, i) => (
         <>
-        {/* {console.log(moment(new Date()).subtract(13, 'day').format('l'))} */}
-        {c.pickupWeek < moment(new Date()).subtract(13, 'day').format('l') && 
-       
-          <div className="">
-            <div
-              key={i}
-              // className={'col-md-12 pt-2'}
-              style={{
-                // color: 'grey',
-                border: '1px solid grey',
-                // padding: '10px',
-                boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
-                // borderRadius: '8px',
-                // borderBlock: '5px',
-              }}
-              className="bg-white"
-            >
-              <Link
-                href={`/links/${c.slug}`}
-                style={{ textDecoration: 'none' }}
+          {/* {console.log(moment(new Date()).subtract(13, 'day').format('l'))} */}
+          {moment(c.pickupWeek).format('l') >
+            moment(new Date()).subtract(13, 'day').format('l') && (
+            <div className="">
+              <div
+                key={i}
+                // className={'col-md-12 pt-2'}
+                style={{
+                  // color: 'grey',
+                  border: '1px solid grey',
+                  // padding: '10px',
+                  boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
+                  // borderRadius: '8px',
+                  // borderBlock: '5px',
+                }}
+                className="bg-white"
               >
-                <a
-                  style={{
-                    color: '#444444',
-                    textDecoration: 'none',
-                    // border: '1px solid grey',
-                    // padding: '10px',
-                    // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
-                    // borderRadius: '8px',
-                    // borderBlock: '5px',
-                  }}
+                <Link
+                  href={`/links/${c.slug}`}
+                  style={{ textDecoration: 'none' }}
                 >
-                  <div className="p-4">
-                    <h3 className="font-weight-bold ">{c.name}</h3>
-                    <hr />
-                    <div
-                    // className="lead alert alert-seconary pt-4"
-                    // className={'col-md-12 pt-2'}
-                    >
-                      {renderHTML(c.content || '')}
-                    </div>
-
-                    <div className="alert-seconary pt-2">
-                      
-
-                      <table className="table table-sm table-striped table-bordered " style={{ fontSize: '10px' }}>
-                        {c.menu.length > 0 && (
-                          <thead>
-                            <tr>
-                              <th scope="col">Day</th>
-                              <th scope="col">Breakfast</th>
-                              <th scope="col">Lunch</th>
-                              <th scope="col">Vegetarian Lunch</th>
-                            </tr>
-                          </thead>
-                        )}
-                        <tbody>
-                          {c.menu.map((l, i) => (
-                            <>
-                              <tr key={i}>
-                                <td>{l.row1}</td>
-                                <td>{l.row2}</td>
-                                <td>{l.row3}</td>
-                                <td>{l.row4}</td>
-                              </tr>
-                            </>
-                          )) || ''}
-                        </tbody>
-                      </table>
-
-                    </div>
-
-                    <div className="">
-                      <div className="pb-4">
-                        {c.image && (
-                          <img
-                            src={c.image.url}
-                            alt={c.name}
-                            style={{ width: '280px', maxHeight: 'auto' }}
-                          />
-                        )}
+                  <a
+                    style={{
+                      color: '#444444',
+                      textDecoration: 'none',
+                      // border: '1px solid grey',
+                      // padding: '10px',
+                      // boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+                      // borderRadius: '8px',
+                      // borderBlock: '5px',
+                    }}
+                  >
+                    <div className="p-4">
+                      <h3 className="font-weight-bold ">{c.name}</h3>
+                      <hr />
+                      <div
+                      // className="lead alert alert-seconary pt-4"
+                      // className={'col-md-12 pt-2'}
+                      >
+                        {renderHTML(c.content || '')}
                       </div>
 
-                      <div className="pb-3">
-                        {/* <h3>{c.name}</h3> {c.createdAt} */}
-                        Posted {moment(c.createdAt).format('MMMM Do YYYY')}
-                        {/* {popular.map((l, i) => l.postedBy.name)} */}
-                        {/* {c.username} */}
-                        {
-                        isAuth() ?
-                        c.menu.length > 0 &&  new Date < twoWeeksFromNow && 
-                        <Link href="/user/link/create">
-                          <button
-                            className={'btn float-right ' + styles.button}
-                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(c.pickupWeek).format('l')))}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                            &nbsp; Request
-                          </button>
-                        </Link> :
-                        c.menu.length > 0 &&  new Date < twoWeeksFromNow && 
-                        <Link href="/login">
-                          <button
-                            className={'btn float-right ' + styles.button}
-                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(c.pickupWeek).format('l')))}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                            &nbsp; Request
-                          </button>
-                        </Link> 
-                        
-                      }
-                        {process.browser &&
-                          isAuth() &&
-                          isAuth().role === 'admin' && (
-                            <div className="">
-                              <Link href={`/admin/category/${c.slug}`}>
-                                <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
-                                  Edit
-                                </button>
-                              </Link>
-                              &nbsp;
-                              {/* <button
+                      <div className="alert-seconary pt-2">
+                        {c.menu.length > 0 && <h4>Curbside Menu</h4>}
+                        <table
+                          className="table table-sm table-striped table-bordered "
+                          style={{ fontSize: '10px' }}
+                        >
+                          {c.menu.length > 0 && (
+                            <thead>
+                              <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Breakfast</th>
+                                <th scope="col">Lunch</th>
+                                <th scope="col">Vegetarian Lunch</th>
+                              </tr>
+                            </thead>
+                          )}
+                          <tbody>
+                            {c.menu.map((l, i) => (
+                              <>
+                                <tr key={i}>
+                                  <td>{l.row1}</td>
+                                  <td>{l.row2}</td>
+                                  <td>{l.row3}</td>
+                                  <td>{l.row4}</td>
+                                </tr>
+                              </>
+                            )) || ''}
+                          </tbody>
+                        </table>
+
+                        <br />
+                        {c.menu2.length > 0 && <h4>Elementary Onsite Menu</h4>}
+                        <table
+                          className="table table-sm table-striped table-bordered "
+                          style={{ fontSize: '10px' }}
+                        >
+                          {c.menu2.length > 0 && (
+                            <thead>
+                              <tr>
+                                <th scope="col">Secondary</th>
+                                <th scope="col">Day 1</th>
+                                <th scope="col">Day 2</th>
+                              </tr>
+                            </thead>
+                          )}
+                          <tbody>
+                            {c.menu2.map((l, i) => (
+                              <>
+                                <tr key={i}>
+                                  <td>{l.row1}</td>
+                                  <td>{l.row2}</td>
+                                  <td>{l.row3}</td>
+                                </tr>
+                              </>
+                            )) || ''}
+                          </tbody>
+                        </table>
+
+                        <br />
+                        {c.menu3.length > 0 && <h4>Highschool Onsite Menu</h4>}
+                        <table
+                          className="table table-sm table-striped table-bordered "
+                          style={{ fontSize: '10px' }}
+                        >
+                          {c.menu3.length > 0 && (
+                            <thead>
+                              <tr>
+                                <th scope="col">Secondary</th>
+                                <th scope="col">Day 1</th>
+                                <th scope="col">Day 2</th>
+                              </tr>
+                            </thead>
+                          )}
+                          <tbody>
+                            {c.menu3.map((l, i) => (
+                              <>
+                                <tr key={i}>
+                                  <td>{l.row1}</td>
+                                  <td>{l.row2}</td>
+                                  <td>{l.row3}</td>
+                                </tr>
+                              </>
+                            )) || ''}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <div className="">
+                        <div className="pb-4">
+                          {c.image && (
+                            <img
+                              src={c.image.url}
+                              alt={c.name}
+                              style={{ width: '280px', maxHeight: 'auto' }}
+                            />
+                          )}
+                        </div>
+
+                        <div className="pb-3">
+                          {/* <h3>{c.name}</h3> {c.createdAt} */}
+                          Posted {moment(c.createdAt).format('MMMM Do YYYY')}
+                          {/* {popular.map((l, i) => l.postedBy.name)} */}
+                          {/* {c.username} */}
+                          {isAuth()
+                            ? c.menu.length > 0 &&
+                              new Date() < twoWeeksFromNow && (
+                                <Link href="/user/link/create">
+                                  <button
+                                    className={
+                                      'btn float-right ' + styles.button
+                                    }
+                                    onClick={(e) =>
+                                      localStorage.setItem(
+                                        'search-date',
+                                        JSON.stringify(
+                                          moment(c.pickupWeek).format('l')
+                                        )
+                                      )
+                                    }
+                                  >
+                                    <i class="fas fa-pencil-alt"></i>
+                                    &nbsp; Request
+                                  </button>
+                                </Link>
+                              )
+                            : c.menu.length > 0 &&
+                              new Date() < twoWeeksFromNow && (
+                                <Link href="/login">
+                                  <button
+                                    className={
+                                      'btn float-right ' + styles.button
+                                    }
+                                    onClick={(e) =>
+                                      localStorage.setItem(
+                                        'search-date',
+                                        JSON.stringify(
+                                          moment(c.pickupWeek).format('l')
+                                        )
+                                      )
+                                    }
+                                  >
+                                    <i class="fas fa-pencil-alt"></i>
+                                    &nbsp; Request
+                                  </button>
+                                </Link>
+                              )}
+                          {process.browser &&
+                            isAuth() &&
+                            isAuth().role === 'admin' && (
+                              <div className="">
+                                <Link href={`/admin/category/${c.slug}`}>
+                                  <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
+                                    Edit
+                                  </button>
+                                </Link>
+                                &nbsp;
+                                {/* <button
                 onClick={(e) => confirmDelete(e, category.slug)}
                 className="badge btn btn-sm btn-outline-danger "
               >
                 Delete
               </button> */}
-                            </div>
-                          )}
+                              </div>
+                            )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              </Link>
+                  </a>
+                </Link>
+              </div>
+              <div className="p-2"></div>
             </div>
-            <div className="p-2"></div>
-          </div>
-           }
+          )}
         </>
       ));
   return (

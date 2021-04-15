@@ -40,6 +40,32 @@ const categorySchema = new mongoose.Schema(
         },
       },
     ],
+    menu2: [
+      {
+        row1: {
+          type: String,
+        },
+        row2: {
+          type: String,
+        },
+        row3: {
+          type: String,
+        },
+      },
+    ],
+    menu3: [
+      {
+        row1: {
+          type: String,
+        },
+        row2: {
+          type: String,
+        },
+        row3: {
+          type: String,
+        },
+      },
+    ],
     pickupWeek: {
       type: String,
       trim: true,

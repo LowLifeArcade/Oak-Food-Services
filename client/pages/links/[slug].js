@@ -197,6 +197,8 @@ const Links = ({
             </div>
 
             <div className="alert-seconary pt-2">
+              {category.menu.length > 0 && <h4>Curbside Menu</h4>}
+              <div className="p-1"></div>
               <table className="table table-striped table-bordered">
                 {category.menu.length > 0 && (
                   <thead>
@@ -221,6 +223,61 @@ const Links = ({
                   )) || ''}
                 </tbody>
               </table>
+              <br />
+              {category.menu2.length > 0 && <h4>Elementary Onsite Menu</h4>}
+              <table
+                className="table table-sm table-striped table-bordered "
+                style={{ fontSize: '10px' }}
+              >
+                {category.menu2.length > 0 && (
+                  <thead>
+                    <tr>
+                      <th scope="col">Secondary</th>
+                      <th scope="col">Day 1</th>
+                      <th scope="col">Day 2</th>
+                    </tr>
+                  </thead>
+                )}
+                <tbody>
+                  {category.menu2.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>{l.row1}</td>
+                        <td>{l.row2}</td>
+                        <td>{l.row3}</td>
+                      </tr>
+                    </>
+                  )) || ''}
+                </tbody>
+              </table>
+
+              <br />
+              {category.menu3.length > 0 && <h4>Highschool Onsite Menu</h4>}
+              <table
+                className="table table-sm table-striped table-bordered "
+                style={{ fontSize: '10px' }}
+              >
+                {category.menu3.length > 0 && (
+                  <thead>
+                    <tr>
+                      <th scope="col">Secondary</th>
+                      <th scope="col">Day 1</th>
+                      <th scope="col">Day 2</th>
+                    </tr>
+                  </thead>
+                )}
+                <tbody>
+                  {category.menu3.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>{l.row1}</td>
+                        <td>{l.row2}</td>
+                        <td>{l.row3}</td>
+                      </tr>
+                    </>
+                  )) || ''}
+                </tbody>
+              </table>
             </div>
           </div>
           <div className="col-md">
@@ -233,30 +290,45 @@ const Links = ({
             )}
             <div className="pt-5"></div>
             Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
-            {
-                        isAuth() ?
-                        category.menu.length > 0 &&  new Date < twoWeeksFromNow && 
-                        <Link href="/user/link/create">
-                          <button
-                            className={'btn float-right ' + styles.button}
-                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                            &nbsp; Request
-                          </button>
-                        </Link> :
-                        category.menu.length > 0 &&  new Date < twoWeeksFromNow && 
-                        <Link href="/login">
-                          <button
-                            className={'btn float-right ' + styles.button}
-                            onClick={e => localStorage.setItem('search-date', JSON.stringify(moment(category.pickupWeek).format('l')))}
-                          >
-                            <i class="fas fa-pencil-alt"></i>
-                            &nbsp; Request
-                          </button>
-                        </Link> 
-                        
+            {isAuth()
+              ? category.menu.length > 0 &&
+                new Date() < twoWeeksFromNow && (
+                  <Link href="/user/link/create">
+                    <button
+                      className={'btn float-right ' + styles.button}
+                      onClick={(e) =>
+                        localStorage.setItem(
+                          'search-date',
+                          JSON.stringify(
+                            moment(category.pickupWeek).format('l')
+                          )
+                        )
                       }
+                    >
+                      <i class="fas fa-pencil-alt"></i>
+                      &nbsp; Request
+                    </button>
+                  </Link>
+                )
+              : category.menu.length > 0 &&
+                new Date() < twoWeeksFromNow && (
+                  <Link href="/login">
+                    <button
+                      className={'btn float-right ' + styles.button}
+                      onClick={(e) =>
+                        localStorage.setItem(
+                          'search-date',
+                          JSON.stringify(
+                            moment(category.pickupWeek).format('l')
+                          )
+                        )
+                      }
+                    >
+                      <i class="fas fa-pencil-alt"></i>
+                      &nbsp; Request
+                    </button>
+                  </Link>
+                )}
             {/* {category.menu.length > 0 && new Date() < twoWeeksFromNow && (
               <Link href="/user/link/create">
                 <button className={'btn float-right ' + styles.button}

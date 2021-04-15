@@ -71,11 +71,11 @@ const s3 = new AWS.S3({
 
 exports.create = (req, res) => {
   // base64 taking off beginning of data
-  const { name, content, image, group, postedBy, menu, pickupWeek } = req.body;
+  const { name, content, image, group, postedBy, menu, menu2, menu3, pickupWeek } = req.body;
 
   // taking req.body name and making a slug for image name url i think
   const slug = slugify(name);
-  let category = new Category({ name, content, slug, image, group, postedBy, menu, pickupWeek });
+  let category = new Category({ name, content, slug, image, group, postedBy, menu, menu2, menu3, pickupWeek });
 
   if (image) {
     // image data
@@ -108,36 +108,33 @@ exports.create = (req, res) => {
         if (err) res.status(400).json({ error: 'Duplicate post' });
         res.json(data);
         
-        User.find({ special: { sendEmail: true } }).exec((err, users) => {
-          // console.log('emailable users', users);
-          if (err) {
-            console.log('send email err', err);
-            throw new Error(err);
-          } else {
-            // data.categories = result;
+        // send email disabled for test 
 
-            // TODO make updatePost in blog create for update emails and reminders 
+        // User.find({ special: { sendEmail: true } }).exec((err, users) => {
+        //   if (err) {
+        //     console.log('send email err', err);
+        //     throw new Error(err);
+        //   } else {
+  
+        //     for (let i = 0; i < users.length; i++) {
+        //       const params = linkPublishedParams(users[i].email, data); // email mod
+        //       const sendEmail = ses.sendEmail(params).promise();
+  
+        //       sendEmail
+        //         .then((success) => {
+        //           console.log('email submitted to SES', success);
+        //           return;
+        //         })
+        //         .catch((failure) => {
+        //           console.log('error on email submitted to SES', failure);
+        //           return;
+        //         });
+        //     }
+        //   }
+        // });
 
-            // TODO if menuPost === true then send email 
-  
-            for (let i = 0; i < users.length; i++) {
-              // console.log("user email stuff", users[i].email, data)
-              // TODO if user.special.cohort === 'offsite' then they get offsite menu etc...
-              const params = linkPublishedParams(users[i].email, data); // email mod
-              const sendEmail = ses.sendEmail(params).promise();
-  
-              sendEmail
-                .then((success) => {
-                  console.log('email submitted to SES', success);
-                  return;
-                })
-                .catch((failure) => {
-                  console.log('error on email submitted to SES', failure);
-                  return;
-                });
-            }
-          }
-        });
+
+
       });
     });
   } else {

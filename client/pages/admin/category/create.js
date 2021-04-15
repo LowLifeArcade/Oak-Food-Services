@@ -45,6 +45,12 @@ const Create = ({ user, token }) => {
     menu: [
       { row1: 'day', row2: 'breakfast food', row3: 'lunch', row4: 'vege food' },
     ],
+    menu2: [
+      { row1: 'Secondary', row2: 'Day 1', row3: 'Day 2' },
+    ],
+    menu3: [
+      { row1: 'Secondary', row2: 'Day 1', row3: 'Day 2' },
+    ],
     postedBy: user._id,
     pickupWeek: '',
     error: '',
@@ -66,6 +72,8 @@ const Create = ({ user, token }) => {
   const {
     pickupWeek,
     menu,
+    menu2,
+    menu3,
     postedBy,
     name,
     success,
@@ -156,6 +164,46 @@ const Create = ({ user, token }) => {
       error: '',
     });
   };
+  const handleMenu2 = (rowName) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    setMenuChange(e.target.value);
+
+    let newMenu = [...state.menu2];
+    let menuRow = { ...newMenu[i] };
+
+    menuRow[rowName] = e.target.value;
+    // menuRow[rowName] = menuChange;
+
+    newMenu[i] = menuRow;
+
+    setState({
+      ...state,
+      menu2: [...newMenu],
+      success: '',
+      error: '',
+    });
+  };
+  const handleMenu3 = (rowName) => (e) => {
+    let i = e.target.getAttribute('data-index');
+
+    setMenuChange(e.target.value);
+
+    let newMenu = [...state.menu3];
+    let menuRow = { ...newMenu[i] };
+
+    menuRow[rowName] = e.target.value;
+    // menuRow[rowName] = menuChange;
+
+    newMenu[i] = menuRow;
+
+    setState({
+      ...state,
+      menu3: [...newMenu],
+      success: '',
+      error: '',
+    });
+  };
 
   const handleImage = (event) => {
     let fileInput = false;
@@ -193,7 +241,7 @@ const Create = ({ user, token }) => {
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, group, image, postedBy, menu, pickupWeek },
+        { name, content, group, image, postedBy, menu, menu2, menu3, pickupWeek },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -234,6 +282,30 @@ const Create = ({ user, token }) => {
       ],
     });
   };
+  const addRow2 = (e) => {
+    // e.preventDefault();
+    setState({
+      ...state,
+      menu2: [
+        ...menu2,
+        menuType === 'Onsite'
+          ? { row1: '', row2: '', row3: '', row4: '' }
+          : { row1: '', row2: '', row3: '' },
+      ],
+    });
+  };
+  const addRow3 = (e) => {
+    // e.preventDefault();
+    setState({
+      ...state,
+      menu3: [
+        ...menu3,
+        menuType === 'Onsite'
+          ? { row1: '', row2: '', row3: '', row4: '' }
+          : { row1: '', row2: '', row3: '' },
+      ],
+    });
+  };
 
   const removeRow = (e) => {
     e.preventDefault();
@@ -241,6 +313,20 @@ const Create = ({ user, token }) => {
     list.splice(-1)[0];
 
     setState({ ...state, menu: list });
+  };
+  const removeRow2 = (e) => {
+    e.preventDefault();
+    const list = [...state.menu2];
+    list.splice(-1)[0];
+
+    setState({ ...state, menu2: list });
+  };
+  const removeRow3 = (e) => {
+    e.preventDefault();
+    const list = [...state.menu3];
+    list.splice(-1)[0];
+
+    setState({ ...state, menu3: list });
   };
 
   const chooseEmailGroup = () => (
@@ -300,7 +386,7 @@ const Create = ({ user, token }) => {
       Menu is for week of {`${pickupWeek}`}
       {console.log('pickup week', pickupWeek)}
       <br />
-      <br/>
+      <br />
       <div className="form-group">
         <label className="text-muted">Content</label>
         <ReactQuill
@@ -336,9 +422,12 @@ const Create = ({ user, token }) => {
       )}
       <br />
       <br />
-      {menuPost && (
+
+
+      {menuPost && // menu 1
+      (
         <>
-          <div>
+          {/* <div>
             {menuType === 'Pickup' && (
               <button
                 type="button"
@@ -359,10 +448,11 @@ const Create = ({ user, token }) => {
                 &nbsp; Onsite Menu
               </button>
             )}
-          </div>
+          </div> */}
           <br />
           <br />
-
+          <h3>Curbside Menu </h3>
+          <div className="p-1"></div>
           {/* table menu */}
           <table className="table table-striped table-sm table-bordered">
             {menuType === 'Pickup' ? (
@@ -380,7 +470,6 @@ const Create = ({ user, token }) => {
                   <th scope="col">Secondary</th>
                   <th scope="col">Day 1</th>
                   <th scope="col">Day 2</th>
-                  {/* <th scope="col">Vegetarian Lunch</th> */}
                 </tr>
               </thead>
             )}
@@ -474,6 +563,304 @@ const Create = ({ user, token }) => {
                 type="button"
                 className={'btn float-right ' + styles.buttonshadow}
                 onClick={(e) => removeRow(e)}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        </>
+      )}
+
+      <br/>
+
+      {menuPost && // menu 2
+      (
+        <>
+          {/* <div>
+            {menuType === 'Pickup' && (
+              <button
+                type="button"
+                className="btn btn-warning fas fa-car-side"
+                onClick={(e) => resetMenuType('Onsite')}
+                // value="Onsite"
+              >
+                &nbsp; Curbside Menu
+              </button>
+            )}
+            {menuType === 'Onsite' && (
+              <button
+                type="button"
+                className="btn  btn-warning fas fa-school"
+                onClick={(e) => resetMenuType('Pickup')}
+                // value="Pickup"
+              >
+                &nbsp; Onsite Menu
+              </button>
+            )}
+          </div> */}
+          <br />
+          <br />
+          <h3>Elementary Menu </h3>
+          {/* table menu */}
+          <table className="table table-striped table-sm table-bordered">
+            {menuType === 'Onsite' ? (
+              <thead>
+                <tr>
+                  <th scope="col">Day</th>
+                  <th scope="col">Breakfast</th>
+                  <th scope="col">Lunch</th>
+                  <th scope="col">Vegetarian Lunch</th>
+                </tr>
+              </thead>
+            ) : (
+              <thead>
+                <tr>
+                  <th scope="col">Secondary</th>
+                  <th scope="col">Day 1</th>
+                  <th scope="col">Day 2</th>
+                  {/* <th scope="col">Vegetarian Lunch</th> */}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {console.log('what"s in menu', menu)}
+              {menuType === 'Onsite'
+                ? menu2.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row1')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row2')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row3')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row4')}
+                          />
+                        </td>
+                      </tr>
+                    </>
+                  ))
+                : menu2.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row1')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row2')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu2('row3')}
+                          />
+                        </td>
+                        {/* <td>
+                      <input
+                        data-index={i}
+                        value={l.row1.value}
+                        onChange={handleMenu('row4')}
+                      />
+                    </td> */}
+                      </tr>
+                    </>
+                  ))}
+            </tbody>
+          </table>
+          <div className="p-1"></div>
+          <div className="">
+            {
+              <button
+                className={'btn  btn-outline-info ' + styles.buttonshadow}
+                type="button"
+                onClick={() => menu2.map((e) => addRow2(e))}
+              >
+                <i class="fas fa-utensils"></i>
+                &nbsp;&nbsp; Add Row
+              </button>
+            }
+            {menu.length !== 1 && (
+              <button
+                type="button"
+                className={'btn float-right ' + styles.buttonshadow}
+                onClick={(e) => removeRow2(e)}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        </>
+      )}
+
+      <br/>
+
+      {menuPost && // menu 3
+      (
+        <>
+          {/* <div>
+            {menuType === 'Pickup' && (
+              <button
+                type="button"
+                className="btn btn-warning fas fa-car-side"
+                onClick={(e) => resetMenuType('Onsite')}
+                // value="Onsite"
+              >
+                &nbsp; Curbside Menu
+              </button>
+            )}
+            {menuType === 'Onsite' && (
+              <button
+                type="button"
+                className="btn  btn-warning fas fa-school"
+                onClick={(e) => resetMenuType('Pickup')}
+                // value="Pickup"
+              >
+                &nbsp; Onsite Menu
+              </button>
+            )}
+          </div> */}
+          <br />
+          <br />
+          <h3>Highschool Menu </h3>
+          {/* table menu */}
+          <table className="table table-striped table-sm table-bordered">
+            {menuType === 'Onsite' ? (
+              <thead>
+                <tr>
+                  <th scope="col">Day</th>
+                  <th scope="col">Breakfast</th>
+                  <th scope="col">Lunch</th>
+                  <th scope="col">Vegetarian Lunch</th>
+                </tr>
+              </thead>
+            ) : (
+              <thead>
+                <tr>
+                  <th scope="col">Secondary</th>
+                  <th scope="col">Day 1</th>
+                  <th scope="col">Day 2</th>
+                  {/* <th scope="col">Vegetarian Lunch</th> */}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {console.log('what"s in menu', menu)}
+              {menuType === 'Onsite'
+                ? menu3.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row1')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row2')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row3')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row4')}
+                          />
+                        </td>
+                      </tr>
+                    </>
+                  ))
+                : menu3.map((l, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row1')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row2')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            data-index={i}
+                            value={l.row1.value}
+                            onChange={handleMenu3('row3')}
+                          />
+                        </td>
+                        {/* <td>
+                      <input
+                        data-index={i}
+                        value={l.row1.value}
+                        onChange={handleMenu('row4')}
+                      />
+                    </td> */}
+                      </tr>
+                    </>
+                  ))}
+            </tbody>
+          </table>
+          <div className="p-1"></div>
+          <div className="">
+            {
+              <button
+                className={'btn  btn-outline-info ' + styles.buttonshadow}
+                type="button"
+                onClick={() => menu3.map((e) => addRow3(e))}
+              >
+                <i class="fas fa-utensils"></i>
+                &nbsp;&nbsp; Add Row
+              </button>
+            }
+            {menu.length !== 1 && (
+              <button
+                type="button"
+                className={'btn float-right ' + styles.buttonshadow}
+                onClick={(e) => removeRow3(e)}
               >
                 Remove
               </button>

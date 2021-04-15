@@ -148,7 +148,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )} */}
-          {process.browser && isAuth() && isAuth().role === 'subscriber' && (
+          {process.browser && isAuth() &&  (
             <li key="2" className="nav-item">
               <Link href="/user">
                 <a className="nav-link text-white">
@@ -387,7 +387,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-          {process.browser && isAuth() && (
+          {process.browser && isAuth() && isAuth().role === 'subscriber' && (
             <li key="2" className="nav-item">
               <Link href="/user">
                 <a className="nav-link text-white">
@@ -834,7 +834,7 @@ const Layout = ({ children }) => {
             </li>
           )}
 
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li
               onClick={() => setShowSideMenu(false)}
               className="nav-item pointer-hand"
@@ -846,7 +846,7 @@ const Layout = ({ children }) => {
                 </a>
               </Link>
             </li>
-          )}
+          )} */}
           <hr />
 
           {process.browser && !isAuth() && (
