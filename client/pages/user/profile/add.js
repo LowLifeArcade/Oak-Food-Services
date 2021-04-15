@@ -638,7 +638,8 @@ const Profile = ({ user, token }) => {
                   <div className="form-group pt-1">
                     <input
                       key={i + 3}
-                      value={x.all}
+                      value={x.name}
+                      // value={x.all}
                       data-index={i}
                       onChange={handleObjectNameChange()}
                       // onChange={handleChange({student: 'name'})}
