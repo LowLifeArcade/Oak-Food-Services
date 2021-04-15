@@ -80,6 +80,7 @@ const Menus = ({ categories }) => {
     categories
       .slice(0)
       .reverse()
+      .sort((a, b) => Date.parse(b.pickupWeek) - Date.parse(a.pickupWeek))
       .map((c, i) => (
         <>
           {/* {console.log(moment(new Date()).subtract(13, 'day').format('l'))} */}
@@ -115,7 +116,8 @@ const Menus = ({ categories }) => {
                     }}
                   >
                     <div className="p-4">
-                      <h3 className="font-weight-bold ">{c.name}</h3>
+                      {/* <h3 className="font-weight-bold ">{c.name}</h3> */}
+                      <h3 className="font-weight-bold ">Menus for Week of {moment(c.pickupWeek).format('MMMM Do')}</h3>
                       <hr />
                       <div
                       // className="lead alert alert-seconary pt-4"

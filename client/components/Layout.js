@@ -362,6 +362,23 @@ const Layout = ({ children }) => {
           )}
           </li>
           &nbsp;&nbsp;
+          {
+          // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
+          (
+            <li
+              key="1133"
+              onClick={() => setShowSidebar(false)}
+              className="nav-item pointer-hand "
+            >
+              <Link href="/menus">
+                <a className="nav-link text-white">
+                  {/* <i class="fas fa-book-open"></i> */}
+                  <i class="fas fa-columns"></i>
+                </a>
+              </Link>
+            </li>
+          )}
+          
           {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li
               onClick={() => setShowSidebar(false)}
@@ -397,22 +414,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-          {
-          // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
-          (
-            <li
-              key="1133"
-              onClick={() => setShowSidebar(false)}
-              className="nav-item pointer-hand "
-            >
-              <Link href="/menus">
-                <a className="nav-link text-white">
-                  {/* <i class="fas fa-book-open"></i> */}
-                  <i class="fas fa-columns"></i>
-                </a>
-              </Link>
-            </li>
-          )}
+         
           {process.browser && !isAuth() && (
             <React.Fragment>
               <li key="2" className="nav-item ml-auto">

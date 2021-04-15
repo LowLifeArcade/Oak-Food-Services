@@ -42,6 +42,8 @@ const Update = ({ oldCategory, token }) => {
     name: oldCategory.name,
     emailGroup: oldCategory.group,
     menu: oldCategory.menu,
+    menu2: oldCategory.menu2,
+    menu3: oldCategory.menu3,
     error: '',
     success: '',
     buttonText: 'Update',
