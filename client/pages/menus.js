@@ -136,10 +136,10 @@ const Menus = ({ categories }) => {
                             .format('MMMM Do')}
                         </b>
                       </div>
-                            <div className="p-1"></div></>}
+                            <div className=""></div></>}
                       <hr/>
                       <div >
-                        {c.menu.length > 0 && <h4 className="alert-seconary pt-3">Curbside Pickup</h4>}
+                        {c.menu.length > 0 && <><h4 className="alert-seconary pt-3">Curbside Pickup</h4>
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
@@ -170,11 +170,14 @@ const Menus = ({ categories }) => {
                             )) || ''}
                           </tbody>
                         </table>
-
+                        <br/>
+<hr/>
                         <br />
-                        {c.menu2.length > 0 && (
+                        </>
+                      }
+                        {c.menu2.length > 0 && <>
                           <h5>BES | OHES | ROES | MCMS</h5>
-                        )}
+                        
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
@@ -232,6 +235,10 @@ const Menus = ({ categories }) => {
                             )) || ''}
                           </tbody>
                         </table>
+                      <br/>
+                      <br/>
+                        </>
+                    }
                       </div>
 
                       <div className={' '}>{renderHTML(c.content || '')}</div>
