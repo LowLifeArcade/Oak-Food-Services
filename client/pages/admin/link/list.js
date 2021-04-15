@@ -518,7 +518,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   const onsiteHeaders = [
     { label: 'School Name', key: 'schoolName' },
     { label: 'Student Name', key: 'studentName' },
-    { label: 'Last Name', key: 'lastName' },
+    // { label: 'Last Name', key: 'lastName' },
     { label: 'Teacher', key: 'teacher' },
     { label: 'Group', key: 'group' },
     { label: 'Food Allergy', key: 'allergies' },
@@ -726,7 +726,9 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                 <td>
                   {l.postedBy === null
                     ? 'user deleted'
-                    : l.studentName + ' ' + l.lastName}
+                    : l.studentName 
+                    // + ' ' + l.lastName
+                    }
                 </td>
                 <td>{l.postedBy === null ? 'user deleted' : l.teacher}</td>
                 <td>{l.schoolName === null ? 'user deleted' : l.schoolName}</td>

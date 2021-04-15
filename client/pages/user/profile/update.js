@@ -316,6 +316,41 @@ const Profile = ({ user, token }) => {
     </>
   );
 
+  const addOPISTeacher = (i, x) => (
+    <>
+      <div key={i} className="form-group">
+        <div className="">
+          <select
+            type="select"
+            data-index={i}
+            onChange={(e) => handleSelectTeacherChange(e)}
+            className="form-control"
+            required
+          >
+            {' '}
+            <option selected disabled value="">
+              Choose Grade Level
+            </option>
+            <option value="k">K</option>
+            <option value="1st-grade">1st</option>
+            <option value="2nd-grade">2nd</option>
+            <option value="3rd-grade">3rd</option>
+            <option value="4th-grade">4th</option>
+            <option value="5th-grade">5th</option>
+            <option value="6th-grade">6th</option>
+            <option value="7th-grade">7th</option>
+            <option value="8th-grade">8th</option>
+            <option value="9th-grade">9th</option>
+            <option value="10th-grade">10th </option>
+            <option value="11th-grade">11th </option>
+            <option value="12th-grade">12th </option>
+          </select>
+          <div className="p-2"></div>
+        </div>
+      </div>
+    </>
+  );
+
   // adding a student to fields
   const addStudent = (e) => {
     e.preventDefault();
@@ -444,7 +479,9 @@ const Profile = ({ user, token }) => {
     oneStudent.teacher = '';
     oneStudent.age = '';
     oneStudent.group =
-      e.target.value === 'NON' || e.target.value === 'DK'
+      e.target.value === 'NON' ||
+      e.target.value === 'DK' ||
+      e.target.value === 'OPIS'
         ? 'distance-learning'
         : '';
 
@@ -845,6 +882,7 @@ const Profile = ({ user, token }) => {
                     <option value="MCMS">Medea Creek Middle School</option>
                     <option value="OPHS">Oak Park High School</option>
                     <option value="OVHS">Oak View High School</option>
+                    <option value="OPIS">Oak Park Independent School</option>
                     <option value="NON">Non OPUSD Student</option>
                   </select>
                 </div>
@@ -852,6 +890,7 @@ const Profile = ({ user, token }) => {
                 {students[i].schoolName != 'NON' &&
                   students[i].schoolName != 'DK' &&
                   students[i].schoolName != 'OVHS' &&
+                  students[i].schoolName != 'OPIS' &&
                   students[i].schoolName != 'OPHS' && (
                     <div key={1} className="form-group">
                       <div className="">
@@ -877,7 +916,9 @@ const Profile = ({ user, token }) => {
                               Onsite Lunch- Cohort A
                             </option>
                           ) : (
-                            <option value="a-group">Onsite Lunch- Cohort A</option>
+                            <option value="a-group">
+                              Onsite Lunch- Cohort A
+                            </option>
                           )}
                           {students[i].foodAllergy.gluten === true ||
                           students[i].foodAllergy.egg === true ||
@@ -887,7 +928,9 @@ const Profile = ({ user, token }) => {
                               Onsite Lunch- Cohort B
                             </option>
                           ) : (
-                            <option value="b-group">Onsite Lunch- Cohort B</option>
+                            <option value="b-group">
+                              Onsite Lunch- Cohort B
+                            </option>
                           )}
                         </select>
                         <div className=""></div>
@@ -968,6 +1011,7 @@ const Profile = ({ user, token }) => {
                       {x.schoolName === 'MCMS' && addMCMSTeacher(i, x)}
                       {x.schoolName === 'OPHS' && addOPHSTeacher(i, x)}
                       {x.schoolName === 'OVHS' && addOPHSTeacher(i, x)}
+
                       {x.schoolName === 'NON' ||
                         (x.schoolName === 'DK' && (
                           <div className="form-group pt-1">
@@ -984,6 +1028,8 @@ const Profile = ({ user, token }) => {
                         ))}
                     </div>
                   )}
+
+                {x.schoolName === 'OPIS' && addOPISTeacher(i, x)}
 
                 {students[i].schoolName === 'DK' && (
                   <div className="form-group pt-1">
