@@ -11,7 +11,10 @@ import { getCookie } from '../../../helpers/auth';
 const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
     requests: initRequests,
-    pickupDate: moment(new Date()).format('l'),
+    pickupDate: localStorage.getItem('search-date')
+    ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
+    : moment(new Date()).format('l'),
+    // pickupDate: moment(new Date()).format('l'),
     meals: [],
   });
 
@@ -33,6 +36,23 @@ const Admin = ({ token, user, initRequests }) => {
       meals: allMealsArray.filter((meal) => meal.meal !== 'None'),
     });
   }, [requests]);
+
+  useEffect(() => {
+    localStorage.setItem('search-date', JSON.stringify(pickupDate));
+    // localStorage.setItem('curbsideToggle', JSON.stringify(orderType));
+  });
+
+  useEffect(() => {
+    const data = localStorage.getItem('search-date');
+    console.log('data', data);
+    if (data) {
+      try {
+        handleDateChange(JSON.parse(data));
+      } catch (error) {
+        setState({ ...state, error: error });
+      }
+    }
+  }, []);
 
   const handleTimeSelect = (e, pickupTimeSelected) => {
     e.preventDefault();
@@ -162,7 +182,7 @@ const Admin = ({ token, user, initRequests }) => {
               <Calendar
                 onChange={(e) => onDateChange(e)}
                 tileDisabled={handleDisabledDates}
-                value={pickupDate}
+                value={new Date()}
                 value={''}
               />
             </div>
@@ -186,68 +206,71 @@ const Admin = ({ token, user, initRequests }) => {
       </h3>
       <hr />
       <h4>
-        <b className="text-danger">{pickupMealsForLunch('Lunch Only') * 5}</b> -
+        <b className="text-danger">{pickupMealsForLunch('Lunch Only')}</b> -
         Curbside Lunch Meals <p />
-        <b className="text-danger">{pickupMealsForBreakfast() * 5}</b> -
+        <b className="text-danger">{pickupMealsForBreakfast()}</b> -
         Curbside Breakfast Meals <p />
       </h4>
 
       <h5 className="p-1">
-        <b>{allOpenPickupMeals() * 5}</b> - Unfulfilled Curbside Meals <p />
-        <b>{allCompletedPickupMeals() * 5}</b> - Fulfilled Curbside Meals
+        <b>{allOpenPickupMeals() }</b> - Unfulfilled Curbside Meals <p />
+        <b>{allCompletedPickupMeals()}</b> - Fulfilled Curbside Meals
       </h5>
       <hr />
       <div className="p-3">
         <h6>
-          {mealCounter('Standard') * 5} - Standard Breakfast and Lunch Meal
+          {mealCounter('Standard') } - Standard Breakfast and Lunch Meal
           Requests
           <hr />
-          {lunchOnlyMealCounter('Standard') * 5} - Standard Meals LUNCH ONLY
+          {lunchOnlyMealCounter('Standard') } - Standard Meals LUNCH ONLY
           <hr />
-          {mealCounter('Vegetarian') * 5} - Vegetarian Breakfast and Lunch Meal
+          {mealCounter('Vegetarian') } - Vegetarian Breakfast and Lunch Meal
           Requests
           <hr />
-          {lunchOnlyMealCounter('Vegetarian') * 5} - Vegetarian Meals LUNCH ONLY
+          {lunchOnlyMealCounter('Vegetarian') } - Vegetarian Meals LUNCH ONLY
           <hr />
-          {lunchOnlyMealCounter('Vegan') * 5} - Vegan Meals LUNCH ONLY
+          {lunchOnlyMealCounter('Vegan') } - Vegan Meals LUNCH ONLY
           <hr />
-          {lunchOnlyMealCounter('GlutenFree') * 5} - Gluten Free Meals LUNCH
+          {lunchOnlyMealCounter('GlutenFree') } - Gluten Free Meals LUNCH
           ONLY
           <hr />
-          {mealBreakfastOnlyCounter('Standard Onsite') * 5} - Breakfast Only
+          {lunchOnlyMealCounter('Sesame') } - Sesame Free Meals LUNCH
+          ONLY
+          <hr />
+          {mealBreakfastOnlyCounter('Standard Onsite') } - Breakfast Only
           meal requests
           <hr />
         </h6>
       </div>
       <h4>
-        <b className="text-danger">{allOnsiteMeals() * 2}</b> - All Onsite Meals{' '}
+        <b className="text-danger">{allOnsiteMeals() }</b> - All Onsite Meals{' '}
         <p />
         <hr />
       </h4>
 
       <div className="p-3">
         <h6>
-          {pickupMealsBySchool('BES', 'a-group') * 2} - BES A
+          {pickupMealsBySchool('BES', 'a-group') } - BES A
           <hr />
-          {pickupMealsBySchool('BES', 'b-group') * 2} - BES B
+          {pickupMealsBySchool('BES', 'b-group') } - BES B
           <hr />
-          {pickupMealsBySchool('OHES', 'a-group') * 2} - OHES A
+          {pickupMealsBySchool('OHES', 'a-group') } - OHES A
           <hr />
-          {pickupMealsBySchool('OHES', 'b-group') * 2} - OHES B
+          {pickupMealsBySchool('OHES', 'b-group') } - OHES B
           <hr />
-          {pickupMealsBySchool('ROES', 'a-group') * 2} - ROES A
+          {pickupMealsBySchool('ROES', 'a-group') } - ROES A
           <hr />
-          {pickupMealsBySchool('ROES', 'b-group') * 2} - ROES B
+          {pickupMealsBySchool('ROES', 'b-group') } - ROES B
           <hr />
-          {pickupMealsBySchool('MCMS', 'a-group') * 2} - MCMS A
+          {pickupMealsBySchool('MCMS', 'a-group') } - MCMS A
           <hr />
-          {pickupMealsBySchool('MCMS', 'b-group') * 2} - MCMS B
+          {pickupMealsBySchool('MCMS', 'b-group') } - MCMS B
           <hr />
-          {pickupMealsBySchool('OPHS', 'a-group') * 2} - OPHS A
+          {pickupMealsBySchool('OPHS', 'a-group') } - OPHS A
           <hr />
-          {pickupMealsBySchool('OPHS', 'b-group') * 2} - OPHS B
+          {pickupMealsBySchool('OPHS', 'b-group') } - OPHS B
           <hr />
-          {pickupMealsBySchool('OVHS') * 2} - OVHS
+          {pickupMealsBySchool('OVHS') } - OVHS
           <hr />
         </h6>
       </div>
