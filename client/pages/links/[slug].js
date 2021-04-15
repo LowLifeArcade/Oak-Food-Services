@@ -244,7 +244,7 @@ const Links = ({
               {category.menu2.length > 0 && <h5>BES | OHES | ROES | MCMS</h5>}
               <table
                 className="table table-sm table-striped table-bordered "
-                style={{ fontSize: '10px' }}
+                // style={{ fontSize: '10px' }}
               >
                 {category.menu2.length > 0 && (
                   <thead>
@@ -270,7 +270,7 @@ const Links = ({
               {category.menu3.length > 0 && <h5>OPHS</h5>}
               <table
                 className="table table-sm table-striped table-bordered "
-                style={{ fontSize: '10px' }}
+                // style={{ fontSize: '10px' }}
               >
                 {category.menu3.length > 0 && (
                   <thead>

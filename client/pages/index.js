@@ -8,8 +8,8 @@ import Router from 'next/router';
 const Home = () => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
-    localStorage.getItem('no-students') &&  Router.push('/user/profile/add');
-  })
+    localStorage.getItem('no-students') && Router.push('/user/profile/add');
+  });
   useEffect(() => {
     // window.addEventListener('load', (event) => {
     //   setLoaded(true)
@@ -86,15 +86,20 @@ const Home = () => {
                     <b>Start a Meal Request</b>
                   </div>
                   <div className={'pb-5 ' + styles.bodyregular}>
-                    Look over the &nbsp;{
-                      <Link href='/menus'>
-                      <a className='text-' style={{ textDecorater: 'none', color: '#419ca8' }}>
-                      <i class="fas fa-columns"></i>
-                      <span>&nbsp;&nbsp;</span>
-                    <b>weekly menu</b>
-                      </a>
+                    Look over the &nbsp;
+                    {
+                      <Link href="/menus">
+                        <a
+                          className="text-"
+                          style={{ textDecorater: 'none', color: '#419ca8' }}
+                        >
+                          <i class="fas fa-columns"></i>
+                          <span>&nbsp;&nbsp;</span>
+                          <b>weekly menu</b>
+                        </a>
                       </Link>
-                    }, then start a request with one of the{' '}
+                    }
+                    , then start a request with one of the{' '}
                     <b>
                       yellow <i>Meal Request</i> buttons
                     </b>{' '}
@@ -242,7 +247,7 @@ const Home = () => {
           >
             <div className={'text-white col-md-9 ' + styles.bodyregular}>
               <div className="p-2"></div>
-              <ul className={styles.lists}>
+              <ul style={{ fontSize: '14px' }}className={styles.lists}>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/10593">
                     <a className="text-white  " target="_blank">
@@ -252,12 +257,16 @@ const Home = () => {
                 </li>
                 <li>
                   <div className="float-right ">
+                  <Link href="https://www.oakparkusd.org/Page/1">
+                    <a className="text-white  " target="_blank">
                     <img
                       src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
                       loading="lazy"
                       alt=""
                       width="100"
                     />
+                    </a>
+                    </Link>
                   </div>
                 </li>
                 <li>
@@ -277,14 +286,20 @@ const Home = () => {
                     Contact
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <Link href="https://www.oakparkusd.org/Page/1">
                     <a className="text-white  " target="_blank">
                       OPUSD
                     </a>
                   </Link>
+                </li> */}
+                <li>
+                  <Link href="https://www.oakparkusd.org/Page/1">
+                    <a className="text-white  " target="_blank">
+                      FAQ
+                    </a>
+                  </Link>
                 </li>
-
 
                 {/* <li>
                   <Link href="https://www.oakparkusd.org/Page/10809">
@@ -298,25 +313,21 @@ const Home = () => {
                 735-3200 | Fax (818) 879-0372
                 </div> */}
               </ul>
-              <hr/>
+              <hr />
               <div className="p-1"></div>
-<div className='d-flex row justify-content-center' 
-// style={{ fontSize: '10px' }}
->
-
-                This institution is an equal opportunity provider.
-                
-                
-</div>
-<div className="p-1"></div>
-<div className='d-flex row justify-content-center' 
-style={{ fontSize: '10px' }}
->
-
+              <div
+                className="d-flex row justify-content-center"
+                style={{ fontSize: '17px' }}
+              >
+                This institution is an equal opportunity provider
+              </div>
+              <div className="p-1"></div>
+              <div
+                className="d-flex row justify-content-center"
+                style={{ fontSize: '10px' }}
+              >
                 Copyright 2021
-                
-                
-</div>
+              </div>
             </div>
           </div>
         </div>

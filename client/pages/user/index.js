@@ -88,68 +88,73 @@ const User = ({ user, token, l, userLinks }) => {
       .sort((a, b) => Date.parse(a.pickupDate) - Date.parse(b.pickupDate))
       .map((l, i) => (
         <>
-          { moment(l.pickupDate).format('MDD').toString() > // doesn't show receipts older than 3 days past pickupdate (actually mealweek date i need to change pickupdate to mealweek)
-            moment(new Date()).subtract(2, 'day').format('MDD').toString() && 
+          {moment(l.pickupDate).format('MDD').toString() > // doesn't show receipts older than 3 days past pickupdate (actually mealweek date i need to change pickupdate to mealweek)
+            moment(new Date()).subtract(2, 'day').format('MDD').toString() && (
             // <Link href={`/user/receipt/${l._id}`}>
             //   <a style={{ textDecoration: 'none' }}>
-                <div
-                  key={i}
-                  // style={{ textDecoration: 'none' }}
-                  className={
-                    l.orderStatus === true ||
-                    moment(l.pickupDate).format('MDD').toString() <
-                      moment(new Date()).add(2, 'day').format('MDD').toString()
-                      ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
-                      : 'p-4 alert  alert-warning ' + styles.subcard // completed order
-                  }
-                >
-                  {/* {console.log(
+            <div
+              key={i}
+              // style={{ textDecoration: 'none' }}
+              className={
+                l.orderStatus === true ||
+                moment(l.pickupDate).format('MDD').toString() <
+                  moment(new Date()).add(2, 'day').format('MDD').toString()
+                  ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
+                  : 'p-4 alert  alert-warning ' + styles.subcard // completed order
+              }
+            >
+              {/* {console.log(
               'date comparison',
               moment(l.pickupDate).format('MDD').toString() <
                 moment(new Date()).format('MDD').toString()
             )} */}
+              <div className="wrapper ">
+                <Link href={`/user/receipt/${l._id}`}>
+                  <a
+                    className=" "
+                    style={{ color: 'inherit', textDecoration: 'none' }}
+                  >
+                    <h4>
+                      {l.orderStatus && (
+                        <b className="text-danger ">
+                          <h2>
+                            * PICKED UP *
+                            <br />
+                            on {moment(l.updatedAt).format('MMM Do')}
+                          </h2>
+                          <hr />
+                        </b>
+                      )}
+                      {moment(l.pickupDate).format('MDD').toString() <
+                        moment(new Date())
+                          .add(2, 'day')
+                          .format('MDD')
+                          .toString() && (
+                        <b className="text-danger ">
+                          <h2>
+                            * EXPIRED *
+                            <br />
+                            {/* on {moment(l.updatedAt).format('MMM Do')} */}
+                          </h2>
+                          <hr />
+                        </b>
+                      )}
+                    </h4>
 
-            <div className="wrapper ">
-            <Link href={`/user/receipt/${l._id}`}>
-              <a className=' ' style={{ color: 'inherit', textDecoration: 'none' }}>
-                  <h4>
-                    {l.orderStatus && (
-                      <b className="text-danger ">
-                        <h2>
-                          * PICKED UP *
-                          <br />
-                          on {moment(l.updatedAt).format('MMM Do')}
-                        </h2>
-                        <hr />
-                      </b>
-                    )}
-                    {moment(l.pickupDate).format('MDD').toString() <
-                      moment(new Date()).add(2, 'day').format('MDD').toString() && (
-                      <b className="text-danger ">
-                        <h2>
-                          * EXPIRED *
-                          <br />
-                          {/* on {moment(l.updatedAt).format('MMM Do')} */}
-                        </h2>
-                        <hr />
-                      </b>
-                    )}
-                  </h4>
-
-                  {l.mealRequest.filter(
-                    (l) =>
-                      l.meal == 'Standard' ||
-                      l.meal == 'Vegetarian' ||
-                      l.meal == 'Gluten Free' ||
-                      l.meal == 'Vegan' ||
-                      l.meal == 'Standard Dairy Free' ||
-                      l.meal == 'GlutenFree Dairy Free' ||
-                      l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                      l.pickupOption === 'Lunch Only' ||
-                      l.pickupOption === 'Breakfast and Lunch'
-                  ).length != 0 && (
-                    <React.Fragment>
-                      {/* <h4 className="pt-2 ">
+                    {l.mealRequest.filter(
+                      (l) =>
+                        l.meal == 'Standard' ||
+                        l.meal == 'Vegetarian' ||
+                        l.meal == 'Gluten Free' ||
+                        l.meal == 'Vegan' ||
+                        l.meal == 'Standard Dairy Free' ||
+                        l.meal == 'GlutenFree Dairy Free' ||
+                        l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                        l.pickupOption === 'Lunch Only' ||
+                        l.pickupOption === 'Breakfast and Lunch'
+                    ).length != 0 && (
+                      <React.Fragment>
+                        {/* <h4 className="pt-2 ">
                       CURBSIDE PICKUP
                       <br />
                       ON: {' '}
@@ -160,37 +165,73 @@ const User = ({ user, token, l, userLinks }) => {
                       </b>
                     </h4>
                     Between <b className="pb-2 ">{l.pickupTime} </b> */}
-                      <h3 className="pt-2 d-flex justify-content-center ">
-                        CURBSIDE PICKUP
-                      </h3>
-                      <h4>
-                        <div className="d-flex justify-content-center">
-                          {/* {'On '} */}
-                          {l.pickupDate === moment('05/31/2021').format('l') ? (
-                            <b>
-                              {
-                                moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                        <h3 className="pt-2 d-flex justify-content-center ">
+                          CURBSIDE PICKUP
+                        </h3>
+                        <h4>
+                          <div className="d-flex justify-content-center">
+                            {/* {'On '} */}
+                            {l.pickupDate ===
+                            moment('05/31/2021').format('l') ? (
+                              <b>
+                                {moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
                                   .subtract(5, 'day') // i can make the number a variable that is set in the menu creation phase or something
                                   .format('dddd MMMM Do')}
-                            </b>
-                          ) : (
-                            <b>
-                              {
-                                moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                              </b>
+                            ) : (
+                              <b>
+                                {moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
                                   .subtract(3, 'day') // i can make the number a variable that is set in the menu creation phase or something
                                   .format('dddd MMMM Do')}
-                            </b>
-                          )}
-                        </div>
-                      </h4>
-                      <span className="d-flex justify-content-center ">
-                        <b className="pb-2 ">{'Between ' + l.pickupTime} </b>
-                      </span>
-                    </React.Fragment>
-                  )}
-                  <hr className={styles.hr} />
+                              </b>
+                            )}
+                          </div>
+                        </h4>
+                        <span className="d-flex justify-content-center ">
+                          <b className="pb-2 ">{'Between ' + l.pickupTime} </b>
+                        </span>
+                      </React.Fragment>
+                    )}
+                    <hr className={styles.hr} />
 
-                  <h3>
+                    <h3>
+                      {l.mealRequest.filter(
+                        (l) =>
+                          l.meal == 'Standard' ||
+                          l.meal == 'Vegetarian' ||
+                          l.meal == 'GlutenFree' ||
+                          l.meal == 'Vegan' ||
+                          l.meal == 'Standard DF' ||
+                          l.meal == 'GlutenFree DF' ||
+                          l.pickupOption ===
+                            'Lunch Onsite / Breakfast Pickup' ||
+                          l.pickupOption === 'Lunch Only' ||
+                          l.pickupOption === 'Breakfast and Lunch'
+                      ).length != 0 ? (
+                        <b
+                          id={`${i}+printCode`}
+                          data-index={`${i}+printCode`}
+                          onClick={
+                            l.orderStatus === false &&
+                            moment(l.pickupDate).format('MDD').toString() >
+                              moment(new Date()).format('MDD').toString()
+                              ? (e) => printData(e)
+                              : null
+                          }
+                          className="code d-flex justify-content-center"
+                        >
+                          {l.pickupCode}{' '}
+                        </b>
+                      ) : (
+                        <b>
+                          Onsite School Lunch for Week of{' '}
+                          {moment(l.pickupDate).format('MMMM Do')}
+                          {/* {moment(l.pickupDate).add(3, 'day').format('MMMM Do')} */}
+                        </b>
+                      )}
+                    </h3>
+
+                    <hr className={styles.hr} />
                     {l.mealRequest.filter(
                       (l) =>
                         l.meal == 'Standard' ||
@@ -202,62 +243,26 @@ const User = ({ user, token, l, userLinks }) => {
                         l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
                         l.pickupOption === 'Lunch Only' ||
                         l.pickupOption === 'Breakfast and Lunch'
-                    ).length != 0 ? (
-                      <b
-                        id={`${i}+printCode`}
-                        data-index={`${i}+printCode`}
-                        onClick={
-                          l.orderStatus === false &&
-                          moment(l.pickupDate).format('MDD').toString() >
-                            moment(new Date()).format('MDD').toString()
-                            ? (e) => printData(e)
-                            : null
-                        }
-                        className="code d-flex justify-content-center"
-                      >
-                        {l.pickupCode}{' '}
-                      </b>
-                    ) : (
-                      <b>
-                        Onsite School Lunch for Week of{' '}
-                        {moment(l.pickupDate).format('MMMM Do')}
-                        {/* {moment(l.pickupDate).add(3, 'day').format('MMMM Do')} */}
-                      </b>
+                    ).length != 0 && (
+                      <h6>
+                        Pickup is at{' '}
+                        <b className="text">Brookside Elementary</b>. Display
+                        the above code{' '}
+                        <b className="text-danger">on your dashboard </b>or show
+                        from your phone.
+                      </h6>
                     )}
-                  </h3>
+                    <p></p>
+                  </a>
+                </Link>
+              </div>{' '}
+              {/* finish wrapper  */}
+              <div className="">
+                {/* put link router here  */}
 
-                  <hr className={styles.hr} />
-                  {l.mealRequest.filter(
-                    (l) =>
-                      l.meal == 'Standard' ||
-                      l.meal == 'Vegetarian' ||
-                      l.meal == 'GlutenFree' ||
-                      l.meal == 'Vegan' ||
-                      l.meal == 'Standard DF' ||
-                      l.meal == 'GlutenFree DF' ||
-                      l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                      l.pickupOption === 'Lunch Only' ||
-                      l.pickupOption === 'Breakfast and Lunch'
-                  ).length != 0 && (
-                    <h6>
-                      Pickup is at <b className="text">Brookside Elementary</b>.
-                      Display the above code{' '}
-                      <b className="text-danger">on your dashboard </b>or show
-                      from your phone.
-                    </h6>
-                  )}
-                  <p></p>
-                    </a>
-                    </Link>
-                  </div> {/* finish wrapper  */}
-                  
-
-                  <div className="">
-                    {/* put link router here  */}
-
-                    <div className="p-2">
+                <div className="p-2">
                   <Link href={`/user/receipt/${l._id}`}>
-              <a style={{ color: 'inherit', textDecoration: 'none' }}>
+                    <a style={{ color: 'inherit', textDecoration: 'none' }}>
                       <h5 className="pb-1">
                         <div className="p-3">
                           {l.mealRequest
@@ -354,92 +359,120 @@ const User = ({ user, token, l, userLinks }) => {
                         </div>
                       </h5>
                     </a>
-            </Link>
-                    </div>
-
-
-                    Receipt for week of{' '}
-                    <b>Monday {moment(l.pickupDate).format('MMMM Do')}</b>
-                    {/* put link router here  */}
-
-
-                    <div className=" pb-3 pt-3">
-                      {
-                        // l.postedBy.students[i] === undefined ? null :
-                        l.orderStatus === false &&
-                          moment(l.pickupDate).format('MDD').toString() >
-                            moment(new Date())
-                              .add(2, 'day')
-                              .format('MDD')
-                              .toString() && (
-                            <Link href={`/user/link/${l._id}`}>
-                              <button className="btn btn-sm btn-outline-dark text float-left">
-                                <i class="far fa-edit"></i> &nbsp;Edit
-                              </button>
-                            </Link>
-                          )
-                      }
-                      <span>&nbsp;&nbsp;</span>
-                      {
-                        // l.postedBy.students[i] === undefined ? null :
-                        l.orderStatus === false &&
-                          l.mealRequest.filter(
-                            (l) =>
-                              l.meal == 'Standard' ||
-                              l.meal == 'Vegetarian' ||
-                              l.meal == 'GlutenFree' ||
-                              l.meal == 'Vegan' ||
-                              l.meal == 'Standard DF' ||
-                              l.meal == 'GlutenFree DF' ||
-                              l.pickupOption ===
-                                'Lunch Onsite / Breakfast Pickup' ||
-                              l.pickupOption === 'Lunch Only' ||
-                              l.pickupOption === 'Breakfast and Lunch'
-                          ).length != 0 &&
-                          moment(l.pickupDate).format('MDD').toString() >
-                            moment(new Date()).format('MDD').toString() && (
-                            <a>
-                              <button
-                                type="button"
-                                // ref={printEl}
-                                className="btn btn-sm btn-outline-dark text  print"
-                                data-index={`${i}+printCode`}
-                                onClick={(e) => printData(e)}
-                              >
-                                <i class="fas fa-print"></i>
-                                &nbsp;Print Code
-                              </button>
-                            </a>
-                          )
-                      }
-                      {l.orderStatus === false &&
-                        moment(l.pickupDate).format('MDD').toString() >
-                          moment(new Date()).format('MDD').toString() && (
-                          <Link href="">
-                            <button
-                              onClick={(e) => confirmDelete(e, l._id)}
-                              className="text-white btn btn-sm btn-danger float-right"
-                            >
-                              Cancel
-                            </button>
-                          </Link>
-                        )}
-                      <div className="pt-3 ">
-                        <span className="">
-                          {' '}
-                          Requested {moment(l.createdAt).format('l')} by{' '}
-                          {l.postedBy == null
-                            ? 'user deleted'
-                            : l.postedBy.name}{' '}
-                          <br />
-                        </span>
-                      </div>
-                      <div className="pb-2"></div>
-                    </div>
+                  </Link>
+                </div>
+                {l.mealRequest.filter(
+                  (l) =>
+                    l.meal == 'Standard' ||
+                    l.meal == 'Vegetarian' ||
+                    l.meal == 'Gluten Free' ||
+                    l.meal == 'Vegan' ||
+                    l.meal == 'Standard Dairy Free' ||
+                    l.meal == 'GlutenFree Dairy Free' ||
+                    l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                    l.pickupOption === 'Lunch Only' ||
+                    l.pickupOption === 'Breakfast and Lunch'
+                ).length != 0 && (
+                  <div className=" d-flex justify-content-center ">
+                    <Link
+                      href={`https://drive.google.com/drive/folders/1rF6PSME6_yyWIdsmIhWng8x2Wo2xt4h9`}
+                    >
+                      <a target="_blank">
+                        <button className="btn btn-sm btn-outline-dark text float-left">
+                          <i
+                            className="text-warning fas fa-fire"
+                            // style={{
+                            //   boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
+                            // }}
+                          ></i>{' '}
+                          &nbsp;Reheating Instructions
+                        </button>
+                      </a>
+                    </Link>
                   </div>
+                )}
+
+                <div className="p-3"></div>
+                <div style={{ fontSize: '12px' }}>
+                  Receipt for week of{' '}
+                  <b>Monday {moment(l.pickupDate).format('MMMM Do')}</b>
+                  {/* put link router here  */}
                 </div>
 
-          }
+                <div style={{ fontSize: '12px' }} className=" pb-3 pt-3">
+                  {
+                    // l.postedBy.students[i] === undefined ? null :
+                    l.orderStatus === false &&
+                      moment(l.pickupDate).format('MDD').toString() >
+                        moment(new Date())
+                          .add(2, 'day')
+                          .format('MDD')
+                          .toString() && (
+                        <Link href={`/user/link/${l._id}`}>
+                          <button className="btn btn-sm btn-outline-dark text float-left">
+                            <i class="far fa-edit"></i> &nbsp;Edit
+                          </button>
+                        </Link>
+                      )
+                  }
+                  <span>&nbsp;&nbsp;</span>
+                  {
+                    // l.postedBy.students[i] === undefined ? null :
+                    l.orderStatus === false &&
+                      l.mealRequest.filter(
+                        (l) =>
+                          l.meal == 'Standard' ||
+                          l.meal == 'Vegetarian' ||
+                          l.meal == 'GlutenFree' ||
+                          l.meal == 'Vegan' ||
+                          l.meal == 'Standard DF' ||
+                          l.meal == 'GlutenFree DF' ||
+                          l.pickupOption ===
+                            'Lunch Onsite / Breakfast Pickup' ||
+                          l.pickupOption === 'Lunch Only' ||
+                          l.pickupOption === 'Breakfast and Lunch'
+                      ).length != 0 &&
+                      moment(l.pickupDate).format('MDD').toString() >
+                        moment(new Date()).format('MDD').toString() && (
+                        <a>
+                          <button
+                            type="button"
+                            // ref={printEl}
+                            className="btn btn-sm btn-outline-dark text  print"
+                            data-index={`${i}+printCode`}
+                            onClick={(e) => printData(e)}
+                          >
+                            <i class="fas fa-print"></i>
+                            &nbsp;Print Code
+                          </button>
+                        </a>
+                      )
+                  }
+                  {l.orderStatus === false &&
+                    moment(l.pickupDate).format('MDD').toString() >
+                      moment(new Date()).format('MDD').toString() && (
+                      <Link href="">
+                        <button
+                          onClick={(e) => confirmDelete(e, l._id)}
+                          className="text-white btn btn-sm btn-danger float-right"
+                        >
+                          Cancel
+                        </button>
+                      </Link>
+                    )}
+                  <div className="pt-3 ">
+                    <span className="">
+                      {' '}
+                      Requested {moment(l.createdAt).format('l')} by{' '}
+                      {l.postedBy == null ? 'user deleted' : l.postedBy.name}{' '}
+                      <br />
+                    </span>
+                  </div>
+                  <div className="pb-2"></div>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       ));
 

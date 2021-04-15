@@ -143,7 +143,7 @@ const Menus = ({ categories }) => {
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
-                          style={{ fontSize: '10px' }}
+                          style={{ fontSize: '12px' }}
                         >
                           {c.menu.length > 0 && (
                             <thead>
@@ -178,7 +178,7 @@ const Menus = ({ categories }) => {
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
-                          style={{ fontSize: '10px' }}
+                          style={{ fontSize: '12px' }}
                         >
                           {c.menu2.length > 0 && (
                             <thead>
@@ -207,7 +207,7 @@ const Menus = ({ categories }) => {
                         <div className="p-1"></div>
                         <table
                           className="table table-sm table-striped table-bordered "
-                          style={{ fontSize: '10px' }}
+                          style={{ fontSize: '12px' }}
                         >
                           {c.menu3.length > 0 && (
                             <thead>
