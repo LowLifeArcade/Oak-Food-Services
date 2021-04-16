@@ -572,8 +572,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     setShowSearch(!showSearch);
   };
 
-  // const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
-  const handleDisabledDates = ({ date, view }) => date.getDay() !== 1 || date.getMonth()===5 || date.getMonth()===6;
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
 
   // meal request select
   const handleSelectChange = (
@@ -892,7 +891,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     }); //puts ...mealRequest with new meal back into mealRequest: []
   };
 
-  console.log('meal requests', mealRequest);
+  // console.log('meal requests', mealRequest);
   const selectMealRequest = (
     i,
     student,
@@ -957,7 +956,7 @@ const Update = ({ oldLink, token, user, _id }) => {
               <option value={'Vegan B'}>Vegan Lunch plus Breakfast</option>
             )}
             {isAuth().role === 'admin' && (
-              <option value={'Standard '}>Standard</option>
+              <option value={'Standard'}>Standard</option>
             )}
             {isAuth().role === 'admin' && (
               <option value={'Vegetarian'}>Vegetarian</option>
@@ -1849,6 +1848,11 @@ const Update = ({ oldLink, token, user, _id }) => {
             <option disabled value={''}>
               Choose a meal
             </option>
+            {user.special.twothree == true && (
+              <option value={'2on 3off'}>
+                Standard 2 Onsite / 3 Offsite Lunches plus 5 Breakfasts
+              </option>
+            )}
             {user.special.day1 == 'true' && (
               <option value={'Onsite Day 1'}>Onsite Lunch Monday/Wednesday Only</option>
             )}
@@ -2128,7 +2132,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       {
                         isAuth().role === 'admin'
                           ? selectAdminPickupOptions()
-                          : x.meal != 'None'
+                          : x.meal != 'None' && x.meal != '2on 3off' 
                           ? students[i] &&
                             students[i].group === 'distance-learning'
                             ? x.meal === 'GlutenFree' ||

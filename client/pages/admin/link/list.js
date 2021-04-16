@@ -394,6 +394,8 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     });
   };
 
+  console.log('links by date', linksByDate)
+
   // initRequests
 
   const compileOrderStatusArray = (pickupDate) => {
