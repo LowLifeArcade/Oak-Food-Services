@@ -141,7 +141,8 @@ const User = ({ user, token, l, userLinks }) => {
                       )}
                     </h4>
 
-                    {l.mealRequest.filter(
+                    
+                    {l.mealRequest.filter( // If any of these are true, display as a curbside pickup 
                       (l) =>
                         l.meal == 'Standard' ||
                         l.meal == 'Vegetarian' ||
@@ -150,22 +151,12 @@ const User = ({ user, token, l, userLinks }) => {
                         l.meal == 'Standard Dairy Free' ||
                         l.meal == 'GlutenFree Dairy Free' ||
                         l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                        l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                         l.pickupOption === 'Lunch Only' ||
                         l.pickupOption === 'Breakfast and Lunch' ||
                         l.pickupOption === 'Breakfast Only'
                     ).length != 0 && (
                       <React.Fragment>
-                        {/* <h4 className="pt-2 ">
-                      CURBSIDE PICKUP
-                      <br />
-                      ON: {' '}
-                      <b>
-                        {moment(l.pickupDate)
-                          .subtract(3, 'day')
-                          .format('MMMM Do')}
-                      </b>
-                    </h4>
-                    Between <b className="pb-2 ">{l.pickupTime} </b> */}
                         <h3 className="pt-2 d-flex justify-content-center ">
                           CURBSIDE PICKUP
                         </h3>
@@ -196,7 +187,7 @@ const User = ({ user, token, l, userLinks }) => {
                     <hr className={styles.hr} />
 
                     <h3>
-                      {l.mealRequest.filter(
+                      {l.mealRequest.filter( // decides to display print code 
                         (l) =>
                           l.meal == 'Standard' ||
                           l.meal == 'Vegetarian' ||
@@ -206,6 +197,7 @@ const User = ({ user, token, l, userLinks }) => {
                           l.meal == 'GlutenFree DF' ||
                           l.pickupOption ===
                             'Lunch Onsite / Breakfast Pickup' ||
+                          l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                           l.pickupOption === 'Lunch Only' ||
                           l.pickupOption === 'Breakfast Only' ||
                           l.pickupOption === 'Breakfast and Lunch'
@@ -234,7 +226,7 @@ const User = ({ user, token, l, userLinks }) => {
                     </h3>
 
                     <hr className={styles.hr} />
-                    {l.mealRequest.filter(
+                    {l.mealRequest.filter( // decides to show instructions
                       (l) =>
                         l.meal == 'Standard' ||
                         l.meal == 'Vegetarian' ||
@@ -243,6 +235,7 @@ const User = ({ user, token, l, userLinks }) => {
                         l.meal == 'Standard DF' ||
                         l.meal == 'GlutenFree DF' ||
                         l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                        l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                         l.pickupOption === 'Breakfast Only' ||
                         l.pickupOption === 'Lunch Only' ||
                         l.pickupOption === 'Breakfast and Lunch'
@@ -364,7 +357,7 @@ const User = ({ user, token, l, userLinks }) => {
                     </a>
                   </Link>
                 </div>
-                {l.mealRequest.filter(
+                {l.mealRequest.filter( // decides to show reheat instructions 
                   (l) =>
                     l.meal == 'Standard' ||
                     l.meal == 'Vegetarian' ||
@@ -373,6 +366,7 @@ const User = ({ user, token, l, userLinks }) => {
                     l.meal == 'Standard Dairy Free' ||
                     l.meal == 'GlutenFree Dairy Free' ||
                     l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                    l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                     l.pickupOption === 'Lunch Only' ||
                     l.pickupOption === 'Breakfast and Lunch'
                 ).length != 0 && (
@@ -424,9 +418,8 @@ const User = ({ user, token, l, userLinks }) => {
                   }
                   <span>&nbsp;&nbsp;</span>
                   {
-                    // l.postedBy.students[i] === undefined ? null :
                     l.orderStatus === false &&
-                      l.mealRequest.filter(
+                      l.mealRequest.filter( // shows print code 
                         (l) =>
                           l.meal == 'Standard' ||
                           l.meal == 'Vegetarian' ||
@@ -436,6 +429,7 @@ const User = ({ user, token, l, userLinks }) => {
                           l.meal == 'GlutenFree DF' ||
                           l.pickupOption ===
                             'Lunch Onsite / Breakfast Pickup' ||
+                          l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                           l.pickupOption === 'Lunch Only' ||
                           l.pickupOption === 'Breakfast and Lunch'
                       ).length != 0 &&

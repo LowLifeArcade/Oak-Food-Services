@@ -133,7 +133,7 @@ const Create = ({ token, user }) => {
     type,
     medium,
   } = state;
-  // console.log('MEAL REQ', mealRequest);
+  console.log('MEAL REQ', mealRequest);
   const [loaded, setLoaded] = useState(false);
 
   const calanderButton = useRef();
@@ -204,6 +204,7 @@ const Create = ({ token, user }) => {
     });
   }, [mealRequest]);
 
+  // this handles the front code. Others are redundent I think.
   useEffect(() => {
     let frontCode = [];
     mealRequest.forEach((item) => {
@@ -344,248 +345,138 @@ const Create = ({ token, user }) => {
     switch (input) {
       // specials
       case 'Lunch Only' && code.meal === 'Vegetarian':
-        frontCode = 'Lv';
+        // frontCode = 'Lv';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Lunch Only' && code.meal === 'Standard':
-        frontCode = 'L';
+        // frontCode = 'L';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Breakfast Only':
-        frontCode = 'B';
+        // frontCode = 'B';
         pickupOptionLO = 'Breakfast Only';
         break;
       case 'Vegan B': // Vegan with breakfast
-        frontCode = 'Vgb';
+        // frontCode = 'Vgb';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Gluten Free with Breakfast':
-        frontCode = 'Gfb'; // gf with breakfast
+        // frontCode = 'Gfb'; // gf with breakfast
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case '2on 3off':
-        frontCode = 'H';
-        pickupOptionLO = 'Lunch Onsite / Breakfast Pickup';
+        // frontCode = 'H';
+        pickupOptionLO = 'Two Onsite / Three Breakfast and Lunches';
         break;
 
       // standard options
       case 'Standard':
-        frontCode = '';
+        // frontCode = '';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegetarian':
-        frontCode = 'Vt';
+        // frontCode = 'Vt';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan':
-        frontCode = 'Vg';
+        // frontCode = 'Vg';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // gluten dairy options
       case 'Gluten Free':
-        frontCode = 'Gf';
+        // frontCode = 'Gf';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Standard Dairy Free':
-        frontCode = 'Df';
+        // frontCode = 'Df';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Gluten Free Dairy Free':
-        frontCode = 'Gfdf';
+        // frontCode = 'Gfdf';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // sesame gluten dairy combos
       case 'Gluten Sesame Free':
-        frontCode = 'Gfsm';
+        // frontCode = 'Gfsm';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Sesame Dairy Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Sesame Dairy Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // sesame options
       case 'Standard Sesame Free':
-        frontCode = 'Sm';
+        // frontCode = 'Sm';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegetarian Sesame Free':
-        frontCode = 'Vtsm';
+        // frontCode = 'Vtsm';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan Sesame Free':
-        frontCode = 'Vgsm';
+        // frontCode = 'Vgsm';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // soy options
       case 'Standard Soy Free':
-        frontCode = 'Sy';
+        // frontCode = 'Sy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Vegetarian Soy Free':
-        frontCode = 'Vtsy';
+        // frontCode = 'Vtsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Vegan Soy Free':
-        frontCode = 'Vgsy';
+        // frontCode = 'Vgsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Gluten Soy Free':
-        frontCode = 'Gfsy';
+        // frontCode = 'Gfsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy and Sesame Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Dairy Free':
-        frontCode = 'Dfsy';
+        // frontCode = 'Dfsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Sesame Dairy Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Sesame Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Sesame Dairy Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Dairy Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // other
       case 'Standard Onsite':
-        frontCode = 'Onsite';
+        // frontCode = 'Onsite';
         pickupOptionLO = 'Lunch Onsite';
         break;
       case 'None':
-        frontCode = 'None';
+        // frontCode = 'None';
         pickupOptionLO = 'None';
         // group = 'None';
         break;
-      // switch (input) {
-      //   case 'Lunch Only' && code.meal === 'Vegetarian':
-      //     frontCode = 'Lv';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Lunch Only' && code.meal === 'Standard':
-      //     frontCode = 'Sl';
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Breakfast Only':
-      //     frontCode = 'B';
-      //     pickupOptionLO = 'Breakfast Only';
-      //     break; // this wasnt there and worked fine. Not sure why i had it out
-      //   case 'Vegetarian':
-      //     frontCode = 'Vt';
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Vegan':
-      //     frontCode = 'Vg';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Vegan B': // Vegan with breakfast
-      //     frontCode = 'Vg+b';
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Gluten Free':
-      //     frontCode = 'Gf';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Gluten Free with Breakfast':
-      //     frontCode = 'Gf+b'; // gf with breakfast
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Standard':
-      //     frontCode = '';
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Standard Dairy Free':
-      //     frontCode = 'Df';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Gluten Free Dairy Free':
-      //     frontCode = 'Gfdf';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Standard Sesame Free':
-      //     frontCode = 'Sm';
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Vegetarian Sesame Free':
-      //     frontCode = 'Vtsm';
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Breakfast and Lunch';
-      //     break;
-      //   case 'Vegan Sesame Free':
-      //     frontCode = 'Vgsm';
-      //     // pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Standard Soy Free':
-      //     frontCode = 'Sy';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Vegetarian Soy Free':
-      //     frontCode = 'Vtsy';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Vegan Soy Free':
-      //     frontCode = 'Vgsy';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Soy and Sesame Free':
-      //     frontCode = 'Sp';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Soy Sesame Dairy Free':
-      //     frontCode = 'Sp';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Soy Sesame Gluten Free':
-      //     frontCode = 'Sp';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Soy Sesame Dairy Gluten Free':
-      //     frontCode = 'Sp';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Sesame Dairy Gluten Free':
-      //     frontCode = 'Sp';
-      //     pickupOptionLO = 'Lunch Only';
-      //     break;
-      //   case 'Standard Onsite':
-      //     frontCode = 'Onsite';
-      //     pickupOptionLO = 'Lunch Onsite';
-      //     break;
-      //   case '2on 3off':
-      //     frontCode = 'H';
-      //     pickupOptionLO = state.mealRequest[i].pickupOption;
-      //     break;
-      //   case 'None':
-      //     frontCode = 'None';
-      //     pickupOptionLO = 'None';
-      //     // group = 'None';
-      //     break;
-
       default:
         break;
     }
@@ -1175,6 +1066,29 @@ const Create = ({ token, user }) => {
       </div>
     </>
   );
+  const select2on3offOption = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <select
+          type="select"
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {' '}
+          {/* <option value={'Lunch Onsite'}>
+            Lunch Onsite
+          </option> */}
+          <option selected value={'Two Onsite / Three Breakfast and Lunches'}>
+          Two Onsite / Three Breakfast and Lunches
+          </option>
+        </select>
+        <div className="p-1"></div>
+      </div>
+    </>
+  );
 
   // pickup times select
   const handlePickupTimeChange = (e) => {
@@ -1706,10 +1620,12 @@ const Create = ({ token, user }) => {
                               state.students[i].foodAllergy
                             )}
                         </div>
-                        {
+
+                        {x.meal !== '2on 3off' ? // put all special options here to turn off this field then put them below this to activate another select menu
                           isAuth().role === 'admin'
                             ? selectAdminPickupOptions()
                             : x.meal != 'None'  // put option here to turn off pickup selection like for none 
+                            // ? x.meal != '2on 3off' 
                             ? state.students[i].group === 'distance-learning' 
                               ? x.meal === 'Gluten Free' ||
                                 x.meal === 'Gluten Free Dairy Free' ||
@@ -1720,12 +1636,14 @@ const Create = ({ token, user }) => {
                                 user.students[i].foodAllergy.dairy === true ||
                                 user.students[i].foodAllergy.gluten === true
                                 ? selectPickupLunchOnlyOption(i)
-                                : selectPickupOption(i)
+                                : selectPickupOption(i) // if not distance learning then:
                               : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
-                            : null
+                              // : select2on3offOption(i)
+                            : null : null
                           // selectNonePickupOption(i)
                         }
-                        {/* {x.meal === '2on 3off' && selectPickupLunchOnsiteBreakfastOffsiteOptionH(i)} */}
+
+                        {x.meal === '2on 3off' && select2on3offOption(i)}
                         <hr />
                       </>
                     );

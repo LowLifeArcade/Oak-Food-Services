@@ -325,246 +325,6 @@ const Update = ({ oldLink, token, user, _id }) => {
     }, 200);
   }, []);
 
-  // console.log('all meals', mealRequest)
-
-  // const frontCodeRunner = () => {
-  //   // setTimeout(() => {
-  //     let frontCode = [];
-  //     mealRequest.forEach((item) => {
-  //       if (
-  //         item.pickupOption != 'Lunch Onsite' &&
-  //         item.pickupOption != 'Breakfast Only'
-  //       ) {
-  //         switch (item.meal) {
-  //           case 'Standard':
-  //             frontCode.push('');
-  //             break;
-  //           case 'Vegetarian' && !item.pickupOption === 'Lunch Only':
-  //             frontCode.push('Vt');
-  //             break;
-  //           case 'Vegan':
-  //             frontCode.push('Vg');
-  //             break;
-  //           case 'Vegan B':
-  //             frontCode.push('Vg+b');
-  //             break;
-  //           case 'Gluten Free':
-  //             frontCode.push('Gf');
-  //             break;
-  //           case 'Gluten Free with Breakfast':
-  //             frontCode.push('Gf+b');
-  //             break;
-  //           case 'Standard Dairy Free':
-  //             frontCode.push('Df');
-  //             break;
-  //           case 'Gluten Free Dairy Free':
-  //             frontCode.push('Gfdf');
-  //             break;
-  //           case 'Standard Sesame Free':
-  //             frontCode.push('Sm');
-  //             break;
-  //           case 'Vegetarian Sesame Free':
-  //             frontCode.push('Vtsm');
-  //             break;
-  //           case 'Vegan Sesame Free':
-  //             frontCode.push('Vgsm');
-  //             break;
-  //           case 'Standard Soy Free':
-  //             frontCode.push('Sy');
-  //             break;
-  //           case 'Vegetarian Soy Free':
-  //             frontCode.push('Vtsy');
-  //             break;
-  //           case 'Vegan Soy Free':
-  //             frontCode.push('Vgsy');
-  //             break;
-  //           case 'Soy and Sesame Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case 'Soy Sesame Dairy Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case 'Soy Sesame Gluten Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case 'Soy Sesame Dairy Gluten Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case '2on 3off':
-  //             frontCode.push('H');
-  //             break;
-  //           default:
-  //             break;
-  //         }
-  //       }
-  //       // switch (item.meal) {
-  //       //   case 'Vegan':
-  //       //     frontCode.push('Vg');
-  //       //     break;
-  //       //   case 'GlutenFree':
-  //       //     frontCode.push('Gf');
-  //       //     break;
-  //       //   default:
-  //       //     break;
-  //       // }
-  //     });
-
-  //     mealRequest.forEach((item) => {
-  //       switch (item.pickupOption) {
-  //         case 'Breakfast Only':
-  //           frontCode.push('B');
-  //           break;
-  //         case 'Lunch Onsite / Breakfast Pickup':
-  //           frontCode.push('B');
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //       item.pickupOption === 'Lunch Only' && item.meal === 'Standard'
-  //         ? frontCode.push('L')
-  //         : null;
-  //       item.pickupOption === 'Lunch Only' && item.meal === 'Vegetarian'
-  //         ? frontCode.push('Lv')
-  //         : null;
-  //     });
-
-  //     setState({
-  //       ...state,
-  //       buttonText: 'Update',
-  //       pickupCodeAdd: frontCode,
-  //       pickupTime:
-  //         isAuth().role === 'admin'
-  //           ? '11am-1pm'
-  //           : mealRequest
-  //               .filter((meal) => meal.meal !== 'None')
-  //               .every((meal) => meal.meal === 'Standard Onsite') &&
-  //             mealRequest
-  //               .filter((meal) => meal.meal !== 'None')
-  //               .some((meal) => meal.pickupOption === 'Lunch Onsite')
-  //           ? 'Cafeteria'
-  //           : oldLink.pickupTime
-  //           ? oldLink.pickupTime
-  //           : '',
-  //       success: '',
-  //       error: '',
-  //     }); //puts ...mealRequest with new meal back into mealRequest: []
-  //   // }, 1000);
-  // };
-  // console.log('pickup code to add', pickupCodeAdd)
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     let frontCode = [];
-  //     mealRequest.forEach((item) => {
-  //       if (
-  //         item.pickupOption != 'Lunch Onsite' &&
-  //         item.pickupOption != 'Breakfast Only'
-  //       ) {
-  //         switch (item.meal) {
-  //           case 'Standard':
-  //             frontCode.push('');
-  //             break;
-  //           case 'Vegetarian' && !item.pickupOption === 'Lunch Only':
-  //             frontCode.push('Vt');
-  //             break;
-  //           case 'Vegan':
-  //             frontCode.push('Vg');
-  //             break;
-  //           case 'Vegan B':
-  //             frontCode.push('Vg+b');
-  //             break;
-  //           case 'Gluten Free':
-  //             frontCode.push('Gf');
-  //             break;
-  //           case 'Gluten Free with Breakfast':
-  //             frontCode.push('Gf+b');
-  //             break;
-  //           case 'Standard Dairy Free':
-  //             frontCode.push('Df');
-  //             break;
-  //           case 'Gluten Free Dairy Free':
-  //             frontCode.push('Gfdf');
-  //             break;
-  //           case 'Standard Sesame Free':
-  //             frontCode.push('Sm');
-  //             break;
-  //           case 'Vegetarian Sesame Free':
-  //             frontCode.push('Vtsm');
-  //             break;
-  //           case 'Vegan Sesame Free':
-  //             frontCode.push('Vgsm');
-  //             break;
-  //           case 'Standard Soy Free':
-  //             frontCode.push('Sy');
-  //             break;
-  //           case 'Vegetarian Soy Free':
-  //             frontCode.push('Vtsy');
-  //             break;
-  //           case 'Vegan Soy Free':
-  //             frontCode.push('Vgsy');
-  //             break;
-  //           case 'Soy and Sesame Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case 'Soy Sesame Dairy Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case 'Soy Sesame Gluten Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case 'Soy Sesame Dairy Gluten Free':
-  //             frontCode.push('Sp');
-  //             break;
-  //           case '2on 3off':
-  //             frontCode.push('H');
-  //             break;
-  //           default:
-  //             break;
-  //         }
-  //       }
-  //     });
-
-  //     mealRequest.forEach((item) => {
-  //       switch (item.pickupOption) {
-  //         case 'Breakfast Only':
-  //           frontCode.push('B');
-  //           break;
-  //         case 'Lunch Onsite / Breakfast Pickup':
-  //           frontCode.push('B');
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //       item.pickupOption === 'Lunch Only' && item.meal === 'Standard'
-  //         ? frontCode.push('L')
-  //         : null;
-  //       item.pickupOption === 'Lunch Only' && item.meal === 'Vegetarian'
-  //         ? frontCode.push('Lv')
-  //         : null;
-  //     });
-
-  //     setState({
-  //       ...state,
-  //       buttonText: 'Update',
-  //       pickupCodeAdd: frontCode,
-  //       // pickupTime:
-  //       //   isAuth().role === 'admin'
-  //       //     ? '11am-1pm'
-  //       //     : mealRequest
-  //       //         .filter((meal) => meal.meal !== 'None')
-  //       //         .every((meal) => meal.meal === 'Standard Onsite') &&
-  //       //       mealRequest
-  //       //         .filter((meal) => meal.meal !== 'None')
-  //       //         .some((meal) => meal.pickupOption === 'Lunch Onsite')
-  //       //     ? 'Cafeteria'
-  //       //     : oldLink.pickupTime
-  //       //     ? oldLink.pickupTime
-  //       //     : '',
-  //       success: '',
-  //       error: '',
-  //     }); //puts ...mealRequest with new meal back into mealRequest: []
-  //   }, 1000);
-  // }, [submit]);
 
   // change date
   const onDateChange = (pickupDate) => {
@@ -592,133 +352,136 @@ const Update = ({ oldLink, token, user, _id }) => {
 
     // console.log(pickupCodeAdd)
 
+    // This only handles the pickup option right now
     let input = e.target.value;
     let frontCode = '';
     let pickupOptionLO = '';
     switch (input) {
 
+
+
       // specials
       case 'Lunch Only' && code.meal === 'Vegetarian':
-        frontCode = 'Lv';
+        // frontCode = 'Lv';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Lunch Only' && code.meal === 'Standard':
-        frontCode = 'L';
+        // frontCode = 'L';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Breakfast Only':
-        frontCode = 'B';
+        // frontCode = 'B';
         pickupOptionLO = 'Breakfast Only';
         break;
       case 'Vegan B': // Vegan with breakfast
-        frontCode = 'Vgb';
+        // frontCode = 'Vgb';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Gluten Free with Breakfast':
-        frontCode = 'Gfb'; // gf with breakfast
+        // frontCode = 'Gfb'; // gf with breakfast
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case '2on 3off':
-        frontCode = 'H';
-        pickupOptionLO = 'Lunch Onsite / Breakfast Pickup';
+        // frontCode = 'H';
+        pickupOptionLO = 'Two Onsite / Three Breakfast and Lunches';
         break;
 
       // standard options
       case 'Standard':
-        frontCode = '';
+        // frontCode = '';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegetarian':
-        frontCode = 'Vt';
+        // frontCode = 'Vt';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan':
-        frontCode = 'Vg';
+        // frontCode = 'Vg';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // gluten dairy options
       case 'Gluten Free':
-        frontCode = 'Gf';
+        // frontCode = 'Gf';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Standard Dairy Free':
-        frontCode = 'Df';
+        // frontCode = 'Df';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Gluten Free Dairy Free':
-        frontCode = 'Gfdf';
+        // frontCode = 'Gfdf';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // sesame gluten dairy combos
       case 'Gluten Sesame Free':
-        frontCode = 'Gfsm';
+        // frontCode = 'Gfsm';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Sesame Dairy Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Sesame Dairy Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
 
       // sesame options
       case 'Standard Sesame Free':
-        frontCode = 'Sm';
+        // frontCode = 'Sm';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegetarian Sesame Free':
-        frontCode = 'Vtsm';
+        // frontCode = 'Vtsm';
         pickupOptionLO = 'Breakfast and Lunch';
         break;
       case 'Vegan Sesame Free':
-        frontCode = 'Vgsm';
+        // frontCode = 'Vgsm';
         pickupOptionLO = 'Lunch Only';
         break;
      
 
       // soy options
       case 'Standard Soy Free':
-        frontCode = 'Sy';
+        // frontCode = 'Sy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Vegetarian Soy Free':
-        frontCode = 'Vtsy';
+        // frontCode = 'Vtsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Vegan Soy Free':
-        frontCode = 'Vgsy';
+        // frontCode = 'Vgsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Gluten Soy Free':
-        frontCode = 'Gfsy';
+        // frontCode = 'Gfsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy and Sesame Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Dairy Free':
-        frontCode = 'Dfsy';
+        // frontCode = 'Dfsy';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Sesame Dairy Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Sesame Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Sesame Dairy Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
       case 'Soy Dairy Gluten Free':
-        frontCode = 'Sp';
+        // frontCode = 'Sp';
         pickupOptionLO = 'Lunch Only';
         break;
 
@@ -732,138 +495,9 @@ const Update = ({ oldLink, token, user, _id }) => {
         pickupOptionLO = 'None';
         // group = 'None';
         break;
-      // case 'Lunch Only' && code.meal === 'Vegetarian':
-      //   frontCode = 'Lv';
-      //   break;
-      // case 'Lunch Only' && code.meal === 'Standard':
-      //   frontCode = 'Sl';
-      //   break;
-      // case 'Breakfast Only':
-      //   frontCode = 'B'; // this wasnt there and worked fine. Not sure why i had it out
-      //   break;
-      // case 'Vegetarian':
-      //   frontCode = 'Vt';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'Vegan':
-      //   frontCode = 'Vg';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Vegan B':
-      //   frontCode = 'Vg+b';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'GlutenFree':
-      //   frontCode = 'Gf';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'GlutenFree B':
-      //   frontCode = 'Gf+b';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'Standard':
-      //   frontCode = '';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'Standard DF':
-      //   frontCode = 'Df';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'GlutenFree DF':
-      //   frontCode = 'Gfdf';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Standard SF':
-      //   frontCode = 'Smf';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'Vegetarian SF':
-      //   frontCode = 'Smfvt';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'Vegan SF':
-      //   frontCode = 'Smfvg';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'Standard SyF':
-      //   frontCode = 'Syf';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Vegetarian SyF':
-      //   frontCode = 'Syfvt';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Vegan SyF':
-      //   frontCode = 'Syfvg';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Soy and Sesame Free':
-      //   frontCode = 'Sp';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Soy Sesame Dairy Free':
-      //   frontCode = 'Sp';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Soy Sesame Gluten Free':
-      //   frontCode = 'Sp';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Soy Sesame Dairy GlutenFree':
-      //   frontCode = 'Sp';
-      //   pickupOptionLO = 'Lunch Only';
-      //   break;
-      // case 'Standard Onsite':
-      //   frontCode = 'Onsite';
-      //   pickupOptionLO = 'Lunch Onsite';
-      //   break;
-      // case '2on 3off':
-      //   frontCode = 'H';
-      //   pickupOptionLO = state.mealRequest[i].pickupOption;
-      //   break;
-      // case 'None':
-      //   frontCode = 'None';
-      //   pickupOptionLO = 'None';
-      //   group = 'None';
-      //   break;
-
       default:
         break;
     }
-
-    // let input = e.target.value;
-    // let frontCode = '';
-    // let pickupOptionLO = '';
-    // switch (input) {
-
-    //   case 'Vegetarian':
-    //     frontCode = 'Vt';
-    //     pickupOptionLO = state.mealRequest[i].pickupOption;
-    //     break;
-    //   case 'Vegan':
-    //     frontCode = 'Vg';
-    //     pickupOptionLO = 'Lunch Only';
-    //     break;
-    //   case 'GlutenFree':
-    //     frontCode = 'Gf';
-    //     pickupOptionLO = 'Lunch Only';
-    //     break;
-    //   case 'Standard':
-    //     frontCode = '';
-    //     pickupOptionLO = state.mealRequest[i].pickupOption;
-    //     break;
-    //   case 'Standard Onsite':
-    //     frontCode = 'Onsite';
-    //     pickupOptionLO = state.mealRequest[i].pickupOption;
-    //     break;
-    //   case 'None':
-    //     frontCode = 'None';
-    //     pickupOptionLO = 'None';
-    //     break;
-
-    //   default:
-    //     break;
-    // }
 
     code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
     codes[i] = code;
@@ -932,11 +566,11 @@ const Update = ({ oldLink, token, user, _id }) => {
             {/* <option selected value={state.mealRequest[i].meal}>
               {state.mealRequest[i].meal}
             </option> */}
-            {user.special.twothree == true && (
+            {/* {user.special.twothree == true && (
               <option value={'2on 3off'}>
                 Standard 2 Onsite / 3 Offsite Lunches plus 5 Breakfasts
               </option>
-            )}
+            )} */}
             {/* {user.special.vtplus == 'true' && (
               <option value={'GlutenFree B'}>
                 Gluten Free plus Vegetarian Breakfast
@@ -1610,6 +1244,8 @@ const Update = ({ oldLink, token, user, _id }) => {
     // const mealRequestNew = mealRequest.filter((meal) => meal.meal != 'None');
     // frontCodeRunner()
 
+    // this handles the front code. The useEffect is redundent I think.
+
     let frontCode = [];
     mealRequest.forEach((item) => {
       if (
@@ -1891,6 +1527,30 @@ const Update = ({ oldLink, token, user, _id }) => {
     </>
   );
 
+  const select2on3offOption = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <select
+          type="select"
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {' '}
+          {/* <option value={'Lunch Onsite'}>
+            Lunch Onsite
+          </option> */}
+          <option selected value={'Two Onsite / Three Breakfast and Lunches'}>
+          Two Onsite / Three Breakfast and Lunches
+          </option>
+        </select>
+        <div className="p-1"></div>
+      </div>
+    </>
+  );
+
   const selectPickupLunchOnlyOption = (i) => (
     <>
       <div key={i} className="form-group">
@@ -2129,15 +1789,15 @@ const Update = ({ oldLink, token, user, _id }) => {
                             : selectPickupOption(i)
                           : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
                         : null} */}
-                      {
+                      { x.meal !== '2on 3off' ? 
                         isAuth().role === 'admin'
                           ? selectAdminPickupOptions()
                           : x.meal != 'None' 
                           ? students[i] &&
                             students[i].group === 'distance-learning' && x.meal != '2on 3off'
                             ? x.meal === 'GlutenFree' ||
-                              x.meal === 'GlutenFree DF' ||
-                              x.meal === 'Standard DF' ||
+                              x.meal === 'Gluten Free Dairy Free' ||
+                              x.meal === 'Standard Dairy Free' ||
                               x.meal === 'Vegan' ||
                               user.students[i].foodAllergy.egg === true ||
                               user.students[i].foodAllergy.soy === true ||
@@ -2146,9 +1806,10 @@ const Update = ({ oldLink, token, user, _id }) => {
                               ? selectPickupLunchOnlyOption(i)
                               : selectPickupOption(i)
                             : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
-                          : null
+                          : null : null
                         // selectNonePickupOption(i)
                       }
+                      {x.meal === '2on 3off' && select2on3offOption(i)}
                       <hr />
                     </>
                   );
