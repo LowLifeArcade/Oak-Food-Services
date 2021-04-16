@@ -365,7 +365,7 @@ const Create = ({ token, user }) => {
         break;
       case '2on 3off':
         frontCode = 'H';
-        pickupOptionLO = 'Breakfast and Lunch';
+        pickupOptionLO = 'Lunch Onsite / Breakfast Pickup';
         break;
 
       // standard options
@@ -1152,6 +1152,30 @@ const Create = ({ token, user }) => {
     </>
   );
 
+  const selectPickupLunchOnsiteBreakfastOffsiteOptionH = (i) => (
+    <>
+      <div key={i} className="form-group">
+        <select
+          type="select"
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
+          data-index={i}
+          onChange={(e) => handlePickupOption(i, e)}
+          className="form-control"
+        >
+          {' '}
+          <option value={'Lunch Onsite'}>
+            Lunch Onsite
+          </option>
+          <option selected value={'Lunch Onsite / Breakfast Pickup'}>
+            Lunch Onsite / Breakfast Pickup
+          </option>
+        </select>
+        <div className="p-1"></div>
+      </div>
+    </>
+  );
+
   // pickup times select
   const handlePickupTimeChange = (e) => {
     setState({
@@ -1686,7 +1710,7 @@ const Create = ({ token, user }) => {
                           isAuth().role === 'admin'
                             ? selectAdminPickupOptions()
                             : x.meal != 'None'  // put option here to turn off pickup selection like for none 
-                            ? state.students[i].group === 'distance-learning' && x.meal != '2on 3off'
+                            ? state.students[i].group === 'distance-learning' 
                               ? x.meal === 'Gluten Free' ||
                                 x.meal === 'Gluten Free Dairy Free' ||
                                 x.meal === 'Standard Dairy Free' ||
@@ -1701,6 +1725,7 @@ const Create = ({ token, user }) => {
                             : null
                           // selectNonePickupOption(i)
                         }
+                        {/* {x.meal === '2on 3off' && selectPickupLunchOnsiteBreakfastOffsiteOptionH(i)} */}
                         <hr />
                       </>
                     );

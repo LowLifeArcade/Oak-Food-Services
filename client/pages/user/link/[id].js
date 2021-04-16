@@ -620,7 +620,7 @@ const Update = ({ oldLink, token, user, _id }) => {
         break;
       case '2on 3off':
         frontCode = 'H';
-        pickupOptionLO = state.mealRequest[i].pickupOption;
+        pickupOptionLO = 'Lunch Onsite / Breakfast Pickup';
         break;
 
       // standard options
@@ -2132,9 +2132,9 @@ const Update = ({ oldLink, token, user, _id }) => {
                       {
                         isAuth().role === 'admin'
                           ? selectAdminPickupOptions()
-                          : x.meal != 'None' && x.meal != '2on 3off' 
+                          : x.meal != 'None' 
                           ? students[i] &&
-                            students[i].group === 'distance-learning'
+                            students[i].group === 'distance-learning' && x.meal != '2on 3off'
                             ? x.meal === 'GlutenFree' ||
                               x.meal === 'GlutenFree DF' ||
                               x.meal === 'Standard DF' ||
