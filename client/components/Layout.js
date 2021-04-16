@@ -836,7 +836,7 @@ const Layout = ({ children }) => {
             </li>
           )}
 
-          {/* {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && (
             <li
               onClick={() => setShowSideMenu(false)}
               className="nav-item pointer-hand"
@@ -848,7 +848,7 @@ const Layout = ({ children }) => {
                 </a>
               </Link>
             </li>
-          )} */}
+          )}
           <hr />
 
           {process.browser && !isAuth() && (

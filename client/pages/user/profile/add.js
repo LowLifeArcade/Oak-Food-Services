@@ -465,7 +465,6 @@ const Profile = ({ user, token }) => {
   const removeStudent = (e) => {
     let i = e.target.getAttribute('data-index');
     e.preventDefault();
-
     const list = [...state.students];
     list.splice(i, 1);
     setState({ ...state, students: list });
@@ -669,7 +668,8 @@ const Profile = ({ user, token }) => {
                       className="btn text-danger btn-outline-secondary float-right"
                       onClick={(e) => removeStudent(e)}
                     >
-                      <i class="fas fa-user-times"></i>{' '}
+                      {/* <i class="fas fa-user-times"></i> */}
+                      {'Delete'}
                     </button>
                   }
 

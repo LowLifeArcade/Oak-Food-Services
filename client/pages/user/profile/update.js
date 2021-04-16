@@ -407,10 +407,11 @@ const Profile = ({ user, token }) => {
     });
   };
 
+  console.log('students array', students)
   // remove meal button
   const removeStudent = (e) => {
-    let i = e.target.getAttribute('data-index');
     e.preventDefault();
+    let i = e.target.getAttribute('data-index');
 
     const list = [...state.students];
     list.splice(i, 1);
@@ -593,6 +594,7 @@ const Profile = ({ user, token }) => {
     setState({ ...state, showAllergies: [...allShow] });
   };
 
+
   const registerForm = () => (
     <form
       onSubmit={handleSubmit}
@@ -648,9 +650,10 @@ const Profile = ({ user, token }) => {
       </div>
 
       <br />
+
       <div className="row">
         <div className="col-md-12 pt-2">
-          {students.slice(0).map((x, i) => {
+          {students.map((x, i) => { // shows array in revrese order with slice 0
             return (
               <div key={i}>
                 <h6 className="p-2">
@@ -683,15 +686,18 @@ const Profile = ({ user, token }) => {
                   ></i>
                 </label>
 
-                {
+                { 
+                // setTimeout(() => {
+                  
                   <button
-                    key={i}
-                    data-index={i}
-                    className="btn text-danger btn-outline-secondary float-right"
-                    onClick={(e) => removeStudent(e)}
+                  data-index={i}
+                  className="btn text-danger btn-outline-secondary float-right"
+                  onClick={(e) => removeStudent(e)}
                   >
-                    <i class="fas fa-user-times"></i>{' '}
+                    {/* <div className="fas fa-user-times"></div> */}
+                    {'Delete'}
                   </button>
+                  // }, 200)
                 }
 
                 <div className="pb-2"></div>
@@ -1097,7 +1103,7 @@ const Profile = ({ user, token }) => {
         <div className="pt-4"></div>
         {success && showSuccessMessage(success)}
         {error && showErrorMessage(error)}
-        {!state.students.length < 1 && (
+        {!state.students.length < 1 && ( // submit update button
           <button type="text" className="btn btn-warning">
             <i className="far fa-paper-plane"></i> &nbsp;
             {buttonText}
