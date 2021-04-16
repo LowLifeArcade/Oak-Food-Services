@@ -118,6 +118,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 // l.meal == 'Standard DF' ||
                 // l.meal == 'GlutenFree DF' ||
                 l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                 l.pickupOption === 'Lunch Only' ||
                 l.pickupOption === 'Breakfast Only' ||
                 l.pickupOption === 'Breakfast and Lunch'
@@ -150,6 +151,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                   // l.meal == 'Standard DF' ||
                   // l.meal == 'GlutenFree DF' ||
                   l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                  l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                   l.pickupOption === 'Breakfast Only' ||
                   l.pickupOption === 'Lunch Only' ||
                   l.pickupOption === 'Breakfast and Lunch'
@@ -184,6 +186,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 // l.meal == 'Standard DF' ||
                 // l.meal == 'GlutenFree DF' ||
                 l.pickupOption === 'Breakfast Only' ||
+                l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
                 l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
                 l.pickupOption === 'Lunch Only' ||
                 l.pickupOption === 'Breakfast and Lunch'

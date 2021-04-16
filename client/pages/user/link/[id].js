@@ -47,8 +47,8 @@ const Update = ({ oldLink, token, user, _id }) => {
     medium,
   } = state;
 
-  const [showSearch, setShowSearch] = useState(false);
   // console.log('meal requests', mealRequest);
+  const [showSearch, setShowSearch] = useState(false);
 
   // useEffect(() => {
   //   setState({
@@ -80,7 +80,15 @@ const Update = ({ oldLink, token, user, _id }) => {
         let meal = { ...meals[index] };
 
         // if allergies or group has changed we run the switch case to apply default selections on the form
+        if (!user.students[index])  {
+          meal.studentName = 'Student Deleted'
+          meal.pickupOption = 'deleted'
+          meal.meal = 'deleted'
+        }else{
+
+        
         if (
+          meal.studentName !== user.students[index].name ||
           meal.foodAllergy.soy !== students[index].foodAllergy.soy ||
           meal.foodAllergy.sesame !== students[index].foodAllergy.sesame ||
           meal.foodAllergy.dairy !== students[index].foodAllergy.dairy ||
@@ -90,6 +98,7 @@ const Update = ({ oldLink, token, user, _id }) => {
         ) {
           meal.foodAllergy = students[index].foodAllergy;
           meal.group = students[index].group;
+          meal.studentName = students[index].name;
 
           if (
             students[index] &&
@@ -193,6 +202,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Soy Sesame Dairy Gluten Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.sesame &&
                 students[index].foodAllergy.soy &&
@@ -200,6 +210,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Soy Sesame Gluten Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.sesame &&
                 students[index].foodAllergy.soy &&
@@ -207,35 +218,41 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Soy Sesame Dairy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.sesame &&
                 students[index].foodAllergy.soy:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Soy and Sesame Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.soy &&
                 students[index].foodAllergy.sesame:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Gluten Soy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.soy &&
                 students[index].foodAllergy.dairy:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Soy Dairy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.soy &&
                 students[index].foodAllergy.gluten:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Soy and Sesame Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.soy:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Standard Soy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
 
               // single allergy
@@ -243,16 +260,19 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Standard Dairy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.gluten:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Gluten Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.sesame:
                 meal.pickupOption = 'Breakfast and Lunch';
                 meal.meal = 'Standard Sesame Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
 
               // combo allergies
@@ -261,24 +281,28 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Gluten Sesame Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.dairy &&
                 students[index].foodAllergy.sesame:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Sesame Dairy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.sesame &&
                 students[index].foodAllergy.gluten:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Sesame Gluten Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.dairy &&
                 students[index].foodAllergy.gluten:
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Gluten Free Dairy Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case students[index].foodAllergy.dairy &&
                 students[index].foodAllergy.dairy &&
@@ -286,6 +310,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Sesame Dairy Gluten Free';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               
 
@@ -294,6 +319,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Lunch Only';
                 meal.meal = 'Standard';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               case !students[index].foodAllergy.sesame ||
                 !students[index].foodAllergy.dairy ||
@@ -303,14 +329,16 @@ const Update = ({ oldLink, token, user, _id }) => {
                 meal.pickupOption = 'Breakfast and Lunch';
                 meal.meal = 'Standard';
                 meal.foodAllergy = students[index].foodAllergy;
+                meal.name = user.students[index];
                 break;
               default:
                 break;
             }
           } else {
             meal.pickupOption = 'Lunch Onsite';
+            meal.name = user.students[index];
           }
-        }
+        }}
 
         someArray.push(meal);
       });
@@ -1719,8 +1747,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                           <label key={i} className="text-secondary">
                             <h6>
                               {' '}
-                              <b>{`${state.students[i].name}`}'s</b>{' '}
-                              {state.students[i].group ===
+                              <b>{state.students[i] ? `${state.students[i].name}` : 'Student Deleted'}'s</b>{' '}
+                              {state.students[i] && state.students[i].group ===
                               'distance-learning' ? (
                                 <>Curbside</>
                               ) : (
@@ -1792,7 +1820,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       { x.meal !== '2on 3off' ? 
                         isAuth().role === 'admin'
                           ? selectAdminPickupOptions()
-                          : x.meal != 'None' 
+                          : x.meal != 'None' && x.meal != 'deleted'
                           ? students[i] &&
                             students[i].group === 'distance-learning' && x.meal != '2on 3off'
                             ? x.meal === 'GlutenFree' ||
