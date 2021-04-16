@@ -119,6 +119,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 // l.meal == 'GlutenFree DF' ||
                 l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
                 l.pickupOption === 'Lunch Only' ||
+                l.pickupOption === 'Breakfast Only' ||
                 l.pickupOption === 'Breakfast and Lunch'
             ).length != 0 && (
               <>
@@ -149,6 +150,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                   // l.meal == 'Standard DF' ||
                   // l.meal == 'GlutenFree DF' ||
                   l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                  l.pickupOption === 'Breakfast Only' ||
                   l.pickupOption === 'Lunch Only' ||
                   l.pickupOption === 'Breakfast and Lunch'
               ).length != 0 ? (
@@ -181,6 +183,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                 // l.meal == 'Vegan' ||
                 // l.meal == 'Standard DF' ||
                 // l.meal == 'GlutenFree DF' ||
+                l.pickupOption === 'Breakfast Only' ||
                 l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
                 l.pickupOption === 'Lunch Only' ||
                 l.pickupOption === 'Breakfast and Lunch'
