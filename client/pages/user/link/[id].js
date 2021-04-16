@@ -572,7 +572,8 @@ const Update = ({ oldLink, token, user, _id }) => {
     setShowSearch(!showSearch);
   };
 
-  const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+  // const handleDisabledDates = ({ date, view }) => date.getDay() !== 5;
+  const handleDisabledDates = ({ date, view }) => date.getDay() !== 1 || date.getMonth()===5 || date.getMonth()===6;
 
   // meal request select
   const handleSelectChange = (
