@@ -87,7 +87,6 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         calanderButton.current &&
         !calanderButton.current.contains(event.target)
       ) {
-        console.log('show search');
         setShowSearch(false);
       }
     };
@@ -102,7 +101,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   // reads date in local storage
   useEffect(() => {
     const data = localStorage.getItem('search-date');
-    console.log('data', data);
+    // console.log('data', data);
     if (data) {
       try {
         handleDateChange(JSON.parse(data));
@@ -202,7 +201,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       )
       .filter((l, i) => l.group.includes(searchByGroup))
       .filter((l, i) => l.schoolName.includes(searchBySchool));
-    console.log('NEW onsite data', newOnsiteData);
+    // console.log('NEW onsite data', newOnsiteData);
     setCsvOnsiteData(newOnsiteData);
     setState({
       ...state,
@@ -351,7 +350,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   //   );
   // }, [linksByDate])
 
-  console.log('all meals array', allMealsArray);
+  console.log('all individual meals by date',pickupDateLookup, allMealsArray);
 
   // const loadUsers = async () => {
   //   const response = await axios.get(`${API}/user-list`, {
@@ -384,7 +383,6 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     let links = await response.data.sort((a, b) =>
       a.userCode > b.userCode ? 1 : -1
     );
-    console.log('links', links);
 
     setState({
       ...state,
@@ -394,7 +392,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     });
   };
 
-  console.log('links by date', linksByDate)
+  console.log('requests by date',pickupDateLookup, linksByDate)
 
   // initRequests
 
@@ -640,7 +638,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           mealRequest.complete = request.orderStatus;
         }
       });
-      console.log(request);
+
       handleComplete(request._id, request.complete, request.mealRequest);
       // setAllMealsArray(requests);
       setState({ ...state, allMealsArray: requests });
@@ -724,7 +722,6 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
           .map((l, i) => (
             <>
-              {console.log(l)}
               <tr key={i}>
                 <td>
                   {l.postedBy === null
@@ -1014,7 +1011,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                   Date
                 </button>
               </span>
-              {console.log('csv offsite data near button', csvOffsiteData)}
+              {/* {console.log('csv offsite data near button', csvOffsiteData)} */}
               {orderType === 'Onsite' ? (
                 // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
                 <CSVLink

@@ -12,8 +12,8 @@ const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
     requests: initRequests,
     pickupDate: localStorage.getItem('search-date')
-    ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
-    : moment(new Date()).format('l'),
+      ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
+      : moment(new Date()).format('l'),
     // pickupDate: moment(new Date()).format('l'),
     meals: [],
   });
@@ -21,15 +21,16 @@ const Admin = ({ token, user, initRequests }) => {
   const { requests, pickupDate, meals } = state;
   let myDate = '';
 
+  // console.log('all meals by date', requests)
   useEffect(() => {
     let allMealsArray = [];
     const pushAllMeals = (meal) => {
       requests.map((r, i) =>
         r.mealRequest.map((meal) => allMealsArray.push(meal))
       );
-      console.log('meal array', allMealsArray);
+      console.log('all meals by date', pickupDate, allMealsArray);
+      console.log('all requests by date', pickupDate, requests);
     };
-    console.log('none array', meals);
     pushAllMeals();
     setState({
       ...state,
@@ -69,8 +70,8 @@ const Admin = ({ token, user, initRequests }) => {
 
   const mealCounter = (meal) =>
     state.meals.filter(
-      (m) =>
-        m.meal == meal && m.meal !== 'None' && m.pickupOption !== 'Lunch Only'
+      (m) => m.meal == meal && m.meal !== 'None'
+      //  && m.pickupOption !== 'Lunch Only'
     ).length;
 
   const lunchOnlyMealCounter = (meal) =>
@@ -85,6 +86,13 @@ const Admin = ({ token, user, initRequests }) => {
     ).length;
 
   const allOnsiteMeals = () =>
+    // requests.filter((m) => m.mealRequest.map((meal) => meal.group == 'distance-learning')).length
+    requests.filter((request) =>
+      request.mealRequest.every((meal) => meal.meal == 'Standard Onsite')
+    ).length;
+  // console.log('all onsite', requests.filter((request) => request.mealRequest.every((meal) => meal.group == 'distance-learning')).length)
+  // meals.filter((m) => m.group == 'b-group').length;
+  const allIndividualOnsiteMeals = () =>
     meals.filter((m) => m.group == 'a-group').length +
     meals.filter((m) => m.group == 'b-group').length;
 
@@ -112,8 +120,9 @@ const Admin = ({ token, user, initRequests }) => {
   const pickupMealsForLunch = () =>
     meals.filter(
       (m) =>
-        m.group === 'distance-learning' ||
-        (m.pickupOption === 'Lunch Only' && m.group === 'distance-learning') ||
+        // m.group === 'distance-learning' ||
+        // m.group === 'distance-learning' ||
+        m.pickupOption === 'Lunch Only' ||
         m.pickupOption === 'Breakfast and Lunch'
     ).length;
   const pickupMealsForBreakfast = () =>
@@ -128,22 +137,31 @@ const Admin = ({ token, user, initRequests }) => {
     meals.filter((m) => m.schoolName === school && m.group === group).length;
 
   const allOpenPickupMeals = (meal) =>
-    meals
-      .filter(
-        (m) =>
-          m.group === 'distance-learning' ||
-          m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
-      )
-      .filter((x) => x.complete === false).length;
+    requests
+      .filter((m) => m.pickupTime !== 'Cafeteria')
+      .filter((x) => x.orderStatus === false).length;
 
   const allCompletedPickupMeals = (meal) =>
-    meals
-      .filter(
-        (m) =>
-          m.group === 'distance-learning' ||
-          m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
-      )
-      .filter((x) => x.complete === true).length;
+    requests
+      .filter((m) => m.pickupTime !== 'Cafeteria')
+      .filter((x) => x.orderStatus === true).length;
+  // const allOpenPickupMeals = (meal) =>
+  //   meals
+  //     .filter(
+  //       (m) =>
+  //         m.group === 'distance-learning' ||
+  //         m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+  //     )
+  //     .filter((x) => x.complete === false).length;
+
+  // const allCompletedPickupMeals = (meal) =>
+  //   meals
+  //     .filter(
+  //       (m) =>
+  //         m.group === 'distance-learning' ||
+  //         m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+  //     )
+  //     .filter((x) => x.complete === true).length;
 
   // change date
   const onDateChange = (pickupDate) => {
@@ -172,9 +190,11 @@ const Admin = ({ token, user, initRequests }) => {
       <br />
       <div className="row">
         <div className="col-md-4">
-          <h3>Friday Pickup {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
-          <br/>
-          Week of {`${pickupDate}`}
+          <h3>
+            Friday Pickup{' '}
+            {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
+            <br />
+            Week of {`${pickupDate}`}
           </h3>
           <hr />
           <div className="">
@@ -200,77 +220,119 @@ const Admin = ({ token, user, initRequests }) => {
       </div>
 
       <hr />
-      <h3>
-        <b className="text-danger">{requests.length}</b> - All Meal Requests{' '}
-        <p />
+      <h2>
+        <b className="text-danger">{requests.length}</b> - All (Curbside and
+        Onsite)
+      </h2>
+      <hr style={{ textSize: '20px' }}/>
+      <hr style={{ textSize: '20px' }}/>
+      <hr style={{ textSize: '20px' }}/>
+      <h3 className="">
+        <b className="text-danger">
+          {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
+        </b>{' '}
+        - All Curbside <p />
+        <hr />
+        <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
+        Curbside <p />
+        <b className="text-danger">{allCompletedPickupMeals()}</b> - Fulfilled
+        Curbside
       </h3>
       <hr />
-      <h4>
-        <b className="text-danger">{pickupMealsForLunch('Lunch Only')}</b> -
-        Curbside Lunch Meals <p />
-        <b className="text-danger">{pickupMealsForBreakfast()}</b> -
-        Curbside Breakfast Meals <p />
-      </h4>
-
-      <h5 className="p-1">
-        <b>{allOpenPickupMeals() }</b> - Unfulfilled Curbside Meals <p />
-        <b>{allCompletedPickupMeals()}</b> - Fulfilled Curbside Meals
+      <h5><b>Curbside Kitchen Prep Data</b></h5>
+      <div className="pt-2"></div>
+      <h5>
+        <b className="text-danger">{pickupMealsForLunch()}</b> - Individual Curbside Lunches <p />
+        <b className="text-danger">{pickupMealsForBreakfast()}</b> - Individual Curbside Breakfasts <p />
       </h5>
-      <hr />
-      <div className="p-3">
-        <h6>
-          {mealCounter('Standard') } - Standard Breakfast and Lunch Meal
-          Requests
-          <hr />
-          {lunchOnlyMealCounter('Standard') } - Standard Meals LUNCH ONLY
-          <hr />
-          {mealCounter('Vegetarian') } - Vegetarian Breakfast and Lunch Meal
-          Requests
-          <hr />
-          {lunchOnlyMealCounter('Vegetarian') } - Vegetarian Meals LUNCH ONLY
-          <hr />
-          {lunchOnlyMealCounter('Vegan') } - Vegan Meals LUNCH ONLY
-          <hr />
-          {lunchOnlyMealCounter('GlutenFree') } - Gluten Free Meals LUNCH
-          ONLY
-          <hr />
-          {lunchOnlyMealCounter('Sesame') } - Sesame Free Meals LUNCH
-          ONLY
-          <hr />
-          {mealBreakfastOnlyCounter('Standard Onsite') } - Breakfast Only
-          meal requests
-          <hr />
-        </h6>
-      </div>
-      <h4>
-        <b className="text-danger">{allOnsiteMeals() }</b> - All Onsite Meals{' '}
-        <p />
-        <hr />
-      </h4>
 
+      <hr />
+      <h5><b>Standard Requests</b></h5> 
       <div className="p-3">
         <h6>
-          {pickupMealsBySchool('BES', 'a-group') } - BES A
+          {mealCounter('Standard')} - <b>Standard</b> Breakfast and Lunch 
           <hr />
-          {pickupMealsBySchool('BES', 'b-group') } - BES B
+          {mealCounter('Vegetarian')} - <b>Vegetarian</b> Breakfast and Lunch 
           <hr />
-          {pickupMealsBySchool('OHES', 'a-group') } - OHES A
+          {mealCounter('Vegan')} - <b>Vegan</b>   Meals
           <hr />
-          {pickupMealsBySchool('OHES', 'b-group') } - OHES B
+          {mealCounter('Gluten Free')} - <b>Gluten Free</b>  Meals
           <hr />
-          {pickupMealsBySchool('ROES', 'a-group') } - ROES A
+          {mealCounter('Standard Dairy Free')} - <b>Dairy Free</b>  Meals
           <hr />
-          {pickupMealsBySchool('ROES', 'b-group') } - ROES B
+          {mealBreakfastOnlyCounter('Standard Onsite')} - <b>BREAKFAST ONLY </b> Meals
           <hr />
-          {pickupMealsBySchool('MCMS', 'a-group') } - MCMS A
+          {/* {lunchOnlyMealCounter('Standard')} - <b>LUNCH ONLY</b> Standard
           <hr />
-          {pickupMealsBySchool('MCMS', 'b-group') } - MCMS B
+          {lunchOnlyMealCounter('Vegetarian')} - <b>LUNCH ONLY</b> Vegetarian */}
+          {/* <hr /> */}
+          </h6>
+          </div>
+          <h5><b>Special Requests</b></h5> 
+          <h6>
+          <div className="p-3">
+          <hr/>
+          {mealCounter('Vegan B')} - <b>Vegan</b> with Breakfast 
           <hr />
-          {pickupMealsBySchool('OPHS', 'a-group') } - OPHS A
+          {mealCounter('Gluten Free with Breakfast')} - <b>Gluten Free</b> with Breakfast
           <hr />
-          {pickupMealsBySchool('OPHS', 'b-group') } - OPHS B
+          {mealCounter('Gluten Free Dairy Free')} - <b>Gluten Free Dairy Free</b> 
           <hr />
-          {pickupMealsBySchool('OVHS') } - OVHS
+          {mealCounter('2on 3off')} - <b>Two On Three Off</b> 
+          <hr />
+          
+          {mealCounter('Standard Sesame Free')} - Standard Sesame Free Meals
+          <hr />
+          {mealCounter('Vegetarian Sesame Free')} - Vegetarian Sesame Free Meals
+          <hr />
+          {mealCounter('Vegan Sesame Free')} - Vegan Sesame Free Meals
+          <hr />
+          {mealCounter('Sesame Dairy Free')} - Sesame Dairy Free Meals
+          <hr />
+          {mealCounter('Sesame Dairy Free')} - Sesame Dairy Free Meals
+          <hr />
+          {mealCounter('None')} - None Meals
+          <hr />
+          
+      </div>
+        </h6>
+      <h3>
+        <b className="text-danger">{allOnsiteMeals()}</b> - All Onsite{' '}
+      </h3>
+      <hr/>
+      <div className="pt-1"></div>
+      <h5><b>Onsite Kitchen Prep Data</b></h5>
+      <div className="pt-1"></div>
+      <h5 className="">
+        <b className="text-danger">{allIndividualOnsiteMeals()}</b> - Individual Onsite Meals 
+        <div className="p-1"></div>
+      </h5>
+        <hr />
+
+      <h5><b>School Numbers</b></h5> 
+      <div className="p-3">
+        <h6>
+          {pickupMealsBySchool('BES', 'a-group')} - BES A
+          <br/>
+          {pickupMealsBySchool('BES', 'b-group')} - BES B
+          <hr />
+          {pickupMealsBySchool('OHES', 'a-group')} - OHES A
+          <br/>
+          {pickupMealsBySchool('OHES', 'b-group')} - OHES B
+          <hr />
+          {pickupMealsBySchool('ROES', 'a-group')} - ROES A
+          <br/>
+          {pickupMealsBySchool('ROES', 'b-group')} - ROES B
+          <hr />
+          {pickupMealsBySchool('MCMS', 'a-group')} - MCMS A
+          <br/>
+          {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
+          <hr />
+          {pickupMealsBySchool('OPHS', 'a-group')} - OPHS A
+          <br/>
+          {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
+          <hr />
+          {pickupMealsBySchool('OVHS')} - OVHS
           <hr />
         </h6>
       </div>
