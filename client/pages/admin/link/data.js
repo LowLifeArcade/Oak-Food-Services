@@ -21,7 +21,7 @@ const Admin = ({ token, user, initRequests }) => {
     error: '',
   });
 
-  const [userList, setUserList] = useState([])
+  const [userList, setUserList] = useState([]);
 
   const { requests, pickupDate, meals, error } = state;
   let myDate = '';
@@ -61,8 +61,8 @@ const Admin = ({ token, user, initRequests }) => {
   }, []);
 
   useEffect(() => {
-      handleUserList()
-  }, [])
+    handleUserList();
+  }, []);
 
   // csv stuff
 
@@ -204,45 +204,40 @@ const Admin = ({ token, user, initRequests }) => {
   const handleUserList = async () => {
     // const pickupDateLookup = moment(pickupDate).format('l');
     try {
-    const response = await axios.get(
-      `${API}/user-list`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setUserList(
-     response.data,
-    );
-  } catch (error) {
-    console.log('USER LIST ERROR', error);
-    setState({
-      ...state,
-      error: error.response.data.error,
-    });
-  }
+      const response = await axios.get(`${API}/user-list`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserList(response.data);
+    } catch (error) {
+      console.log('USER LIST ERROR', error);
+      setState({
+        ...state,
+        error: error.response.data.error,
+      });
+    }
   };
 
   // {requests.map(request => console.log('request email', request.postedBy.email))}
   // {userList.map(user => console.log('user email', user.email))}
 
   // userers who have not ordered yet
-  const userListFiltered = () => ( 
+  const userListFiltered = () =>
     userList
-    .filter((user) => !requests.map(request => request.postedBy.email).includes(user.email))
-    .map((l, i) => (
-      <>
-        <tr key={i}>
-          <td>
-            {l.name + ' ' + l.lastName}
-          </td>
-          <td>
-            {l.userCode}
-          </td>
-          <td>
-            {l.email}
-          </td>
-        </tr>
-      </>
-    ))
-  )
+      .filter(
+        (user) =>
+          !requests
+            .map((request) => request.postedBy.email)
+            .includes(user.email)
+      )
+      .map((l, i) => (
+        <>
+          <tr key={i}>
+            <td>{l.name + ' ' + l.lastName}</td>
+            <td>{l.userCode}</td>
+            <td>{l.email}</td>
+          </tr>
+        </>
+      ));
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
@@ -276,12 +271,9 @@ const Admin = ({ token, user, initRequests }) => {
             <button onClick={(e) => handleTimeSelect(e, '4pm-6pm')}>
               4pm-6pm
             </button>
-            <br/>
-            <button onClick={(e) => handleUserList(e)}>
-              User List
-            </button>
+            <br />
+            <button onClick={(e) => handleUserList(e)}>User List</button>
             {error && showErrorMessage(error)}
-            
           </div>
         </div>
       </div>
@@ -291,9 +283,9 @@ const Admin = ({ token, user, initRequests }) => {
         <b className="text-danger">{requests.length}</b> - All (Curbside and
         Onsite)
       </h2>
-      <hr style={{ textSize: '20px' }}/>
-      <hr style={{ textSize: '20px' }}/>
-      <hr style={{ textSize: '20px' }}/>
+      <hr style={{ textSize: '20px' }} />
+      <hr style={{ textSize: '20px' }} />
+      <hr style={{ textSize: '20px' }} />
       <h3 className="">
         <b className="text-danger">
           {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
@@ -306,48 +298,58 @@ const Admin = ({ token, user, initRequests }) => {
         Curbside
       </h3>
       <hr />
-      <h5><b>Curbside Kitchen Prep Data</b></h5>
+      <h5>
+        <b>Curbside Kitchen Prep Data</b>
+      </h5>
       <div className="pt-2"></div>
       <h5>
-        <b className="text-danger">{pickupMealsForLunch()}</b> - Individual Curbside Lunches <p />
-        <b className="text-danger">{pickupMealsForBreakfast()}</b> - Individual Curbside Breakfasts <p />
+        <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
+        Curbside Lunches <p />
+        <b className="text-danger">{pickupMealsForBreakfast()}</b> - Individual
+        Curbside Breakfasts <p />
       </h5>
 
       <hr />
-      <h5><b>Standard Requests</b></h5> 
+      <h5>
+        <b>Standard Requests</b>
+      </h5>
       <div className="p-3">
         <h6>
-          {mealCounter('Standard')} - <b>Standard</b> Breakfast and Lunch 
+          {mealCounter('Standard')} - <b>Standard</b> Breakfast and Lunch
           <hr />
-          {mealCounter('Vegetarian')} - <b>Vegetarian</b> Breakfast and Lunch 
+          {mealCounter('Vegetarian')} - <b>Vegetarian</b> Breakfast and Lunch
           <hr />
-          {mealCounter('Vegan')} - <b>Vegan</b>   Meals
+          {mealCounter('Vegan')} - <b>Vegan</b> Meals
           <hr />
-          {mealCounter('Gluten Free')} - <b>Gluten Free</b>  Meals
+          {mealCounter('Gluten Free')} - <b>Gluten Free</b> Meals
           <hr />
-          {mealCounter('Standard Dairy Free')} - <b>Dairy Free</b>  Meals
+          {mealCounter('Standard Dairy Free')} - <b>Dairy Free</b> Meals
           <hr />
-          {mealBreakfastOnlyCounter('Standard Onsite')} - <b>BREAKFAST ONLY </b> Meals
+          {mealBreakfastOnlyCounter('Standard Onsite')} - <b>BREAKFAST ONLY </b>{' '}
+          Meals
           <hr />
           {/* {lunchOnlyMealCounter('Standard')} - <b>LUNCH ONLY</b> Standard
           <hr />
           {lunchOnlyMealCounter('Vegetarian')} - <b>LUNCH ONLY</b> Vegetarian */}
           {/* <hr /> */}
-          </h6>
-          </div>
-          <h5><b>Special Requests</b></h5> 
-          <h6>
-          <div className="p-3">
-          <hr/>
-          {mealCounter('Vegan B')} - <b>Vegan</b> with Breakfast 
+        </h6>
+      </div>
+      <h5>
+        <b>Special Requests</b>
+      </h5>
+      <h6>
+        <div className="p-3">
           <hr />
-          {mealCounter('Gluten Free with Breakfast')} - <b>Gluten Free</b> with Breakfast
+          {mealCounter('Vegan B')} - <b>Vegan</b> with Breakfast
           <hr />
-          {mealCounter('Gluten Free Dairy Free')} - <b>Gluten Free Dairy Free</b> 
+          {mealCounter('Gluten Free with Breakfast')} - <b>Gluten Free</b> with
+          Breakfast
           <hr />
-          {mealCounter('2on 3off')} - <b>Two On Three Off</b> 
+          {mealCounter('Gluten Free Dairy Free')} -{' '}
+          <b>Gluten Free Dairy Free</b>
           <hr />
-          
+          {mealCounter('2on 3off')} - <b>Two On Three Off</b>
+          <hr />
           {mealCounter('Standard Sesame Free')} - Standard Sesame Free Meals
           <hr />
           {mealCounter('Vegetarian Sesame Free')} - Vegetarian Sesame Free Meals
@@ -360,71 +362,100 @@ const Admin = ({ token, user, initRequests }) => {
           <hr />
           {mealCounter('None')} - None Meals
           <hr />
-          
-      </div>
-        </h6>
+        </div>
+      </h6>
       <h3>
         <b className="text-danger">{allOnsiteMeals()}</b> - All Onsite{' '}
       </h3>
-      <hr/>
+      <hr />
       <div className="pt-1"></div>
-      <h5><b>Onsite Kitchen Prep Data</b></h5>
+      <h5>
+        <b>Onsite Kitchen Prep Data</b>
+      </h5>
       <div className="pt-1"></div>
       <h5 className="">
-        <b className="text-danger">{allIndividualOnsiteMeals()}</b> - Individual Onsite Meals 
+        <b className="text-danger">{allIndividualOnsiteMeals()}</b> - Individual
+        Onsite Meals
         <div className="p-1"></div>
       </h5>
-        <hr />
-          
-      <h5><b>School Numbers</b></h5> 
+      <hr />
+
+      <h5>
+        <b>School Numbers</b>
+      </h5>
       <div className="p-3">
         <h6>
           {pickupMealsBySchool('BES', 'a-group')} - BES A
-          <br/>
+          <br />
           {pickupMealsBySchool('BES', 'b-group')} - BES B
           <hr />
           {pickupMealsBySchool('OHES', 'a-group')} - OHES A
-          <br/>
+          <br />
           {pickupMealsBySchool('OHES', 'b-group')} - OHES B
           <hr />
           {pickupMealsBySchool('ROES', 'a-group')} - ROES A
-          <br/>
+          <br />
           {pickupMealsBySchool('ROES', 'b-group')} - ROES B
           <hr />
           {pickupMealsBySchool('MCMS', 'a-group')} - MCMS A
-          <br/>
+          <br />
           {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
           <hr />
           {pickupMealsBySchool('OPHS', 'a-group')} - OPHS A
-          <br/>
+          <br />
           {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
           <hr />
           {pickupMealsBySchool('OVHS')} - OVHS
           <hr />
         </h6>
-        <br/>
-        <h5><b className='text-danger' >{userListFiltered().length} users who have not ordered yet for {moment(pickupDate).format('MMMM Do')}</b></h5> 
+        <br />
+        <h5>
+          <b className="text-danger">
+            {userListFiltered().length} users who have not ordered yet for{' '}
+            {moment(pickupDate).format('MMMM Do')}
+          </b>
+        </h5>
         {/* <h5>email list</h5> */}
         <CSVLink
-                  className="btn btn-sm btn-outline-dark text"
-                  headers={emailHeaders}
-                  data={userList
-                    .filter((user) => !requests.map(request => request.postedBy.email).includes(user.email))}
-                >Email List CSV </CSVLink>
-        <br/>
-        <br/>
+          className="btn btn-sm btn-outline-dark text"
+          headers={emailHeaders}
+          data={userList.filter(
+            (user) =>
+              !requests
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+          )}
+        >
+          Email List of users who haven't ordered CSV{' '}
+        </CSVLink>
+        {/* <div className="float-right">{userList.length} total users</div> */}
+        &nbsp;&nbsp;
+        <CSVLink
+          className="btn btn-sm btn-outline-dark text float-right"
+          headers={emailHeaders}
+          data={userList
+          //   .filter(
+          //   (user) =>
+          //     !requests
+          //       .map((request) => request.postedBy.email)
+          //       .includes(user.email)
+          // )
+        }
+        >
+          Full Email List of {userList.length} users CSV{' '}
+        </CSVLink>
+        <br />
+        <br />
         <table className="table table-striped table-sm table-bordered">
-      <thead>
-        <tr>
-          <th scope="col">User</th>
-          <th scope="col">User Code</th>
-          <th scope="col">Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        {userListFiltered()}
-      </tbody>
-    </table>
+          <thead>
+            <tr>
+              <th scope="col">User</th>
+              <th scope="col">User Code</th>
+              <th scope="col">Email</th>
+            </tr>
+          </thead>
+          <tbody>{userListFiltered()}</tbody>
+        </table>
       </div>
     </Layout>
   );
