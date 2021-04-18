@@ -8,6 +8,7 @@ import { API } from '../../../config';
 import Layout from '../../../components/Layout';
 import { getCookie } from '../../../helpers/auth';
 import { showErrorMessage } from '../../../helpers/alerts';
+import { CSVLink } from 'react-csv';
 
 const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
@@ -62,6 +63,15 @@ const Admin = ({ token, user, initRequests }) => {
   useEffect(() => {
       handleUserList()
   }, [])
+
+  // csv stuff
+
+  const emailHeaders = [
+    { label: 'First Name', key: 'name' },
+    { label: 'Last Name', key: 'lastName' },
+    { label: 'Code', key: 'userCode' },
+    { label: 'Email', key: 'email' },
+  ];
 
   const handleTimeSelect = (e, pickupTimeSelected) => {
     e.preventDefault();
@@ -271,6 +281,7 @@ const Admin = ({ token, user, initRequests }) => {
               User List
             </button>
             {error && showErrorMessage(error)}
+            
           </div>
         </div>
       </div>
@@ -394,6 +405,13 @@ const Admin = ({ token, user, initRequests }) => {
         <br/>
         <h5><b className='text-danger' >{userListFiltered().length} users who have not ordered yet for {moment(pickupDate).format('MMMM Do')}</b></h5> 
         {/* <h5>email list</h5> */}
+        <CSVLink
+                  className="btn btn-sm btn-outline-dark text"
+                  headers={emailHeaders}
+                  data={userList
+                    .filter((user) => !requests.map(request => request.postedBy.email).includes(user.email))}
+                >Email List CSV </CSVLink>
+        <br/>
         <br/>
         <table className="table table-striped table-sm table-bordered">
       <thead>
