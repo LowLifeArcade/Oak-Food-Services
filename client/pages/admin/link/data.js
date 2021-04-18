@@ -7,6 +7,7 @@ import axios from 'axios';
 import { API } from '../../../config';
 import Layout from '../../../components/Layout';
 import { getCookie } from '../../../helpers/auth';
+import { showErrorMessage } from '../../../helpers/alerts';
 
 const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
@@ -16,9 +17,12 @@ const Admin = ({ token, user, initRequests }) => {
       : moment(new Date()).format('l'),
     // pickupDate: moment(new Date()).format('l'),
     meals: [],
+    error: '',
   });
 
-  const { requests, pickupDate, meals } = state;
+  const [userList, setUserList] = useState([])
+
+  const { requests, pickupDate, meals, error } = state;
   let myDate = '';
 
   // console.log('all meals by date', requests)
@@ -54,6 +58,10 @@ const Admin = ({ token, user, initRequests }) => {
       }
     }
   }, []);
+
+  useEffect(() => {
+      handleUserList()
+  }, [])
 
   const handleTimeSelect = (e, pickupTimeSelected) => {
     e.preventDefault();
@@ -183,6 +191,49 @@ const Admin = ({ token, user, initRequests }) => {
     });
   };
 
+  const handleUserList = async () => {
+    // const pickupDateLookup = moment(pickupDate).format('l');
+    try {
+    const response = await axios.get(
+      `${API}/user-list`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    setUserList(
+     response.data,
+    );
+  } catch (error) {
+    console.log('USER LIST ERROR', error);
+    setState({
+      ...state,
+      error: error.response.data.error,
+    });
+  }
+  };
+
+  // {requests.map(request => console.log('request email', request.postedBy.email))}
+  // {userList.map(user => console.log('user email', user.email))}
+
+  // userers who have not ordered yet
+  const userListFiltered = () => ( 
+    userList
+    .filter((user) => !requests.map(request => request.postedBy.email).includes(user.email))
+    .map((l, i) => (
+      <>
+        <tr key={i}>
+          <td>
+            {l.name + ' ' + l.lastName}
+          </td>
+          <td>
+            {l.userCode}
+          </td>
+          <td>
+            {l.email}
+          </td>
+        </tr>
+      </>
+    ))
+  )
+
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
   return (
@@ -215,6 +266,11 @@ const Admin = ({ token, user, initRequests }) => {
             <button onClick={(e) => handleTimeSelect(e, '4pm-6pm')}>
               4pm-6pm
             </button>
+            <br/>
+            <button onClick={(e) => handleUserList(e)}>
+              User List
+            </button>
+            {error && showErrorMessage(error)}
           </div>
         </div>
       </div>
@@ -308,7 +364,7 @@ const Admin = ({ token, user, initRequests }) => {
         <div className="p-1"></div>
       </h5>
         <hr />
-
+          
       <h5><b>School Numbers</b></h5> 
       <div className="p-3">
         <h6>
@@ -335,6 +391,22 @@ const Admin = ({ token, user, initRequests }) => {
           {pickupMealsBySchool('OVHS')} - OVHS
           <hr />
         </h6>
+        <br/>
+        <h5><b className='text-danger' >{userListFiltered().length} users who have not ordered yet for {moment(pickupDate).format('MMMM Do')}</b></h5> 
+        {/* <h5>email list</h5> */}
+        <br/>
+        <table className="table table-striped table-sm table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">User</th>
+          <th scope="col">User Code</th>
+          <th scope="col">Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {userListFiltered()}
+      </tbody>
+    </table>
       </div>
     </Layout>
   );
