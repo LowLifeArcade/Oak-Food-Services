@@ -65,6 +65,7 @@ const Layout = ({ children }) => {
 
   const head = () => (
     <>
+    <meta name="google" content="notranslate" />
       {/* bootstrap */}
       <link
         rel="stylesheet"

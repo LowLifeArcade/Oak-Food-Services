@@ -83,10 +83,15 @@ const Home = () => {
                   />
 
                   <div className={'pt-4 ' + styles.bodyregular}>
+                    <span>
+
                     <b>Start a Meal Request</b>
+                    </span>
                   </div>
                   <div className={'pb-5 ' + styles.bodyregular}>
                     Look over the &nbsp;
+                    <span>
+
                     {
                       <Link href="/menus">
                         <a
@@ -99,11 +104,15 @@ const Home = () => {
                         </a>
                       </Link>
                     }
+                    </span>
+                    <span>
+
                     , then start a request with one of the{' '}
                     <b>
                       yellow <i>Meal Request</i> buttons
                     </b>{' '}
                     found throughout the site.
+                    </span>
                     {/* located either
                 on your nav bar, the weekly menu, or your receipts page. */}
                   </div>
@@ -121,6 +130,8 @@ const Home = () => {
                   <div className={'pt-4 ' + styles.bodyregular}>
                     <b> Make Your Selections</b>
                   </div>
+                  <span>
+
                   <p className={styles.bodyregular}>
                     Select the school week, make your{' '}
                     <b>student's meal selections</b> for that week, select a
@@ -129,6 +140,7 @@ const Home = () => {
                     <br />
                     {/* You can edit your student's cohort and allery group for differnt meal options in  <b>update profile</b>.  */}
                   </p>
+                  </span>
                 </div>
 
                 <div className={styles.columnscontainer}>
@@ -140,16 +152,21 @@ const Home = () => {
                     class="stepimage"
                     width="300"
                   />
+                  <span> 
 
                   <div className={'pt-4 ' + styles.bodyregular}>
                     <b>For Onsite Requests</b>
                   </div>
+                  </span>
+                  <span>
+
                   <p className={'pb-2 ' + styles.bodyregular}>
                     You're all done! Your hybrid student is now on the lunch
                     roster for the <b>week found on your receipt</b>.
                     <br />
                     <br />
                   </p>
+                  </span>
                 </div>
                 <div className={styles.columnscontainer}>
                   <img
@@ -160,41 +177,64 @@ const Home = () => {
                     class="stepimage"
                     width="340"
                   />
-
+                  <span>
                   <div className={'pt-4 ' + styles.bodyregular}>
                     <b>For Curbside Requests</b>
                   </div>
+
+                  </span>
+                  <span>
                   <p className={'pb-5 ' + styles.bodyregular}>
                     Simply <b>print out your code</b> and drive to the{' '}
                     <b>pickup location</b> on the date and time found on your
                     receipt.
                   </p>
+
+                  </span>
                 </div>
+                <span>
                 {/* <p className={'pb-2 ' + styles.bodyregular}> */}
                 <h1 className={'pb-3 ' + styles.h4}> Display Code</h1>
                 {/* </p> */}
+
+                </span>
 
                 <div className={'pt-4 alert-warning ' + styles.sectionair}>
                   <div className={styles.sectioncolumns}>
                     <h3 className={'p-3 ' + styles.h4}>On Your Dashboard</h3>
                     {/* <hr className={styles.hr} /> */}
+                    <span>
+
                     <b>Click Example:</b>
+                    </span>
+                    <span>
                     <h1 id="printCode" className="code" onClick={printData}>
                       Gf-NESS-03
                     </h1>
+
+                    </span>
                     {/* <hr className={styles.hr} /> */}
+                    <span>
                     <div className={'p-4 ' + styles.bodyregular}>
                       Print (or write out) your{' '}
                       <b>code found on your receipt</b> and display it on your
                       dashboard.
                     </div>
+
+                    </span>
+                    
                     <button
                       type="button"
                       className="btn btn-sm btn-outline-dark text float-left print"
                       onClick={printData}
                     >
+                      <span>
                       <i class="fas fa-print"></i>
+                      </span>
+                      <span>
+
                       &nbsp;Print Code
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -202,10 +242,13 @@ const Home = () => {
                 <div className={'pt-5 ' + styles.bodyregular}>
                   <b> That's it! </b>
                 </div>
+                <span>
                 <p className={styles.bodyregular}>
                   Lastly, please don't forget to thank our hardworking staff as
                   they work diligently to feed our students every week.
                 </p>
+
+                </span>
               </div>
             </div>
           ) : (

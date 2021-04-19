@@ -85,6 +85,18 @@ const Admin = ({ token, user, initRequests }) => {
     setState({ ...state, meals: allMealsArray2 });
     console.log('req ', meals);
   };
+  const resetTimeSelect = (e, pickupTimeSelected) => {
+    e.preventDefault();
+
+    let allMealsArray2 = [];
+
+    requests
+      // .filter((mealRequest) => mealRequest.pickupTime === pickupTimeSelected)
+      .map((r, i) => r.mealRequest.map((meal) => allMealsArray2.push(meal)));
+
+    setState({ ...state, meals: allMealsArray2 });
+    console.log('req ', meals);
+  };
 
   const mealCounter = (meal) =>
     state.meals.filter(
@@ -217,6 +229,11 @@ const Admin = ({ token, user, initRequests }) => {
     }
   };
 
+  let twoWeeksFromNow = new Date();
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+  let summerFromNow = new Date();
+  summerFromNow.setDate(summerFromNow.getDate() + 90);
+
   // {requests.map(request => console.log('request email', request.postedBy.email))}
   // {userList.map(user => console.log('user email', user.email))}
 
@@ -257,11 +274,17 @@ const Admin = ({ token, user, initRequests }) => {
             <div className="">
               <Calendar
                 onChange={(e) => onDateChange(e)}
+                // activeStartDate={twoWeeksFromNow}
+                // maxDate={summerFromNow}
+                // activeStartDate={moment(new Date()).add(14, 'day').format('l')}
                 tileDisabled={handleDisabledDates}
                 value={new Date()}
                 value={''}
               />
             </div>
+            <button onClick={(e) => resetTimeSelect(e)}>
+              All
+            </button>
             <button onClick={(e) => handleTimeSelect(e, '7am-9am')}>
               7am-9am
             </button>
@@ -272,8 +295,8 @@ const Admin = ({ token, user, initRequests }) => {
               4pm-6pm
             </button>
             <br />
-            <button onClick={(e) => handleUserList(e)}>User List</button>
-            {error && showErrorMessage(error)}
+            {/* <button onClick={(e) => handleUserList(e)}>User List</button>
+            {error && showErrorMessage(error)} */}
           </div>
         </div>
       </div>

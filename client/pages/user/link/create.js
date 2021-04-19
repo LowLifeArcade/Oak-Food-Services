@@ -133,7 +133,7 @@ const Create = ({ token, user }) => {
     type,
     medium,
   } = state;
-  console.log('MEAL REQ', mealRequest);
+  // console.log('MEAL REQ', mealRequest);
   const [loaded, setLoaded] = useState(false);
 
   const calanderButton = useRef();
