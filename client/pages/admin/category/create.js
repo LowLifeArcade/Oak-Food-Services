@@ -128,14 +128,9 @@ const Create = ({ user, token }) => {
     setMenuPost(menuPostStatus);
     setState({
       ...state,
-      menu: [
-        {
-          row1: 'day',
-          row2: 'breakfast food',
-          row3: 'lunch',
-          row4: 'vege food',
-        },
-      ],
+      menu: [],
+      menu2: [],
+      menu3: [],
     });
   };
 
@@ -241,7 +236,17 @@ const Create = ({ user, token }) => {
     try {
       const response = await axios.post(
         `${API}/category`,
-        { name, content, group, image, postedBy, menu, menu2, menu3, pickupWeek },
+        {
+          name,
+          content,
+          group,
+          image,
+          postedBy,
+          menu,
+          menu2,
+          menu3,
+          pickupWeek,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -282,6 +287,7 @@ const Create = ({ user, token }) => {
       ],
     });
   };
+
   const addRow2 = (e) => {
     // e.preventDefault();
     setState({
@@ -294,6 +300,7 @@ const Create = ({ user, token }) => {
       ],
     });
   };
+
   const addRow3 = (e) => {
     // e.preventDefault();
     setState({
@@ -314,6 +321,7 @@ const Create = ({ user, token }) => {
 
     setState({ ...state, menu: list });
   };
+
   const removeRow2 = (e) => {
     e.preventDefault();
     const list = [...state.menu2];
@@ -321,6 +329,7 @@ const Create = ({ user, token }) => {
 
     setState({ ...state, menu2: list });
   };
+  
   const removeRow3 = (e) => {
     e.preventDefault();
     const list = [...state.menu3];
@@ -422,10 +431,7 @@ const Create = ({ user, token }) => {
       )}
       <br />
       <br />
-
-
-      {menuPost && // menu 1
-      (
+      {menuPost && ( // menu 1
         <>
           {/* <div>
             {menuType === 'Pickup' && (
@@ -570,11 +576,8 @@ const Create = ({ user, token }) => {
           </div>
         </>
       )}
-
-      <br/>
-
-      {menuPost && // menu 2
-      (
+      <br />
+      {menuPost && ( // menu 2
         <>
           {/* <div>
             {menuType === 'Pickup' && (
@@ -719,11 +722,8 @@ const Create = ({ user, token }) => {
           </div>
         </>
       )}
-
-      <br/>
-
-      {menuPost && // menu 3
-      (
+      <br />
+      {menuPost && ( // menu 3
         <>
           {/* <div>
             {menuType === 'Pickup' && (

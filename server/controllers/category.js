@@ -267,7 +267,7 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { slug } = req.params;
-  const { name, image, content, group } = req.body;
+  const { name, content, image, group, postedBy, menu, menu2, menu3, pickupWeek  } = req.body;
 
   // image data
   const base64Data = new Buffer.from(
@@ -277,12 +277,12 @@ exports.update = (req, res) => {
 
   Category.findOneAndUpdate(
     { slug },
-    { name, content, group },
+    { name, content, image, group, postedBy, menu, menu2, menu3, pickupWeek  },
     { new: true }
   ).exec((err, updated) => {
     if (err) {
       return res.status(400).json({
-        error: 'Could find not category to update',
+        error: 'Could not find post to update',
       });
     }
     // console.log('UPDATED', updated);
