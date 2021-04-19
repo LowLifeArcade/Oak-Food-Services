@@ -56,12 +56,10 @@ const Update = ({ oldLink, token, user, _id }) => {
     head.appendChild(style);
 
     let newWin = window.open('');
-    
+
     newWin.document.write(head.outerHTML, divToPrint.outerHTML);
     if (newWin == null || typeof newWin == 'undefined')
-      alert(
-        'Turn off your pop-up blocker to print code'
-      );
+      alert('Turn off your pop-up blocker to print code');
     newWin.document.close();
     newWin.print();
     setTimeout(() => {
@@ -78,7 +76,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           <div
             key={242}
             className={
-              (oldLink && oldLink.orderStatus === true) ||
+              (oldLink && oldLink.orderStatus === true) || oldLink  &&
               moment(oldLink.pickupDate).format('MDD').toString() <
                 moment(new Date()).format('MDD').toString()
                 ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
@@ -86,7 +84,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             }
           >
             <h4>
-              {oldLink.orderStatus && (
+              {oldLink && oldLink.orderStatus && (
                 <b className="text-danger ">
                   <h2>
                     * PICKED UP *
@@ -96,7 +94,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                   <hr />
                 </b>
               )}
-              {moment(oldLink.pickupDate).format('MDD').toString() <
+              {oldLink && moment(oldLink.pickupDate).format('MDD').toString() <
                 moment(new Date()).format('MDD').toString() && (
                 <b className="text-danger ">
                   <h2>
@@ -109,7 +107,7 @@ const Update = ({ oldLink, token, user, _id }) => {
               )}
             </h4>
             {/* {console.log('old link', oldLink)} */}
-            {oldLink.mealRequest.filter(
+            {oldLink && oldLink.mealRequest.filter(
               (l) =>
                 // l.meal == 'Standard' ||
                 // l.meal == 'Vegetarian' ||
@@ -124,25 +122,27 @@ const Update = ({ oldLink, token, user, _id }) => {
                 l.pickupOption === 'Breakfast and Lunch'
             ).length != 0 && (
               <>
-                <h3 className="pt-2 d-flex justify-content-center ">CURBSIDE PICKUP</h3>
+                <h3 className="pt-2 d-flex justify-content-center ">
+                  CURBSIDE PICKUP
+                </h3>
                 <h4>
                   <div className="d-flex justify-content-center">
                     <b>
-                      {'On ' + moment(oldLink.pickupDate)
-                        .subtract(3, 'day')
-                        .format('MMMM Do')}
+                      {'On ' +
+                        moment(oldLink.pickupDate)
+                          .subtract(3, 'day')
+                          .format('MMMM Do')}
                     </b>
                   </div>
                 </h4>
-                <span className="d-flex justify-content-center " >
-                  
-                <b className="pb-2 ">{'Between '+ oldLink.pickupTime} </b>
+                <span className="d-flex justify-content-center ">
+                  <b className="pb-2 ">{'Between ' + oldLink.pickupTime} </b>
                 </span>
               </>
             )}
             <hr className={styles.hr} />
             <h3>
-              {oldLink.mealRequest.filter(
+              {oldLink && oldLink.mealRequest.filter(
                 (l) =>
                   // l.meal == 'Standard' ||
                   // l.meal == 'Vegetarian' ||
@@ -151,7 +151,8 @@ const Update = ({ oldLink, token, user, _id }) => {
                   // l.meal == 'Standard DF' ||
                   // l.meal == 'GlutenFree DF' ||
                   l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                  l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
+                  l.pickupOption ===
+                    'Two Onsite / Three Breakfast and Lunches' ||
                   l.pickupOption === 'Breakfast Only' ||
                   l.pickupOption === 'Lunch Only' ||
                   l.pickupOption === 'Breakfast and Lunch'
@@ -172,12 +173,12 @@ const Update = ({ oldLink, token, user, _id }) => {
               ) : (
                 <b>
                   Onsite School Lunch for Week of{' '}
-                  {moment(oldLink.pickupDate).format('MMMM Do')}
+                  {oldLink && moment(oldLink.pickupDate).format('MMMM Do')}
                 </b>
               )}
             </h3>
             <hr className={styles.hr} />
-            {oldLink.mealRequest.filter(
+            {oldLink && oldLink.mealRequest.filter(
               (l) =>
                 // l.meal == 'Standard' ||
                 // l.meal == 'Vegetarian' ||
@@ -202,7 +203,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             <div className="p-2">
               <h5 className="pb-1">
                 <div className="p-3">
-                  {oldLink.mealRequest
+                  {oldLink && oldLink.mealRequest
                     .filter((l) => oldLink.meal !== 'None')
                     .map((k, i) => (
                       <>
@@ -244,6 +245,40 @@ const Update = ({ oldLink, token, user, _id }) => {
                                     // .add(3, 'day')
                                     .format('MMMM Do')}
                                   *
+                                </div>
+                              </div>
+                            </>
+                          ) : k.pickupOption ===
+                            'Two Onsite / Three Breakfast and Lunches' ? (
+                            <>
+                              <div className="p-1">
+                                <div className="pb-2 ">
+                                  Curbside: Three Lunches and Five Breakfasts
+                                </div>
+                                <div
+                                  className="p-2"
+                                  style={{ fontSize: '16px' }}
+                                >
+                                  PLUS:
+                                  <br />
+                                  *Onsite Lunches{' '}
+                                  {k.group === 'b-group'
+                                    ? '- B'
+                                    : k.group === 'a-group'
+                                    ? '- A'
+                                    : ''}
+                                  *
+                                  <br />
+                                  *Week of{' '}
+                                  {moment(oldLink.pickupDate)
+                                    // .add(3, 'day')
+                                    .format('MMMM Do')}
+                                  *
+                                  <br />
+                                  <br />
+                                  {/* TYPE:
+                                <br />
+                                {k.pickupOption} */}
                                 </div>
                               </div>
                             </>
@@ -291,12 +326,32 @@ const Update = ({ oldLink, token, user, _id }) => {
               </h5>
             </div>
             Receipt for week of{' '}
-                    <b>Monday {moment(oldLink.pickupDate).format('MMMM Do')}</b>
+            <b>Monday {oldLink && moment(oldLink.pickupDate).format('MMMM Do')}</b>
+
+            {isAuth().role === 'admin' && 
+<>
+<br/>
+<br/>
+<span>
+  <b>
+
+  Admin Only info:
+  </b>
+</span>
+<br/>
+
+parent email: {oldLink.postedBy.email}
+<br/>
+parent first name: {oldLink.postedBy.name}
+<br/>
+parent last name: {oldLink.postedBy.lastName}
+</>
+}
 
             <div className={' pb-3 pt-3 ' + styles.noPrint}>
               {
                 // l.postedBy.students[i] === undefined ? null :
-                oldLink.orderStatus === false &&
+                oldLink && oldLink.orderStatus === false &&
                   moment(oldLink.pickupDate).format('MDD').toString() >
                     moment(new Date()).format('MDD').toString() && (
                     <Link href={`/user/link/${oldLink._id}`}>
@@ -306,8 +361,10 @@ const Update = ({ oldLink, token, user, _id }) => {
                     </Link>
                   )
               }
+
+
               <span>&nbsp;&nbsp;</span>
-              {oldLink.orderStatus === false &&
+              {oldLink && oldLink.orderStatus === false &&
                 oldLink.mealRequest.filter(
                   (l) =>
                     l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
@@ -325,7 +382,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                     &nbsp;Print Code
                   </button>
                 )}
-              {oldLink.orderStatus === false &&
+              {oldLink && oldLink.orderStatus === false &&
                 moment(oldLink.pickupDate).format('MDD').toString() >
                   moment(new Date()).format('MDD').toString() && (
                   <Link href="">
@@ -337,16 +394,16 @@ const Update = ({ oldLink, token, user, _id }) => {
                     </button>
                   </Link>
                 )}
-                <div className="pt-3 ">
-                        <span className="">
-                          {' '}
-                          Requested {moment(oldLink.createdAt).format('l')} by{' '}
-                          {oldLink.postedBy == null
-                            ? 'user deleted'
-                            : oldLink.postedBy.name}{' '}
-                          <br />
-                        </span>
-                      </div>
+              <div className="pt-3 ">
+                <span className="">
+                  {' '}
+                  Requested {oldLink && moment(oldLink.createdAt).format('l')} by{' '}
+                  {oldLink && oldLink.postedBy == null
+                    ? 'user deleted'
+                    : oldLink && oldLink.postedBy.name}{' '}
+                  <br />
+                </span>
+              </div>
               <div className="pb-2"></div>
             </div>
             {/* <div className=" pb-3 pt-3">
@@ -382,6 +439,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           <div className={'d-flex justify-content-center   '}>
             {/* <div className={"flex-column justify-content-center " + styles.mobile}> */}
             {receipt(oldLink, confirmDelete)}
+            
           </div>
           {/* </div> */}
           {/* </div> */}

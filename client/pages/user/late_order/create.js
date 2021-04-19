@@ -1531,7 +1531,7 @@ const Create = ({ token, user }) => {
                       </button>
                     )}
 
-                    {isAuth().role === 'admin'
+                    {/* {isAuth().role === 'admin'
                       ? showSearch && (
                           <Calendar
                             onChange={(e) => onDateChange(e)}
@@ -1543,11 +1543,12 @@ const Create = ({ token, user }) => {
                           <Calendar
                             onChange={(e) => onDateChange(e)}
                             tileDisabled={handleDisabledDates}
-                            defaultValue={twoWeeksFromNow}
-                            minDate={twoWeeksFromNow}
-                            value={twoWeeksFromNow}
+                            value={''}
+                            // defaultValue={twoWeeksFromNow}
+                            // minDate={twoWeeksFromNow}
+                            // value={twoWeeksFromNow}
                           />
-                        )}
+                        )} */}
                   </span>
                 </div>
               </div>

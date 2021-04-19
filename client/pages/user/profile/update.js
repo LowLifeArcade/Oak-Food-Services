@@ -407,7 +407,7 @@ const Profile = ({ user, token }) => {
     });
   };
 
-  console.log('students array', students)
+  // console.log('students array', students)
   // remove meal button
   const removeStudent = (e) => {
     e.preventDefault();

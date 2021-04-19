@@ -309,7 +309,45 @@ const User = ({ user, token, l, userLinks }) => {
                                         </div>
                                       </div>
                                     </>
-                                  ) : (
+                                  ) : k.pickupOption ===
+                                  "Two Onsite / Three Breakfast and Lunches" ? (
+                                    <>
+                                      <div className="p-1">
+                                        <div className="pb-2 ">
+                                        Curbside: Three Lunches and Five Breakfasts
+                                        </div>
+                                        <div
+                                          className="p-2"
+                                          style={{ fontSize: '16px' }}
+                                        >
+                                          PLUS:
+                                          <br />
+                                          *Onsite Lunches{' '}
+                                          {k.group === 'b-group'
+                                            ? '- B'
+                                            : k.group === 'a-group'
+                                            ? '- A'
+                                            : ''}
+                                          *
+                                          <br />
+                                          *Week of{' '}
+                                          {moment(l.pickupDate)
+                                            // .add(3, 'day')
+                                            .format('MMMM Do')}
+                                          *
+                                          <br />
+                                          <br />
+
+                                          {/* TYPE:
+                                        <br />
+                                        {k.pickupOption} */}
+                                        </div>
+                                      </div>
+                                    </>
+                                  
+                                  ) 
+                                  :
+                                  (
                                     <>
                                       <div className="p-1">
                                         Onsite Lunches

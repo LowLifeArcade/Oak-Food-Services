@@ -377,7 +377,10 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     // makes all meals a serpate array usable for onsite order data
     let allMealsArray2 = [];
     await response.data.map((r, i) =>
-      r.mealRequest.map((meal) => allMealsArray2.push(meal))
+      r.mealRequest.map((meal) => {
+        meal.id = r._id
+        allMealsArray2.push(meal)
+      })
     );
 
     let links = await response.data.sort((a, b) =>
@@ -724,11 +727,26 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
             <>
               <tr key={i}>
                 <td>
-                  {l.postedBy === null
+                <Link href={`/user/receipt/${l.id}`}>
+                    <a className="text-dark">{l.postedBy === null
                     ? 'user deleted'
-                    : l.studentName 
+                    : 
+                    
+                    l.studentName // make link to receipt
+                    
+                    
                     // + ' ' + l.lastName
-                    }
+                    }</a>
+                  </Link>
+                  {/* {l.postedBy === null
+                    ? 'user deleted'
+                    : 
+                    
+                    l.studentName // make link to receipt
+                    
+                    
+                    // + ' ' + l.lastName
+                    } */}
                 </td>
                 <td>{l.postedBy === null ? 'user deleted' : l.teacher}</td>
                 <td>{l.schoolName === null ? 'user deleted' : l.schoolName}</td>
