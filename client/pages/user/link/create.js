@@ -873,7 +873,9 @@ const Create = ({ token, user }) => {
                 Standard 2 Onsite / 3 Offsite Lunches plus 5 Breakfasts
               </option>
             )}
-            {isAuth().role === 'subscriber' && (
+            {
+            // isAuth().role === 'subscriber' && 
+            (
               <option value={'Standard Onsite'}>Standard (Onsite)</option>
             )}
             {user.special.day1 == 'true' && (
@@ -1544,7 +1546,7 @@ const Create = ({ token, user }) => {
                             onChange={(e) => onDateChange(e)}
                             tileDisabled={handleDisabledDates}
                             defaultValue={twoWeeksFromNow}
-                            minDate={twoWeeksFromNow}
+                            // minDate={twoWeeksFromNow}
                             value={twoWeeksFromNow}
                           />
                         )}

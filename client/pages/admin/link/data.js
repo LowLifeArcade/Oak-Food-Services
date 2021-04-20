@@ -424,11 +424,11 @@ const Admin = ({ token, user, initRequests }) => {
           <br />
           {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
           <hr />
-          {pickupMealsBySchool('OPHS', 'a-group')} - OPHS A
+          {pickupMealsBySchool('OPHS', 'a-group')} - OPHS 
           <br />
-          {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
-          <hr />
-          {pickupMealsBySchool('OVHS')} - OVHS
+          {/* {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
+          <hr /> */}
+          {pickupMealsBySchool('OVHS', 'a-group')} - OVHS
           <hr />
         </h6>
         <br />

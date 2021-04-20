@@ -103,7 +103,7 @@ const Profile = ({ user, token }) => {
   useEffect(() => {
     success === "You've successfully registered your students"
       ? setTimeout(() => {
-          Router.push('/user');
+          Router.push('/menus');
         }, 2000)
       : console.log('add students');
   }, [success]);

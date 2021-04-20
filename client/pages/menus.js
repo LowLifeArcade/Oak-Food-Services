@@ -83,9 +83,12 @@ const Menus = ({ categories }) => {
       .sort((a, b) => Date.parse(a.pickupWeek) - Date.parse(b.pickupWeek))
       .map((c, i) => (
         <>
-          {/* {console.log(moment(new Date()).subtract(13, 'day').format('l'))} */}
-          {moment(c.pickupWeek).format('l') >
-            moment(new Date()).subtract(13, 'day').format('l') && (
+          {console.log(
+            moment(c.pickupWeek).format('l') <
+              moment(new Date()).add(13, 'day').format('l')
+          )}
+          {moment(c.pickupWeek).format('l') <
+            moment(new Date()).add(18, 'day').format('l') && (
             <div className="">
               <div
                 key={i}
@@ -127,118 +130,127 @@ const Menus = ({ categories }) => {
                         </h3>
                       )}
 
-                      {c.menu.length > 0 && <><div style={{ color: '#419ca8' }} className={'pt-1'}>
+                      {c.menu.length > 0 && (
+                        <>
+                          <div style={{ color: '#419ca8' }} className={'pt-1'}>
+                            <hr />
+                            <b>
+                              Meal requests must be made by 11:59pm{' '}
+                              {moment(c.pickupWeek)
+                                .subtract(14, 'day')
+                                .format('MMMM Do')}
+                            </b>
+                          </div>
+                          <div className=""></div>
+                        </>
+                      )}
                       <hr />
-                        <b>
-                          Meal requests must be made by 11:59pm{' '}
-                          {moment(c.pickupWeek)
-                            .subtract(14, 'day')
-                            .format('MMMM Do')}
-                        </b>
-                      </div>
-                            <div className=""></div></>}
-                      <hr/>
-                      <div >
-                        {c.menu.length > 0 && <><h4 className="alert-seconary pt-3">Curbside Pickup</h4>
-                        <div className="p-1"></div>
-                        <table
-                          className="table table-sm table-striped table-bordered "
-                          style={{ fontSize: '12px' }}
-                        >
-                          {c.menu.length > 0 && (
-                            <thead>
-                              <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Breakfast</th>
-                                <th scope="col">Lunch</th>
-                                <th scope="col">Vegetarian Lunch</th>
-                              </tr>
-                            </thead>
-                          )}
-                          <tbody>
-                            {c.menu.map((l, i) => (
-                              <>
-                                <tr key={i}>
-                                  <td>
-                                    <b>{l.row1}</b>
-                                  </td>
-                                  <td>{l.row2}</td>
-                                  <td>{l.row3}</td>
-                                  <td>{l.row4}</td>
-                                </tr>
-                              </>
-                            )) || ''}
-                          </tbody>
-                        </table>
-                        <br/>
-<hr/>
-                        <br />
-                        </>
-                      }
-                        {c.menu2.length > 0 && <>
-                          <h5>BES | OHES | ROES | MCMS</h5>
-                        
-                        <div className="p-1"></div>
-                        <table
-                          className="table table-sm table-striped table-bordered "
-                          style={{ fontSize: '12px' }}
-                        >
-                          {c.menu2.length > 0 && (
-                            <thead>
-                              <tr>
-                                {/* <th scope="col">Secondary</th> */}
-                                <th scope="col">Monday/Wednesday</th>
-                                <th scope="col">Tuesday/Thursday</th>
-                              </tr>
-                            </thead>
-                          )}
-                          <tbody>
-                            {c.menu2.map((l, i) => (
-                              <>
-                                <tr key={i}>
-                                  <td>{l.row1}</td>
-                                  <td>{l.row2}</td>
-                                  {/* <td>{l.row3}</td> */}
-                                </tr>
-                              </>
-                            )) || ''}
-                          </tbody>
-                        </table>
+                      <div>
+                        {c.menu.length > 0 && (
+                          <>
+                            <h4 className="alert-seconary pt-3">
+                              Curbside Pickup
+                            </h4>
+                            <div className="p-1"></div>
+                            <table
+                              className="table table-sm table-striped table-bordered "
+                              style={{ fontSize: '12px' }}
+                            >
+                              {c.menu.length > 0 && (
+                                <thead>
+                                  <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Breakfast</th>
+                                    <th scope="col">Lunch</th>
+                                    <th scope="col">Vegetarian Lunch</th>
+                                  </tr>
+                                </thead>
+                              )}
+                              <tbody>
+                                {c.menu.map((l, i) => (
+                                  <>
+                                    <tr key={i}>
+                                      <td>
+                                        <b>{l.row1}</b>
+                                      </td>
+                                      <td>{l.row2}</td>
+                                      <td>{l.row3}</td>
+                                      <td>{l.row4}</td>
+                                    </tr>
+                                  </>
+                                )) || ''}
+                              </tbody>
+                            </table>
+                            <br />
+                            <hr />
+                            <br />
+                          </>
+                        )}
+                        {c.menu2.length > 0 && (
+                          <>
+                            <h5>BES | OHES | ROES | MCMS</h5>
 
-                        <br />
-                        {c.menu3.length > 0 && <h5>OPHS</h5>}
-                        <div className="p-1"></div>
-                        <table
-                          className="table table-sm table-striped table-bordered "
-                          style={{ fontSize: '12px' }}
-                        >
-                          {c.menu3.length > 0 && (
-                            <thead>
-                              <tr>
-                                <th scope="col">Monday</th>
-                                <th scope="col">Tuesday</th>
-                                <th scope="col">Wednesday</th>
-                                <th scope="col">Thursday</th>
-                              </tr>
-                            </thead>
-                          )}
-                          <tbody>
-                            {c.menu3.map((l, i) => (
-                              <>
-                                <tr key={i}>
-                                  <td>{l.row1}</td>
-                                  <td>{l.row2}</td>
-                                  <td>{l.row3}</td>
-                                  <td>{l.row4}</td>
-                                </tr>
-                              </>
-                            )) || ''}
-                          </tbody>
-                        </table>
-                      <br/>
-                      <br/>
-                        </>
-                    }
+                            <div className="p-1"></div>
+                            <table
+                              className="table table-sm table-striped table-bordered "
+                              style={{ fontSize: '12px' }}
+                            >
+                              {c.menu2.length > 0 && (
+                                <thead>
+                                  <tr>
+                                    {/* <th scope="col">Secondary</th> */}
+                                    <th scope="col">Monday/Wednesday</th>
+                                    <th scope="col">Tuesday/Thursday</th>
+                                  </tr>
+                                </thead>
+                              )}
+                              <tbody>
+                                {c.menu2.map((l, i) => (
+                                  <>
+                                    <tr key={i}>
+                                      <td>{l.row1}</td>
+                                      <td>{l.row2}</td>
+                                      {/* <td>{l.row3}</td> */}
+                                    </tr>
+                                  </>
+                                )) || ''}
+                              </tbody>
+                            </table>
+
+                            <br />
+                            {c.menu3.length > 0 && <h5>OPHS</h5>}
+                            <div className="p-1"></div>
+                            <table
+                              className="table table-sm table-striped table-bordered "
+                              style={{ fontSize: '12px' }}
+                            >
+                              {c.menu3.length > 0 && (
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Monday</th>
+                                    <th scope="col">Tuesday</th>
+                                    <th scope="col">Wednesday</th>
+                                    <th scope="col">Thursday</th>
+                                  </tr>
+                                </thead>
+                              )}
+                              <tbody>
+                                {c.menu3.map((l, i) => (
+                                  <>
+                                    <tr key={i}>
+                                      <td>{l.row1}</td>
+                                      <td>{l.row2}</td>
+                                      <td>{l.row3}</td>
+                                      <td>{l.row4}</td>
+                                    </tr>
+                                  </>
+                                )) || ''}
+                              </tbody>
+                            </table>
+                            <br />
+                            <br />
+                          </>
+                        )}
                       </div>
 
                       <div className={' '}>{renderHTML(c.content || '')}</div>
@@ -261,47 +273,51 @@ const Menus = ({ categories }) => {
                           {/* {c.username} */}
                           {isAuth()
                             ? c.menu.length > 0 &&
-                              new Date() < twoWeeksFromNow && (
-                                <Link href="/user/link/create">
-                                  <button
-                                    className={
-                                      'btn float-right ' + styles.button
-                                    }
-                                    onClick={(e) =>
-                                      localStorage.setItem(
-                                        'search-date',
-                                        JSON.stringify(
-                                          moment(c.pickupWeek).format('l')
+                              // moment(new Date()).format('l') > twoWeeksFromNow &&
+                              moment(c.pickupWeek).format('l') <
+                                moment(new Date()).add(14, 'day').format('l') && (
+                                  <Link href="/user/link/create">
+                                    <button
+                                      className={
+                                        'btn float-right ' + styles.button
+                                      }
+                                      onClick={(e) =>
+                                        localStorage.setItem(
+                                          'search-date',
+                                          JSON.stringify(
+                                            moment(c.pickupWeek).format('l')
+                                          )
                                         )
-                                      )
-                                    }
-                                  >
-                                    <i class="fas fa-pencil-alt"></i>
-                                    &nbsp; Request
-                                  </button>
-                                </Link>
-                              )
+                                      }
+                                    >
+                                      <i class="fas fa-pencil-alt"></i>
+                                      &nbsp; Meal Request
+                                    </button>
+                                  </Link>
+                                )
                             : c.menu.length > 0 &&
-                              new Date() < twoWeeksFromNow && (
-                                <Link href="/login">
-                                  <button
-                                    className={
-                                      'btn float-right ' + styles.button
-                                    }
-                                    onClick={(e) =>
-                                      localStorage.setItem(
-                                        'search-date',
-                                        JSON.stringify(
-                                          moment(c.pickupWeek).format('l')
+                              // new Date() < twoWeeksFromNow &&
+                              moment(c.pickupWeek).format('l') <
+                                moment(new Date()).add(14, 'day').format('l') && (
+                                  <Link href="/login">
+                                    <button
+                                      className={
+                                        'btn float-right ' + styles.button
+                                      }
+                                      onClick={(e) =>
+                                        localStorage.setItem(
+                                          'search-date',
+                                          JSON.stringify(
+                                            moment(c.pickupWeek).format('l')
+                                          )
                                         )
-                                      )
-                                    }
-                                  >
-                                    <i class="fas fa-pencil-alt"></i>
-                                    &nbsp; Request
-                                  </button>
-                                </Link>
-                              )}
+                                      }
+                                    >
+                                      <i class="fas fa-pencil-alt"></i>
+                                      &nbsp; Request
+                                    </button>
+                                  </Link>
+                                )}
                           {process.browser &&
                             isAuth() &&
                             isAuth().role === 'admin' && (

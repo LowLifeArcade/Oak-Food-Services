@@ -519,7 +519,7 @@ const User = ({ user, token, l, userLinks }) => {
     <div>
       <Layout>
         <div>
-          <h2 className=" pt-3">{user.name}'s Meal Requests </h2>
+          <h2 className=" pt-3">{user.name}'s Receipts </h2>
           <hr />
           <div className="p-1">
             <div className="">
@@ -534,7 +534,7 @@ const User = ({ user, token, l, userLinks }) => {
               <Link href="/user/link/create">
                 <button className={'btn float-right ' + styles.button}>
                   <i class="fas fa-pencil-alt"></i>
-                  &nbsp;&nbsp; Request
+                  &nbsp;&nbsp; Meal Request
                 </button>
               </Link>
             </div>
