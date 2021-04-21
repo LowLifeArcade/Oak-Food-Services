@@ -657,7 +657,7 @@ const Admin = ({ token, user, initRequests }) => {
             'test',
             userList.filter((user) =>
               requests
-                .filter((request) => request.pickupTime === 'Cafeteria').map(request => request.postedBy.email)
+                .filter((request) => request.pickupTime != 'Cafeteria').map(request => request.postedBy.email)
                 .includes(user.email)
             )
           )}
@@ -671,7 +671,7 @@ const Admin = ({ token, user, initRequests }) => {
         {
           userList.filter((user) =>
           requests
-            .filter((request) => request.pickupTime === 'Cafeteria').map(request => request.postedBy.email)
+            .filter((request) => request.pickupTime != 'Cafeteria').map(request => request.postedBy.email)
             .includes(user.email)
         ).length
         }
@@ -681,7 +681,7 @@ const Admin = ({ token, user, initRequests }) => {
           headers={emailHeaders}
           data={userList.filter((user) =>
             requests
-              .filter((request) => request.pickupTime === 'Cafeteria').map(request => request.postedBy.email)
+              .filter((request) => request.pickupTime != 'Cafeteria').map(request => request.postedBy.email)
               .includes(user.email)
           )}
         >
