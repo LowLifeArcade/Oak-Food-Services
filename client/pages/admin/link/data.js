@@ -122,6 +122,12 @@ const Admin = ({ token, user, initRequests }) => {
         m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
         m.pickupOption === 'Breakfast Only'
     ).length;
+    console.log('all Breakfast Only', state.meals.filter(
+      (m) =>
+        m.pickupOption === 'Lunch Onsite / Breakfast Pickup' && m.meal === 'Standard Onsite'
+        // m.pickupOption === 'Breakfast Only' 
+        
+    ))
 
   const allOnsiteMeals = () =>
     // requests.filter((m) => m.mealRequest.map((meal) => meal.group == 'distance-learning')).length

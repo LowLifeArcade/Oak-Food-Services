@@ -727,7 +727,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
             <>
               <tr key={i}>
                 <td>
-                <Link  href={`/user/receipt/${l.id}` }passHref>
+                <Link  href={`/user/receipt/${l.id}` } passHref>
                     <a >{l.postedBy === null
                     ? 'user deleted'
                     : 

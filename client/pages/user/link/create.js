@@ -925,6 +925,7 @@ const Create = ({ token, user }) => {
     setState({
       ...state,
       mealRequest: [...meals],
+      pickupTime: '',
       buttonText: 'Submit',
       pickupCodeAdd: codes,
       success: '',

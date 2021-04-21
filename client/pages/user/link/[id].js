@@ -899,6 +899,7 @@ const Update = ({ oldLink, token, user, _id }) => {
       ...state,
       mealRequest: [...meals],
       buttonText: 'Update',
+      pickupTime: '',
       // pickupCodeAdd: codes,
       success: '',
       error: '',
