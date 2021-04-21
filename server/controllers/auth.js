@@ -170,11 +170,11 @@ exports.login = (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '8d',
     });
-    const { _id, name, email, role } = user;
+    const { _id, name, email, role, userCode } = user;
 
     return res.json({
       token,
-      user: { _id, name, email, role },
+      user: { _id, name, email, role, userCode },
       // refreshToken
     });
   });

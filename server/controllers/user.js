@@ -3,65 +3,48 @@ const Link = require('../models/link');
 
 exports.read = (req, res) => {
   User.findOne({ _id: req.user._id })
-  .populate({
-    
+    .populate({
       path: 'students',
-      // populate: { path: 'group', select: '_id name slug' },
-    
-  })
-  .exec((err, user) => {
-    if (err) {
-      return res.status(400).json({
-        error: 'User not found',
-      });
-    }
-    Link.find({ postedBy: user })
-      // .populate('categories', 'name slug')
-      .populate({
-        path: 'postedBy',
-        select:
-          '-salt -hashed_password -pickupCodeAdd -categories -role -username -updatedAt -__v -_id',
-        populate: {
-          path: 'students',
-          // populate: { path: 'teacher' },
-          // populate: { path: 'group teacher', select: '-_id name slug' },
-          // populate: { path: 'teacher'},
-        },
-      })
-      // .populate({
-      //   path: 'mealRequest',
-      //   populate:  { path: 'student', select: 'name' },
-      // })
-      .sort({ createdAt: -1 })
-      .exec((err, mealRequest) => {
-        if (err) {
-          return res.status(400).json({
-            error: 'Could not find links',
-          });
-        }
-        user.hashed_password = undefined;
-        user.salt = undefined;
-        // console.log('user from user.js',user)
-        res.json({ user, mealRequest });
-        console.log(user);
-      });
-  });
-
-  //   return res.json(req.profile);
+    })
+    .exec((err, user) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'User not found',
+        });
+      }
+      Link.find({ postedBy: user })
+        .populate({
+          path: 'postedBy',
+          select:
+            '-salt -hashed_password -pickupCodeAdd -categories -role -username -updatedAt -__v -_id',
+          populate: {
+            path: 'students',
+          },
+        })
+        .sort({ createdAt: -1 })
+        .exec((err, mealRequest) => {
+          if (err) {
+            return res.status(400).json({
+              error: 'Could not find links',
+            });
+          }
+          user.hashed_password = undefined;
+          user.salt = undefined;
+          res.json({ user, mealRequest });
+          console.log(user);
+        });
+    });
 };
 
 exports.list = (req, res) => {
-  // look for users and populate
-  User.find({}).select
-  ('-salt -hashed_password -pickupCodeAdd -categories -role -username -createdAt -updatedAt -__v -_id')
-    // .populate('postedBy', 'name lastName' )
-    // .populate('students', 'name school teacher group')
+  User.find({})
+    .select(
+      '-salt -hashed_password -pickupCodeAdd -categories -role -username -createdAt -updatedAt -__v -_id'
+    )
     .populate({
       path: 'mealRequest',
       populate: { path: '0', populate: { path: 'student' } },
-      
     })
-    // .populate('categories', 'name slug')
     .sort({ createdAt: -1 })
     .exec((err, data) => {
       if (err) {
@@ -73,43 +56,8 @@ exports.list = (req, res) => {
     });
 };
 
-// exports.read = (req, res) => {
-//   User.findOne({ _id: req.user._id }).exec((err, user) => {
-//     if (err) {
-//       return res.status(400).json({
-//         error: 'User not found',
-//       });
-//     }
-//     Link.find({ postedBy: user })
-//       .populate('categories', 'name slug')
-//       .populate('postedBy', 'name')
-//       .sort({ createdAt: -1 })
-//       .exec((err, links) => {
-//         if (err) {
-//           return res.status(400).json({
-//             error: 'Could not find links',
-//           });
-//         }
-//         user.hashed_password = undefined;
-//         user.salt = undefined;
-//         // console.log('user from user.js',user)
-//         res.json({ user, links });
-//       });
-//   });
-
-//   //   return res.json(req.profile);
-// };
-
 exports.update = (req, res) => {
   const { name, lastName, email, students, special } = req.body;
-  // switch (true) {
-  //   case password && password.length < 8:
-  //     return res
-  //       .status(400)
-  //       .json({ error: 'Password must be at least 8 characters long' });
-  //     break;
-  // }
-  // add code to generate new password via salt and hash
 
   User.findOneAndUpdate(
     { _id: req.user._id },
@@ -119,9 +67,9 @@ exports.update = (req, res) => {
     if (err) {
       return res.status(400).json({
         error: 'problem updating user',
-      }); 
+      });
     }
-    console.log('update error', err)
+    console.log('update error', err);
     updated.hashed_password = undefined;
     updated.salt = undefined;
     res.json(updated);
@@ -130,14 +78,6 @@ exports.update = (req, res) => {
 
 exports.addStudents = (req, res) => {
   const { students, special } = req.body;
-  // switch (true) {
-  //   case password && password.length < 8:
-  //     return res
-  //       .status(400)
-  //       .json({ error: 'Password must be at least 8 characters long' });
-  //     break;
-  // }
-  // add code to generate new password via salt and hash
 
   User.findOneAndUpdate(
     { _id: req.user._id },

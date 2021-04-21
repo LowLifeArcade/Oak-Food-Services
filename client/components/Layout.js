@@ -206,7 +206,19 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )} */}
-          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().email === 'famousfigures@gmail.com' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'DOOB' && (
+            <li className="nav-item pointer-hand">
+              <Link href="/admin/category/create">
+                <a className="nav-link text-white">
+                <i class="fas fa-money-check"></i>&nbsp;&nbsp;
+                  {/* <i class="fas fa-book-open"></i>&nbsp; */}
+                  {'Create Menu'}
+                </a>
+              </Link>
+            </li>
+          )}
+
+          {process.browser && isAuth() && isAuth().role === 'admin' &&  isAuth().userCode === 'LYF' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/category/create">
                 <a className="nav-link text-white">
@@ -594,7 +606,21 @@ const Layout = ({ children }) => {
           </li>
         )} */}
 
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'DOOB' && (
+            <li
+              onClick={() => setShowSidebar(false)}
+              className="nav-item pointer-hand"
+            >
+              <Link href="/admin/category/create">
+                <a className="nav-link text-white">
+                <i class="fas fa-money-check"></i>&nbsp;&nbsp;&nbsp;
+                  {/* <i class="far fa-file-word"></i>&nbsp;&nbsp;&nbsp; */}
+                  {' Create Menu'}
+                </a>
+              </Link>
+            </li>
+          )}
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'LYF' && (
             <li
               onClick={() => setShowSidebar(false)}
               className="nav-item pointer-hand"
@@ -815,7 +841,20 @@ const Layout = ({ children }) => {
             </li>
           )}
 
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' &&  isAuth().userCode === 'DOOB' && (
+            <li
+              onClick={() => setShowSideMenu(false)}
+              className="nav-item pointer-hand"
+            >
+              <Link href="/admin/category/create">
+                <a className="nav-link text-white">
+                  <i class="far fa-file-word"></i>&nbsp;&nbsp;&nbsp;
+                  {' Create Menu'}
+                </a>
+              </Link>
+            </li>
+          )}
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'LYF'  && (
             <li
               onClick={() => setShowSideMenu(false)}
               className="nav-item pointer-hand"
@@ -843,7 +882,7 @@ const Layout = ({ children }) => {
             </li>
           )}
 
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'DOOB' && (
             <li
               onClick={() => setShowSideMenu(false)}
               className="nav-item pointer-hand"
