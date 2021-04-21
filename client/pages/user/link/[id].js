@@ -1725,7 +1725,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             </div>
             <hr />
             {/* Admin code */}
-            {isAuth().role === 'admin' && (
+            {isAuth().role === 'admin' && user.userCode === 'LYF' || user.userCode === 'DOOB' && (
               <div className=" form-group">
                 <input
                   type="text"
@@ -1862,7 +1862,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       }
                     >
                       <i class="fas fa-utensils"></i>
-                      &nbsp;&nbsp; Next Student
+                      &nbsp;&nbsp; Show Next Student
                     </button>
                   )}
 

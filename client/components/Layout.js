@@ -6,6 +6,7 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 import { isAuth, logout } from '../helpers/auth';
 import styles from '../styles/Home.module.css';
+// import user from '../pages/user';
 
 // if(typeof window !== 'undefined') {
 //   hydrate(window.___NEXT_DATA__.ids)
@@ -187,7 +188,8 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() 
+          && isAuth().role === 'admin' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/link/list">
                 <a className="nav-link text-white">
@@ -204,7 +206,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
         )} */}
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().email === 'famousfigures@gmail.com' && (
             <li className="nav-item pointer-hand">
               <Link href="/admin/category/create">
                 <a className="nav-link text-white">

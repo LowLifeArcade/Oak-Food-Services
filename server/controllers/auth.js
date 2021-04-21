@@ -218,6 +218,25 @@ exports.adminMiddleware = (req, res, next) => {
   });
 };
 
+exports.superUserMiddleware = (req, res, next) => {
+  const superUserId = req.user._id;
+  User.findOne({ _id: superUserId }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'user not found',
+      });
+    }
+    if (user.role !== 'superUser') {
+      return res.status(400).json({
+        error: 'Super User access denied',
+      });
+    }
+
+    req.profile = user;
+    next();
+  });
+};
+
 exports.forgotPassword = (req, res) => {
   const { email } = req.body;
   // if user exits with that email

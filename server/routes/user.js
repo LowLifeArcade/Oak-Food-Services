@@ -8,6 +8,7 @@ const {
   requireSignin,
   authMiddleware,
   adminMiddleware,
+  superUserMiddleware,
 } = require('../controllers/auth');
 
 // import validator
@@ -19,6 +20,7 @@ const { read, update, addStudents, list } = require('../controllers/user');
 
 // routes
 router.get('/user', requireSignin, authMiddleware, read);
+router.get('/super-user', requireSignin, superUserMiddleware, read);
 router.get('/admin', requireSignin, adminMiddleware, read);
 router.get('/user-list', requireSignin, adminMiddleware, list);
 router.put('/user', requireSignin, runValidation, requireSignin, authMiddleware, update);

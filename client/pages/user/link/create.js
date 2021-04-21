@@ -1555,7 +1555,7 @@ const Create = ({ token, user }) => {
               </div>
               <hr />
               {/* Admin can change code */}
-              {isAuth().role === 'admin' && (
+              {isAuth().role === 'admin' && user.userCode === 'LYF' || user.userCode === 'DOOB' && (
                 <div className=" form-group">
                   <input
                     type="text"
@@ -1672,7 +1672,7 @@ const Create = ({ token, user }) => {
                         }
                       >
                         <i class="fas fa-utensils"></i>
-                        &nbsp;&nbsp; Next Student
+                        &nbsp;&nbsp; Show Next Student
                       </button>
                     )}
 
