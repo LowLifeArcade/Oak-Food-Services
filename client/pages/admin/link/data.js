@@ -398,18 +398,19 @@ const Admin = ({ token, user, initRequests }) => {
       <br />
       <div className="d-flex">
         <div className="col-md-12">
+        <div className="col-md-3 float-right">
+            {<canvas className=" float-right" id="myChart"></canvas>}
+          </div>
+          <div className="col-md-5 float-right">
+            {<canvas className=" float-right" id="myBarChart"></canvas>}
+          </div>
           <h3>
             Friday Pickup{' '}
             {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
             <br />
             Week of {`${pickupDate}`}
           </h3>
-          <div className="col-md-3 float-right">
-            {<canvas className=" float-right" id="myChart"></canvas>}
-          </div>
-          <div className="col-md-5 float-right">
-            {<canvas className=" float-right" id="myBarChart"></canvas>}
-          </div>
+          
           {/* <hr className="col-md-3"/> */}
           <div className="">
             <div className="">
