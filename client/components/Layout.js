@@ -67,6 +67,7 @@ const Layout = ({ children }) => {
     <>
     <meta name="google" content="notranslate" />
       {/* bootstrap */}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js" integrity="sha512-BqNYFBAzGfZDnIWSAEGZSD/QFKeVxms2dIBPfw11gZubWwKUjEgmFUtUls8vZ6xTRZN/jaXGHD/ZaxD9+fDo0A==" crossOrigin="anonymous"></script>
       <link
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -164,7 +165,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-          
+
             <li key="2" className="nav-item">
           {process.browser && isAuth() &&  (
               <Link href="/user">

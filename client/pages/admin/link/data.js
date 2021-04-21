@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
@@ -9,6 +9,8 @@ import Layout from '../../../components/Layout';
 import { getCookie } from '../../../helpers/auth';
 import { showErrorMessage } from '../../../helpers/alerts';
 import { CSVLink } from 'react-csv';
+import styles from '../../../styles/Home.module.css';
+import Head from 'next/head';
 
 const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
@@ -101,6 +103,12 @@ const Admin = ({ token, user, initRequests }) => {
   const mealCounter = (meal) =>
     state.meals.filter(
       (m) => m.meal == meal && m.meal !== 'None'
+      //  && m.pickupOption !== 'Lunch Only'
+    ).length;
+  const lunchOnlymealCounter = (meal, pickupOption) =>
+    state.meals.filter(
+      (m) =>
+        m.meal == meal && m.pickupOption == pickupOption && m.meal !== 'None'
       //  && m.pickupOption !== 'Lunch Only'
     ).length;
 
@@ -258,21 +266,155 @@ const Admin = ({ token, user, initRequests }) => {
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
+  const myChartRef = useRef();
+  let studentsChart = '';
+  let studentsChart2 = '';
+  useEffect(() => {
+    // let myChart = document.getElementById('myChart')
+    studentsChart = new Chart(document.getElementById('myChart'), {
+      type: 'polarArea', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+      data: {
+        labels: ['BES', 'OHES', 'ROES', 'MCMS', 'OPHS', 'OVHS'],
+        datasets: [
+          {
+            label: 'Number of Meals',
+            data: [
+              parseInt(
+                pickupMealsBySchool('BES', 'a-group') +
+                  pickupMealsBySchool('BES', 'b-group'),
+                10
+              ),
+              parseInt(
+                pickupMealsBySchool('OHES', 'a-group') +
+                  pickupMealsBySchool('OHES', 'b-group'),
+                10
+              ),
+              parseInt(
+                pickupMealsBySchool('ROES', 'a-group') +
+                  pickupMealsBySchool('ROES', 'b-group'),
+                10
+              ),
+              parseInt(
+                pickupMealsBySchool('MCMS', 'a-group') +
+                  pickupMealsBySchool('MCMS', 'b-group'),
+                10
+              ),
+              parseInt(pickupMealsBySchool('OPHS', 'a-group'), 10),
+              parseInt(pickupMealsBySchool('OVHS', 'a-group'), 10),
+            ],
+            backgroundColor: [
+              '#b8d8d8',
+              '#7a9e9f',
+              '#4f6367',
+              '#eef5db',
+              '#fe5f55',
+              '#c5dfc4',
+            ],
+            borderWidth: 1,
+            hoverBorderWidth: '3',
+            hoverBorderColor: '#000',
+            // borderColor:
+          },
+        ],
+      },
+      options: [],
+    });
+    studentsChart2 = new Chart(document.getElementById('myBarChart'), {
+      type: 'radar', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+      data: {
+        labels: ['BES', 'OHES', 'ROES', 'MCMS', 'OPHS', 'OVHS'],
+        datasets: [
+          {
+            label: 'Number of Meals',
+            data: [
+              parseInt(
+                pickupMealsBySchool('BES', 'a-group') +
+                  pickupMealsBySchool('BES', 'b-group'),
+                10
+              ),
+              parseInt(
+                pickupMealsBySchool('OHES', 'a-group') +
+                  pickupMealsBySchool('OHES', 'b-group'),
+                10
+              ),
+              parseInt(
+                pickupMealsBySchool('ROES', 'a-group') +
+                  pickupMealsBySchool('ROES', 'b-group'),
+                10
+              ),
+              parseInt(
+                pickupMealsBySchool('MCMS', 'a-group') +
+                  pickupMealsBySchool('MCMS', 'b-group'),
+                10
+              ),
+              parseInt(pickupMealsBySchool('OPHS', 'a-group'), 10),
+              parseInt(pickupMealsBySchool('OVHS', 'a-group'), 10),
+            ],
+            // backgroundColor: 'green'
+            backgroundColor: [
+              '#b8d8d8',
+              '#7a9e9f',
+              '#4f6367',
+              '#eef5db',
+              '#fe5f55',
+              '#c5dfc4',
+            ],
+            borderWidth: 1,
+            hoverBorderWidth: '3',
+            hoverBorderColor: '#000',
+            // borderColor:
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+            // position: 'top',
+          },
+          title: {
+            display: false,
+            text: 'Requests By School',
+          },
+        },
+      },
+    });
+    return () => {
+      studentsChart.destroy();
+      studentsChart2.destroy();
+    };
+  }, [meals]);
+
   return (
     <Layout>
+      {/* <Head>
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"
+          integrity="sha512-BqNYFBAzGfZDnIWSAEGZSD/QFKeVxms2dIBPfw11gZubWwKUjEgmFUtUls8vZ6xTRZN/jaXGHD/ZaxD9+fDo0A=="
+          crossOrigin="anonymous"
+        ></script>
+      </Head> */}
       <br />
-      <div className="row">
-        <div className="col-md-4">
+      <div className="d-flex">
+        <div className="col-md-12">
           <h3>
             Friday Pickup{' '}
             {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
             <br />
             Week of {`${pickupDate}`}
           </h3>
-          <hr />
+          <div className="col-md-3 float-right">
+            {<canvas className=" float-right" id="myChart"></canvas>}
+          </div>
+          <div className="col-md-5 float-right">
+            {<canvas className=" float-right" id="myBarChart"></canvas>}
+          </div>
+          {/* <hr className="col-md-3"/> */}
           <div className="">
             <div className="">
               <Calendar
+                // className={styles.reactCalendar}
                 onChange={(e) => onDateChange(e)}
                 // activeStartDate={twoWeeksFromNow}
                 // maxDate={summerFromNow}
@@ -282,9 +424,7 @@ const Admin = ({ token, user, initRequests }) => {
                 value={''}
               />
             </div>
-            <button onClick={(e) => resetTimeSelect(e)}>
-              All
-            </button>
+            <button onClick={(e) => resetTimeSelect(e)}>All</button>
             <button onClick={(e) => handleTimeSelect(e, '7am-9am')}>
               7am-9am
             </button>
@@ -340,7 +480,13 @@ const Admin = ({ token, user, initRequests }) => {
         <h6>
           {mealCounter('Standard')} - <b>Standard</b> Breakfast and Lunch
           <hr />
+          {lunchOnlymealCounter('Standard', 'Lunch Only')} - <b>Standard</b>{' '}
+          Lunch Only
+          <hr />
           {mealCounter('Vegetarian')} - <b>Vegetarian</b> Breakfast and Lunch
+          <hr />
+          {lunchOnlymealCounter('Vegetarian', 'Lunch Only')} - <b>Vegetarian</b>{' '}
+          Lunch Only
           <hr />
           {mealCounter('Vegan')} - <b>Vegan</b> Meals
           <hr />
@@ -408,27 +554,67 @@ const Admin = ({ token, user, initRequests }) => {
       </h5>
       <div className="p-3">
         <h6>
-          {pickupMealsBySchool('BES', 'a-group')} - BES A
+          <b className="text-danger">
+            {pickupMealsBySchool('BES', 'a-group') +
+              pickupMealsBySchool('BES', 'b-group')}{' '}
+          </b>{' '}
+          - BES
           <br />
-          {pickupMealsBySchool('BES', 'b-group')} - BES B
+          <div className="px-2">
+            {pickupMealsBySchool('BES', 'a-group')} - BES A
+            <br />
+            {pickupMealsBySchool('BES', 'b-group')} - BES B
+          </div>
           <hr />
-          {pickupMealsBySchool('OHES', 'a-group')} - OHES A
+          <b className="text-danger">
+            {pickupMealsBySchool('OHES', 'a-group') +
+              pickupMealsBySchool('OHES', 'b-group')}{' '}
+          </b>{' '}
+          - OHES
           <br />
-          {pickupMealsBySchool('OHES', 'b-group')} - OHES B
+          <div className="px-2">
+            {pickupMealsBySchool('OHES', 'a-group')} - OHES A
+            <br />
+            {pickupMealsBySchool('OHES', 'b-group')} - OHES B
+          </div>
           <hr />
-          {pickupMealsBySchool('ROES', 'a-group')} - ROES A
+          <b className="text-danger">
+            {pickupMealsBySchool('ROES', 'a-group') +
+              pickupMealsBySchool('ROES', 'b-group')}{' '}
+          </b>{' '}
+          - ROES
           <br />
-          {pickupMealsBySchool('ROES', 'b-group')} - ROES B
+          <div className="px-2">
+            {pickupMealsBySchool('ROES', 'a-group')} - ROES A
+            <br />
+            {pickupMealsBySchool('ROES', 'b-group')} - ROES B
+          </div>
           <hr />
-          {pickupMealsBySchool('MCMS', 'a-group')} - MCMS A
+          <b className="text-danger">
+            {pickupMealsBySchool('MCMS', 'a-group') +
+              pickupMealsBySchool('MCMS', 'b-group')}{' '}
+          </b>{' '}
+          - MCMS
           <br />
-          {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
+          <div className="px-2">
+            {pickupMealsBySchool('MCMS', 'a-group')} - MCMS A
+            <br />
+            {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
+          </div>
           <hr />
-          {pickupMealsBySchool('OPHS', 'a-group')} - OPHS 
+          {/* <div className="px-2"> */}
+          <b className="text-danger">
+            {pickupMealsBySchool('OPHS', 'a-group')}
+          </b>{' '}
+          - OPHS
           <br />
           {/* {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
           <hr /> */}
-          {pickupMealsBySchool('OVHS', 'a-group')} - OVHS
+          <b className="text-danger">
+            {pickupMealsBySchool('OVHS', 'a-group')}
+          </b>{' '}
+          - OVHS
+          {/* </div> */}
           <hr />
         </h6>
         <br />
@@ -439,6 +625,12 @@ const Admin = ({ token, user, initRequests }) => {
           </b>
         </h5>
         {/* <h5>email list</h5> */}
+        {/* {console.log('test', userList.filter(
+            (user) =>
+              !requests
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+          ))} */}
         <CSVLink
           className="btn btn-sm btn-outline-dark text"
           headers={emailHeaders}
@@ -456,16 +648,46 @@ const Admin = ({ token, user, initRequests }) => {
         <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
-          data={userList
-          //   .filter(
-          //   (user) =>
-          //     !requests
-          //       .map((request) => request.postedBy.email)
-          //       .includes(user.email)
-          // )
-        }
+          data={
+            userList
+            //   .filter(
+            //   (user) =>
+            //     !requests
+            //       .map((request) => request.postedBy.email)
+            //       .includes(user.email)
+            // )
+          }
         >
           Full Email List of {userList.length} users CSV{' '}
+          {console.log('test', userList.filter(user => requests.filter(request => request.pickupTime === 'Cafeteria').includes(user.email)))}
+          {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+          {/* {console.log('test2', !requests
+                .map((request) => request.postedBy.email).includes(user.email))} */}
+        </CSVLink>
+        <br />
+        <br />
+        Curbside only{' '}
+        {
+          userList.filter(
+            (user) =>
+              !requests
+                .map((request) => {
+                  request.pickupTime != 'Cafeteria';
+                })
+                .includes(user.email)
+          ).length
+        }
+        <br />
+        <CSVLink
+          className="btn btn-sm btn-outline-dark text"
+          headers={emailHeaders}
+          data={userList.filter(
+            (user) =>
+              requests.map((request) => request.group === 'distance-learning')
+            // .includes(user.email)
+          )}
+        >
+          Curbside Only CSV{' '}
         </CSVLink>
         <br />
         <br />

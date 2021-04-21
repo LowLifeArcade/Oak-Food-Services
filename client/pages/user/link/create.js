@@ -136,13 +136,13 @@ const Create = ({ token, user }) => {
   // console.log('MEAL REQ', mealRequest);
   const [loaded, setLoaded] = useState(false);
 
-  const calanderButton = useRef();
+  const calendarButton = useRef();
 
   useEffect(() => {
     const handleClick = (event) => {
       if (
-        calanderButton.current &&
-        !calanderButton.current.contains(event.target)
+        calendarButton.current &&
+        !calendarButton.current.contains(event.target)
       ) {
         setShowSearch(false);
       }
@@ -1287,7 +1287,7 @@ const Create = ({ token, user }) => {
 
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
 
   const submit = () => {
     localStorage.removeItem('search-date');
@@ -1504,13 +1504,13 @@ const Create = ({ token, user }) => {
             <div className={styles.subcard}>
               <div className="row">
                 <div className="col-md-9">
-                  <span ref={calanderButton}>
+                  <span ref={calendarButton}>
                     <h4 className="text-dark">
                       Meal Request for the Week of:{' '}
                       {pickupDate && (
                         <>
                           <span
-                            // ref={calanderButton}
+                            // ref={calendarButton}
                             onClick={() => setShowSearch(!showSearch)}
                           >
                             {moment(state.pickupDate).format('MMMM Do')}
@@ -1546,7 +1546,7 @@ const Create = ({ token, user }) => {
                             onChange={(e) => onDateChange(e)}
                             tileDisabled={handleDisabledDates}
                             defaultValue={twoWeeksFromNow}
-                            // minDate={twoWeeksFromNow}
+                            minDate={twoWeeksFromNow}
                             value={twoWeeksFromNow}
                           />
                         )}
