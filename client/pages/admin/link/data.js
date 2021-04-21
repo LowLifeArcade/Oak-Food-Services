@@ -398,7 +398,7 @@ const Admin = ({ token, user, initRequests }) => {
       <br />
       <div className="d-flex">
         <div className="col-md-12">
-        <div className="col-md-3 float-right">
+          <div className="col-md-3 float-right">
             {<canvas className=" float-right" id="myChart"></canvas>}
           </div>
           <div className="col-md-5 float-right">
@@ -410,7 +410,7 @@ const Admin = ({ token, user, initRequests }) => {
             <br />
             Week of {`${pickupDate}`}
           </h3>
-          
+
           {/* <hr className="col-md-3"/> */}
           <div className="">
             <div className="">
@@ -649,18 +649,18 @@ const Admin = ({ token, user, initRequests }) => {
         <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
-          data={
-            userList
-            //   .filter(
-            //   (user) =>
-            //     !requests
-            //       .map((request) => request.postedBy.email)
-            //       .includes(user.email)
-            // )
-          }
+          data={userList}
         >
+          {/* {!requests.map((request) => request.postedBy.email)} */}
           Full Email List of {userList.length} users CSV{' '}
-          {console.log('test', userList.filter(user => requests.filter(request => request.pickupTime === 'Cafeteria').includes(user.email)))}
+          {console.log(
+            'test',
+            userList.filter((user) =>
+              requests
+                .filter((request) => request.pickupTime === 'Cafeteria').map(request => request.postedBy.email)
+                .includes(user.email)
+            )
+          )}
           {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
           {/* {console.log('test2', !requests
                 .map((request) => request.postedBy.email).includes(user.email))} */}
@@ -669,23 +669,20 @@ const Admin = ({ token, user, initRequests }) => {
         <br />
         Curbside only{' '}
         {
-          userList.filter(
-            (user) =>
-              !requests
-                .map((request) => {
-                  request.pickupTime != 'Cafeteria';
-                })
-                .includes(user.email)
-          ).length
+          userList.filter((user) =>
+          requests
+            .filter((request) => request.pickupTime === 'Cafeteria').map(request => request.postedBy.email)
+            .includes(user.email)
+        ).length
         }
         <br />
         <CSVLink
           className="btn btn-sm btn-outline-dark text"
           headers={emailHeaders}
-          data={userList.filter(
-            (user) =>
-              requests.map((request) => request.group === 'distance-learning')
-            // .includes(user.email)
+          data={userList.filter((user) =>
+            requests
+              .filter((request) => request.pickupTime === 'Cafeteria').map(request => request.postedBy.email)
+              .includes(user.email)
           )}
         >
           Curbside Only CSV{' '}

@@ -52,12 +52,14 @@ exports.read = (req, res) => {
 
 exports.list = (req, res) => {
   // look for users and populate
-  User.find({})
+  User.find({}).select
+  ('-salt -hashed_password -pickupCodeAdd -categories -role -username -createdAt -updatedAt -__v -_id')
     // .populate('postedBy', 'name lastName' )
     // .populate('students', 'name school teacher group')
     .populate({
       path: 'mealRequest',
       populate: { path: '0', populate: { path: 'student' } },
+      
     })
     // .populate('categories', 'name slug')
     .sort({ createdAt: -1 })
