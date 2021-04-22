@@ -1288,7 +1288,7 @@ const Create = ({ token, user }) => {
 
   // handles lead time for orders
   let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
 
   const submit = () => {
     localStorage.removeItem('search-date');

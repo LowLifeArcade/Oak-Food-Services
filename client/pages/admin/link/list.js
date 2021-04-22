@@ -7,7 +7,7 @@ import { API } from '../../../config';
 import moment from 'moment';
 import InfiniteScroll from 'react-infinite-scroller';
 import withAdmin from '../../withAdmin';
-import { getCookie } from '../../../helpers/auth';
+import { getCookie, isAuth } from '../../../helpers/auth';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CSVLink } from 'react-csv';
@@ -167,7 +167,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       // add students to request
       request.students = [];
       r.mealRequest.map((meal, i) => {
-        request.students.push(' '  + meal.studentName + ' ' + meal.schoolName);
+        request.students.push(' ' + meal.studentName + ' ' + meal.schoolName);
       });
 
       requestsArrayByDate[i] = request;
@@ -350,8 +350,6 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   //   );
   // }, [linksByDate])
 
-  console.log('all individual meals by date',pickupDateLookup, allMealsArray);
-
   // const loadUsers = async () => {
   //   const response = await axios.get(`${API}/user-list`, {
   //     headers: { Authorization: `Bearer ${token}` },
@@ -378,8 +376,8 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     let allMealsArray2 = [];
     await response.data.map((r, i) =>
       r.mealRequest.map((meal) => {
-        meal.id = r._id
-        allMealsArray2.push(meal)
+        meal.id = r._id;
+        allMealsArray2.push(meal);
       })
     );
 
@@ -395,8 +393,15 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     });
   };
 
-  console.log('requests by date',pickupDateLookup, linksByDate)
-
+  useEffect(() => {
+    console.log('requests by date', pickupDateLookup, linksByDate);
+    console.log(
+      'all individual meals by date',
+      pickupDateLookup,
+      allMealsArray
+    );
+  }, [pickupDateLookup, linksByDate, allMealsArray]);
+  console.log('loop');
   // initRequests
 
   const compileOrderStatusArray = (pickupDate) => {
@@ -533,7 +538,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     { label: 'Pickup Time', key: 'pickupTime' },
     { label: 'Pickup Date', key: 'pickupDate' },
     // { label: 'First Name', key: 'postedBy.name' },
-    // linksByDate.map(link => link.postedBy != null)  && { label: 'Last Name', key: 'postedBy.lastName' }, // had to disable because causes an error if user is deleted 
+    // linksByDate.map(link => link.postedBy != null)  && { label: 'Last Name', key: 'postedBy.lastName' }, // had to disable because causes an error if user is deleted
     { label: 'Student Names', key: 'students' },
     { label: 'Student', key: 'school' },
     { label: 'Special Orders', key: 'specialOrder' },
@@ -649,7 +654,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   };
 
   const listOfLinks = (search, searchPickupTime, searchByStatus) => (
-    <table className="table table-striped table-sm table-bordered">
+    <table className="table table-striped table table-bordered">
       <thead>
         <tr>
           <th scope="col">Code</th>
@@ -662,15 +667,24 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           .filter((l) => l.pickupTime.includes(searchPickupTime))
           .filter((l) => l.pickupTime != 'Cafeteria')
           .filter((l) => l.orderStatus.toString().includes(searchByStatus))
-          .filter((l) =>
-            l.userCode.toLowerCase().includes(search.toLowerCase())
+          // .filter((l) => (l.postedBy.students.map(student => student.name.toLowerCase().includes(search.toLowerCase())).includes(true)))
+          .filter(
+            (l) =>
+              l.postedBy.lastName
+                .toLowerCase()
+                .includes(search.toLowerCase()) ||
+              l.userCode.toLowerCase().includes(search.toLowerCase())
           )
           .map((l, i) => (
             <>
               <tr key={i}>
                 <td>
                   <Link href={`/user/receipt/${l._id}`}>
-                    <a className="text-dark">{l.pickupCode}</a>
+                    <a
+                    // className="text-dark"
+                    >
+                      {l.pickupCode}
+                    </a>
                   </Link>
                 </td>
                 <td>
@@ -722,21 +736,26 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           )
           .filter((l, i) => l.group.includes(searchByGroup))
           .filter((l, i) => l.schoolName.includes(searchBySchool))
+          .filter(
+            (l) =>
+              l.parentName.toLowerCase().includes(search.toLowerCase()) ||
+              l.lastName.toLowerCase().includes(search.toLowerCase()) ||
+              // l.schoolName.toLowerCase().includes(search.toLowerCase()) ||
+              l.studentName.toLowerCase().includes(search.toLowerCase())
+          )
 
           .map((l, i) => (
             <>
               <tr key={i}>
                 <td>
-                <Link  href={`/user/receipt/${l.id}` } passHref>
-                    <a >{l.postedBy === null
-                    ? 'user deleted'
-                    : 
-                    
-                    l.studentName // make link to receipt
-                    
-                    
-                    // + ' ' + l.lastName
-                    }</a>
+                  <Link href={`/user/receipt/${l.id}`} passHref>
+                    <a>
+                      {
+                        l.postedBy === null ? 'user deleted' : l.studentName // make link to receipt
+
+                        // + ' ' + l.lastName
+                      }
+                    </a>
                   </Link>
                   {/* {l.postedBy === null
                     ? 'user deleted'
@@ -1013,7 +1032,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           </h3>
           <div className="lead alert alert-seconary pb-3">
             <div className="">
-              <span  ref={calanderButton}>
+              <span ref={calanderButton}>
                 {showSearch && (
                   <Calendar
                     onChange={(e) => onDateChange(e)}
@@ -1025,75 +1044,66 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                   className="btn btn-sm btn-outline-dark"
                   onClick={() => setShowSearch(!showSearch)}
                 >
-                  <i className="far fa-calendar-alt"></i> &nbsp;&nbsp; Select
-                  Date
+                  <i className="far fa-calendar-alt"></i> &nbsp;Select Date
                 </button>
               </span>
               {/* {console.log('csv offsite data near button', csvOffsiteData)} */}
-              {orderType === 'Onsite' ? (
-                // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
-                <CSVLink
-                  className="btn btn-sm btn-outline-dark text float-right"
-                  headers={onsiteHeaders}
-                  data={csvOnsiteData}
-                >
-                  <i class="fas fa-file-export"></i>
-                  &nbsp;Export csv
-                </CSVLink>
-              ) : (
-                <CSVLink
-                  className="btn btn-sm btn-outline-dark text float-right"
-                  headers={pickupHeaders}
-                  data={csvOffsiteData}
-                >
-                  <i class="fas fa-file-export"></i>
-                  &nbsp;Export csv
-                </CSVLink>
-              )}
-              {
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-dark text float-right print"
-                  onClick={(e) => window.print()}
-                >
-                  <i class="fas fa-print"></i>
-                  &nbsp;Print
-                </button>
-              }
-              <br />
-              <br />
-              <input
-                className="form-control pb-4"
-                onChange={handleSearch(
-                  'search',
-                  state.search,
-                  searchPickupTime,
-                  searchByStatus
-                )}
-                value={state.search}
-                type="text"
-                className="form-control"
-                placeholder="Search requests by pickup code"
-              ></input>
-              <br />
-              {orderType === 'Pickup' && (
-                <button
-                  className="btn btn-warning fas fa-car-side"
-                  onClick={handleSearch('orderType')}
-                  value="Onsite"
-                >
-                  &nbsp; Curbside
-                </button>
-              )}
-              {orderType === 'Onsite' && (
-                <button
-                  className="btn  btn-warning fas fa-school"
-                  onClick={handleSearch('orderType')}
-                  value="Pickup"
-                >
-                  &nbsp; Onsite
-                </button>
-              )}
+              {orderType === 'Onsite'
+                ? isAuth().userCode === 'CLY' ||
+                  (isAuth().userCode === 'DOOB' && (
+                    // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
+                    <CSVLink
+                      className="btn btn-sm btn-outline-dark text float-right"
+                      headers={onsiteHeaders}
+                      data={csvOnsiteData}
+                    >
+                      <i class="fas fa-file-export"></i>
+                      &nbsp;Export csv
+                    </CSVLink>
+                  ))
+                : isAuth().userCode === 'CLY' ||
+                  (isAuth().userCode === 'DOOB' && (
+                    <CSVLink
+                      className="btn btn-sm btn-outline-dark text float-right"
+                      headers={pickupHeaders}
+                      data={csvOffsiteData}
+                    >
+                      <i class="fas fa-file-export"></i>
+                      &nbsp;Export csv
+                    </CSVLink>
+                  ))}
+              {isAuth().userCode === 'CLY' ||
+                (isAuth().userCode === 'DOOB' && (
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-dark text float-right print"
+                    onClick={(e) => window.print()}
+                  >
+                    <i class="fas fa-print"></i>
+                    &nbsp;Print
+                  </button>
+                ))}
+
+              {isAuth().userCode === 'CLY' ||
+                (isAuth().userCode === 'DOOB' && orderType === 'Pickup' && (
+                  <button
+                    className="btn btn-warning fas fa-car-side"
+                    onClick={handleSearch('orderType')}
+                    value="Onsite"
+                  >
+                    &nbsp; Curbside
+                  </button>
+                ))}
+              {isAuth().userCode === 'CLY' ||
+                (isAuth().userCode === 'DOOB' && orderType === 'Onsite' && (
+                  <button
+                    className="btn  btn-warning fas fa-school"
+                    onClick={handleSearch('orderType')}
+                    value="Pickup"
+                  >
+                    &nbsp; Onsite
+                  </button>
+                ))}
               {orderType === 'Pickup' && (
                 <select
                   className="btn btn-sm btn-outline-secondary"
@@ -1116,14 +1126,15 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                   <option value="4pm-6pm">4-6pm</option>
                 </select>
               )}
-              {orderType === 'Pickup' && (
-                <button
-                  className=" btn btn-sm btn-outline-secondary"
-                  onClick={() => setShowStatus(!showStatus)}
-                >
-                  Show Status
-                </button>
-              )}
+              {(orderType === 'Pickup' && isAuth().userCode === 'CLY') ||
+                (isAuth().userCode === 'DOOB' && (
+                  <button
+                    className=" btn btn-sm btn-outline-secondary"
+                    onClick={() => setShowStatus(!showStatus)}
+                  >
+                    Show Status
+                  </button>
+                ))}
               {orderType === 'Pickup' && showStatus && (
                 <select
                   className="btn btn-sm btn-outline-secondary"
@@ -1277,12 +1288,30 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
               <div className="p-2"></div>
 
-              <button
-                className="badge btn text-red btn-sm btn-outline-danger"
-                onClick={() => resetSearch()}
-              >
-                Reset Filters
-              </button>
+              {isAuth().userCode === 'CLY' ||
+                (isAuth().userCode === 'DOOB' && (
+                  <button
+                    className="badge btn text-red btn-sm btn-outline-danger"
+                    onClick={() => resetSearch()}
+                  >
+                    Reset Filters
+                  </button>
+                ))}
+              <div className="p-2 pt-5">
+                <input
+                  className="form-control pb-4"
+                  onChange={handleSearch(
+                    'search',
+                    state.search,
+                    searchPickupTime,
+                    searchByStatus
+                  )}
+                  value={state.search}
+                  type="text"
+                  className="form-control"
+                  placeholder="Search by name or code"
+                ></input>
+              </div>
             </div>
           </div>
         </div>

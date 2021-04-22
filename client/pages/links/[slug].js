@@ -158,7 +158,7 @@ const Links = ({
     ));
 
   let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 12);
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
 
   const loadMore = async () => {
     let toSkip = skip + limit;
@@ -203,15 +203,14 @@ const Links = ({
 
             <hr />
 
-            <div style={{ color: '#419ca8' }}
-                      className={'pt-2 p-2'}
-                      >
-                        <b>
-
-                        Meal requests must be made by 11:59pm {moment(category.pickupWeek).subtract(14, 'day').format('MMMM Do')}
-                        </b>
-                      </div>
-            
+            <div style={{ color: '#419ca8' }} className={'pt-2 p-2'}>
+              <b>
+                Meal requests must be made by 11:59pm{' '}
+                {moment(category.pickupWeek)
+                  .subtract(14, 'day')
+                  .format('MMMM Do')}
+              </b>
+            </div>
 
             <div className="alert-seconary pt-3">
               {category.menu.length > 0 && <h4>Curbside Pickup</h4>}
@@ -295,14 +294,14 @@ const Links = ({
                   )) || ''}
                 </tbody>
               </table>
-          <div className="alert-seconary">
-              {renderHTML(category.content || '')}
-            </div>
+              <div className="alert-seconary">
+                {renderHTML(category.content || '')}
+              </div>
             </div>
           </div>
 
-            <br/>
-            <br/>
+          <br />
+          <br />
           <div className="col-md">
             {category.image && (
               <img
@@ -313,48 +312,60 @@ const Links = ({
             )}
             <div className="pt-2"></div>
 
-            <div className='' >
-            Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
-            {isAuth()
-              ? category.menu.length > 0 &&
-              new Date() < twoWeeksFromNow && (
-                <Link href="/user/link/create">
-                    <button
-                      className={'btn float-right ' + styles.button}
-                      onClick={(e) =>
-                        localStorage.setItem(
-                          'search-date',
-                          JSON.stringify(
-                            moment(category.pickupWeek).format('l')
+            <div className="">
+              Posted: {moment(category.createdAt).format('MMMM Do YYYY')}
+              {isAuth()
+                ? parseInt(moment(category.pickupWeek).format('MMDD')) >
+                    parseInt(
+                      moment(new Date()).add(14, 'day').format('MMDD')
+                    ) && (
+                    // ? category.menu.length > 0 &&
+                    // new Date() < twoWeeksFromNow
+
+                    <Link href="/user/link/create">
+                      <button
+                        className={'btn float-right ' + styles.button}
+                        onClick={(e) =>
+                          localStorage.setItem(
+                            'search-date',
+                            JSON.stringify(
+                              moment(category.pickupWeek).format('l')
                             )
+                          )
+                        }
+                      >
+                        <i class="fas fa-pencil-alt"></i>
+                        &nbsp; Meal Request
+                      </button>
+                    </Link>
+                  )
+                : 
+                category.menu.length > 0 &&
+                  parseInt(moment(category.pickupWeek).format('MMDD')) >
+                                parseInt(
+                                  moment(new Date())
+                                    .add(14, 'day')
+                                    .format('MMDD'))
+                  && 
+                  (
+                    <Link href="/login">
+                      <button
+                        className={'btn float-right ' + styles.button}
+                        onClick={(e) =>
+                          localStorage.setItem(
+                            'search-date',
+                            JSON.stringify(
+                              moment(category.pickupWeek).format('l')
                             )
-                          }
-                          >
-                      <i class="fas fa-pencil-alt"></i>
-                      &nbsp; Request
-                    </button>
-                  </Link>
-                )
-                : category.menu.length > 0 &&
-                new Date() < twoWeeksFromNow && (
-                  <Link href="/login">
-                    <button
-                      className={'btn float-right ' + styles.button}
-                      onClick={(e) =>
-                        localStorage.setItem(
-                          'search-date',
-                          JSON.stringify(
-                            moment(category.pickupWeek).format('l')
-                            )
-                            )
-                          }
-                          >
-                      <i class="fas fa-pencil-alt"></i>
-                      &nbsp; Request
-                    </button>
-                  </Link>
-                )}
-                </div>
+                          )
+                        }
+                      >
+                        <i class="fas fa-pencil-alt"></i>
+                        &nbsp; Request
+                      </button>
+                    </Link>
+                  )}
+            </div>
             {/* {category.menu.length > 0 && new Date() < twoWeeksFromNow && (
               <Link href="/user/link/create">
               <button className={'btn float-right ' + styles.button}

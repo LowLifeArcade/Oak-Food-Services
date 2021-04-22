@@ -83,12 +83,15 @@ const Menus = ({ categories }) => {
       .sort((a, b) => Date.parse(a.pickupWeek) - Date.parse(b.pickupWeek))
       .map((c, i) => (
         <>
-          {console.log(
+          {/* {console.log('show menu check by date',
             moment(c.pickupWeek).format('l') <
-              moment(new Date()).add(13, 'day').format('l')
-          )}
-          {moment(c.pickupWeek).format('l') <
-            moment(new Date()).add(18, 'day').format('l') && (
+              moment(new Date()).add(12, 'day').format('l')
+          )} */}
+          {parseInt(moment(c.pickupWeek).format('MMDD')) >
+            parseInt(moment(new Date()).add(9, 'day').format('MMDD')) && (
+            // moment(c.pickupWeek).format('l') <
+            //   moment(new Date()).add(18, 'day').format('l')
+
             <div className="">
               <div
                 key={i}
@@ -271,56 +274,66 @@ const Menus = ({ categories }) => {
                           Posted {moment(c.createdAt).format('MMMM Do YYYY')}
                           {/* {popular.map((l, i) => l.postedBy.name)} */}
                           {/* {c.username} */}
+                          {/* {console.log('date check', c.name, moment(c.pickupWeek).format('l') <
+                                moment(new Date()).setDate(new Date().getDate() + 13).format('l'))} */}
                           {isAuth()
                             ? c.menu.length > 0 &&
-                              // moment(new Date()).format('l') > twoWeeksFromNow &&
-                              moment(c.pickupWeek).format('l') <
-                                moment(new Date()).add(14, 'day').format('l') && (
-                                  <Link href="/user/link/create">
-                                    <button
-                                      className={
-                                        'btn float-right ' + styles.button
-                                      }
-                                      onClick={(e) =>
-                                        localStorage.setItem(
-                                          'search-date',
-                                          JSON.stringify(
-                                            moment(c.pickupWeek).format('l')
-                                          )
+                              parseInt(moment(c.pickupWeek).format('MMDD')) >
+                                parseInt(
+                                  moment(new Date())
+                                    .add(14, 'day')
+                                    .format('MMDD')
+                                ) && (
+                                <Link href="/user/link/create">
+                                  <button
+                                    className={
+                                      'btn float-right ' + styles.button
+                                    }
+                                    onClick={(e) =>
+                                      localStorage.setItem(
+                                        'search-date',
+                                        JSON.stringify(
+                                          moment(c.pickupWeek).format('l')
                                         )
-                                      }
-                                    >
-                                      <i class="fas fa-pencil-alt"></i>
-                                      &nbsp; Meal Request
-                                    </button>
-                                  </Link>
-                                )
+                                      )
+                                    }
+                                  >
+                                    <i class="fas fa-pencil-alt"></i>
+                                    &nbsp; Meal Request
+                                  </button>
+                                </Link>
+                              )
                             : c.menu.length > 0 &&
-                              // new Date() < twoWeeksFromNow &&
-                              moment(c.pickupWeek).format('l') <
-                                moment(new Date()).add(14, 'day').format('l') && (
-                                  <Link href="/login">
-                                    <button
-                                      className={
-                                        'btn float-right ' + styles.button
-                                      }
-                                      onClick={(e) =>
-                                        localStorage.setItem(
-                                          'search-date',
-                                          JSON.stringify(
-                                            moment(c.pickupWeek).format('l')
-                                          )
+                              parseInt(moment(c.pickupWeek).format('MMDD')) >
+                                parseInt(
+                                  moment(new Date())
+                                    .add(14, 'day')
+                                    .format('MMDD')
+                                ) && (
+                                <Link href="/login">
+                                  <button
+                                    className={
+                                      'btn float-right ' + styles.button
+                                    }
+                                    onClick={(e) =>
+                                      localStorage.setItem(
+                                        'search-date',
+                                        JSON.stringify(
+                                          moment(c.pickupWeek).format('l')
                                         )
-                                      }
-                                    >
-                                      <i class="fas fa-pencil-alt"></i>
-                                      &nbsp; Request
-                                    </button>
-                                  </Link>
-                                )}
-                          {process.browser &&
+                                      )
+                                    }
+                                  >
+                                    <i class="fas fa-pencil-alt"></i>
+                                    &nbsp; Login to Request
+                                  </button>
+                                </Link>
+                              )}
+                          {(process.browser &&
                             isAuth() &&
-                            isAuth().role === 'admin' && (
+                            isAuth().role === 'admin' &&
+                            isAuth().userCode === 'CLY') ||
+                            (isAuth().userCode === 'DOOB' && (
                               <div className="">
                                 <Link href={`/admin/category/${c.slug}`}>
                                   <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
@@ -335,7 +348,7 @@ const Menus = ({ categories }) => {
                 Delete
               </button> */}
                               </div>
-                            )}
+                            ))}
                         </div>
                       </div>
                     </div>

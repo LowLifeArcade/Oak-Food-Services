@@ -102,7 +102,14 @@ const Admin = ({ token, user, initRequests }) => {
 
   const mealCounter = (meal, pickupOption) =>
     state.meals.filter(
-      (m) => m.meal == meal && m.meal !== 'None' && m.pickupOption == pickupOption
+      (m) =>
+        m.meal == meal && m.meal !== 'None' && m.pickupOption == pickupOption
+      //  && m.pickupOption !== 'Lunch Only'
+    ).length;
+  const sesameMealCounter = (meal) =>
+    state.meals.filter(
+      (m) =>
+        m.meal == meal && m.meal !== 'None' 
       //  && m.pickupOption !== 'Lunch Only'
     ).length;
   const lunchOnlymealCounter = (meal, pickupOption) =>
@@ -122,12 +129,15 @@ const Admin = ({ token, user, initRequests }) => {
         m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
         m.pickupOption === 'Breakfast Only'
     ).length;
-    console.log('all Breakfast Only', state.meals.filter(
+  console.log(
+    'all Breakfast Only',
+    state.meals.filter(
       (m) =>
-        m.pickupOption === 'Lunch Onsite / Breakfast Pickup' && m.meal === 'Standard Onsite'
-        // m.pickupOption === 'Breakfast Only' 
-        
-    ))
+        m.pickupOption === 'Lunch Onsite / Breakfast Pickup' &&
+        m.meal === 'Standard Onsite'
+      // m.pickupOption === 'Breakfast Only'
+    )
+  );
 
   const allOnsiteMeals = () =>
     // requests.filter((m) => m.mealRequest.map((meal) => meal.group == 'distance-learning')).length
@@ -175,7 +185,7 @@ const Admin = ({ token, user, initRequests }) => {
         m.pickupOption === 'Breakfast Only' ||
         m.pickupOption === 'Breakfast and Lunch' ||
         m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-        m.pickupOption === 'Two Onsite / Three Breakfast and Lunches' 
+        m.pickupOption === 'Two Onsite / Three Breakfast and Lunches'
     ).length;
 
   const pickupMealsBySchool = (school, group) =>
@@ -282,7 +292,30 @@ const Admin = ({ token, user, initRequests }) => {
     let studentsChart = new Chart(document.getElementById('myChart'), {
       type: 'polarArea', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
       data: {
-        labels: ['BES', 'OHES', 'ROES', 'MCMS', 'OPHS', 'OVHS'],
+        labels: [
+          `BES ${
+            pickupMealsBySchool('BES', 'a-group') +
+            pickupMealsBySchool('BES', 'b-group')
+          }`,
+          `OHES ${
+            pickupMealsBySchool('OHES', 'a-group') +
+            pickupMealsBySchool('OHES', 'b-group')
+          }`,
+          `ROES ${
+            pickupMealsBySchool('ROES', 'a-group') +
+            pickupMealsBySchool('ROES', 'b-group')
+          }`,
+          `MCMS ${
+            pickupMealsBySchool('MCMS', 'a-group') +
+            pickupMealsBySchool('MCMS', 'b-group')
+          }`,
+          `OPHS ${
+            pickupMealsBySchool('OPHS', 'a-group') 
+          }`,
+          `OVHS ${
+            pickupMealsBySchool('OVHS', 'a-group') 
+          }`,
+        ],
         datasets: [
           {
             label: 'Number of Meals',
@@ -391,26 +424,19 @@ const Admin = ({ token, user, initRequests }) => {
     let studentsChart3 = new Chart(document.getElementById('completedChart'), {
       type: 'pie', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
       data: {
-        labels: [`Unfullfilled ${allOpenPickupMeals()}`, `Fullfilled ${allCompletedPickupMeals()}` ],
+        labels: [
+          `Unfullfilled ${allOpenPickupMeals()}`,
+          `Fullfilled ${allCompletedPickupMeals()}`,
+        ],
         datasets: [
           {
             label: 'Curbside',
             data: [
-              parseInt(
-                allOpenPickupMeals(),
-                10
-              ),
-              parseInt(
-                allCompletedPickupMeals(),
-                10
-              )
-              ],
-            // backgroundColor: 'green'
-            backgroundColor: [
-              
-              '#fe5f55',
-              '#c5dfc4',
+              parseInt(allOpenPickupMeals(), 10),
+              parseInt(allCompletedPickupMeals(), 10),
             ],
+            // backgroundColor: 'green'
+            backgroundColor: ['#fe5f55', '#c5dfc4'],
             borderWidth: 1,
             hoverBorderWidth: '3',
             hoverBorderColor: '#000',
@@ -432,8 +458,6 @@ const Admin = ({ token, user, initRequests }) => {
         },
       },
     });
-
-
 
     return () => {
       studentsChart.destroy();
@@ -513,41 +537,47 @@ const Admin = ({ token, user, initRequests }) => {
         <b className="text-danger">
           {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
         </b>{' '}
-        - All Curbside 
-        <CSVLink
+        - All Curbside
+        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
           data={userList.filter((user) =>
             requests
-              .filter((request) => request.pickupTime != 'Cafeteria').map(request => request.postedBy.email)
+              .filter((request) => request.pickupTime != 'Cafeteria')
+              .map((request) => request.postedBy.email)
               .includes(user.email)
-              )}
+          )}
         >
           Curbside CSV{' '}
-        </CSVLink>
+        </CSVLink>}
         <p />
         <hr />
         <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
-        Curbside 
-        <CSVLink
+        Curbside
+        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
           data={userList.filter((user) =>
             requests
-              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
+              .filter(
+                (request) =>
+                  request.pickupTime != 'Cafeteria' &&
+                  request.orderStatus != true
+              )
+              .map((request) => request.postedBy.email)
               // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
               .includes(user.email)
-              )}
+          )}
         >
-          Unfulfilled {' '}
+          Unfulfilled{' '}
           {/* {userList.filter((user) =>
             requests
               .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
               // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
               .includes(user.email)
               ).length} */}
-              CSV{' '}
-        </CSVLink>
+          CSV{' '}
+        </CSVLink>}
         <p />
         <b className="text-danger">{allCompletedPickupMeals()}</b> - Fulfilled
         Curbside
@@ -570,12 +600,14 @@ const Admin = ({ token, user, initRequests }) => {
       </h5>
       <div className="p-3">
         <h6>
-          {mealCounter('Standard', 'Breakfast and Lunch')} - <b>Standard</b> Breakfast and Lunch
+          {mealCounter('Standard', 'Breakfast and Lunch')} - <b>Standard</b>{' '}
+          Breakfast and Lunch
           <hr />
           {lunchOnlymealCounter('Standard', 'Lunch Only')} - <b>Standard</b>{' '}
           Lunch Only
           <hr />
-          {mealCounter('Vegetarian', 'Breakfast and Lunch')} - <b>Vegetarian</b> Breakfast and Lunch
+          {mealCounter('Vegetarian', 'Breakfast and Lunch')} - <b>Vegetarian</b>{' '}
+          Breakfast and Lunch
           <hr />
           {lunchOnlymealCounter('Vegetarian', 'Lunch Only')} - <b>Vegetarian</b>{' '}
           Lunch Only
@@ -584,7 +616,8 @@ const Admin = ({ token, user, initRequests }) => {
           <hr />
           {mealCounter('Gluten Free', 'Lunch Only')} - <b>Gluten Free</b> Meals
           <hr />
-          {mealCounter('Standard Dairy Free', 'Lunch Only')} - <b>Dairy Free</b> Meals
+          {mealCounter('Standard Dairy Free', 'Lunch Only')} - <b>Dairy Free</b>{' '}
+          Meals
           <hr />
           {mealBreakfastOnlyCounter('Standard Onsite')} - <b>BREAKFAST ONLY </b>{' '}
           Meals
@@ -601,27 +634,39 @@ const Admin = ({ token, user, initRequests }) => {
       <h6>
         <div className="p-3">
           <hr />
-          {mealCounter('Vegan B', 'Breakfast and Lunch')} - <b>Vegan</b> with Breakfast
-          <hr />
-          {mealCounter('Gluten Free with Breakfast', 'Breakfast and Lunch')} - <b>Gluten Free</b> with
+          {mealCounter('Vegan B', 'Breakfast and Lunch')} - <b>Vegan</b> with
           Breakfast
+          <hr />
+          {mealCounter(
+            'Gluten Free with Breakfast',
+            'Breakfast and Lunch'
+          )} - <b>Gluten Free</b> with Breakfast
           <hr />
           {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
           <b>Gluten Free Dairy Free</b>
           <hr />
-          {mealCounter('2on 3off', 'Two Onsite / Three Breakfast and Lunches')} - <b>Two On Three Off</b>
+          {mealCounter(
+            '2on 3off',
+            'Two Onsite / Three Breakfast and Lunches'
+          )}{' '}
+          - <b>Two On Three Off</b>
           <hr />
-          {mealCounter('Standard Sesame Free', 'Breakfast and Lunch')} - Standard Sesame Free Meals
+          {sesameMealCounter('Standard Sesame Free')} -
+          Standard Sesame Free Meals
           <hr />
-          {mealCounter('Vegetarian Sesame Free', 'Breakfast and Lunch')} - Vegetarian Sesame Free Meals
+          {sesameMealCounter('Vegetarian Sesame Free')} -
+          Vegetarian Sesame Free Meals
           <hr />
-          {mealCounter('Vegan Sesame Free', 'Breakfast and Lunch')} - Vegan Sesame Free Meals
+          {sesameMealCounter('Vegan Sesame Free')} - Vegan
+          Sesame Free Meals
           <hr />
-          {mealCounter('Sesame Dairy Free', 'Breakfast and Lunch')} - Sesame Dairy Free Meals
+          {sesameMealCounter('Sesame Dairy Free')} - Sesame
+          Dairy Free Meals
           <hr />
-          {mealCounter('Sesame Dairy Free', 'Breakfast and Lunch')} - Sesame Dairy Free Meals
+          {sesameMealCounter('Sesame Dairy Free')} - Sesame
+          Dairy Free Meals
           <hr />
-          {mealCounter('None')} - None Meals
+          {mealCounter('None', 'None')} - None Meals
           <hr />
         </div>
       </h6>
@@ -699,7 +744,7 @@ const Admin = ({ token, user, initRequests }) => {
             {pickupMealsBySchool('OPHS', 'a-group')}
           </b>{' '}
           - OPHS
-          <hr/>
+          <hr />
           {/* {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
           <hr /> */}
           <b className="text-danger">
@@ -707,30 +752,43 @@ const Admin = ({ token, user, initRequests }) => {
           </b>{' '}
           - OVHS
           {/* </div> */}
-          <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList.filter((user) =>
-            requests
-              .filter((request) => request.mealRequest.filter(meal => meal.schoolName === 'OVHS')).map(request => request.postedBy.email)
-              .includes(user.email)
-              )}
-        >
-          OVHS CSV {userList.filter((user) =>
-            requests
-              .filter((request) => request.mealRequest.filter(meal => meal.schoolName === 'OVHS')).map(request => request.postedBy.email)
-              .includes(user.email)
-              ).length} {' '}
-        </CSVLink>
+          {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList.filter((user) =>
+              requests
+                .filter((request) =>
+                  request.mealRequest.filter(
+                    (meal) => meal.schoolName === 'OVHS'
+                  )
+                )
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+            )}
+          >
+            OVHS CSV{' '}
+            {
+              userList.filter((user) =>
+                requests
+                  .filter((request) =>
+                    request.mealRequest.filter(
+                      (meal) => meal.schoolName === 'OVHS'
+                    )
+                  )
+                  .map((request) => request.postedBy.email)
+                  .includes(user.email)
+              ).length
+            }{' '}
+          </CSVLink>}
           <hr />
         </h6>
         <br />
-        <h5>
+        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <h5>
           <b className="text-danger">
             {userListFiltered().length} users who have not ordered yet for{' '}
             {moment(pickupDate).format('MMMM Do')}
           </b>
-        </h5>
+        </h5>}
         {/* <h5>email list</h5> */}
         {/* {console.log('test', userList.filter(
             (user) =>
@@ -738,7 +796,7 @@ const Admin = ({ token, user, initRequests }) => {
                 .map((request) => request.postedBy.email)
                 .includes(user.email)
           ))} */}
-        <CSVLink
+        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
           className="btn btn-sm btn-outline-dark text"
           headers={emailHeaders}
           data={userList.filter(
@@ -749,10 +807,9 @@ const Admin = ({ token, user, initRequests }) => {
           )}
         >
           Email List of users who haven't ordered CSV{' '}
-        </CSVLink>
-        {/* <div className="float-right">{userList.length} total users</div> */}
+        </CSVLink>}
         &nbsp;&nbsp;
-        <CSVLink
+        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
           data={userList}
@@ -763,14 +820,15 @@ const Admin = ({ token, user, initRequests }) => {
             'test',
             userList.filter((user) =>
               requests
-                .filter((request) => request.pickupTime != 'Cafeteria').map(request => request.postedBy.email)
+                .filter((request) => request.pickupTime != 'Cafeteria')
+                .map((request) => request.postedBy.email)
                 .includes(user.email)
             )
           )}
           {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
           {/* {console.log('test2', !requests
                 .map((request) => request.postedBy.email).includes(user.email))} */}
-        </CSVLink>
+        </CSVLink>}
         <br />
         <br />
         {/* Curbside only{' '}
@@ -795,7 +853,7 @@ const Admin = ({ token, user, initRequests }) => {
         </CSVLink> */}
         <br />
         <br />
-        <table className="table table-striped table-sm table-bordered">
+        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <table className="table table-striped table-sm table-bordered">
           <thead>
             <tr>
               <th scope="col">User</th>
@@ -804,7 +862,7 @@ const Admin = ({ token, user, initRequests }) => {
             </tr>
           </thead>
           <tbody>{userListFiltered()}</tbody>
-        </table>
+        </table>}
       </div>
     </Layout>
   );
