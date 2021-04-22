@@ -101,9 +101,9 @@ const Create = ({ token, user }) => {
           user.students[0].group === 'a-group'
             ? {
                 sunday: false,
-                monday: true,
-                tuesday: false,
-                wednesday: true,
+                monday: true, // a
+                tuesday: true, // a
+                wednesday: false,
                 thursday: false,
                 friday: false,
                 saturday: false,
@@ -112,9 +112,9 @@ const Create = ({ token, user }) => {
             ? {
                 sunday: false,
                 monday: false,
-                tuesday: true,
-                wednesday: false,
-                thursday: true,
+                tuesday: false,
+                wednesday: true, // b
+                thursday: true, // b
                 friday: false,
                 saturday: false,
               }
@@ -1322,9 +1322,9 @@ const Create = ({ token, user }) => {
           group === 'a-group'
             ? {
                 sunday: false,
-                monday: true,
-                tuesday: false,
-                wednesday: true,
+                monday: true, // a
+                tuesday: true, // a
+                wednesday: false,
                 thursday: false,
                 friday: false,
                 saturday: false,
@@ -1333,9 +1333,9 @@ const Create = ({ token, user }) => {
             ? {
                 sunday: false,
                 monday: false,
-                tuesday: true,
-                wednesday: false,
-                thursday: true,
+                tuesday: false,
+                wednesday: true, // b
+                thursday: true, // b
                 friday: false,
                 saturday: false,
               }

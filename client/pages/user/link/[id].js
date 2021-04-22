@@ -1161,9 +1161,9 @@ const Update = ({ oldLink, token, user, _id }) => {
           group === 'a-group'
             ? {
                 sunday: false,
-                monday: true,
-                tuesday: false,
-                wednesday: true,
+                monday: true, // a
+                tuesday: true, // a
+                wednesday: false,
                 thursday: false,
                 friday: false,
                 saturday: false,
@@ -1172,9 +1172,9 @@ const Update = ({ oldLink, token, user, _id }) => {
             ? {
                 sunday: false,
                 monday: false,
-                tuesday: true,
-                wednesday: false,
-                thursday: true,
+                tuesday: false,
+                wednesday: true, // b
+                thursday: true, // b
                 friday: false,
                 saturday: false,
               }
