@@ -1405,7 +1405,7 @@ const Update = ({ oldLink, token, user, _id }) => {
       mealRequest.filter((meal) => meal.meal != 'None').length -
       mealRequest.filter((meal) => meal.meal === 'Standard Onsite').length +
       mealRequest.filter(
-        (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+        (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' || meal.meal ==='2on 3off'
       ).length;
 
     // let newFrontCode = codes
