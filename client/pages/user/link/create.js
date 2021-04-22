@@ -114,7 +114,7 @@ const Create = ({ token, user }) => {
                 monday: false,
                 tuesday: false,
                 wednesday: true, // b
-                thursday: true, // b
+                thursday: true, // b cohort
                 friday: false,
                 saturday: false,
               }
