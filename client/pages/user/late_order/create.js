@@ -1571,7 +1571,7 @@ const Create = ({ token, user }) => {
               </div>
               <hr />
               {/* Admin can change code */}
-              {isAuth().role === 'admin' && user.userCode === 'LYF' || user.userCode === 'DOOB' && (
+              {/* {isAuth().role === 'admin' && user.userCode === 'LYF' || user.userCode === 'DOOB' && (
                 <div className=" form-group">
                   <input
                     type="text"
@@ -1580,7 +1580,7 @@ const Create = ({ token, user }) => {
                     onChange={(e) => handleCodeChange(e)}
                   />
                 </div>
-              )}
+              )} */}
 
               <div className="row">
                 <div className="col-md-12">

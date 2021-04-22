@@ -1049,7 +1049,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
               </span>
               {/* {console.log('csv offsite data near button', csvOffsiteData)} */}
               {orderType === 'Onsite'
-                ? isAuth().userCode === 'CLY' ||
+                ? 
                   (isAuth().userCode === 'DOOB' && (
                     // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
                     <CSVLink
@@ -1061,7 +1061,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                       &nbsp;Export csv
                     </CSVLink>
                   ))
-                : isAuth().userCode === 'CLY' ||
+                : 
                   (isAuth().userCode === 'DOOB' && (
                     <CSVLink
                       className="btn btn-sm btn-outline-dark text float-right"
@@ -1072,7 +1072,33 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                       &nbsp;Export csv
                     </CSVLink>
                   ))}
-              {isAuth().userCode === 'CLY' ||
+              {orderType === 'Onsite'
+                ? (isAuth().userCode === 'LYF' 
+                   && (
+                    // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
+                    <CSVLink
+                      className="btn btn-sm btn-outline-dark text float-right"
+                      headers={onsiteHeaders}
+                      data={csvOnsiteData}
+                    >
+                      <i class="fas fa-file-export"></i>
+                      &nbsp;Export csv
+                    </CSVLink>
+                  ))
+                : (isAuth().userCode === 'LYF' 
+                   && (
+                    <CSVLink
+                      className="btn btn-sm btn-outline-dark text float-right"
+                      headers={pickupHeaders}
+                      data={csvOffsiteData}
+                    >
+                      <i class="fas fa-file-export"></i>
+                      &nbsp;Export csv
+                    </CSVLink>
+                  ))}
+
+
+              {
                 (isAuth().userCode === 'DOOB' && (
                   <button
                     type="button"
@@ -1083,8 +1109,18 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                     &nbsp;Print
                   </button>
                 ))}
+              {(isAuth().userCode === 'LYF' && (
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-dark text float-right print"
+                    onClick={(e) => window.print()}
+                  >
+                    <i class="fas fa-print"></i>
+                    &nbsp;Print
+                  </button>
+                ))}
 
-              {isAuth().userCode === 'CLY' ||
+              {
                 (isAuth().userCode === 'DOOB' && orderType === 'Pickup' && (
                   <button
                     className="btn btn-warning fas fa-car-side"
@@ -1094,8 +1130,27 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                     &nbsp; Curbside
                   </button>
                 ))}
-              {isAuth().userCode === 'CLY' ||
+              {(isAuth().userCode === 'LYF'  && orderType === 'Pickup' && (
+                  <button
+                    className="btn btn-warning fas fa-car-side"
+                    onClick={handleSearch('orderType')}
+                    value="Onsite"
+                  >
+                    &nbsp; Curbside
+                  </button>
+                ))}
+              {
                 (isAuth().userCode === 'DOOB' && orderType === 'Onsite' && (
+                  <button
+                    className="btn  btn-warning fas fa-school"
+                    onClick={handleSearch('orderType')}
+                    value="Pickup"
+                  >
+                    &nbsp; Onsite
+                  </button>
+                ))}
+              {
+                (isAuth().userCode === 'LYF' && orderType === 'Onsite' && (
                   <button
                     className="btn  btn-warning fas fa-school"
                     onClick={handleSearch('orderType')}
@@ -1126,8 +1181,15 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                   <option value="4pm-6pm">4-6pm</option>
                 </select>
               )}
-              {(orderType === 'Pickup' && isAuth().userCode === 'CLY') ||
-                (isAuth().userCode === 'DOOB' && (
+              {(orderType === 'Pickup' && isAuth().userCode === 'DOOB' && (
+                  <button
+                    className=" btn btn-sm btn-outline-secondary"
+                    onClick={() => setShowStatus(!showStatus)}
+                  >
+                    Show Status
+                  </button>
+                ))}
+              {(orderType === 'Pickup' && isAuth().userCode === 'LYF' && (
                   <button
                     className=" btn btn-sm btn-outline-secondary"
                     onClick={() => setShowStatus(!showStatus)}
@@ -1288,8 +1350,17 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
               <div className="p-2"></div>
 
-              {isAuth().userCode === 'CLY' ||
+              {
                 (isAuth().userCode === 'DOOB' && (
+                  <button
+                    className="badge btn text-red btn-sm btn-outline-danger"
+                    onClick={() => resetSearch()}
+                  >
+                    Reset Filters
+                  </button>
+                ))}
+              {
+                (isAuth().userCode === 'LYF' && (
                   <button
                     className="badge btn text-red btn-sm btn-outline-danger"
                     onClick={() => resetSearch()}

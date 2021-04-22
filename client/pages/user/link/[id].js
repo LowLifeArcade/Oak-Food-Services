@@ -1753,7 +1753,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             </div>
             <hr />
             {/* Admin code */}
-            {(isAuth().role === 'admin' && user.userCode === 'LYF') ||
+            {isAuth().role === 'admin' &&  
               (user.userCode === 'DOOB' && (
                 <div className=" form-group">
                   <input
@@ -1765,6 +1765,19 @@ const Update = ({ oldLink, token, user, _id }) => {
                   />
                 </div>
               ))}
+            {isAuth().role === 'admin' &&  
+              (user.userCode === 'LYF' && (
+                <div className=" form-group">
+                  <input
+                    type="text"
+                    defaultValue={oldLink.postedBy.userCode}
+                    className=" form-control"
+                    placeholder="Enter a 4 digit User Code"
+                    onChange={(e) => handleCodeChange(e)}
+                  />
+                </div>
+              ))}
+
 
             <div className="row">
               <div className="col-md-12">

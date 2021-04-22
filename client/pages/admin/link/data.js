@@ -538,7 +538,19 @@ const Admin = ({ token, user, initRequests }) => {
           {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
         </b>{' '}
         - All Curbside
-        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
+        { user.userCode === 'DOOB' &&  <CSVLink
+          className="btn btn-sm btn-outline-dark text float-right"
+          headers={emailHeaders}
+          data={userList.filter((user) =>
+            requests
+              .filter((request) => request.pickupTime != 'Cafeteria')
+              .map((request) => request.postedBy.email)
+              .includes(user.email)
+          )}
+        >
+          Curbside CSV{' '}
+        </CSVLink>}
+        {user.userCode === 'LYF'  &&  <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
           data={userList.filter((user) =>
@@ -554,7 +566,31 @@ const Admin = ({ token, user, initRequests }) => {
         <hr />
         <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
         Curbside
-        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
+        {user.userCode === 'LYF'  &&  <CSVLink
+          className="btn btn-sm btn-outline-dark text float-right"
+          headers={emailHeaders}
+          data={userList.filter((user) =>
+            requests
+              .filter(
+                (request) =>
+                  request.pickupTime != 'Cafeteria' &&
+                  request.orderStatus != true
+              )
+              .map((request) => request.postedBy.email)
+              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+              .includes(user.email)
+          )}
+        >
+          Unfulfilled{' '}
+          {/* {userList.filter((user) =>
+            requests
+              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
+              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+              .includes(user.email)
+              ).length} */}
+          CSV{' '}
+        </CSVLink>}
+        { user.userCode === 'DOOB' &&  <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
           data={userList.filter((user) =>
@@ -752,7 +788,35 @@ const Admin = ({ token, user, initRequests }) => {
           </b>{' '}
           - OVHS
           {/* </div> */}
-          {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
+          {user.userCode === 'DOOB' &&  <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList.filter((user) =>
+              requests
+                .filter((request) =>
+                  request.mealRequest.filter(
+                    (meal) => meal.schoolName === 'OVHS'
+                  )
+                )
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+            )}
+          >
+            OVHS CSV{' '}
+            {
+              userList.filter((user) =>
+                requests
+                  .filter((request) =>
+                    request.mealRequest.filter(
+                      (meal) => meal.schoolName === 'OVHS'
+                    )
+                  )
+                  .map((request) => request.postedBy.email)
+                  .includes(user.email)
+              ).length
+            }{' '}
+          </CSVLink>}
+          {user.userCode === 'LYF'  &&  <CSVLink
             className="btn btn-sm btn-outline-dark text float-right"
             headers={emailHeaders}
             data={userList.filter((user) =>
@@ -783,7 +847,13 @@ const Admin = ({ token, user, initRequests }) => {
           <hr />
         </h6>
         <br />
-        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <h5>
+        {user.userCode === 'DOOB' &&  <h5>
+          <b className="text-danger">
+            {userListFiltered().length} users who have not ordered yet for{' '}
+            {moment(pickupDate).format('MMMM Do')}
+          </b>
+        </h5>}
+        {user.userCode === 'LYF'  &&  <h5>
           <b className="text-danger">
             {userListFiltered().length} users who have not ordered yet for{' '}
             {moment(pickupDate).format('MMMM Do')}
@@ -796,7 +866,19 @@ const Admin = ({ token, user, initRequests }) => {
                 .map((request) => request.postedBy.email)
                 .includes(user.email)
           ))} */}
-        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
+        {user.userCode === 'LYF'  &&  <CSVLink
+          className="btn btn-sm btn-outline-dark text"
+          headers={emailHeaders}
+          data={userList.filter(
+            (user) =>
+              !requests
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+          )}
+        >
+          Email List of users who haven't ordered CSV{' '}
+        </CSVLink>}
+        { user.userCode === 'DOOB' &&  <CSVLink
           className="btn btn-sm btn-outline-dark text"
           headers={emailHeaders}
           data={userList.filter(
@@ -809,7 +891,27 @@ const Admin = ({ token, user, initRequests }) => {
           Email List of users who haven't ordered CSV{' '}
         </CSVLink>}
         &nbsp;&nbsp;
-        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <CSVLink
+        {user.userCode === 'LYF'  &&  <CSVLink
+          className="btn btn-sm btn-outline-dark text float-right"
+          headers={emailHeaders}
+          data={userList}
+        >
+          {/* {!requests.map((request) => request.postedBy.email)} */}
+          Full Email List of {userList.length} users CSV{' '}
+          {console.log(
+            'test',
+            userList.filter((user) =>
+              requests
+                .filter((request) => request.pickupTime != 'Cafeteria')
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+            )
+          )}
+          {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+          {/* {console.log('test2', !requests
+                .map((request) => request.postedBy.email).includes(user.email))} */}
+        </CSVLink>}
+        {user.userCode === 'DOOB'  &&  <CSVLink
           className="btn btn-sm btn-outline-dark text float-right"
           headers={emailHeaders}
           data={userList}
@@ -853,7 +955,17 @@ const Admin = ({ token, user, initRequests }) => {
         </CSVLink> */}
         <br />
         <br />
-        {user.userCode === 'CLF' || user.userCode === 'DOOB' &&  <table className="table table-striped table-sm table-bordered">
+        {user.userCode === 'LYF'  &&  <table className="table table-striped table-sm table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">User</th>
+              <th scope="col">User Code</th>
+              <th scope="col">Email</th>
+            </tr>
+          </thead>
+          <tbody>{userListFiltered()}</tbody>
+        </table>}
+        { user.userCode === 'DOOB' &&  <table className="table table-striped table-sm table-bordered">
           <thead>
             <tr>
               <th scope="col">User</th>

@@ -329,11 +329,10 @@ const Menus = ({ categories }) => {
                                   </button>
                                 </Link>
                               )}
-                          {(process.browser &&
+                          {process.browser &&
                             isAuth() &&
                             isAuth().role === 'admin' &&
-                            isAuth().userCode === 'CLY') ||
-                            (isAuth().userCode === 'DOOB' && (
+                            isAuth().userCode === 'DOOB' && (
                               <div className="">
                                 <Link href={`/admin/category/${c.slug}`}>
                                   <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
@@ -348,7 +347,26 @@ const Menus = ({ categories }) => {
                 Delete
               </button> */}
                               </div>
-                            ))}
+                            )}
+                          {process.browser &&
+                            isAuth() &&
+                            isAuth().role === 'admin' &&
+                            isAuth().userCode === 'LYF' && (
+                              <div className="">
+                                <Link href={`/admin/category/${c.slug}`}>
+                                  <button className="badge btn btn-sm btn-outline-warning mb-1 float-right">
+                                    Edit
+                                  </button>
+                                </Link>
+                                &nbsp;
+                                {/* <button
+                onClick={(e) => confirmDelete(e, category.slug)}
+                className="badge btn btn-sm btn-outline-danger "
+              >
+                Delete
+              </button> */}
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
