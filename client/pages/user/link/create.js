@@ -550,7 +550,6 @@ const Create = ({ token, user }) => {
                 Gluten Free plus Vegetarian Breakfast
               </option>
             )} */}
-           
             {user.special.gfplus == true && (
               <option value={'Gluten Free with Breakfast'}>
                 Gluten Free Lunch plus Breakfast
@@ -874,10 +873,9 @@ const Create = ({ token, user }) => {
               </option>
             )}
             {
-            // isAuth().role === 'subscriber' && 
-            (
+              // isAuth().role === 'subscriber' &&
               <option value={'Standard Onsite'}>Standard (Onsite)</option>
-            )}
+            }
             {user.special.day1 == 'true' && (
               <option value={'Onsite Day 1'}>
                 Onsite Lunch Monday/Wednesday Only
@@ -1057,9 +1055,7 @@ const Create = ({ token, user }) => {
           className="form-control"
         >
           {' '}
-          <option value={'Lunch Onsite'}>
-            Lunch Onsite
-          </option>
+          <option value={'Lunch Onsite'}>Lunch Onsite</option>
           <option selected value={'Lunch Onsite / Breakfast Pickup'}>
             Lunch Onsite / Breakfast Pickup
           </option>
@@ -1084,7 +1080,7 @@ const Create = ({ token, user }) => {
             Lunch Onsite
           </option> */}
           <option selected value={'Two Onsite / Three Breakfast and Lunches'}>
-          Two Onsite / Three Breakfast and Lunches
+            Two Onsite / Three Breakfast and Lunches
           </option>
         </select>
         <div className="p-1"></div>
@@ -1294,12 +1290,25 @@ const Create = ({ token, user }) => {
     localStorage.removeItem('search-date');
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
-    let length =
-      mealRequest.filter((meal) => meal.meal != 'None').length -
-      mealRequest.filter((meal) => meal.meal === 'Standard Onsite').length +
-      mealRequest.filter(
-        (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' || meal.meal === '2on 3off'
+    let length = mealRequest
+      .filter((meal) => meal.meal != 'None')
+      .filter(
+        (meal) =>
+          meal.pickupOption != 'Lunch Onsite' 
+          // ||
+          // meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' 
+          // meal.meal === '2on 3off'
       ).length;
+    // mealRequest.filter(
+    //   (meal) => meal.meal != 'None' || meal.meal === 'Standard Onsite'
+    // ).length -
+    // mealRequest.filter(
+    //   (meal) =>
+    //     meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+    //     meal.meal === '2on 3off'
+    // ).length;
+    // +
+    // mealRequest.filter((meal) => meal.meal === '2on 3off').length;
 
     let newPickupCode = '';
 
@@ -1556,16 +1565,17 @@ const Create = ({ token, user }) => {
               </div>
               <hr />
               {/* Admin can change code */}
-              {isAuth().role === 'admin' && user.userCode === 'LYF' || user.userCode === 'DOOB' && (
-                <div className=" form-group">
-                  <input
-                    type="text"
-                    className=" form-control"
-                    placeholder="Enter a 4 digit User Code"
-                    onChange={(e) => handleCodeChange(e)}
-                  />
-                </div>
-              )}
+              {(isAuth().role === 'admin' && user.userCode === 'LYF') ||
+                (user.userCode === 'DOOB' && (
+                  <div className=" form-group">
+                    <input
+                      type="text"
+                      className=" form-control"
+                      placeholder="Enter a 4 digit User Code"
+                      onChange={(e) => handleCodeChange(e)}
+                    />
+                  </div>
+                ))}
 
               <div className="row">
                 <div className="col-md-12">
@@ -1623,25 +1633,29 @@ const Create = ({ token, user }) => {
                             )}
                         </div>
 
-                        {x.meal !== '2on 3off' ? // put all special options here to turn off this field then put them below this to activate another select menu
-                          isAuth().role === 'admin'
-                            ? selectAdminPickupOptions()
-                            : x.meal != 'None'  // put option here to turn off pickup selection like for none 
-                            // ? x.meal != '2on 3off' 
-                            ? state.students[i].group === 'distance-learning' 
-                              ? x.meal === 'Gluten Free' ||
-                                x.meal === 'Gluten Free Dairy Free' ||
-                                x.meal === 'Standard Dairy Free' ||
-                                x.meal === 'Vegan' ||
-                                user.students[i].foodAllergy.egg === true ||
-                                user.students[i].foodAllergy.soy === true ||
-                                user.students[i].foodAllergy.dairy === true ||
-                                user.students[i].foodAllergy.gluten === true
-                                ? selectPickupLunchOnlyOption(i)
-                                : selectPickupOption(i) // if not distance learning then:
-                              : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
-                              // : select2on3offOption(i)
-                            : null : null
+                        {
+                          x.meal !== '2on 3off' // put all special options here to turn off this field then put them below this to activate another select menu
+                            ? isAuth().role === 'admin'
+                              ? selectAdminPickupOptions()
+                              : x.meal != 'None' // put option here to turn off pickup selection like for none
+                              ? // ? x.meal != '2on 3off'
+                                state.students[i].group === 'distance-learning'
+                                ? x.meal === 'Gluten Free' ||
+                                  x.meal === 'Gluten Free Dairy Free' ||
+                                  x.meal === 'Standard Dairy Free' ||
+                                  x.meal === 'Vegan' ||
+                                  user.students[i].foodAllergy.egg === true ||
+                                  user.students[i].foodAllergy.soy === true ||
+                                  user.students[i].foodAllergy.dairy === true ||
+                                  user.students[i].foodAllergy.gluten === true
+                                  ? selectPickupLunchOnlyOption(i)
+                                  : selectPickupOption(i) // if not distance learning then:
+                                : selectPickupLunchOnsiteBreakfastOffsiteOption(
+                                    i
+                                  )
+                              : // : select2on3offOption(i)
+                                null
+                            : null
                           // selectNonePickupOption(i)
                         }
 

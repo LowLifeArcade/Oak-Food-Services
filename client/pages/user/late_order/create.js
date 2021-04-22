@@ -1292,12 +1292,28 @@ const Create = ({ token, user }) => {
     localStorage.removeItem('search-date');
     const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
-    let length =
-      mealRequest.filter((meal) => meal.meal != 'None').length -
-      mealRequest.filter((meal) => meal.meal === 'Standard Onsite').length +
-      mealRequest.filter(
-        (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' || meal.meal === '2on 3off'
-      ).length;
+    let length = mealRequest
+    .filter((meal) => meal.meal != 'None')
+    .filter(
+      (meal) =>
+        meal.pickupOption != 'Lunch Onsite' ||
+        meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' 
+        // ||
+        // meal.meal === '2on 3off'
+    ).length
+      // mealRequest.filter(
+      //   (meal) => meal.meal != 'None' || meal.meal === 'Standard Onsite'
+      // ).length -
+      // mealRequest.filter(
+      //   (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+      // ).length +
+      // mealRequest.filter((meal) => meal.meal === '2on 3off').length;
+    // let length =
+    //   mealRequest.filter((meal) => meal.meal != 'None').length -
+    //   mealRequest.filter((meal) => meal.meal === 'Standard Onsite').length +
+    //   mealRequest.filter(
+    //     (meal) => meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' || meal.meal === '2on 3off'
+    //   ).length;
 
     let newPickupCode = '';
 
