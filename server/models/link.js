@@ -80,6 +80,29 @@ const linkSchema = new mongoose.Schema(
             type: Boolean,
           },
         },
+        days: {
+          sunday: {
+            type: Boolean,
+          },
+          monday: {
+            type: Boolean,
+          },
+          tuesday: {
+            type: Boolean,
+          },
+          wednesday: {
+            type: Boolean,
+          },
+          thursday: {
+            type: Boolean,
+          },
+          friday: {
+            type: Boolean,
+          },
+          saturday: {
+            type: Boolean,
+          },
+        },
         parentEmail: {
           type: String,
           trim: true,

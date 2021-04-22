@@ -1,6 +1,7 @@
 import styles from '../../../styles/Home.module.css';
 import { useState, useEffect, useRef } from 'react';
 import Layout from '../../../components/Layout';
+import Toggle from '../../../components/Toggle';
 import { getCookie, isAuth } from '../../../helpers/auth';
 import { API } from '../../../config';
 import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
@@ -96,6 +97,36 @@ const Create = ({ token, user }) => {
         parentName: user.name,
         individualPickupTime: '',
         complete: false,
+        days:
+          user.students[0].group === 'a-group'
+            ? {
+                sunday: false,
+                monday: true,
+                tuesday: false,
+                wednesday: true,
+                thursday: false,
+                friday: false,
+                saturday: false,
+              }
+            : user.students[0].group === 'b-group'
+            ? {
+                sunday: false,
+                monday: false,
+                tuesday: true,
+                wednesday: false,
+                thursday: true,
+                friday: false,
+                saturday: false,
+              }
+            : {
+                sunday: false,
+                monday: false,
+                tuesday: false,
+                wednesday: false,
+                thursday: false,
+                friday: false,
+                saturday: false,
+              },
       },
     ],
     orderStatus: false,
@@ -492,6 +523,27 @@ const Create = ({ token, user }) => {
     meal.teacher = teacher;
     meal.pickupOption = pickupOptionLO;
     meal.foodAllergy = foodAllergy;
+
+    meals[i] = meal; // puts meal[i] back into mealRequest array
+
+    setState({
+      ...state,
+      mealRequest: [...meals],
+      buttonText: 'Submit',
+      // pickupCodeAdd: codes,
+      success: '',
+      error: '',
+    }); //puts ...mealRequest with new meal back into mealRequest: []
+  };
+
+  const handleDayChange = (day) => (e) => {
+    let i = e.target.getAttribute('data-index');
+    let value =
+      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+    meal.days[day] = value;
 
     meals[i] = meal; // puts meal[i] back into mealRequest array
 
@@ -1266,6 +1318,36 @@ const Create = ({ token, user }) => {
           parentName: user.name,
           individualPickupTime: '',
           complete: false,
+          days:
+          group === 'a-group'
+            ? {
+                sunday: false,
+                monday: true,
+                tuesday: false,
+                wednesday: true,
+                thursday: false,
+                friday: false,
+                saturday: false,
+              }
+            : group === 'b-group'
+            ? {
+                sunday: false,
+                monday: false,
+                tuesday: true,
+                wednesday: false,
+                thursday: true,
+                friday: false,
+                saturday: false,
+              }
+            : {
+                sunday: false,
+                monday: false,
+                tuesday: false,
+                wednesday: false,
+                thursday: false,
+                friday: false,
+                saturday: false,
+              },
         },
       ],
       pickupCodeAdd: [...pickupCodeAdd, ''],
@@ -1293,11 +1375,10 @@ const Create = ({ token, user }) => {
     let length = mealRequest
       .filter((meal) => meal.meal != 'None')
       .filter(
-        (meal) =>
-          meal.pickupOption != 'Lunch Onsite' 
-          // ||
-          // meal.pickupOption === 'Lunch Onsite / Breakfast Pickup' 
-          // meal.meal === '2on 3off'
+        (meal) => meal.pickupOption != 'Lunch Onsite'
+        // ||
+        // meal.pickupOption === 'Lunch Onsite / Breakfast Pickup'
+        // meal.meal === '2on 3off'
       ).length;
     // mealRequest.filter(
     //   (meal) => meal.meal != 'None' || meal.meal === 'Standard Onsite'
@@ -1565,28 +1646,26 @@ const Create = ({ token, user }) => {
               </div>
               <hr />
               {/* Admin can change code */}
-              {isAuth().role === 'admin' && 
-                (user.userCode === 'DOOB' && (
-                  <div className=" form-group">
-                    <input
-                      type="text"
-                      className=" form-control"
-                      placeholder="Enter a 4 digit User Code"
-                      onChange={(e) => handleCodeChange(e)}
-                    />
-                  </div>
-                ))}
-              {isAuth().role === 'admin' && 
-                (user.userCode === 'LYF' && (
-                  <div className=" form-group">
-                    <input
-                      type="text"
-                      className=" form-control"
-                      placeholder="Enter a 4 digit User Code"
-                      onChange={(e) => handleCodeChange(e)}
-                    />
-                  </div>
-                ))}
+              {isAuth().role === 'admin' && user.userCode === 'DOOB' && (
+                <div className=" form-group">
+                  <input
+                    type="text"
+                    className=" form-control"
+                    placeholder="Enter a 4 digit User Code"
+                    onChange={(e) => handleCodeChange(e)}
+                  />
+                </div>
+              )}
+              {isAuth().role === 'admin' && user.userCode === 'LYF' && (
+                <div className=" form-group">
+                  <input
+                    type="text"
+                    className=" form-control"
+                    placeholder="Enter a 4 digit User Code"
+                    onChange={(e) => handleCodeChange(e)}
+                  />
+                </div>
+              )}
 
               <div className="row">
                 <div className="col-md-12">
@@ -1671,6 +1750,150 @@ const Create = ({ token, user }) => {
                         }
 
                         {x.meal === '2on 3off' && select2on3offOption(i)}
+
+                        {(process.browser &&
+                          isAuth().role === 'admin' &&
+                          x.meal === '2on 3off' &&
+                          x.group === 'a-group') ||
+                        (isAuth().role === 'admin' &&
+                          x.meal === 'Standard Onsite' &&
+                          x.group === 'a-group') ? (
+                          <>
+                            <hr />
+                            <div className="form-control ">
+                              <div className="row p-1">
+                                {/* <Toggle
+                                toggleKey={i}
+                                dataIndex={i}
+                                isOn={x.days.sunday}
+                                toggleId="sunday"
+                                toggleName="Sunday"
+                                handleToggle={handleDayChange('sunday')}
+                              ></Toggle> */}
+                                <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.monday}
+                                  toggleId="monday"
+                                  toggleName="Monday"
+                                  handleToggle={handleDayChange('monday')}
+                                ></Toggle>
+                                <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.tuesday}
+                                  toggleId="tuesday"
+                                  toggleName="Tuesday"
+                                  handleToggle={handleDayChange('tuesday')}
+                                ></Toggle>
+                                {/* <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.wednesday}
+                                  toggleId="wednesday"
+                                  toggleName="Wednesday"
+                                  handleToggle={handleDayChange('wednesday')}
+                                ></Toggle> */}
+                                {/* <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.thursday}
+                                  toggleId="thursday"
+                                  toggleName="Thursday"
+                                  handleToggle={handleDayChange('thursday')}
+                                ></Toggle>
+                                <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.friday}
+                                  toggleId="friday"
+                                  toggleName="Friday"
+                                  handleToggle={handleDayChange('friday')}
+                                ></Toggle> */}
+                                {/* <Toggle
+                                toggleKey={i}
+                                dataIndex={i}
+                                isOn={x.days.saturday}
+                                toggleId="saturday"
+                                toggleName="Saturday"
+                                handleToggle={handleDayChange('saturday')}
+                              ></Toggle> */}
+                              </div>
+                            </div>
+                          </>
+                        ) : (process.browser &&
+                            isAuth().role === 'admin' &&
+                            x.meal === '2on 3off' &&
+                            x.group === 'b-group') ||
+                          (isAuth().role === 'admin' &&
+                            x.meal === 'Standard Onsite' &&
+                            x.group === 'b-group') ? (
+                          <>
+                            <hr />
+                            <div className="form-control ">
+                              <div className="row p-1">
+                                {/* <Toggle
+                                toggleKey={i}
+                                dataIndex={i}
+                                isOn={x.days.sunday}
+                                toggleId="sunday"
+                                toggleName="Sunday"
+                                handleToggle={handleDayChange('sunday')}
+                              ></Toggle> */}
+                                {/* <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.monday}
+                                  toggleId="monday"
+                                  toggleName="Monday"
+                                  handleToggle={handleDayChange('monday')}
+                                ></Toggle> */}
+                                {/* <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.tuesday}
+                                  toggleId="tuesday"
+                                  toggleName="Tuesday"
+                                  handleToggle={handleDayChange('tuesday')}
+                                ></Toggle> */}
+                                <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.wednesday}
+                                  toggleId="wednesday"
+                                  toggleName="Wednesday"
+                                  handleToggle={handleDayChange('wednesday')}
+                                ></Toggle>
+                                <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.thursday}
+                                  toggleId="thursday"
+                                  toggleName="Thursday"
+                                  handleToggle={handleDayChange('thursday')}
+                                ></Toggle>
+                                {/* <Toggle
+                                  toggleKey={i}
+                                  dataIndex={i}
+                                  isOn={x.days.friday}
+                                  toggleId="friday"
+                                  toggleName="Friday"
+                                  handleToggle={handleDayChange('friday')}
+                                ></Toggle> */}
+                                {/* <Toggle
+                                toggleKey={i}
+                                dataIndex={i}
+                                isOn={x.days.saturday}
+                                toggleId="saturday"
+                                toggleName="Saturday"
+                                handleToggle={handleDayChange('saturday')}
+                              ></Toggle> */}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          ''
+                        )}
                         <hr />
                       </>
                     );

@@ -89,7 +89,7 @@ const User = ({ user, token, l, userLinks }) => {
       .map((l, i) => (
         <>
           {moment(l.pickupDate).format('MDD').toString() > // doesn't show receipts older than 3 days past pickupdate (actually mealweek date i need to change pickupdate to mealweek)
-            moment(new Date()).subtract(2, 'day').format('MDD').toString() && (
+            moment(new Date()).subtract(2, 'day').format('MDD').toString()  && (
             // <Link href={`/user/receipt/${l._id}`}>
             //   <a style={{ textDecoration: 'none' }}>
             <div
@@ -336,7 +336,11 @@ const User = ({ user, token, l, userLinks }) => {
                                             .format('MMMM Do')}
                                           *
                                           <br />
-                                          <br />
+                                          {k.days && k.days.monday && <>*Monday*<br/></>}
+                                          {k.days && k.days.tuesday && <>*Tuesday*<br/></>}
+                                          {k.days && k.days.wednesday && <>*Wednesday*<br/></>}
+                                          {k.days && k.days.thursday && <>*Thursday*<br/></>}
+                                          {k.days && k.days.friday && <>*Friday*<br/></>}
 
                                           {/* TYPE:
                                         <br />
@@ -368,6 +372,14 @@ const User = ({ user, token, l, userLinks }) => {
                                             // .add(3, 'day')
                                             .format('MMMM Do')}
                                           *
+                                          <br/>
+                                          
+                                          {k.days && k.days.monday && <>*Monday*<br/></>}
+                                          {k.days && k.days.tuesday && <>*Tuesday*<br/></>}
+                                          {k.days && k.days.wednesday && <>*Wednesday*<br/></>}
+                                          {k.days && k.days.thursday && <>*Thursday*<br/></>}
+                                          {k.days && k.days.friday && <>*Friday*<br/></>}
+                                          
                                         </div>
                                       </div>
                                     </>
