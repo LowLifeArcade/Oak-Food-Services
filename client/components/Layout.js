@@ -427,7 +427,7 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'STAO' && (
             <li
               onClick={() => setShowSidebar(false)}
-              className="nav-item pointer-hand"
+              className="nav-item text-white btn btn-warning pointer-hand"
             >
               <Link href="/admin/link/list">
                 <a className="nav-link text-white">
