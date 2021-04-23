@@ -369,7 +369,7 @@ const Layout = ({ children }) => {
           </li>
 
           <li>
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode !== 'STAO' && (
             <Link href="/user/link/create">
               <a
                 className="nav-link text-white btn btn-warning"
@@ -383,6 +383,7 @@ const Layout = ({ children }) => {
           &nbsp;&nbsp;
           {
           // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
+          process.browser && isAuth().userCode !== 'STAO' &&
           (
             <li
               key="1133"
@@ -411,7 +412,7 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode !== 'STAO' && (
             <li
               onClick={() => setShowSidebar(false)}
               className="nav-item pointer-hand"
@@ -419,6 +420,18 @@ const Layout = ({ children }) => {
               <Link href="/admin/link/list">
                 <a className="nav-link text-white">
                   <i class="far fa-folder-open"></i>
+                </a>
+              </Link>
+            </li>
+          )}
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'STAO' && (
+            <li
+              onClick={() => setShowSidebar(false)}
+              className="nav-item pointer-hand"
+            >
+              <Link href="/admin/link/list">
+                <a className="nav-link text-white">
+                  <i class="far fa-folder-open"></i> &nbsp;&nbsp; Curbside List
                 </a>
               </Link>
             </li>
