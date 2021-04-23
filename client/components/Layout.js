@@ -398,7 +398,7 @@ const Layout = ({ children }) => {
             </li>
           )}
           
-          {process.browser && isAuth() && isAuth().role === 'admin' && (
+          {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode !== 'STAO' && (
             <li
               onClick={() => setShowSidebar(false)}
               className="nav-item pointer-hand"
