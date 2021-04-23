@@ -383,7 +383,7 @@ const Layout = ({ children }) => {
           &nbsp;&nbsp;
           {
           // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
-          process.browser && isAuth().userCode !== 'STAO' &&
+          process.browser &&  isAuth() && isAuth().userCode !== 'STAO' &&
           (
             <li
               key="1133"
