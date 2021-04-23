@@ -721,14 +721,14 @@ const Profile = ({ user, token }) => {
                           handleToggle={handleAllergy('egg')}
                         ></Toggle>
 
-                        <Toggle
+                        {/* <Toggle
                           toggleKey={i}
                           dataIndex={i}
                           isOn={students[i].foodAllergy.sesame}
                           toggleId="sesame"
                           toggleName="Sesame"
                           handleToggle={handleAllergy('sesame')}
-                        ></Toggle>
+                        ></Toggle> */}
 
                         {/* <Toggle
                           toggleKey={i}

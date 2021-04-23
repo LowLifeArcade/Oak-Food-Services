@@ -100,6 +100,11 @@ const Admin = ({ token, user, initRequests }) => {
     console.log('req ', meals);
   };
 
+  const bagsCounter = () =>
+    state.meals
+      .filter((m) => m.meal !== 'None')
+      .filter((m) => m.pickupOption !== 'Lunch Onsite').length;
+
   const mealCounter = (meal, pickupOption) =>
     state.meals.filter(
       (m) =>
@@ -176,7 +181,8 @@ const Admin = ({ token, user, initRequests }) => {
         // m.group === 'distance-learning' ||
         // m.group === 'distance-learning' ||
         m.pickupOption === 'Lunch Only' ||
-        m.pickupOption === 'Breakfast and Lunch'
+        m.pickupOption === 'Breakfast and Lunch' ||
+        m.pickupOption === 'Two Onsite / Three Breakfast and Lunches'
     ).length;
   const pickupMealsForBreakfast = () =>
     meals.filter(
@@ -621,18 +627,18 @@ const Admin = ({ token, user, initRequests }) => {
                 {<canvas className=" " id="completedChart"></canvas>}
               </div>
               <div className="col-sm-4 p-4">
-              <CSVLink
-              className=""
-              filename={`users_not_ordered_for_${pickupDate}-CSV`}
-              headers={emailHeaders}
-              data={userList.filter(
-                (user) =>
-                  !requests
-                    .map((request) => request.postedBy.email)
-                    .includes(user.email)
-              )}
-            >
-                {<canvas className=" " id="polarArea"></canvas>}
+                <CSVLink
+                  className=""
+                  filename={`users_not_ordered_for_${pickupDate}-CSV`}
+                  headers={emailHeaders}
+                  data={userList.filter(
+                    (user) =>
+                      !requests
+                        .map((request) => request.postedBy.email)
+                        .includes(user.email)
+                  )}
+                >
+                  {<canvas className=" " id="polarArea"></canvas>}
                 </CSVLink>
               </div>
             </div>
@@ -683,7 +689,7 @@ const Admin = ({ token, user, initRequests }) => {
             <CSVLink
               className="btn btn-sm btn-outline-dark text float-right mr-3"
               headers={emailHeaders}
-              filename='all_registered_users_email_list-CSV'
+              filename="all_registered_users_email_list-CSV"
               data={userList}
             >
               {/* {!requests.map((request) => request.postedBy.email)} */}
@@ -706,7 +712,7 @@ const Admin = ({ token, user, initRequests }) => {
             <CSVLink
               className="btn btn-sm btn-outline-dark text float-right mr-3"
               headers={emailHeaders}
-              filename='all_registered_users_email_list-CSV'
+              filename="all_registered_users_email_list-CSV"
               data={userList}
             >
               {/* {!requests.map((request) => request.postedBy.email)} */}
@@ -747,7 +753,7 @@ const Admin = ({ token, user, initRequests }) => {
             {user.userCode === 'DOOB' && (
               <CSVLink
                 className="badge btn btn-sm btn-outline-dark text float-right"
-                filename='all_curbside_orders_email_list-CSV'
+                filename="all_curbside_orders_email_list-CSV"
                 headers={emailHeaders}
                 data={userList.filter((user) =>
                   requests
@@ -762,7 +768,7 @@ const Admin = ({ token, user, initRequests }) => {
             {user.userCode === 'LYF' && (
               <CSVLink
                 className="badge btn btn-sm btn-outline-dark text float-right "
-                filename='all_curbside_orders_email_list-CSV'
+                filename="all_curbside_orders_email_list-CSV"
                 headers={emailHeaders}
                 data={userList.filter((user) =>
                   requests
@@ -783,7 +789,7 @@ const Admin = ({ token, user, initRequests }) => {
                 <CSVLink
                   className="badge btn btn-sm btn-outline-dark text float-right"
                   headers={emailHeaders}
-                  filename='unfulfilled_curbside_email_list-CSV'
+                  filename="unfulfilled_curbside_email_list-CSV"
                   data={userList.filter((user) =>
                     requests
                       .filter(
@@ -803,7 +809,7 @@ const Admin = ({ token, user, initRequests }) => {
                 <CSVLink
                   className="badge btn btn-sm btn-outline-dark text float-right"
                   headers={emailHeaders}
-                  filename='unfulfilled_curbside_email_list-CSV'
+                  filename="unfulfilled_curbside_email_list-CSV"
                   data={userList.filter((user) =>
                     requests
                       .filter(
@@ -833,6 +839,7 @@ const Admin = ({ token, user, initRequests }) => {
             <hr />
             <b className="h5">Curbside Kitchen Prep Data</b>
             <div className="pt-3"></div>
+            <b className="text-danger">{bagsCounter()}</b> - Total Bags <p />
             <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
             Curbside Lunches <p />
             <b className="text-danger">{pickupMealsForBreakfast()}</b> -
@@ -848,7 +855,7 @@ const Admin = ({ token, user, initRequests }) => {
               <div className="p-1"></div> */}
           </div>
           <div
-          className='mt-3'
+            className="mt-3"
             id="inner"
             style={{
               // color: 'grey',
@@ -948,13 +955,13 @@ const Admin = ({ token, user, initRequests }) => {
             Individual Curbside Breakfasts
             <hr/>
             <hr/> */}
-            <b className="h3 text-danger">{allOnsiteMeals()}</b> - <b className="h3 ">All Onsite</b>{' '}
-            <hr />
-              <b className='h5'>Onsite Kitchen Prep Data</b>
-              <div className="pt-3"></div>
-              <b className="text-danger">{allIndividualOnsiteMeals()}</b> -
-              Individual Onsite Meals
-              <div className="p-1"></div>
+            <b className="h3 text-danger">{allOnsiteMeals()}</b> -{' '}
+            <b className="h3 ">All Onsite</b> <hr />
+            <b className="h5">Onsite Kitchen Prep Data</b>
+            <div className="pt-3"></div>
+            <b className="text-danger">{allIndividualOnsiteMeals()}</b> -
+            Individual Onsite Meals
+            <div className="p-1"></div>
           </div>
         </div>
         <div className="col-sm-4 pb-4" id="standardRequests">
@@ -970,7 +977,7 @@ const Admin = ({ token, user, initRequests }) => {
             }}
           >
             <b className="h3">Curbside Requests</b>
-            <hr/>
+            <hr />
             <b className="h5">Standard Requests</b>
             <hr />
             <div className="">
@@ -1008,57 +1015,55 @@ const Admin = ({ token, user, initRequests }) => {
           <hr />
           {lunchOnlyMealCounter('Vegetarian')} - <b>LUNCH ONLY</b> Vegetarian */}
                 <hr />
-
                 <b className="h5">Special Requests</b>
-            <hr />
-            <div className="">
-              <h6>
-                {mealCounter('Vegan B', 'Breakfast and Lunch')} - <b>Vegan</b>{' '}
-                with Breakfast
-                <br />
-                <br />
-                {mealCounter(
-                  'Gluten Free with Breakfast',
-                  'Breakfast and Lunch'
-                )}{' '}
-                - <b>Gluten Free</b> with Breakfast
-                <br />
-                <br />
-                {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
-                <b>Gluten Free Dairy Free</b>
-                <br />
-                <br />
-                {mealCounter(
-                  '2on 3off',
-                  'Two Onsite / Three Breakfast and Lunches'
-                )}{' '}
-                - <b>Two On Three Off</b>
-                <br />
-                <br />
-                {sesameMealCounter('Standard Sesame Free')} - Standard Sesame
-                Free Meals
-                <br />
-                <br />
-                {sesameMealCounter('Vegetarian Sesame Free')} - Vegetarian
-                Sesame Free Meals
-                <br />
-                <br />
-                {sesameMealCounter('Vegan Sesame Free')} - Vegan Sesame Free
-                Meals
-                <br />
-                <br />
-                {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
-                Meals
-                <br />
-                <br />
-                {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
-                Meals
-                <br />
-                <br />
-                {mealCounter('None', 'None')} - None Meals
-              </h6>
-            </div>
-
+                <hr />
+                <div className="">
+                  <h6>
+                    {mealCounter('Vegan B', 'Breakfast and Lunch')} -{' '}
+                    <b>Vegan</b> with Breakfast
+                    <br />
+                    <br />
+                    {mealCounter(
+                      'Gluten Free with Breakfast',
+                      'Breakfast and Lunch'
+                    )}{' '}
+                    - <b>Gluten Free</b> with Breakfast
+                    <br />
+                    <br />
+                    {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
+                    <b>Gluten Free Dairy Free</b>
+                    <br />
+                    <br />
+                    {mealCounter(
+                      '2on 3off',
+                      'Two Onsite / Three Breakfast and Lunches'
+                    )}{' '}
+                    - <b>Two On Three Off</b>
+                    <br />
+                    <br />
+                    {sesameMealCounter('Standard Sesame Free')} - Standard
+                    Sesame Free Meals
+                    <br />
+                    <br />
+                    {sesameMealCounter('Vegetarian Sesame Free')} - Vegetarian
+                    Sesame Free Meals
+                    <br />
+                    <br />
+                    {sesameMealCounter('Vegan Sesame Free')} - Vegan Sesame Free
+                    Meals
+                    <br />
+                    <br />
+                    {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
+                    Meals
+                    <br />
+                    <br />
+                    {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
+                    Meals
+                    <br />
+                    <br />
+                    {mealCounter('None', 'None')} - None Meals
+                  </h6>
+                </div>
               </h6>
             </div>
           </div>
@@ -1155,9 +1160,9 @@ const Admin = ({ token, user, initRequests }) => {
               // borderBlock: '5px',
             }}
           >
-              <b className='h4'>Onsite School Numbers</b>
+            <b className="h4">Onsite School Numbers</b>
             <div className="pl-3">
-            <hr/>
+              <hr />
               <h6>
                 <b className="text-danger">
                   {pickupMealsBySchool('BES', 'a-group') +
