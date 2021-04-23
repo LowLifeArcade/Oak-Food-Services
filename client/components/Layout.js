@@ -427,10 +427,10 @@ const Layout = ({ children }) => {
           {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode === 'STAO' && (
             <li
               onClick={() => setShowSidebar(false)}
-              className="nav-item text-white btn btn-warning pointer-hand"
+              className="nav-item  pointer-hand"
             >
               <Link href="/admin/link/list">
-                <a className="nav-link text-white">
+                <a className="nav-link text-white btn btn-warning">
                   <i class="far fa-folder-open"></i> &nbsp;&nbsp; Curbside List
                 </a>
               </Link>
