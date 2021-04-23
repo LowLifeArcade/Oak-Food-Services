@@ -108,8 +108,7 @@ const Admin = ({ token, user, initRequests }) => {
     ).length;
   const sesameMealCounter = (meal) =>
     state.meals.filter(
-      (m) =>
-        m.meal == meal && m.meal !== 'None' 
+      (m) => m.meal == meal && m.meal !== 'None'
       //  && m.pickupOption !== 'Lunch Only'
     ).length;
   const lunchOnlymealCounter = (meal, pickupOption) =>
@@ -283,7 +282,7 @@ const Admin = ({ token, user, initRequests }) => {
 
   const handleDisabledDates = ({ date, view }) => date.getDay() !== 1;
 
-  const myChartRef = useRef();
+  // const myChartRef = useRef();
   // let studentsChart = '';
   // let studentsChart2 = '';
   // let studentsChart3 = '';
@@ -309,12 +308,8 @@ const Admin = ({ token, user, initRequests }) => {
             pickupMealsBySchool('MCMS', 'a-group') +
             pickupMealsBySchool('MCMS', 'b-group')
           }`,
-          `OPHS ${
-            pickupMealsBySchool('OPHS', 'a-group') 
-          }`,
-          `OVHS ${
-            pickupMealsBySchool('OVHS', 'a-group') 
-          }`,
+          `OPHS ${pickupMealsBySchool('OPHS', 'a-group')}`,
+          `OVHS ${pickupMealsBySchool('OVHS', 'a-group')}`,
         ],
         datasets: [
           {
@@ -358,9 +353,98 @@ const Admin = ({ token, user, initRequests }) => {
           },
         ],
       },
-      options: [],
+      options: { responsive: true },
     });
     let studentsChart2 = new Chart(document.getElementById('myBarChart'), {
+      type: 'bar', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+      data: {
+        labels: [
+          'Standard ' + `${mealCounter('Standard', 'Breakfast and Lunch')}`,
+          `Vegetarian ${mealCounter('Vegetarian', 'Breakfast and Lunch')}`,
+          `Vegan ${mealCounter('Vegan', 'Lunch Only')}`,
+          `Gluten Free ${mealCounter('Gluten Free', 'Lunch Only')}`,
+          `Dairy Free ${mealCounter('Standard Dairy Free', 'Lunch Only')}`,
+          `Breakfast Only ${mealBreakfastOnlyCounter('Standard Onsite')}`,
+        ],
+        datasets: [
+          {
+            label: 'Number of Curbside Meals',
+            data: [
+              parseInt(mealCounter('Standard', 'Breakfast and Lunch'), 10),
+              parseInt(mealCounter('Vegetarian', 'Breakfast and Lunch'), 10),
+              parseInt(mealCounter('Vegan', 'Lunch Only'), 10),
+              parseInt(mealCounter('Gluten Free', 'Lunch Only'), 10),
+              parseInt(mealCounter('Standard Dairy Free', 'Lunch Only'), 10),
+              parseInt(mealBreakfastOnlyCounter('Standard Onsite'), 10),
+            ],
+            // backgroundColor: 'green'
+            backgroundColor: [
+              '#b8d8d8',
+              '#7a9e9f',
+              '#4f6367',
+              '#eef5db',
+              '#fe5f55',
+              '#c5dfc4',
+            ],
+            borderWidth: 1,
+            hoverBorderWidth: '3',
+            hoverBorderColor: '#000',
+            // borderColor:
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            // position: 'top',
+          },
+          title: {
+            display: false,
+            text: 'Requests By School',
+          },
+        },
+      },
+    });
+    let studentsChart3 = new Chart(document.getElementById('completedChart'), {
+      type: 'pie', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+      data: {
+        labels: [
+          `Unfullfilled ${allOpenPickupMeals()}`,
+          `Fullfilled ${allCompletedPickupMeals()}`,
+        ],
+        datasets: [
+          {
+            label: 'Curbside',
+            data: [
+              parseInt(allOpenPickupMeals(), 10),
+              parseInt(allCompletedPickupMeals(), 10),
+            ],
+            // backgroundColor: 'green'
+            backgroundColor: ['#fe5f55', '#c5dfc4'],
+            borderWidth: 1,
+            hoverBorderWidth: '3',
+            hoverBorderColor: '#000',
+            // borderColor:
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            // position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Completed Curbside Requests',
+          },
+        },
+      },
+    });
+    let studentsChart4 = new Chart(document.getElementById('polarArea'), {
       type: 'radar', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
       data: {
         labels: ['BES', 'OHES', 'ROES', 'MCMS', 'OPHS', 'OVHS'],
@@ -421,48 +505,12 @@ const Admin = ({ token, user, initRequests }) => {
         },
       },
     });
-    let studentsChart3 = new Chart(document.getElementById('completedChart'), {
-      type: 'pie', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
-      data: {
-        labels: [
-          `Unfullfilled ${allOpenPickupMeals()}`,
-          `Fullfilled ${allCompletedPickupMeals()}`,
-        ],
-        datasets: [
-          {
-            label: 'Curbside',
-            data: [
-              parseInt(allOpenPickupMeals(), 10),
-              parseInt(allCompletedPickupMeals(), 10),
-            ],
-            // backgroundColor: 'green'
-            backgroundColor: ['#fe5f55', '#c5dfc4'],
-            borderWidth: 1,
-            hoverBorderWidth: '3',
-            hoverBorderColor: '#000',
-            // borderColor:
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true,
-            // position: 'top',
-          },
-          title: {
-            display: true,
-            text: 'Completed Requests',
-          },
-        },
-      },
-    });
 
     return () => {
       studentsChart.destroy();
       studentsChart2.destroy();
       studentsChart3.destroy();
+      studentsChart4.destroy();
     };
   }, [meals]);
 
@@ -476,57 +524,78 @@ const Admin = ({ token, user, initRequests }) => {
         ></script>
       </Head> */}
       <br />
-      <div className="d-flex">
-        <div className="col-md-12">
-          <div className="col-md-3 float-right">
-            {<canvas className=" float-right" id="myChart"></canvas>}
+      <div
+        className=""
+        style={{
+          // color: 'grey',
+          border: '1px solid grey',
+          padding: '30px',
+          boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
+          borderRadius: '8px',
+          borderBlock: '5px',
+        }}
+      >
+        <div className="row">
+          <div className="col-sm-4 p-4">
+            {<canvas className=" " id="myChart"></canvas>}
           </div>
-          <div className="col-md-5 float-right">
-            {<canvas className=" float-right" id="myBarChart"></canvas>}
-          </div>
-          <div className="col-md-5 float-right">
-            {<canvas className=" float-right" id="completedChart"></canvas>}
-          </div>
-          <h3>
-            Friday Pickup{' '}
-            {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
-            <br />
-            Week of {`${pickupDate}`}
-          </h3>
 
+          <div className="col-sm-4 p-4">
+            {<canvas className=" " id="completedChart"></canvas>}
+          </div>
+          <div className="col-sm-4 p-4">
+            {<canvas className=" " id="polarArea"></canvas>}
+          </div>
+        </div>
+        <br />
+        <br />
+        <div className="">
           {/* <hr className="col-md-3"/> */}
-          <div className="">
-            <div className="">
-              <Calendar
-                // className={styles.reactCalendar}
-                onChange={(e) => onDateChange(e)}
-                // activeStartDate={twoWeeksFromNow}
-                // maxDate={summerFromNow}
-                // activeStartDate={moment(new Date()).add(14, 'day').format('l')}
-                tileDisabled={handleDisabledDates}
-                value={new Date()}
-                value={''}
-              />
+
+          <div className="row align-items-center">
+            <div className="col">
+              <h3 className="">
+                Friday Pickup{' '}
+                {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
+                <br />
+                Week of {`${pickupDate}`}
+              </h3>
+              <div className="">
+                <Calendar
+                  // className={styles.reactCalendar}
+                  onChange={(e) => onDateChange(e)}
+                  // activeStartDate={twoWeeksFromNow}
+                  // maxDate={summerFromNow}
+                  // activeStartDate={moment(new Date()).add(14, 'day').format('l')}
+                  tileDisabled={handleDisabledDates}
+                  value={new Date()}
+                  value={''}
+                />
+              </div>
+              <button onClick={(e) => resetTimeSelect(e)}>All</button>
+              <button onClick={(e) => handleTimeSelect(e, '7am-9am')}>
+                7am-9am
+              </button>
+              <button onClick={(e) => handleTimeSelect(e, '11am-1pm')}>
+                11am-1pm
+              </button>
+              <button onClick={(e) => handleTimeSelect(e, '4pm-6pm')}>
+                4pm-6pm
+              </button>
             </div>
-            <button onClick={(e) => resetTimeSelect(e)}>All</button>
-            <button onClick={(e) => handleTimeSelect(e, '7am-9am')}>
-              7am-9am
-            </button>
-            <button onClick={(e) => handleTimeSelect(e, '11am-1pm')}>
-              11am-1pm
-            </button>
-            <button onClick={(e) => handleTimeSelect(e, '4pm-6pm')}>
-              4pm-6pm
-            </button>
-            <br />
-            {/* <button onClick={(e) => handleUserList(e)}>User List</button>
+            <div className="col-sm-7 pt-4 float-right">
+              {<canvas className=" " id="myBarChart"></canvas>}
+              <br />
+              {/* <button onClick={(e) => handleUserList(e)}>User List</button>
             {error && showErrorMessage(error)} */}
+            </div>
           </div>
         </div>
       </div>
 
-      <hr />
-      <h2>
+      {/* <hr /> */}
+
+      <h2 className="pt-5">
         <b className="text-danger">{requests.length}</b> - All (Curbside and
         Onsite)
       </h2>
@@ -538,82 +607,90 @@ const Admin = ({ token, user, initRequests }) => {
           {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
         </b>{' '}
         - All Curbside
-        { user.userCode === 'DOOB' &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList.filter((user) =>
-            requests
-              .filter((request) => request.pickupTime != 'Cafeteria')
-              .map((request) => request.postedBy.email)
-              .includes(user.email)
-          )}
-        >
-          Curbside CSV{' '}
-        </CSVLink>}
-        {user.userCode === 'LYF'  &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList.filter((user) =>
-            requests
-              .filter((request) => request.pickupTime != 'Cafeteria')
-              .map((request) => request.postedBy.email)
-              .includes(user.email)
-          )}
-        >
-          Curbside CSV{' '}
-        </CSVLink>}
+        {user.userCode === 'DOOB' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList.filter((user) =>
+              requests
+                .filter((request) => request.pickupTime != 'Cafeteria')
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+            )}
+          >
+            Curbside CSV{' '}
+          </CSVLink>
+        )}
+        {user.userCode === 'LYF' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList.filter((user) =>
+              requests
+                .filter((request) => request.pickupTime != 'Cafeteria')
+                .map((request) => request.postedBy.email)
+                .includes(user.email)
+            )}
+          >
+            Curbside CSV{' '}
+          </CSVLink>
+        )}
         <p />
         <hr />
         <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
         Curbside
-        {user.userCode === 'LYF'  &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList.filter((user) =>
-            requests
-              .filter(
-                (request) =>
-                  request.pickupTime != 'Cafeteria' &&
-                  request.orderStatus != true
-              )
-              .map((request) => request.postedBy.email)
-              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-              .includes(user.email)
-          )}
-        >
-          Unfulfilled{' '}
-          {/* {userList.filter((user) =>
-            requests
-              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
-              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-              .includes(user.email)
-              ).length} */}
-          CSV{' '}
-        </CSVLink>}
-        { user.userCode === 'DOOB' &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList.filter((user) =>
-            requests
-              .filter(
-                (request) =>
-                  request.pickupTime != 'Cafeteria' &&
-                  request.orderStatus != true
-              )
-              .map((request) => request.postedBy.email)
-              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-              .includes(user.email)
-          )}
-        >
-          Unfulfilled{' '}
-          {/* {userList.filter((user) =>
+        {user.userCode === 'LYF' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList.filter((user) =>
+              requests
+                .filter(
+                  (request) =>
+                    request.pickupTime != 'Cafeteria' &&
+                    request.orderStatus != true
+                )
+                .map((request) => request.postedBy.email)
+                // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                .includes(user.email)
+            )}
+          >
+            Unfulfilled{' '}
+            {/* {userList.filter((user) =>
             requests
               .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
               // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
               .includes(user.email)
               ).length} */}
-          CSV{' '}
-        </CSVLink>}
+            CSV{' '}
+          </CSVLink>
+        )}
+        {user.userCode === 'DOOB' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList.filter((user) =>
+              requests
+                .filter(
+                  (request) =>
+                    request.pickupTime != 'Cafeteria' &&
+                    request.orderStatus != true
+                )
+                .map((request) => request.postedBy.email)
+                // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                .includes(user.email)
+            )}
+          >
+            Unfulfilled{' '}
+            {/* {userList.filter((user) =>
+            requests
+              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
+              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+              .includes(user.email)
+              ).length} */}
+            CSV{' '}
+          </CSVLink>
+        )}
         <p />
         <b className="text-danger">{allCompletedPickupMeals()}</b> - Fulfilled
         Curbside
@@ -687,20 +764,17 @@ const Admin = ({ token, user, initRequests }) => {
           )}{' '}
           - <b>Two On Three Off</b>
           <hr />
-          {sesameMealCounter('Standard Sesame Free')} -
-          Standard Sesame Free Meals
+          {sesameMealCounter('Standard Sesame Free')} - Standard Sesame Free
+          Meals
           <hr />
-          {sesameMealCounter('Vegetarian Sesame Free')} -
-          Vegetarian Sesame Free Meals
+          {sesameMealCounter('Vegetarian Sesame Free')} - Vegetarian Sesame Free
+          Meals
           <hr />
-          {sesameMealCounter('Vegan Sesame Free')} - Vegan
-          Sesame Free Meals
+          {sesameMealCounter('Vegan Sesame Free')} - Vegan Sesame Free Meals
           <hr />
-          {sesameMealCounter('Sesame Dairy Free')} - Sesame
-          Dairy Free Meals
+          {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free Meals
           <hr />
-          {sesameMealCounter('Sesame Dairy Free')} - Sesame
-          Dairy Free Meals
+          {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free Meals
           <hr />
           {mealCounter('None', 'None')} - None Meals
           <hr />
@@ -788,23 +862,11 @@ const Admin = ({ token, user, initRequests }) => {
           </b>{' '}
           - OVHS
           {/* </div> */}
-          {user.userCode === 'DOOB' &&  <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList.filter((user) =>
-              requests
-                .filter((request) =>
-                  request.mealRequest.filter(
-                    (meal) => meal.schoolName === 'OVHS'
-                  )
-                )
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-            )}
-          >
-            OVHS CSV{' '}
-            {
-              userList.filter((user) =>
+          {user.userCode === 'DOOB' && (
+            <CSVLink
+              className="btn btn-sm btn-outline-dark text float-right"
+              headers={emailHeaders}
+              data={userList.filter((user) =>
                 requests
                   .filter((request) =>
                     request.mealRequest.filter(
@@ -813,26 +875,28 @@ const Admin = ({ token, user, initRequests }) => {
                   )
                   .map((request) => request.postedBy.email)
                   .includes(user.email)
-              ).length
-            }{' '}
-          </CSVLink>}
-          {user.userCode === 'LYF'  &&  <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList.filter((user) =>
-              requests
-                .filter((request) =>
-                  request.mealRequest.filter(
-                    (meal) => meal.schoolName === 'OVHS'
-                  )
-                )
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-            )}
-          >
-            OVHS CSV{' '}
-            {
-              userList.filter((user) =>
+              )}
+            >
+              OVHS CSV{' '}
+              {
+                userList.filter((user) =>
+                  requests
+                    .filter((request) =>
+                      request.mealRequest.filter(
+                        (meal) => meal.schoolName === 'OVHS'
+                      )
+                    )
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                ).length
+              }{' '}
+            </CSVLink>
+          )}
+          {user.userCode === 'LYF' && (
+            <CSVLink
+              className="btn btn-sm btn-outline-dark text float-right"
+              headers={emailHeaders}
+              data={userList.filter((user) =>
                 requests
                   .filter((request) =>
                     request.mealRequest.filter(
@@ -841,24 +905,42 @@ const Admin = ({ token, user, initRequests }) => {
                   )
                   .map((request) => request.postedBy.email)
                   .includes(user.email)
-              ).length
-            }{' '}
-          </CSVLink>}
+              )}
+            >
+              OVHS CSV{' '}
+              {
+                userList.filter((user) =>
+                  requests
+                    .filter((request) =>
+                      request.mealRequest.filter(
+                        (meal) => meal.schoolName === 'OVHS'
+                      )
+                    )
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                ).length
+              }{' '}
+            </CSVLink>
+          )}
           <hr />
         </h6>
         <br />
-        {user.userCode === 'DOOB' &&  <h5>
-          <b className="text-danger">
-            {userListFiltered().length} users who have not ordered yet for{' '}
-            {moment(pickupDate).format('MMMM Do')}
-          </b>
-        </h5>}
-        {user.userCode === 'LYF'  &&  <h5>
-          <b className="text-danger">
-            {userListFiltered().length} users who have not ordered yet for{' '}
-            {moment(pickupDate).format('MMMM Do')}
-          </b>
-        </h5>}
+        {user.userCode === 'DOOB' && (
+          <h5>
+            <b className="text-danger">
+              {userListFiltered().length} users who have not ordered yet for{' '}
+              {moment(pickupDate).format('MMMM Do')}
+            </b>
+          </h5>
+        )}
+        {user.userCode === 'LYF' && (
+          <h5>
+            <b className="text-danger">
+              {userListFiltered().length} users who have not ordered yet for{' '}
+              {moment(pickupDate).format('MMMM Do')}
+            </b>
+          </h5>
+        )}
         {/* <h5>email list</h5> */}
         {/* {console.log('test', userList.filter(
             (user) =>
@@ -866,71 +948,79 @@ const Admin = ({ token, user, initRequests }) => {
                 .map((request) => request.postedBy.email)
                 .includes(user.email)
           ))} */}
-        {user.userCode === 'LYF'  &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text"
-          headers={emailHeaders}
-          data={userList.filter(
-            (user) =>
-              !requests
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-          )}
-        >
-          Email List of users who haven't ordered CSV{' '}
-        </CSVLink>}
-        { user.userCode === 'DOOB' &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text"
-          headers={emailHeaders}
-          data={userList.filter(
-            (user) =>
-              !requests
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-          )}
-        >
-          Email List of users who haven't ordered CSV{' '}
-        </CSVLink>}
+        {user.userCode === 'LYF' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text"
+            headers={emailHeaders}
+            data={userList.filter(
+              (user) =>
+                !requests
+                  .map((request) => request.postedBy.email)
+                  .includes(user.email)
+            )}
+          >
+            Email List of users who haven't ordered CSV{' '}
+          </CSVLink>
+        )}
+        {user.userCode === 'DOOB' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text"
+            headers={emailHeaders}
+            data={userList.filter(
+              (user) =>
+                !requests
+                  .map((request) => request.postedBy.email)
+                  .includes(user.email)
+            )}
+          >
+            Email List of users who haven't ordered CSV{' '}
+          </CSVLink>
+        )}
         &nbsp;&nbsp;
-        {user.userCode === 'LYF'  &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList}
-        >
-          {/* {!requests.map((request) => request.postedBy.email)} */}
-          Full Email List of {userList.length} users CSV{' '}
-          {console.log(
-            'test',
-            userList.filter((user) =>
-              requests
-                .filter((request) => request.pickupTime != 'Cafeteria')
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-            )
-          )}
-          {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
-          {/* {console.log('test2', !requests
+        {user.userCode === 'LYF' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList}
+          >
+            {/* {!requests.map((request) => request.postedBy.email)} */}
+            Full Email List of {userList.length} users CSV{' '}
+            {console.log(
+              'test',
+              userList.filter((user) =>
+                requests
+                  .filter((request) => request.pickupTime != 'Cafeteria')
+                  .map((request) => request.postedBy.email)
+                  .includes(user.email)
+              )
+            )}
+            {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+            {/* {console.log('test2', !requests
                 .map((request) => request.postedBy.email).includes(user.email))} */}
-        </CSVLink>}
-        {user.userCode === 'DOOB'  &&  <CSVLink
-          className="btn btn-sm btn-outline-dark text float-right"
-          headers={emailHeaders}
-          data={userList}
-        >
-          {/* {!requests.map((request) => request.postedBy.email)} */}
-          Full Email List of {userList.length} users CSV{' '}
-          {console.log(
-            'test',
-            userList.filter((user) =>
-              requests
-                .filter((request) => request.pickupTime != 'Cafeteria')
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-            )
-          )}
-          {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
-          {/* {console.log('test2', !requests
+          </CSVLink>
+        )}
+        {user.userCode === 'DOOB' && (
+          <CSVLink
+            className="btn btn-sm btn-outline-dark text float-right"
+            headers={emailHeaders}
+            data={userList}
+          >
+            {/* {!requests.map((request) => request.postedBy.email)} */}
+            Full Email List of {userList.length} users CSV{' '}
+            {console.log(
+              'test',
+              userList.filter((user) =>
+                requests
+                  .filter((request) => request.pickupTime != 'Cafeteria')
+                  .map((request) => request.postedBy.email)
+                  .includes(user.email)
+              )
+            )}
+            {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+            {/* {console.log('test2', !requests
                 .map((request) => request.postedBy.email).includes(user.email))} */}
-        </CSVLink>}
+          </CSVLink>
+        )}
         <br />
         <br />
         {/* Curbside only{' '}
@@ -955,26 +1045,30 @@ const Admin = ({ token, user, initRequests }) => {
         </CSVLink> */}
         <br />
         <br />
-        {user.userCode === 'LYF'  &&  <table className="table table-striped table-sm table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">User</th>
-              <th scope="col">User Code</th>
-              <th scope="col">Email</th>
-            </tr>
-          </thead>
-          <tbody>{userListFiltered()}</tbody>
-        </table>}
-        { user.userCode === 'DOOB' &&  <table className="table table-striped table-sm table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">User</th>
-              <th scope="col">User Code</th>
-              <th scope="col">Email</th>
-            </tr>
-          </thead>
-          <tbody>{userListFiltered()}</tbody>
-        </table>}
+        {user.userCode === 'LYF' && (
+          <table className="table table-striped table-sm table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">User</th>
+                <th scope="col">User Code</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            <tbody>{userListFiltered()}</tbody>
+          </table>
+        )}
+        {user.userCode === 'DOOB' && (
+          <table className="table table-striped table-sm table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">User</th>
+                <th scope="col">User Code</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            <tbody>{userListFiltered()}</tbody>
+          </table>
+        )}
       </div>
     </Layout>
   );

@@ -653,6 +653,19 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     }
   };
 
+  // console.log(
+  //   'students filter test',
+  //   linksByDate
+  //     .filter(
+  //       (l) =>
+  //         l.postedBy.students
+  //           .map((s) => s.name.toLowerCase()).toString()
+  //           .includes(search.toLowerCase())
+  //       // .includes(search.toLowerCase())
+  //     )
+  //     .map((l) => l.pickupTime)
+  // );
+
   const listOfLinks = (search, searchPickupTime, searchByStatus) => (
     <table className="table table-striped table table-bordered">
       <thead>
@@ -667,14 +680,23 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           .filter((l) => l.pickupTime.includes(searchPickupTime))
           .filter((l) => l.pickupTime != 'Cafeteria')
           .filter((l) => l.orderStatus.toString().includes(searchByStatus))
-          // .filter((l) => (l.postedBy.students.map(student => student.name.toLowerCase().includes(search.toLowerCase())).includes(true)))
           .filter(
             (l) =>
+              l.postedBy.students
+                .map((s) => s.name.toLowerCase()).toString()
+                .includes(search.toLowerCase()) ||
               l.postedBy.lastName
                 .toLowerCase()
                 .includes(search.toLowerCase()) ||
               l.userCode.toLowerCase().includes(search.toLowerCase())
           )
+          // .filter(
+          //   (l) =>
+          //     l.postedBy.lastName
+          //       .toLowerCase()
+          //       .includes(search.toLowerCase()) ||
+          //     l.userCode.toLowerCase().includes(search.toLowerCase())
+          // )
           .map((l, i) => (
             <>
               <tr key={i}>
@@ -1049,8 +1071,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
               </span>
               {/* {console.log('csv offsite data near button', csvOffsiteData)} */}
               {orderType === 'Onsite'
-                ? 
-                  (isAuth().userCode === 'DOOB' && (
+                ? isAuth().userCode === 'DOOB' && (
                     // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
                     <CSVLink
                       className="btn btn-sm btn-outline-dark text float-right"
@@ -1060,9 +1081,8 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                       <i class="fas fa-file-export"></i>
                       &nbsp;Export csv
                     </CSVLink>
-                  ))
-                : 
-                  (isAuth().userCode === 'DOOB' && (
+                  )
+                : isAuth().userCode === 'DOOB' && (
                     <CSVLink
                       className="btn btn-sm btn-outline-dark text float-right"
                       headers={pickupHeaders}
@@ -1071,10 +1091,9 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                       <i class="fas fa-file-export"></i>
                       &nbsp;Export csv
                     </CSVLink>
-                  ))}
+                  )}
               {orderType === 'Onsite'
-                ? (isAuth().userCode === 'LYF' 
-                   && (
+                ? isAuth().userCode === 'LYF' && (
                     // <button type='button' className='btn btn-sm btn btn-outline-dark text float-right print'
                     <CSVLink
                       className="btn btn-sm btn-outline-dark text float-right"
@@ -1084,9 +1103,8 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                       <i class="fas fa-file-export"></i>
                       &nbsp;Export csv
                     </CSVLink>
-                  ))
-                : (isAuth().userCode === 'LYF' 
-                   && (
+                  )
+                : isAuth().userCode === 'LYF' && (
                     <CSVLink
                       className="btn btn-sm btn-outline-dark text float-right"
                       headers={pickupHeaders}
@@ -1095,70 +1113,65 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                       <i class="fas fa-file-export"></i>
                       &nbsp;Export csv
                     </CSVLink>
-                  ))}
+                  )}
 
+              {isAuth().userCode === 'DOOB' && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-dark text float-right print"
+                  onClick={(e) => window.print()}
+                >
+                  <i class="fas fa-print"></i>
+                  &nbsp;Print
+                </button>
+              )}
+              {isAuth().userCode === 'LYF' && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-dark text float-right print"
+                  onClick={(e) => window.print()}
+                >
+                  <i class="fas fa-print"></i>
+                  &nbsp;Print
+                </button>
+              )}
 
-              {
-                (isAuth().userCode === 'DOOB' && (
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-outline-dark text float-right print"
-                    onClick={(e) => window.print()}
-                  >
-                    <i class="fas fa-print"></i>
-                    &nbsp;Print
-                  </button>
-                ))}
-              {(isAuth().userCode === 'LYF' && (
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-outline-dark text float-right print"
-                    onClick={(e) => window.print()}
-                  >
-                    <i class="fas fa-print"></i>
-                    &nbsp;Print
-                  </button>
-                ))}
-
-              {
-                (isAuth().userCode === 'DOOB' && orderType === 'Pickup' && (
-                  <button
-                    className="btn btn-warning fas fa-car-side"
-                    onClick={handleSearch('orderType')}
-                    value="Onsite"
-                  >
-                    &nbsp; Curbside
-                  </button>
-                ))}
-              {(isAuth().userCode === 'LYF'  && orderType === 'Pickup' && (
-                  <button
-                    className="btn btn-warning fas fa-car-side"
-                    onClick={handleSearch('orderType')}
-                    value="Onsite"
-                  >
-                    &nbsp; Curbside
-                  </button>
-                ))}
-              {
-                (isAuth().userCode === 'DOOB' && orderType === 'Onsite' && (
-                  <button
-                    className="btn  btn-warning fas fa-school"
-                    onClick={handleSearch('orderType')}
-                    value="Pickup"
-                  >
-                    &nbsp; Onsite
-                  </button>
-                ))}
-              {
-                (isAuth().userCode === 'LYF' && orderType === 'Onsite' && (
-                  <button
-                    className="btn  btn-warning fas fa-school"
-                    onClick={handleSearch('orderType')}
-                    value="Pickup"
-                  >
-                    &nbsp; Onsite
-                  </button>
-                ))}
+              {isAuth().userCode === 'DOOB' && orderType === 'Pickup' && (
+                <button
+                  className="btn btn-warning fas fa-car-side"
+                  onClick={handleSearch('orderType')}
+                  value="Onsite"
+                >
+                  &nbsp; Curbside
+                </button>
+              )}
+              {isAuth().userCode === 'LYF' && orderType === 'Pickup' && (
+                <button
+                  className="btn btn-warning fas fa-car-side"
+                  onClick={handleSearch('orderType')}
+                  value="Onsite"
+                >
+                  &nbsp; Curbside
+                </button>
+              )}
+              {isAuth().userCode === 'DOOB' && orderType === 'Onsite' && (
+                <button
+                  className="btn  btn-warning fas fa-school"
+                  onClick={handleSearch('orderType')}
+                  value="Pickup"
+                >
+                  &nbsp; Onsite
+                </button>
+              )}
+              {isAuth().userCode === 'LYF' && orderType === 'Onsite' && (
+                <button
+                  className="btn  btn-warning fas fa-school"
+                  onClick={handleSearch('orderType')}
+                  value="Pickup"
+                >
+                  &nbsp; Onsite
+                </button>
+              )}
               {orderType === 'Pickup' && (
                 <select
                   className="btn btn-sm btn-outline-secondary"
@@ -1181,22 +1194,22 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                   <option value="4pm-6pm">4-6pm</option>
                 </select>
               )}
-              {(orderType === 'Pickup' && isAuth().userCode === 'DOOB' && (
-                  <button
-                    className=" btn btn-sm btn-outline-secondary"
-                    onClick={() => setShowStatus(!showStatus)}
-                  >
-                    Show Status
-                  </button>
-                ))}
-              {(orderType === 'Pickup' && isAuth().userCode === 'LYF' && (
-                  <button
-                    className=" btn btn-sm btn-outline-secondary"
-                    onClick={() => setShowStatus(!showStatus)}
-                  >
-                    Show Status
-                  </button>
-                ))}
+              {orderType === 'Pickup' && isAuth().userCode === 'DOOB' && (
+                <button
+                  className=" btn btn-sm btn-outline-secondary"
+                  onClick={() => setShowStatus(!showStatus)}
+                >
+                  Show Status
+                </button>
+              )}
+              {orderType === 'Pickup' && isAuth().userCode === 'LYF' && (
+                <button
+                  className=" btn btn-sm btn-outline-secondary"
+                  onClick={() => setShowStatus(!showStatus)}
+                >
+                  Show Status
+                </button>
+              )}
               {orderType === 'Pickup' && showStatus && (
                 <select
                   className="btn btn-sm btn-outline-secondary"
@@ -1350,24 +1363,22 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
               <div className="p-2"></div>
 
-              {
-                (isAuth().userCode === 'DOOB' && (
-                  <button
-                    className="badge btn text-red btn-sm btn-outline-danger"
-                    onClick={() => resetSearch()}
-                  >
-                    Reset Filters
-                  </button>
-                ))}
-              {
-                (isAuth().userCode === 'LYF' && (
-                  <button
-                    className="badge btn text-red btn-sm btn-outline-danger"
-                    onClick={() => resetSearch()}
-                  >
-                    Reset Filters
-                  </button>
-                ))}
+              {isAuth().userCode === 'DOOB' && (
+                <button
+                  className="badge btn text-red btn-sm btn-outline-danger"
+                  onClick={() => resetSearch()}
+                >
+                  Reset Filters
+                </button>
+              )}
+              {isAuth().userCode === 'LYF' && (
+                <button
+                  className="badge btn text-red btn-sm btn-outline-danger"
+                  onClick={() => resetSearch()}
+                >
+                  Reset Filters
+                </button>
+              )}
               <div className="p-2 pt-5">
                 <input
                   className="form-control pb-4"
@@ -1380,7 +1391,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                   value={state.search}
                   type="text"
                   className="form-control"
-                  placeholder="Search by name or code"
+                  placeholder="Search"
                 ></input>
               </div>
             </div>
