@@ -60,7 +60,7 @@ const Home = () => {
             <div className={styles.body}>
               <div className={styles.section}>
                 <div className="pt-4 pb-">
-                  <h3 className={styles.h4}>Weekly OPUSD Meals Request</h3>
+                  <h3 className={'text-center ' + styles.h4}>Weekly OPUSD Meals Request</h3>
                   <div className={' ' + styles.columnscontainer}>
                     <div className={styles.bodyregular}>
                       Here's how it works

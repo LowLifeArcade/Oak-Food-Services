@@ -289,7 +289,7 @@ const Admin = ({ token, user, initRequests }) => {
   useEffect(() => {
     // let myChart = document.getElementById('myChart')
     let studentsChart = new Chart(document.getElementById('myChart'), {
-      type: 'polarArea', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+      type: 'pie', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
       data: {
         labels: [
           `BES ${
@@ -445,45 +445,21 @@ const Admin = ({ token, user, initRequests }) => {
       },
     });
     let studentsChart4 = new Chart(document.getElementById('polarArea'), {
-      type: 'radar', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+      type: 'pie', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
       data: {
-        labels: ['BES', 'OHES', 'ROES', 'MCMS', 'OPHS', 'OVHS'],
+        labels: [
+          `Not Ordered ${userListFiltered().length}`,
+          `Registered ${userList.length}`,
+        ],
         datasets: [
           {
-            label: 'Number of Meals',
+            label: 'Curbside',
             data: [
-              parseInt(
-                pickupMealsBySchool('BES', 'a-group') +
-                  pickupMealsBySchool('BES', 'b-group'),
-                10
-              ),
-              parseInt(
-                pickupMealsBySchool('OHES', 'a-group') +
-                  pickupMealsBySchool('OHES', 'b-group'),
-                10
-              ),
-              parseInt(
-                pickupMealsBySchool('ROES', 'a-group') +
-                  pickupMealsBySchool('ROES', 'b-group'),
-                10
-              ),
-              parseInt(
-                pickupMealsBySchool('MCMS', 'a-group') +
-                  pickupMealsBySchool('MCMS', 'b-group'),
-                10
-              ),
-              parseInt(pickupMealsBySchool('OPHS', 'a-group'), 10),
-              parseInt(pickupMealsBySchool('OVHS', 'a-group'), 10),
+              parseInt(userListFiltered().length, 10),
+              parseInt(userList.length, 10),
             ],
             // backgroundColor: 'green'
-            backgroundColor: [
-              '#b8d8d8',
-              '#7a9e9f',
-              '#4f6367',
-              '#eef5db',
-              '#fe5f55',
-              '#c5dfc4',
-            ],
+            backgroundColor: ['#fe5f55', '#c5dfc4'],
             borderWidth: 1,
             hoverBorderWidth: '3',
             hoverBorderColor: '#000',
@@ -495,16 +471,77 @@ const Admin = ({ token, user, initRequests }) => {
         responsive: true,
         plugins: {
           legend: {
-            display: false,
+            display: true,
             // position: 'top',
           },
           title: {
-            display: false,
-            text: 'Requests By School',
+            display: true,
+            text: `Not Ordered`,
           },
         },
       },
     });
+    // let studentsChart4 = new Chart(document.getElementById('polarArea'), {
+    //   type: 'radar', // bar, horzontalBar, pie, line, doughnut, radar, ploarArea
+    //   data: {
+    //     labels: ['BES', 'OHES', 'ROES', 'MCMS', 'OPHS', 'OVHS'],
+    //     datasets: [
+    //       {
+    //         label: 'Number of Meals',
+    //         data: [
+    //           parseInt(
+    //             pickupMealsBySchool('BES', 'a-group') +
+    //               pickupMealsBySchool('BES', 'b-group'),
+    //             10
+    //           ),
+    //           parseInt(
+    //             pickupMealsBySchool('OHES', 'a-group') +
+    //               pickupMealsBySchool('OHES', 'b-group'),
+    //             10
+    //           ),
+    //           parseInt(
+    //             pickupMealsBySchool('ROES', 'a-group') +
+    //               pickupMealsBySchool('ROES', 'b-group'),
+    //             10
+    //           ),
+    //           parseInt(
+    //             pickupMealsBySchool('MCMS', 'a-group') +
+    //               pickupMealsBySchool('MCMS', 'b-group'),
+    //             10
+    //           ),
+    //           parseInt(pickupMealsBySchool('OPHS', 'a-group'), 10),
+    //           parseInt(pickupMealsBySchool('OVHS', 'a-group'), 10),
+    //         ],
+    //         // backgroundColor: 'green'
+    //         backgroundColor: [
+    //           '#b8d8d8',
+    //           '#7a9e9f',
+    //           '#4f6367',
+    //           '#eef5db',
+    //           '#fe5f55',
+    //           '#c5dfc4',
+    //         ],
+    //         borderWidth: 1,
+    //         hoverBorderWidth: '3',
+    //         hoverBorderColor: '#000',
+    //         // borderColor:
+    //       },
+    //     ],
+    //   },
+    //   options: {
+    //     responsive: true,
+    //     plugins: {
+    //       legend: {
+    //         display: false,
+    //         // position: 'top',
+    //       },
+    //       title: {
+    //         display: false,
+    //         text: 'Requests By School',
+    //       },
+    //     },
+    //   },
+    // });
 
     return () => {
       studentsChart.destroy();
@@ -535,31 +572,17 @@ const Admin = ({ token, user, initRequests }) => {
           borderBlock: '5px',
         }}
       >
-        <div className="row">
-          <div className="col-sm-4 p-4">
-            {<canvas className=" " id="myChart"></canvas>}
-          </div>
-
-          <div className="col-sm-4 p-4">
-            {<canvas className=" " id="completedChart"></canvas>}
-          </div>
-          <div className="col-sm-4 p-4">
-            {<canvas className=" " id="polarArea"></canvas>}
-          </div>
+        <div className="h2 text-center pb-3">
+          Friday Pickup{' '}
+          {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`} Week of{' '}
+          {`${pickupDate}`}
         </div>
-        <br />
-        <br />
+
         <div className="">
           {/* <hr className="col-md-3"/> */}
 
           <div className="row align-items-center">
             <div className="col">
-              <h3 className="">
-                Friday Pickup{' '}
-                {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`}
-                <br />
-                Week of {`${pickupDate}`}
-              </h3>
               <div className="">
                 <Calendar
                   // className={styles.reactCalendar}
@@ -589,343 +612,681 @@ const Admin = ({ token, user, initRequests }) => {
               {/* <button onClick={(e) => handleUserList(e)}>User List</button>
             {error && showErrorMessage(error)} */}
             </div>
+            <div className="row pt-4">
+              <div className="col-sm-4 p-4">
+                {<canvas className=" " id="myChart"></canvas>}
+              </div>
+
+              <div className="col-sm-4 p-4">
+                {<canvas className=" " id="completedChart"></canvas>}
+              </div>
+              <div className="col-sm-4 p-4">
+              <CSVLink
+              className=""
+              filename={`users_not_ordered_for_${pickupDate}-CSV`}
+              headers={emailHeaders}
+              data={userList.filter(
+                (user) =>
+                  !requests
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+              )}
+            >
+                {<canvas className=" " id="polarArea"></canvas>}
+                </CSVLink>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* <hr /> */}
 
-      <h2 className="pt-5">
-        <b className="text-danger">{requests.length}</b> - All (Curbside and
-        Onsite)
-      </h2>
-      <hr style={{ textSize: '20px' }} />
-      <hr style={{ textSize: '20px' }} />
-      <hr style={{ textSize: '20px' }} />
-      <h3 className="">
-        <b className="text-danger">
-          {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
-        </b>{' '}
-        - All Curbside
-        {user.userCode === 'DOOB' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList.filter((user) =>
-              requests
-                .filter((request) => request.pickupTime != 'Cafeteria')
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-            )}
-          >
-            Curbside CSV{' '}
-          </CSVLink>
-        )}
-        {user.userCode === 'LYF' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList.filter((user) =>
-              requests
-                .filter((request) => request.pickupTime != 'Cafeteria')
-                .map((request) => request.postedBy.email)
-                .includes(user.email)
-            )}
-          >
-            Curbside CSV{' '}
-          </CSVLink>
-        )}
-        <p />
-        <hr />
-        <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
-        Curbside
-        {user.userCode === 'LYF' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList.filter((user) =>
-              requests
-                .filter(
-                  (request) =>
-                    request.pickupTime != 'Cafeteria' &&
-                    request.orderStatus != true
-                )
-                .map((request) => request.postedBy.email)
-                // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-                .includes(user.email)
-            )}
-          >
-            Unfulfilled{' '}
-            {/* {userList.filter((user) =>
-            requests
-              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
-              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-              .includes(user.email)
-              ).length} */}
-            CSV{' '}
-          </CSVLink>
-        )}
-        {user.userCode === 'DOOB' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList.filter((user) =>
-              requests
-                .filter(
-                  (request) =>
-                    request.pickupTime != 'Cafeteria' &&
-                    request.orderStatus != true
-                )
-                .map((request) => request.postedBy.email)
-                // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-                .includes(user.email)
-            )}
-          >
-            Unfulfilled{' '}
-            {/* {userList.filter((user) =>
-            requests
-              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
-              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-              .includes(user.email)
-              ).length} */}
-            CSV{' '}
-          </CSVLink>
-        )}
-        <p />
-        <b className="text-danger">{allCompletedPickupMeals()}</b> - Fulfilled
-        Curbside
-      </h3>
-      <hr />
-      <h5>
-        <b>Curbside Kitchen Prep Data</b>
-      </h5>
-      <div className="pt-2"></div>
-      <h5>
-        <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
-        Curbside Lunches <p />
-        <b className="text-danger">{pickupMealsForBreakfast()}</b> - Individual
-        Curbside Breakfasts <p />
-      </h5>
-
-      <hr />
-      <h5>
-        <b>Standard Requests</b>
-      </h5>
-      <div className="p-3">
-        <h6>
-          {mealCounter('Standard', 'Breakfast and Lunch')} - <b>Standard</b>{' '}
-          Breakfast and Lunch
-          <hr />
-          {lunchOnlymealCounter('Standard', 'Lunch Only')} - <b>Standard</b>{' '}
-          Lunch Only
-          <hr />
-          {mealCounter('Vegetarian', 'Breakfast and Lunch')} - <b>Vegetarian</b>{' '}
-          Breakfast and Lunch
-          <hr />
-          {lunchOnlymealCounter('Vegetarian', 'Lunch Only')} - <b>Vegetarian</b>{' '}
-          Lunch Only
-          <hr />
-          {mealCounter('Vegan', 'Lunch Only')} - <b>Vegan</b> Meals
-          <hr />
-          {mealCounter('Gluten Free', 'Lunch Only')} - <b>Gluten Free</b> Meals
-          <hr />
-          {mealCounter('Standard Dairy Free', 'Lunch Only')} - <b>Dairy Free</b>{' '}
-          Meals
-          <hr />
-          {mealBreakfastOnlyCounter('Standard Onsite')} - <b>BREAKFAST ONLY </b>{' '}
-          Meals
-          <hr />
-          {/* {lunchOnlyMealCounter('Standard')} - <b>LUNCH ONLY</b> Standard
-          <hr />
-          {lunchOnlyMealCounter('Vegetarian')} - <b>LUNCH ONLY</b> Vegetarian */}
-          {/* <hr /> */}
-        </h6>
-      </div>
-      <h5>
-        <b>Special Requests</b>
-      </h5>
-      <h6>
-        <div className="p-3">
-          <hr />
-          {mealCounter('Vegan B', 'Breakfast and Lunch')} - <b>Vegan</b> with
-          Breakfast
-          <hr />
-          {mealCounter(
-            'Gluten Free with Breakfast',
-            'Breakfast and Lunch'
-          )} - <b>Gluten Free</b> with Breakfast
-          <hr />
-          {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
-          <b>Gluten Free Dairy Free</b>
-          <hr />
-          {mealCounter(
-            '2on 3off',
-            'Two Onsite / Three Breakfast and Lunches'
-          )}{' '}
-          - <b>Two On Three Off</b>
-          <hr />
-          {sesameMealCounter('Standard Sesame Free')} - Standard Sesame Free
-          Meals
-          <hr />
-          {sesameMealCounter('Vegetarian Sesame Free')} - Vegetarian Sesame Free
-          Meals
-          <hr />
-          {sesameMealCounter('Vegan Sesame Free')} - Vegan Sesame Free Meals
-          <hr />
-          {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free Meals
-          <hr />
-          {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free Meals
-          <hr />
-          {mealCounter('None', 'None')} - None Meals
-          <hr />
+      <div className="row pt-5 pb-5 ml-3">
+        <div className="col-sm-4 mb-3">
+          <b className="h2 text-danger">{requests.length}</b> -{' '}
+          <b className="h2 ">Meal Requests</b>
         </div>
-      </h6>
-      <h3>
-        <b className="text-danger">{allOnsiteMeals()}</b> - All Onsite{' '}
-      </h3>
-      <hr />
-      <div className="pt-1"></div>
-      <h5>
-        <b>Onsite Kitchen Prep Data</b>
-      </h5>
-      <div className="pt-1"></div>
-      <h5 className="">
-        <b className="text-danger">{allIndividualOnsiteMeals()}</b> - Individual
-        Onsite Meals
-        <div className="p-1"></div>
-      </h5>
-      <hr />
-
-      <h5>
-        <b>School Numbers</b>
-      </h5>
-      <div className="p-3">
-        <h6>
-          <b className="text-danger">
-            {pickupMealsBySchool('BES', 'a-group') +
-              pickupMealsBySchool('BES', 'b-group')}{' '}
-          </b>{' '}
-          - BES
-          <br />
-          <div className="px-2">
-            {pickupMealsBySchool('BES', 'a-group')} - BES A
-            <br />
-            {pickupMealsBySchool('BES', 'b-group')} - BES B
-          </div>
-          <hr />
-          <b className="text-danger">
-            {pickupMealsBySchool('OHES', 'a-group') +
-              pickupMealsBySchool('OHES', 'b-group')}{' '}
-          </b>{' '}
-          - OHES
-          <br />
-          <div className="px-2">
-            {pickupMealsBySchool('OHES', 'a-group')} - OHES A
-            <br />
-            {pickupMealsBySchool('OHES', 'b-group')} - OHES B
-          </div>
-          <hr />
-          <b className="text-danger">
-            {pickupMealsBySchool('ROES', 'a-group') +
-              pickupMealsBySchool('ROES', 'b-group')}{' '}
-          </b>{' '}
-          - ROES
-          <br />
-          <div className="px-2">
-            {pickupMealsBySchool('ROES', 'a-group')} - ROES A
-            <br />
-            {pickupMealsBySchool('ROES', 'b-group')} - ROES B
-          </div>
-          <hr />
-          <b className="text-danger">
-            {pickupMealsBySchool('MCMS', 'a-group') +
-              pickupMealsBySchool('MCMS', 'b-group')}{' '}
-          </b>{' '}
-          - MCMS
-          <br />
-          <div className="px-2">
-            {pickupMealsBySchool('MCMS', 'a-group')} - MCMS A
-            <br />
-            {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
-          </div>
-          <hr />
-          {/* <div className="px-2"> */}
-          <b className="text-danger">
-            {pickupMealsBySchool('OPHS', 'a-group')}
-          </b>{' '}
-          - OPHS
-          <hr />
-          {/* {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
-          <hr /> */}
-          <b className="text-danger">
-            {pickupMealsBySchool('OVHS', 'a-group')}
-          </b>{' '}
-          - OVHS
-          {/* </div> */}
+        <div className="col">
+          {/* {user.userCode === 'LYF' && (
+            <CSVLink
+              className="btn btn-sm btn-outline-dark text float-right mr-3 mb-3"
+              headers={emailHeaders}
+              data={userList.filter(
+                (user) =>
+                  !requests
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+              )}
+            >
+              Email List of {userListFiltered().length} users who haven't
+              ordered CSV{' '}
+            </CSVLink>
+          )}
           {user.userCode === 'DOOB' && (
             <CSVLink
-              className="btn btn-sm btn-outline-dark text float-right"
+              className="btn btn-sm btn-outline-dark text float-right mr-3 mb-3"
               headers={emailHeaders}
-              data={userList.filter((user) =>
-                requests
-                  .filter((request) =>
-                    request.mealRequest.filter(
-                      (meal) => meal.schoolName === 'OVHS'
-                    )
-                  )
-                  .map((request) => request.postedBy.email)
-                  .includes(user.email)
-              )}
-            >
-              OVHS CSV{' '}
-              {
-                userList.filter((user) =>
-                  requests
-                    .filter((request) =>
-                      request.mealRequest.filter(
-                        (meal) => meal.schoolName === 'OVHS'
-                      )
-                    )
+              data={userList.filter(
+                (user) =>
+                  !requests
                     .map((request) => request.postedBy.email)
                     .includes(user.email)
-                ).length
-              }{' '}
+              )}
+            >
+              Email List of {userListFiltered().length} users who haven't
+              ordered CSV{' '}
             </CSVLink>
-          )}
+          )} */}
+          &nbsp;&nbsp;
           {user.userCode === 'LYF' && (
             <CSVLink
-              className="btn btn-sm btn-outline-dark text float-right"
+              className="btn btn-sm btn-outline-dark text float-right mr-3"
               headers={emailHeaders}
-              data={userList.filter((user) =>
-                requests
-                  .filter((request) =>
-                    request.mealRequest.filter(
-                      (meal) => meal.schoolName === 'OVHS'
-                    )
-                  )
-                  .map((request) => request.postedBy.email)
-                  .includes(user.email)
-              )}
+              filename='all_registered_users_email_list-CSV'
+              data={userList}
             >
-              OVHS CSV{' '}
-              {
+              {/* {!requests.map((request) => request.postedBy.email)} */}
+              Full Email List of {userList.length} users CSV{' '}
+              {console.log(
+                'test',
                 userList.filter((user) =>
                   requests
-                    .filter((request) =>
-                      request.mealRequest.filter(
-                        (meal) => meal.schoolName === 'OVHS'
-                      )
-                    )
+                    .filter((request) => request.pickupTime != 'Cafeteria')
                     .map((request) => request.postedBy.email)
                     .includes(user.email)
-                ).length
-              }{' '}
+                )
+              )}
+              {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+              {/* {console.log('test2', !requests
+                .map((request) => request.postedBy.email).includes(user.email))} */}
             </CSVLink>
           )}
+          {user.userCode === 'DOOB' && (
+            <CSVLink
+              className="btn btn-sm btn-outline-dark text float-right mr-3"
+              headers={emailHeaders}
+              filename='all_registered_users_email_list-CSV'
+              data={userList}
+            >
+              {/* {!requests.map((request) => request.postedBy.email)} */}
+              Full Email List of {userList.length} users CSV{' '}
+              {console.log(
+                'test',
+                userList.filter((user) =>
+                  requests
+                    .filter((request) => request.pickupTime != 'Cafeteria')
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                )
+              )}
+              {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+              {/* {console.log('test2', !requests
+                .map((request) => request.postedBy.email).includes(user.email))} */}
+            </CSVLink>
+          )}
+        </div>
+      </div>
+      <div className="row" id="dataCards">
+        <div className="col-sm-4 pb-4" id="curbside">
+          <div
+            id="inner"
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              padding: '30px',
+              boxShadow: '4px 4px 7px 0px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+          >
+            <b className="text-danger h3">
+              {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
+            </b>{' '}
+            - <b className=" h3">All Curbside</b>
+            {user.userCode === 'DOOB' && (
+              <CSVLink
+                className="badge btn btn-sm btn-outline-dark text float-right"
+                filename='all_curbside_orders_email_list-CSV'
+                headers={emailHeaders}
+                data={userList.filter((user) =>
+                  requests
+                    .filter((request) => request.pickupTime != 'Cafeteria')
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                )}
+              >
+                Curbside{' '}
+              </CSVLink>
+            )}
+            {user.userCode === 'LYF' && (
+              <CSVLink
+                className="badge btn btn-sm btn-outline-dark text float-right "
+                filename='all_curbside_orders_email_list-CSV'
+                headers={emailHeaders}
+                data={userList.filter((user) =>
+                  requests
+                    .filter((request) => request.pickupTime != 'Cafeteria')
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                )}
+              >
+                Curbside{' '}
+              </CSVLink>
+            )}
+            <p />
+            <hr />
+            <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
+            Curbside
+            <div className="">
+              {user.userCode === 'LYF' && (
+                <CSVLink
+                  className="badge btn btn-sm btn-outline-dark text float-right"
+                  headers={emailHeaders}
+                  filename='unfulfilled_curbside_email_list-CSV'
+                  data={userList.filter((user) =>
+                    requests
+                      .filter(
+                        (request) =>
+                          request.pickupTime != 'Cafeteria' &&
+                          request.orderStatus != true
+                      )
+                      .map((request) => request.postedBy.email)
+                      // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                      .includes(user.email)
+                  )}
+                >
+                  Unfulfilled{' '}
+                </CSVLink>
+              )}
+              {user.userCode === 'DOOB' && (
+                <CSVLink
+                  className="badge btn btn-sm btn-outline-dark text float-right"
+                  headers={emailHeaders}
+                  filename='unfulfilled_curbside_email_list-CSV'
+                  data={userList.filter((user) =>
+                    requests
+                      .filter(
+                        (request) =>
+                          request.pickupTime != 'Cafeteria' &&
+                          request.orderStatus != true
+                      )
+                      .map((request) => request.postedBy.email)
+                      // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                      .includes(user.email)
+                  )}
+                >
+                  Unfulfilled{' '}
+                  {/* {userList.filter((user) =>
+            requests
+              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
+              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+              .includes(user.email)
+              ).length} */}
+                  {/* CSV{' '} */}
+                </CSVLink>
+              )}
+              <p />
+              <b className="text-danger">{allCompletedPickupMeals()}</b> -
+              Fulfilled Curbside
+            </div>
+            <hr />
+            <b className="h5">Curbside Kitchen Prep Data</b>
+            <div className="pt-3"></div>
+            <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
+            Curbside Lunches <p />
+            <b className="text-danger">{pickupMealsForBreakfast()}</b> -
+            Individual Curbside Breakfasts
+            {/* <hr/>
+            <hr/>
+            <b className="h3 text-danger">{allOnsiteMeals()}</b> - <b className="h3 ">All Onsite</b>{' '}
+            <hr />
+              <b className='h5'>Onsite Kitchen Prep Data</b>
+              <div className="pt-3"></div>
+              <b className="text-danger">{allIndividualOnsiteMeals()}</b> -
+              Individual Onsite Meals
+              <div className="p-1"></div> */}
+          </div>
+          <div
+          className='mt-3'
+            id="inner"
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              padding: '30px',
+              boxShadow: '4px 4px 7px 0px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+          >
+            {/* <b className="text-danger h3">
+              {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
+            </b>{' '}
+            - <b className=" h3">All Curbside</b>
+            {user.userCode === 'DOOB' && (
+              <CSVLink
+                className="badge btn btn-sm btn-outline-dark text float-right"
+                headers={emailHeaders}
+                data={userList.filter((user) =>
+                  requests
+                    .filter((request) => request.pickupTime != 'Cafeteria')
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                )}
+              >
+                Curbside CSV{' '}
+              </CSVLink>
+            )}
+            {user.userCode === 'LYF' && (
+              <CSVLink
+                className="badge btn btn-sm btn-outline-dark text float-right "
+                headers={emailHeaders}
+                data={userList.filter((user) =>
+                  requests
+                    .filter((request) => request.pickupTime != 'Cafeteria')
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                )}
+              >
+                Curbside CSV{' '}
+              </CSVLink>
+            )}
+            <p />
+            <hr />
+            <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
+            Curbside
+            <div className="">
+              {user.userCode === 'LYF' && (
+                <CSVLink
+                  className="badge btn btn-sm btn-outline-dark text float-right"
+                  headers={emailHeaders}
+                  data={userList.filter((user) =>
+                    requests
+                      .filter(
+                        (request) =>
+                          request.pickupTime != 'Cafeteria' &&
+                          request.orderStatus != true
+                      )
+                      .map((request) => request.postedBy.email)
+                      // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                      .includes(user.email)
+                  )}
+                >
+                  Unfulfilled CSV{' '}
+                </CSVLink>
+              )}
+              {user.userCode === 'DOOB' && (
+                <CSVLink
+                  className="badge btn btn-sm btn-outline-dark text float-right"
+                  headers={emailHeaders}
+                  data={userList.filter((user) =>
+                    requests
+                      .filter(
+                        (request) =>
+                          request.pickupTime != 'Cafeteria' &&
+                          request.orderStatus != true
+                      )
+                      .map((request) => request.postedBy.email)
+                      // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                      .includes(user.email)
+                  )}
+                >
+                  Unfulfilled{' '}
+                  CSV{' '}
+                </CSVLink>
+              )}
+              <p />
+              <b className="text-danger">{allCompletedPickupMeals()}</b> -
+              Fulfilled Curbside
+            </div>
+            <hr />
+            <b className="h5">Curbside Kitchen Prep Data</b>
+            <div className="pt-3"></div>
+            <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
+            Curbside Lunches <p />
+            <b className="text-danger">{pickupMealsForBreakfast()}</b> -
+            Individual Curbside Breakfasts
+            <hr/>
+            <hr/> */}
+            <b className="h3 text-danger">{allOnsiteMeals()}</b> - <b className="h3 ">All Onsite</b>{' '}
+            <hr />
+              <b className='h5'>Onsite Kitchen Prep Data</b>
+              <div className="pt-3"></div>
+              <b className="text-danger">{allIndividualOnsiteMeals()}</b> -
+              Individual Onsite Meals
+              <div className="p-1"></div>
+          </div>
+        </div>
+        <div className="col-sm-4 pb-4" id="standardRequests">
+          <div
+            id="inner"
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              padding: '30px',
+              boxShadow: '4px 4px 7px 0px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+          >
+            <b className="h3">Curbside Requests</b>
+            <hr/>
+            <b className="h5">Standard Requests</b>
+            <hr />
+            <div className="">
+              <h6>
+                {mealCounter('Standard', 'Breakfast and Lunch')} -{' '}
+                <b>Standard</b> Breakfast and Lunch
+                <br />
+                <br />
+                {lunchOnlymealCounter('Standard', 'Lunch Only')} -{' '}
+                <b>Standard</b> Lunch Only
+                <br />
+                <br />
+                {mealCounter('Vegetarian', 'Breakfast and Lunch')} -{' '}
+                <b>Vegetarian</b> Breakfast and Lunch
+                <br />
+                <br />
+                {lunchOnlymealCounter('Vegetarian', 'Lunch Only')} -{' '}
+                <b>Vegetarian</b> Lunch Only
+                <br />
+                <br />
+                {mealCounter('Vegan', 'Lunch Only')} - <b>Vegan</b> Meals
+                <br />
+                <br />
+                {mealCounter('Gluten Free', 'Lunch Only')} - <b>Gluten Free</b>{' '}
+                Meals
+                <br />
+                <br />
+                {mealCounter('Standard Dairy Free', 'Lunch Only')} -{' '}
+                <b>Dairy Free</b> Meals
+                <br />
+                <br />
+                {mealBreakfastOnlyCounter('Standard Onsite')} -{' '}
+                <b>BREAKFAST ONLY </b> Meals
+                {/* {lunchOnlyMealCounter('Standard')} - <b>LUNCH ONLY</b> Standard
           <hr />
-        </h6>
+          {lunchOnlyMealCounter('Vegetarian')} - <b>LUNCH ONLY</b> Vegetarian */}
+                <hr />
+
+                <b className="h5">Special Requests</b>
+            <hr />
+            <div className="">
+              <h6>
+                {mealCounter('Vegan B', 'Breakfast and Lunch')} - <b>Vegan</b>{' '}
+                with Breakfast
+                <br />
+                <br />
+                {mealCounter(
+                  'Gluten Free with Breakfast',
+                  'Breakfast and Lunch'
+                )}{' '}
+                - <b>Gluten Free</b> with Breakfast
+                <br />
+                <br />
+                {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
+                <b>Gluten Free Dairy Free</b>
+                <br />
+                <br />
+                {mealCounter(
+                  '2on 3off',
+                  'Two Onsite / Three Breakfast and Lunches'
+                )}{' '}
+                - <b>Two On Three Off</b>
+                <br />
+                <br />
+                {sesameMealCounter('Standard Sesame Free')} - Standard Sesame
+                Free Meals
+                <br />
+                <br />
+                {sesameMealCounter('Vegetarian Sesame Free')} - Vegetarian
+                Sesame Free Meals
+                <br />
+                <br />
+                {sesameMealCounter('Vegan Sesame Free')} - Vegan Sesame Free
+                Meals
+                <br />
+                <br />
+                {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
+                Meals
+                <br />
+                <br />
+                {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
+                Meals
+                <br />
+                <br />
+                {mealCounter('None', 'None')} - None Meals
+              </h6>
+            </div>
+
+              </h6>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="col-sm-4 pb-4" id="standardRequests">
+          <div
+            id="inner"
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              padding: '30px',
+              boxShadow: '4px 4px 7px 0px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+          >
+            <b className="h4">Special Requests</b>
+            <hr />
+            <div className="">
+              <h6>
+                {mealCounter('Vegan B', 'Breakfast and Lunch')} - <b>Vegan</b>{' '}
+                with Breakfast
+                <br />
+                <br />
+                {mealCounter(
+                  'Gluten Free with Breakfast',
+                  'Breakfast and Lunch'
+                )}{' '}
+                - <b>Gluten Free</b> with Breakfast
+                <br />
+                <br />
+                {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
+                <b>Gluten Free Dairy Free</b>
+                <br />
+                <br />
+                {mealCounter(
+                  '2on 3off',
+                  'Two Onsite / Three Breakfast and Lunches'
+                )}{' '}
+                - <b>Two On Three Off</b>
+                <br />
+                <br />
+                {sesameMealCounter('Standard Sesame Free')} - Standard Sesame
+                Free Meals
+                <br />
+                <br />
+                {sesameMealCounter('Vegetarian Sesame Free')} - Vegetarian
+                Sesame Free Meals
+                <br />
+                <br />
+                {sesameMealCounter('Vegan Sesame Free')} - Vegan Sesame Free
+                Meals
+                <br />
+                <br />
+                {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
+                Meals
+                <br />
+                <br />
+                {sesameMealCounter('Sesame Dairy Free')} - Sesame Dairy Free
+                Meals
+                <br />
+                <br />
+                {mealCounter('None', 'None')} - None Meals
+              </h6>
+            </div>
+          </div>
+        </div> */}
+        {/* <div className="col-sm-4 pb-4" id="onsiteData">
+          <div
+            id="inner"
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              padding: '30px',
+              boxShadow: '4px 4px 7px 0px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+          >
+            
+          </div>
+        </div> */}
+
+        <div className="col-sm-4 pb-4" id="onsiteData">
+          <div
+            id="inner"
+            style={{
+              // color: 'grey',
+              border: '1px solid grey',
+              padding: '30px',
+              boxShadow: '4px 4px 7px 0px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              // borderBlock: '5px',
+            }}
+          >
+              <b className='h4'>Onsite School Numbers</b>
+            <div className="pl-3">
+            <hr/>
+              <h6>
+                <b className="text-danger">
+                  {pickupMealsBySchool('BES', 'a-group') +
+                    pickupMealsBySchool('BES', 'b-group')}{' '}
+                </b>{' '}
+                - BES
+                <br />
+                <div className="px-2">
+                  {pickupMealsBySchool('BES', 'a-group')} - BES A
+                  <br />
+                  {pickupMealsBySchool('BES', 'b-group')} - BES B
+                </div>
+                <hr />
+                <b className="text-danger">
+                  {pickupMealsBySchool('OHES', 'a-group') +
+                    pickupMealsBySchool('OHES', 'b-group')}{' '}
+                </b>{' '}
+                - OHES
+                <br />
+                <div className="px-2">
+                  {pickupMealsBySchool('OHES', 'a-group')} - OHES A
+                  <br />
+                  {pickupMealsBySchool('OHES', 'b-group')} - OHES B
+                </div>
+                <hr />
+                <b className="text-danger">
+                  {pickupMealsBySchool('ROES', 'a-group') +
+                    pickupMealsBySchool('ROES', 'b-group')}{' '}
+                </b>{' '}
+                - ROES
+                <br />
+                <div className="px-2">
+                  {pickupMealsBySchool('ROES', 'a-group')} - ROES A
+                  <br />
+                  {pickupMealsBySchool('ROES', 'b-group')} - ROES B
+                </div>
+                <hr />
+                <b className="text-danger">
+                  {pickupMealsBySchool('MCMS', 'a-group') +
+                    pickupMealsBySchool('MCMS', 'b-group')}{' '}
+                </b>{' '}
+                - MCMS
+                <br />
+                <div className="px-2">
+                  {pickupMealsBySchool('MCMS', 'a-group')} - MCMS A
+                  <br />
+                  {pickupMealsBySchool('MCMS', 'b-group')} - MCMS B
+                </div>
+                <hr />
+                {/* <div className="px-2"> */}
+                <b className="text-danger">
+                  {pickupMealsBySchool('OPHS', 'a-group')}
+                </b>{' '}
+                - OPHS
+                <hr />
+                {/* {pickupMealsBySchool('OPHS', 'b-group')} - OPHS B
+          <hr /> */}
+                <b className="text-danger">
+                  {pickupMealsBySchool('OVHS', 'a-group')}
+                </b>{' '}
+                - OVHS
+                {/* </div> */}
+                {user.userCode === 'DOOB' && (
+                  <CSVLink
+                    className="badge btn btn-sm btn-outline-dark text float-right"
+                    headers={emailHeaders}
+                    data={userList.filter((user) =>
+                      requests
+                        .filter((request) =>
+                          request.mealRequest.filter(
+                            (meal) => meal.schoolName === 'OVHS'
+                          )
+                        )
+                        .map((request) => request.postedBy.email)
+                        .includes(user.email)
+                    )}
+                  >
+                    OVHS CSV{' '}
+                    {
+                      userList.filter((user) =>
+                        requests
+                          .filter((request) =>
+                            request.mealRequest.filter(
+                              (meal) => meal.schoolName === 'OVHS'
+                            )
+                          )
+                          .map((request) => request.postedBy.email)
+                          .includes(user.email)
+                      ).length
+                    }{' '}
+                  </CSVLink>
+                )}
+                {user.userCode === 'LYF' && (
+                  <CSVLink
+                    className="badge btn btn-sm btn-outline-dark text float-right"
+                    headers={emailHeaders}
+                    data={userList.filter((user) =>
+                      requests
+                        .filter((request) =>
+                          request.mealRequest.filter(
+                            (meal) => meal.schoolName === 'OVHS'
+                          )
+                        )
+                        .map((request) => request.postedBy.email)
+                        .includes(user.email)
+                    )}
+                  >
+                    OVHS CSV{' '}
+                    {
+                      userList.filter((user) =>
+                        requests
+                          .filter((request) =>
+                            request.mealRequest.filter(
+                              (meal) => meal.schoolName === 'OVHS'
+                            )
+                          )
+                          .map((request) => request.postedBy.email)
+                          .includes(user.email)
+                      ).length
+                    }{' '}
+                  </CSVLink>
+                )}
+                <hr />
+              </h6>
+            </div>
+          </div>
+        </div>
         <br />
-        {user.userCode === 'DOOB' && (
+        {/* {user.userCode === 'DOOB' && (
           <h5>
             <b className="text-danger">
               {userListFiltered().length} users who have not ordered yet for{' '}
@@ -940,7 +1301,7 @@ const Admin = ({ token, user, initRequests }) => {
               {moment(pickupDate).format('MMMM Do')}
             </b>
           </h5>
-        )}
+        )} */}
         {/* <h5>email list</h5> */}
         {/* {console.log('test', userList.filter(
             (user) =>
@@ -948,79 +1309,7 @@ const Admin = ({ token, user, initRequests }) => {
                 .map((request) => request.postedBy.email)
                 .includes(user.email)
           ))} */}
-        {user.userCode === 'LYF' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text"
-            headers={emailHeaders}
-            data={userList.filter(
-              (user) =>
-                !requests
-                  .map((request) => request.postedBy.email)
-                  .includes(user.email)
-            )}
-          >
-            Email List of users who haven't ordered CSV{' '}
-          </CSVLink>
-        )}
-        {user.userCode === 'DOOB' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text"
-            headers={emailHeaders}
-            data={userList.filter(
-              (user) =>
-                !requests
-                  .map((request) => request.postedBy.email)
-                  .includes(user.email)
-            )}
-          >
-            Email List of users who haven't ordered CSV{' '}
-          </CSVLink>
-        )}
-        &nbsp;&nbsp;
-        {user.userCode === 'LYF' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList}
-          >
-            {/* {!requests.map((request) => request.postedBy.email)} */}
-            Full Email List of {userList.length} users CSV{' '}
-            {console.log(
-              'test',
-              userList.filter((user) =>
-                requests
-                  .filter((request) => request.pickupTime != 'Cafeteria')
-                  .map((request) => request.postedBy.email)
-                  .includes(user.email)
-              )
-            )}
-            {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
-            {/* {console.log('test2', !requests
-                .map((request) => request.postedBy.email).includes(user.email))} */}
-          </CSVLink>
-        )}
-        {user.userCode === 'DOOB' && (
-          <CSVLink
-            className="btn btn-sm btn-outline-dark text float-right"
-            headers={emailHeaders}
-            data={userList}
-          >
-            {/* {!requests.map((request) => request.postedBy.email)} */}
-            Full Email List of {userList.length} users CSV{' '}
-            {console.log(
-              'test',
-              userList.filter((user) =>
-                requests
-                  .filter((request) => request.pickupTime != 'Cafeteria')
-                  .map((request) => request.postedBy.email)
-                  .includes(user.email)
-              )
-            )}
-            {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
-            {/* {console.log('test2', !requests
-                .map((request) => request.postedBy.email).includes(user.email))} */}
-          </CSVLink>
-        )}
+
         <br />
         <br />
         {/* Curbside only{' '}
@@ -1045,7 +1334,7 @@ const Admin = ({ token, user, initRequests }) => {
         </CSVLink> */}
         <br />
         <br />
-        {user.userCode === 'LYF' && (
+        {/* {user.userCode === 'LYF' && (
           <table className="table table-striped table-sm table-bordered">
             <thead>
               <tr>
@@ -1068,7 +1357,7 @@ const Admin = ({ token, user, initRequests }) => {
             </thead>
             <tbody>{userListFiltered()}</tbody>
           </table>
-        )}
+        )} */}
       </div>
     </Layout>
   );
