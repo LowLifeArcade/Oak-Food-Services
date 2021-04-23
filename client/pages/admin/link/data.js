@@ -1039,7 +1039,7 @@ const Admin = ({ token, user, initRequests }) => {
                       'Two Onsite / Three Breakfast and Lunches'
                     )}{' '}
                     - <b>Two On Three Off</b>
-                    <br />
+                    {/* <br />
                     <br />
                     {sesameMealCounter('Standard Sesame Free')} - Standard
                     Sesame Free Meals
@@ -1061,7 +1061,7 @@ const Admin = ({ token, user, initRequests }) => {
                     Meals
                     <br />
                     <br />
-                    {mealCounter('None', 'None')} - None Meals
+                    {mealCounter('None', 'None')} - None Meals */}
                   </h6>
                 </div>
               </h6>
