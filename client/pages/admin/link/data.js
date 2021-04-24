@@ -15,20 +15,19 @@ import Head from 'next/head';
 const Admin = ({ token, user, initRequests }) => {
   const [state, setState] = useState({
     requests: initRequests,
+    pickupButton: '',
     pickupDate: localStorage.getItem('search-date')
       ? moment(JSON.parse(localStorage.getItem('search-date'))).format('l')
       : moment(new Date()).format('l'),
-    // pickupDate: moment(new Date()).format('l'),
     meals: [],
     error: '',
   });
 
   const [userList, setUserList] = useState([]);
 
-  const { requests, pickupDate, meals, error } = state;
+  const { requests, pickupDate, pickupButton, meals, error } = state;
   let myDate = '';
 
-  // console.log('all meals by date', requests)
   useEffect(() => {
     let allMealsArray = [];
     const pushAllMeals = (meal) => {
@@ -84,7 +83,11 @@ const Admin = ({ token, user, initRequests }) => {
       .filter((mealRequest) => mealRequest.pickupTime === pickupTimeSelected)
       .map((r, i) => r.mealRequest.map((meal) => allMealsArray2.push(meal)));
 
-    setState({ ...state, meals: allMealsArray2 });
+    setState({
+      ...state,
+      meals: allMealsArray2,
+      pickupButton: pickupTimeSelected,
+    });
     console.log('req ', meals);
   };
   const resetTimeSelect = (e, pickupTimeSelected) => {
@@ -96,7 +99,7 @@ const Admin = ({ token, user, initRequests }) => {
       // .filter((mealRequest) => mealRequest.pickupTime === pickupTimeSelected)
       .map((r, i) => r.mealRequest.map((meal) => allMealsArray2.push(meal)));
 
-    setState({ ...state, meals: allMealsArray2 });
+    setState({ ...state, meals: allMealsArray2, pickupButton: '' });
     console.log('req ', meals);
   };
 
@@ -145,9 +148,15 @@ const Admin = ({ token, user, initRequests }) => {
 
   const allOnsiteMeals = () =>
     // requests.filter((m) => m.mealRequest.map((meal) => meal.group == 'distance-learning')).length
-    requests.filter((request) =>
-      request.mealRequest.every((meal) => meal.meal == 'Standard Onsite')
-    ).length;
+    requests.filter((l) =>
+            l.mealRequest
+              .map((s) => s.meal)
+              .toString()
+              .includes('Standard Onsite')
+          ).length
+    // requests.filter((request) =>
+    //   request.mealRequest.every((meal) => meal.meal == 'Standard Onsite')
+    // ).length;
   // console.log('all onsite', requests.filter((request) => request.mealRequest.every((meal) => meal.group == 'distance-learning')).length)
   // meals.filter((m) => m.group == 'b-group').length;
   const allIndividualOnsiteMeals = () =>
@@ -197,14 +206,25 @@ const Admin = ({ token, user, initRequests }) => {
     meals.filter((m) => m.schoolName === school && m.group === group).length;
 
   const allOpenPickupMeals = (meal) =>
-    requests
-      .filter((m) => m.pickupTime !== 'Cafeteria')
-      .filter((x) => x.orderStatus === false).length;
+    pickupButton
+      ? requests
+          .filter((mealRequest) => mealRequest.pickupTime === pickupButton)
+          .filter((m) => m.pickupTime !== 'Cafeteria')
+          .filter((x) => x.orderStatus === false).length
+      : requests
+          .filter((m) => m.pickupTime !== 'Cafeteria')
+          .filter((x) => x.orderStatus === false).length;
 
   const allCompletedPickupMeals = (meal) =>
-    requests
-      .filter((m) => m.pickupTime !== 'Cafeteria')
-      .filter((x) => x.orderStatus === true).length;
+    pickupButton
+      ? requests
+          .filter((mealRequest) => mealRequest.pickupTime === pickupButton)
+          .filter((m) => m.pickupTime !== 'Cafeteria')
+          .filter((x) => x.orderStatus === true).length
+      : requests
+          .filter((m) => m.pickupTime !== 'Cafeteria')
+          .filter((x) => x.orderStatus === true).length;
+
   // const allOpenPickupMeals = (meal) =>
   //   meals
   //     .filter(
@@ -275,6 +295,20 @@ const Admin = ({ token, user, initRequests }) => {
           !requests
             .map((request) => request.postedBy.email)
             .includes(user.email)
+      )
+      .map((l, i) => (
+        <>
+          <tr key={i}>
+            <td>{l.name + ' ' + l.lastName}</td>
+            <td>{l.userCode}</td>
+            <td>{l.email}</td>
+          </tr>
+        </>
+      ));
+  const userListFiltered2 = () =>
+    userList
+      .filter((user) =>
+        requests.map((request) => request.postedBy.email).includes(user.email)
       )
       .map((l, i) => (
         <>
@@ -455,14 +489,14 @@ const Admin = ({ token, user, initRequests }) => {
       data: {
         labels: [
           `Not Ordered ${userListFiltered().length}`,
-          `Registered ${userList.length}`,
+          `Ordered ${userListFiltered2().length}`,
         ],
         datasets: [
           {
             label: 'Curbside',
             data: [
               parseInt(userListFiltered().length, 10),
-              parseInt(userList.length, 10),
+              parseInt(userListFiltered2().length, 10),
             ],
             // backgroundColor: 'green'
             backgroundColor: ['#fe5f55', '#c5dfc4'],
@@ -482,7 +516,7 @@ const Admin = ({ token, user, initRequests }) => {
           },
           title: {
             display: true,
-            text: `Not Ordered`,
+            text: `Registered but Not Ordered`,
           },
         },
       },
@@ -581,7 +615,7 @@ const Admin = ({ token, user, initRequests }) => {
         <div className="h2 text-center pb-3">
           Friday Pickup{' '}
           {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`} Week of{' '}
-          {`${pickupDate}`}
+          {`${pickupDate}`} {`${pickupButton}`}
         </div>
 
         <div className="">
@@ -624,7 +658,32 @@ const Admin = ({ token, user, initRequests }) => {
               </div>
 
               <div className="col-sm-4 p-4">
-                {<canvas className=" " id="completedChart"></canvas>}
+                <CSVLink
+                  className=""
+                  headers={emailHeaders}
+                  filename={`unfulfilled_curbside_email_list_${pickupDate}_${pickupButton}-CSV`}
+                  data={userList.filter((user) =>
+                    pickupButton
+                      ? requests
+                          .filter(
+                            (mealRequest) =>
+                              mealRequest.pickupTime === pickupButton
+                          )
+                          .filter((m) => m.pickupTime !== 'Cafeteria')
+                          .filter((m) => m.orderStatus === false)
+                          .map((request) => request.postedBy.email)
+                          // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                          .includes(user.email)
+                      : requests
+                          .filter((m) => m.pickupTime !== 'Cafeteria')
+                          .filter((m) => m.orderStatus === false)
+                          .map((request) => request.postedBy.email)
+                          // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
+                          .includes(user.email)
+                  )}
+                >
+                  {<canvas className=" " id="completedChart"></canvas>}
+                </CSVLink>
               </div>
               <div className="col-sm-4 p-4">
                 <CSVLink
@@ -694,7 +753,7 @@ const Admin = ({ token, user, initRequests }) => {
             >
               {/* {!requests.map((request) => request.postedBy.email)} */}
               Full Email List of {userList.length} users CSV{' '}
-              {console.log(
+              {/* {console.log(
                 'test',
                 userList.filter((user) =>
                   requests
@@ -702,7 +761,7 @@ const Admin = ({ token, user, initRequests }) => {
                     .map((request) => request.postedBy.email)
                     .includes(user.email)
                 )
-              )}
+              )} */}
               {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
               {/* {console.log('test2', !requests
                 .map((request) => request.postedBy.email).includes(user.email))} */}
@@ -717,7 +776,7 @@ const Admin = ({ token, user, initRequests }) => {
             >
               {/* {!requests.map((request) => request.postedBy.email)} */}
               Full Email List of {userList.length} users CSV{' '}
-              {console.log(
+              {/* {console.log(
                 'test',
                 userList.filter((user) =>
                   requests
@@ -725,7 +784,7 @@ const Admin = ({ token, user, initRequests }) => {
                     .map((request) => request.postedBy.email)
                     .includes(user.email)
                 )
-              )}
+              )} */}
               {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
               {/* {console.log('test2', !requests
                 .map((request) => request.postedBy.email).includes(user.email))} */}
@@ -733,6 +792,43 @@ const Admin = ({ token, user, initRequests }) => {
           )}
         </div>
       </div>
+
+      {/* {filter((l) =>
+        l.postedBy.students
+          .map((s) => s.name.toLowerCase())
+          .toString()
+          .includes(search.toLowerCase())
+      )} */}
+
+      
+      {console.log( // This shows descripency with All Onsite numbers first filter returning more. Including all the orders with breakfast pickups.
+        'totals check OR sesame check',
+        requests
+          // .filter((request) => request.pickupTime != 'Cafeteria')
+          .filter((l) =>
+            l.mealRequest
+              .map((s) => s.meal)
+              .toString()
+              .includes('Standard Onsite')
+          )
+          .filter((l) =>
+            !l.mealRequest
+              .every((meal) => meal.meal == 'Standard Onsite')
+          ).length,
+        requests // sesame 
+          // .filter((request) => request.pickupTime != 'Cafeteria')
+          .filter((l) =>
+            l.mealRequest
+              .map((s) => s.meal)
+              .toString()
+              .includes('Sesame Free')
+          )
+          // .filter((l) =>
+          //   l.mealRequest
+          //     .every((meal) => meal.meal == 'Vegan')
+          // )
+      )}
+
       <div className="row" id="dataCards">
         <div className="col-sm-4 pb-4" id="curbside">
           <div
@@ -753,7 +849,7 @@ const Admin = ({ token, user, initRequests }) => {
             {user.userCode === 'DOOB' && (
               <CSVLink
                 className="badge btn btn-sm btn-outline-dark text float-right"
-                filename="all_curbside_orders_email_list-CSV"
+                filename={`all_curbside_orders_email_list_${pickupDate}-CSV`}
                 headers={emailHeaders}
                 data={userList.filter((user) =>
                   requests
@@ -785,13 +881,14 @@ const Admin = ({ token, user, initRequests }) => {
             <b className="text-danger">{allOpenPickupMeals()}</b> - Unfulfilled
             Curbside
             <div className="">
-              {user.userCode === 'LYF' && (
+              {/* {user.userCode === 'LYF' && (
                 <CSVLink
                   className="badge btn btn-sm btn-outline-dark text float-right"
                   headers={emailHeaders}
                   filename="unfulfilled_curbside_email_list-CSV"
                   data={userList.filter((user) =>
                     requests
+                    .filter((mealRequest) => mealRequest.pickupTime === pickupButton)
                       .filter(
                         (request) =>
                           request.pickupTime != 'Cafeteria' &&
@@ -823,15 +920,8 @@ const Admin = ({ token, user, initRequests }) => {
                   )}
                 >
                   Unfulfilled{' '}
-                  {/* {userList.filter((user) =>
-            requests
-              .filter((request) => request.pickupTime != 'Cafeteria' && request.orderStatus != true).map(request => request.postedBy.email)
-              // .filter((request) => request.orderStatus != true).map(request => request.postedBy.email)
-              .includes(user.email)
-              ).length} */}
-                  {/* CSV{' '} */}
                 </CSVLink>
-              )}
+              )} */}
               <p />
               <b className="text-danger">{allCompletedPickupMeals()}</b> -
               Fulfilled Curbside
