@@ -682,7 +682,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           .filter((l) => l.orderStatus.toString().includes(searchByStatus))
           .filter(
             (l) =>
-              l.postedBy.students
+              l.postedBy.students // special case unique happy
                 .map((s) => s.name.toLowerCase()).toString()
                 .includes(search.toLowerCase()) ||
               l.postedBy.lastName

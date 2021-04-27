@@ -149,14 +149,14 @@ const Admin = ({ token, user, initRequests }) => {
   const allOnsiteMeals = () =>
     // requests.filter((m) => m.mealRequest.map((meal) => meal.group == 'distance-learning')).length
     requests.filter((l) =>
-            l.mealRequest
-              .map((s) => s.meal)
-              .toString()
-              .includes('Standard Onsite')
-          ).length
-    // requests.filter((request) =>
-    //   request.mealRequest.every((meal) => meal.meal == 'Standard Onsite')
-    // ).length;
+      l.mealRequest
+        .map((s) => s.meal)
+        .toString()
+        .includes('Standard Onsite')
+    ).length;
+  // requests.filter((request) =>
+  //   request.mealRequest.every((meal) => meal.meal == 'Standard Onsite')
+  // ).length;
   // console.log('all onsite', requests.filter((request) => request.mealRequest.every((meal) => meal.group == 'distance-learning')).length)
   // meals.filter((m) => m.group == 'b-group').length;
   const allIndividualOnsiteMeals = () =>
@@ -800,8 +800,8 @@ const Admin = ({ token, user, initRequests }) => {
           .includes(search.toLowerCase())
       )} */}
 
-      
-      {console.log( // This shows descripency with All Onsite numbers first filter returning more. Including all the orders with breakfast pickups.
+      {console.log(
+        // This shows descripency with All Onsite numbers first filter returning more. Including all the orders with breakfast pickups.
         'totals check OR sesame check',
         requests
           // .filter((request) => request.pickupTime != 'Cafeteria')
@@ -811,23 +811,53 @@ const Admin = ({ token, user, initRequests }) => {
               .toString()
               .includes('Standard Onsite')
           )
-          .filter((l) =>
-            !l.mealRequest
-              .every((meal) => meal.meal == 'Standard Onsite')
+          .filter(
+            (l) =>
+              !l.mealRequest.every((meal) => meal.meal == 'Standard Onsite')
           ).length,
-        requests // sesame 
-          // .filter((request) => request.pickupTime != 'Cafeteria')
-          .filter((l) =>
-            l.mealRequest
-              .map((s) => s.meal)
-              .toString()
-              .includes('Sesame Free')
-          )
-          // .filter((l) =>
-          //   l.mealRequest
-          //     .every((meal) => meal.meal == 'Vegan')
-          // )
+        userList.filter((user) =>
+          requests // sesame
+            // .filter((request) => request.pickupTime != 'Cafeteria')
+            .filter((request) =>
+              request.mealRequest
+                .map((s) => s.meal)
+                .toString()
+                .includes('Vegan')
+            )
+            .map((request) => request.postedBy.email)
+            .includes(user.email)
+        )
       )}
+
+      {
+        // this returns the user information that has a certain peram (meal here) in their mealRequest
+        console.log(
+          'userList vs mealRequest',
+          userList.filter((user) =>
+            requests // sesame
+              // .filter((request) => request.pickupTime != 'Cafeteria')
+              .filter(
+                (request) =>
+                  request.mealRequest
+                    .map((s) => s.meal)
+                    .toString()
+                    .includes('Vegan') // meal in their request
+              )
+              .map((request) => request.postedBy.email)
+              .includes(user.email)
+          )
+        )
+      }
+
+      {
+        // let's find sesame
+        console.log(
+          'sesame user finder',
+          userList.filter((user) =>
+            user.students.map((student) => student.foodAllergy.dairy).includes(true)
+          )
+        )
+      }
 
       <div className="row" id="dataCards">
         <div className="col-sm-4 pb-4" id="curbside">

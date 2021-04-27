@@ -41,7 +41,7 @@ exports.register = (req, res) => {
       return result;
     };
     // this takes first 3 letters of last name and 1 random character
-    const userCode =
+    let userCode =
       lastName.substr(0, 3).toUpperCase() + makeUserCode(1).toUpperCase();
 
     // checks to see if anyone has usercode // should be .exec((err, user)) 
