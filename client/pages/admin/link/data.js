@@ -591,6 +591,17 @@ const Admin = ({ token, user, initRequests }) => {
     };
   }, [meals]);
 
+  const Title = ({ pickupDate, pickupButton }) => {
+    // not sure what it does
+    return (
+      <div className="h2 text-center pb-3">
+        <span className='text-danger'> {requests.length}</span> - Meal Requests for Friday Pickup{' '}
+        {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`} Week of{' '}
+        {`${pickupDate}`} {`${pickupButton}`}
+      </div>
+    );
+  };
+
   return (
     <Layout>
       {/* <Head>
@@ -600,6 +611,7 @@ const Admin = ({ token, user, initRequests }) => {
           crossOrigin="anonymous"
         ></script>
       </Head> */}
+
       <br />
       <div
         className=""
@@ -707,12 +719,12 @@ const Admin = ({ token, user, initRequests }) => {
 
       {/* <hr /> */}
 
-      <div className="row pt-5 pb-5 ml-3">
+      {/* <div className="row pt-5 pb-5 ml-3">
         <div className="col-sm-4 mb-3">
           <b className="h2 text-danger">{requests.length}</b> -{' '}
           <b className="h2 ">Meal Requests</b>
-        </div>
-        <div className="col">
+        </div> */}
+        {/* <div className="col"> */}
           {/* {user.userCode === 'LYF' && (
             <CSVLink
               className="btn btn-sm btn-outline-dark text float-right mr-3 mb-3"
@@ -743,28 +755,15 @@ const Admin = ({ token, user, initRequests }) => {
               ordered CSV{' '}
             </CSVLink>
           )} */}
-          &nbsp;&nbsp;
-          {user.userCode === 'LYF' && (
+          {/* &nbsp;&nbsp; */}
+          {/* {user.userCode === 'LYF' && (
             <CSVLink
               className="btn btn-sm btn-outline-dark text float-right mr-3"
               headers={emailHeaders}
               filename="all_registered_users_email_list-CSV"
               data={userList}
             >
-              {/* {!requests.map((request) => request.postedBy.email)} */}
               Full Email List of {userList.length} users CSV{' '}
-              {/* {console.log(
-                'test',
-                userList.filter((user) =>
-                  requests
-                    .filter((request) => request.pickupTime != 'Cafeteria')
-                    .map((request) => request.postedBy.email)
-                    .includes(user.email)
-                )
-              )} */}
-              {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
-              {/* {console.log('test2', !requests
-                .map((request) => request.postedBy.email).includes(user.email))} */}
             </CSVLink>
           )}
           {user.userCode === 'DOOB' && (
@@ -774,24 +773,11 @@ const Admin = ({ token, user, initRequests }) => {
               filename="all_registered_users_email_list-CSV"
               data={userList}
             >
-              {/* {!requests.map((request) => request.postedBy.email)} */}
               Full Email List of {userList.length} users CSV{' '}
-              {/* {console.log(
-                'test',
-                userList.filter((user) =>
-                  requests
-                    .filter((request) => request.pickupTime != 'Cafeteria')
-                    .map((request) => request.postedBy.email)
-                    .includes(user.email)
-                )
-              )} */}
-              {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
-              {/* {console.log('test2', !requests
-                .map((request) => request.postedBy.email).includes(user.email))} */}
             </CSVLink>
-          )}
-        </div>
-      </div>
+          )} */}
+        {/* </div> */}
+      {/* </div> */}
 
       {/* {filter((l) =>
         l.postedBy.students
@@ -854,11 +840,14 @@ const Admin = ({ token, user, initRequests }) => {
         console.log(
           'sesame user finder',
           userList.filter((user) =>
-            user.students.map((student) => student.foodAllergy.dairy).includes(true)
+            user.students
+              .map((student) => student.foodAllergy.dairy)
+              .includes(true)
           )
         )
       }
-
+      <div className="p-4"></div>
+      <Title  pickupDate={pickupDate} pickupButton={pickupButton} />
       <div className="row" id="dataCards">
         <div className="col-sm-4 pb-4" id="curbside">
           <div
@@ -1096,9 +1085,9 @@ const Admin = ({ token, user, initRequests }) => {
               // borderBlock: '5px',
             }}
           >
-            <b className="h3">Curbside Requests</b>
-            <hr />
-            <b className="h5">Standard Requests</b>
+            {/* <b className="h3">Curbside Requests</b>
+            <hr /> */}
+            <b className="h5 strong">Standard Requests</b>
             <hr />
             <div className="">
               <h6>
@@ -1409,6 +1398,32 @@ const Admin = ({ token, user, initRequests }) => {
               </h6>
             </div>
           </div>
+          <br />
+          {user.userCode === 'DOOB' || user.userCode === 'LYF' ? (
+            <CSVLink
+              className="btn btn-sm btn-outline-dark text float-right mr-3"
+              headers={emailHeaders}
+              filename="all_registered_users_email_list-CSV"
+              data={userList}
+            >
+              {/* {!requests.map((request) => request.postedBy.email)} */}
+              All {userList.length} users CSV{' '}
+              {/* {console.log(
+                'test',
+                userList.filter((user) =>
+                  requests
+                    .filter((request) => request.pickupTime != 'Cafeteria')
+                    .map((request) => request.postedBy.email)
+                    .includes(user.email)
+                )
+              )} */}
+              {/* {console.log('test2', requests.filter(request => request.pickupTime === 'Cafeteria'))} */}
+              {/* {console.log('test2', !requests
+                .map((request) => request.postedBy.email).includes(user.email))} */}
+            </CSVLink>
+          ) : (
+            ''
+          )}
         </div>
         <br />
         {/* {user.userCode === 'DOOB' && (
