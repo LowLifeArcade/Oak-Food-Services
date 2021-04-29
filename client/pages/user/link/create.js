@@ -521,7 +521,7 @@ const Create = ({ token, user }) => {
     // meal.studentName = studentName;
     // meal.group = group; // I might regret turnind this off
     // meal.teacher = teacher; // I might regret turnind this off
-    // meal.pickupOption = pickupOptionLO;
+    meal.pickupOption = pickupOptionLO;
     // meal.foodAllergy = foodAllergy;
 
     meals[i] = meal; // puts meal[i] back into mealRequest array
@@ -618,7 +618,7 @@ const Create = ({ token, user }) => {
             {isAuth().role === 'admin' && (
               <>
                 <option value={'Standard'}>Standard</option>
-                <option value={'Standard'}>Standard Onsite</option>
+                <option value={'Standard Onsite'}>Standard Onsite</option>
                 <option value={'Vegetarian'}>Vegetarian</option>
                 <option value={'Vegan'}>Vegan</option>
                 <option value={'Gluten Free'}>Gluten Free</option>
@@ -985,10 +985,13 @@ const Create = ({ token, user }) => {
 
   const selectAdminPickupOptions = (i) => (
     <>
+    {console.log()}
       <div key={i} className="form-group">
         <select
           type="select"
           data-index={i}
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
           onChange={(e) => handlePickupOption(i, e)}
           className="form-control"
         >
@@ -1905,7 +1908,7 @@ const Create = ({ token, user }) => {
                         {
                           x.meal !== '2on 3off' // put all special options here to turn off this field then put them below this to activate another select menu
                             ? isAuth().role === 'admin'
-                              ? selectAdminPickupOptions()
+                              ? selectAdminPickupOptions(i)
                               : x.meal != 'None' // put option here to turn off pickup selection like for none
                               ? // ? x.meal != '2on 3off'
                                 state.students[i].group === 'distance-learning'

@@ -86,7 +86,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           meal.studentName = 'Student Deleted';
           meal.pickupOption = 'deleted';
           meal.meal = 'deleted';
-        } else {
+        } else if (isAuth().role != 'admin') {
           if (
             meal.studentName !== user.students[index].name ||
             meal.foodAllergy.soy !== students[index].foodAllergy.soy ||
@@ -538,7 +538,7 @@ const Update = ({ oldLink, token, user, _id }) => {
     // meal.studentName = studentName;
     // meal.group = group;
     // meal.teacher = teacher;
-    // meal.pickupOption = pickupOptionLO;
+    meal.pickupOption = pickupOptionLO;
     // meal.foodAllergy = foodAllergy;
 
     meals[i] = meal; // puts meal[i] back into mealRequest array
@@ -670,7 +670,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             {isAuth().role === 'admin' && (
               <>
                 <option value={'Standard'}>Standard</option>
-                <option value={'Standard'}>Standard Onsite</option>
+                <option value={'Standard Onsite'}>Standard Onsite</option>
                 <option value={'Vegetarian'}>Vegetarian</option>
                 <option value={'Vegan'}>Vegan</option>
                 <option value={'Gluten Free'}>Gluten Free</option>
@@ -1034,25 +1034,25 @@ const Update = ({ oldLink, token, user, _id }) => {
 
   const selectAdminPickupOptions = (i) => (
     <>
+    {console.log(state.mealRequest)}
       <div key={i} className="form-group">
         <select
           type="select"
-          // defaultValue={state.mealRequest[i].pickupOption}
-          // value={state.mealRequest[i].pickupOption}
+          defaultValue={state.mealRequest[i].pickupOption}
+          value={state.mealRequest[i].pickupOption}
           // value='Breakfast and Lunch'
+          // defaultValue={state.mealRequest[i].pickupOption}
           data-index={i}
           onChange={(e) => handlePickupOption(i, e)}
           className="form-control"
         >
           {' '}
-          <option selected value={'Breakfast and Lunch'}>
+          <option value={'Breakfast and Lunch'}>
             Breakfast and Lunch
           </option>
           <option value={'Breakfast Only'}>Breakfast Only</option>
           <option value={'Lunch Only'}>Lunch Only</option>
-          <option selected value={'Lunch Onsite'}>
-            Lunch Onsite
-          </option>
+          <option value={'Lunch Onsite'}>Lunch Onsite</option>
           <option value={'Lunch Onsite / Breakfast Pickup'}>
             Lunch Onsite / Breakfast Pickup
           </option>
@@ -1888,7 +1888,7 @@ const Update = ({ oldLink, token, user, _id }) => {
               <div className=" form-group">
                 <input
                   type="text"
-                  defaultValue={oldLink.postedBy.userCode}
+                  defaultValue={oldLink.userCode}
                   className=" form-control"
                   placeholder="Enter a 4 digit User Code"
                   onChange={(e) => handleCodeChange(e)}
@@ -1899,7 +1899,7 @@ const Update = ({ oldLink, token, user, _id }) => {
               <div className=" form-group">
                 <input
                   type="text"
-                  defaultValue={oldLink.postedBy.userCode}
+                  defaultValue={oldLink.userCode}
                   className=" form-control"
                   placeholder="Enter a 4 digit User Code"
                   onChange={(e) => handleCodeChange(e)}
@@ -2127,7 +2127,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                       {
                         x.meal !== '2on 3off'
                           ? isAuth().role === 'admin'
-                            ? selectAdminPickupOptions()
+                            ? selectAdminPickupOptions(i)
                             : x.meal != 'None' && x.meal != 'deleted'
                             ? students[i] &&
                               students[i].group === 'distance-learning' &&
