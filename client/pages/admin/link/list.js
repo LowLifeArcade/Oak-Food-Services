@@ -212,6 +212,23 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     });
   }, [linksByDate]);
 
+  useEffect(() => {
+    let newOnsiteData = allMealsArray
+      .filter((meal) => meal.meal !== 'None')
+      .filter((l) => l.group != 'distance-learning')
+      .filter(
+        (l, i) =>
+          (l.teacher && l.teacher.includes(searchByTeacher)) ||
+          (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+          (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+          (l.teacher && l.teacher.includes(searchByTeacher4))
+      )
+      .filter((l, i) => l.group.includes(searchByGroup))
+      .filter((l, i) => l.schoolName.includes(searchBySchool));
+    // console.log('NEW onsite data', newOnsiteData);
+    setCsvOnsiteData(newOnsiteData);
+  }, [searchBySchool, searchByGroup, searchByTeacher, searchByTeacher2, searchByTeacher3, searchByTeacher4]);
+
   // takes 'none' meals out of allMealsArray
   // useEffect(() => {
   //   setTimeout(() => {
@@ -683,7 +700,8 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
           .filter(
             (l) =>
               l.postedBy.students // special case unique happy
-                .map((s) => s.name.toLowerCase()).toString()
+                .map((s) => s.name.toLowerCase())
+                .toString()
                 .includes(search.toLowerCase()) ||
               l.postedBy.lastName
                 .toLowerCase()
