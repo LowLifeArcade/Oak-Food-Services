@@ -26,6 +26,7 @@ router.get('/link/:id', read);
 // user only delete
 router.put('/link/:id', linkUpdateValidator, runValidation, requireSignin, authMiddleware, canUpdateDeleteLink, update);
 router.delete('/link/:id', requireSignin, authMiddleware, canUpdateDeleteLink, remove);
+router.delete('/admin-delete-link/:id', requireSignin, authMiddleware, remove);
 // make admin only able to do something
 router.put('/link/admin/:id', linkUpdateValidator, runValidation, requireSignin, adminMiddleware, update);
 router.put('/link/admin/complete/:id', orderStatusValidator, runValidation, requireSignin, adminMiddleware, complete);

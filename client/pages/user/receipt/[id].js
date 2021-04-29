@@ -16,8 +16,17 @@ const Update = ({ oldLink, token, user, _id }) => {
       'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
     );
     if (answer) {
-      window.confirm('Request is cancelled. No further action required.');
+      
       handleDelete(id);
+    }
+  };
+  const confirmAdminDelete = (e, id) => {
+    e.preventDefault();
+    let answer = window.confirm(
+      'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
+    );
+    if (answer) {
+      handleAdminDelete(id);
     }
   };
 
@@ -29,6 +38,7 @@ const Update = ({ oldLink, token, user, _id }) => {
         },
       });
       // console.log('LINK DELETE SUCCESS', response);
+      window.confirm('Request is cancelled. No further action required.');
       Router.replace('/user');
       // process.browser && window.location.reload();
 
@@ -38,7 +48,28 @@ const Update = ({ oldLink, token, user, _id }) => {
       //   ? Router.push('user')
       //   : Router.push('/login');
     } catch (error) {
-      // console.log('ERROR LINK CATEGORY', error);
+      console.log('ERROR LINK CATEGORY', error);
+    }
+  };
+  const handleAdminDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${API}/admin-delete-link/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log('LINK DELETE SUCCESS', response);
+      window.confirm('Request is cancelled. No further action required.');
+      Router.replace('/user');
+      // process.browser && window.location.reload();
+
+      // isAuth() && isAuth().role === 'admin'
+      //   ? Router.push('admin')
+      //   : isAuth() && isAuth().role === 'subscriber'
+      //   ? Router.push('user')
+      //   : Router.push('/login');
+    } catch (error) {
+      console.log('ERROR LINK CATEGORY', error);
     }
   };
 
@@ -382,12 +413,24 @@ parent last name: {oldLink.postedBy.lastName}
                     &nbsp;Print Code
                   </button>
                 )}
-              {oldLink && oldLink.orderStatus === false &&
+              {oldLink && oldLink.orderStatus === false && isAuth() && isAuth().role !== 'admin' &&
                 moment(oldLink.pickupDate).format('MDD').toString() >
                   moment(new Date()).format('MDD').toString() && (
                   <Link href="">
                     <button
                       onClick={(e) => confirmDelete(e, oldLink._id)}
+                      className="text-white btn btn-sm btn-danger float-right"
+                    >
+                      Cancel
+                    </button>
+                  </Link>
+                )}
+              {oldLink && oldLink.orderStatus === false && isAuth() && isAuth().role === 'admin' &&
+                moment(oldLink.pickupDate).format('MDD').toString() >
+                  moment(new Date()).format('MDD').toString() && (
+                  <Link href="">
+                    <button
+                      onClick={(e) => confirmAdminDelete(e, oldLink._id)}
                       className="text-white btn btn-sm btn-danger float-right"
                     >
                       Cancel

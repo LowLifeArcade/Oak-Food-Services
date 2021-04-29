@@ -792,7 +792,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                     <a>
                       {
                         l.postedBy === null ? 'user deleted' : l.studentName // make link to receipt
-
+                        
                         // + ' ' + l.lastName
                       }
                     </a>

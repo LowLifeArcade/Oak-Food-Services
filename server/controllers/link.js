@@ -340,9 +340,11 @@ exports.complete = (req, res) => {
 
 exports.remove = (req, res) => {
   const { id } = req.params;
+  // console.log('params', req.params)
   Link.findOneAndRemove({ _id: id }).exec((err, data) => {
-    // console.log(data);
+    console.log(data);
     if (err) {
+      // console.log(err)
       return res.status(400).json({
         error: 'Error removing link',
       });
