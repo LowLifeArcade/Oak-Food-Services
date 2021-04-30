@@ -126,9 +126,12 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
     linksByDate.map((r, i) => {
       let request = { ...requestsArrayByDate[i] };
 
-      // lists allergies for both offsite and onsite data
+      // map and update data
       r.mealRequest.map((meal, i) => {
         let oneMeal = { ...request.mealRequest[i] };
+
+
+        // lists allergies for both offsite and onsite data
         oneMeal.allergies = [];
 
         meal.foodAllergy.peanuts && oneMeal.allergies.push(' peanuts');
@@ -140,7 +143,22 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         meal.foodAllergy.seafood && oneMeal.allergies.push(' seafood');
         meal.foodAllergy.egg && oneMeal.allergies.push(' egg');
 
+        // Split student name 
+        oneMeal.studentName2 = oneMeal.studentName ? oneMeal.studentName.split(' ') : oneMeal.studentName
+        oneMeal.studentFirstName = oneMeal.studentName2 ? oneMeal.studentName2[0] : oneMeal.studentName
+        oneMeal.studentLastName = oneMeal.studentName2 ? oneMeal.studentName2[oneMeal.studentName2.length - 1] : oneMeal.studentName
+
+        // Capitalize teacher name
+        function capitalizeFirstAfterTheColon(value){
+          return value.replace(/([-\?]\s+)(.)/g, function(data) {
+             return data.toUpperCase();
+          });
+        }
+        
+        oneMeal.teacherCapitalized = capitalizeFirstAfterTheColon(oneMeal.teacher)
+
         request.mealRequest[i] = oneMeal;
+        console.log('one meal', oneMeal)
       });
 
       // adds special order to offsite data
@@ -628,7 +646,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         request.orderStatus,
         request.mealRequest
       );
-      setState({ ...state, linksByDate: requests });
+      setState({ ...state, search: '', linksByDate: requests });
       // setLinksByDate(requests);
     }
   };
