@@ -122,14 +122,14 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   }, [orderType]);
 
   useEffect(() => {
-    let requestsArrayByDate = [...linksByDate];
+    // This isn't really working. I think at all. The array keeps getting over written when outside of map but inside it doesn't have anything to persist. Tried putting it all in state every loop but that gets very heavy. I need to find out how to loop through the array of requests and update each one and save that data on each loop.
     linksByDate.map((r, i) => {
+      let requestsArrayByDate = [...linksByDate];
       let request = { ...requestsArrayByDate[i] };
 
       // map and update data
       r.mealRequest.map((meal, i) => {
         let oneMeal = { ...request.mealRequest[i] };
-
 
         // lists allergies for both offsite and onsite data
         oneMeal.allergies = [];
@@ -143,22 +143,30 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         meal.foodAllergy.seafood && oneMeal.allergies.push(' seafood');
         meal.foodAllergy.egg && oneMeal.allergies.push(' egg');
 
-        // Split student name 
-        oneMeal.studentName2 = oneMeal.studentName ? oneMeal.studentName.split(' ') : oneMeal.studentName
-        oneMeal.studentFirstName = oneMeal.studentName2 ? oneMeal.studentName2[0] : oneMeal.studentName
-        oneMeal.studentLastName = oneMeal.studentName2 ? oneMeal.studentName2[oneMeal.studentName2.length - 1] : oneMeal.studentName
+        // Split student name
+        oneMeal.studentName2 = oneMeal.studentName
+          ? oneMeal.studentName.split(' ')
+          : oneMeal.studentName;
+        oneMeal.studentFirstName = oneMeal.studentName2
+          ? oneMeal.studentName2[0]
+          : oneMeal.studentName;
+        oneMeal.studentLastName = oneMeal.studentName2
+          ? oneMeal.studentName2[oneMeal.studentName2.length - 1]
+          : oneMeal.studentName;
 
         // Capitalize teacher name
-        function capitalizeFirstAfterTheColon(value){
-          return value.replace(/([-\?]\s+)(.)/g, function(data) {
-             return data.toUpperCase();
+        function capitalizeFirstAfterTheColon(value) {
+          return value.replace(/([-\?]\s+)(.)/g, function (data) {
+            return data.toUpperCase();
           });
         }
-        
-        oneMeal.teacherCapitalized = capitalizeFirstAfterTheColon(oneMeal.teacher)
+
+        oneMeal.teacherCapitalized = capitalizeFirstAfterTheColon(
+          oneMeal.teacher
+        );
 
         request.mealRequest[i] = oneMeal;
-        console.log('one meal', oneMeal)
+        // console.log('one meal', oneMeal)
       });
 
       // adds special order to offsite data
@@ -182,12 +190,13 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         request.mealRequest[i] = oneMeal;
       });
 
+
       // add students to request
       request.students = [];
       r.mealRequest.map((meal, i) => {
         request.students.push(' ' + meal.studentName + ' ' + meal.schoolName);
       });
-
+      
       requestsArrayByDate[i] = request;
 
       let newOffsiteData = requestsArrayByDate
@@ -200,27 +209,33 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         );
 
       setCsvOffsiteData(newOffsiteData);
+
       setState({
+        // not being used anymore
         ...state,
         CSVData: [...requestsArrayByDate],
-        // csvOffsiteData: newOffsiteData
       });
     });
 
-    let newOnsiteData = allMealsArray
-      .filter((meal) => meal.meal !== 'None')
-      .filter((l) => l.group != 'distance-learning')
-      .filter(
-        (l, i) =>
-          (l.teacher && l.teacher.includes(searchByTeacher)) ||
-          (l.teacher && l.teacher.includes(searchByTeacher2)) ||
-          (l.teacher && l.teacher.includes(searchByTeacher3)) ||
-          (l.teacher && l.teacher.includes(searchByTeacher4))
-      )
-      .filter((l, i) => l.group.includes(searchByGroup))
-      .filter((l, i) => l.schoolName.includes(searchBySchool));
-    // console.log('NEW onsite data', newOnsiteData);
-    setCsvOnsiteData(newOnsiteData);
+      let newOnsiteData = allMealsArray
+        .sort((a, b) => // sorts by last name but not 'studentLastName'
+          a.studentLastName
+            ? a.studentLastName.localeCompare(b.studentLastName)
+            : a.lastName.localeCompare(b.lastName)
+        )
+        .filter((meal) => meal.meal !== 'None')
+        .filter((l) => l.group != 'distance-learning')
+        .filter(
+          (l, i) =>
+            (l.teacher && l.teacher.includes(searchByTeacher)) ||
+            (l.teacher && l.teacher.includes(searchByTeacher2)) ||
+            (l.teacher && l.teacher.includes(searchByTeacher3)) ||
+            (l.teacher && l.teacher.includes(searchByTeacher4))
+        )
+        .filter((l, i) => l.group.includes(searchByGroup))
+        .filter((l, i) => l.schoolName.includes(searchBySchool));
+      // console.log('NEW onsite data', newOnsiteData);
+      setCsvOnsiteData(newOnsiteData);
     setState({
       ...state,
       // allMealsArray: allMealsArray2.filter((meal) => meal.meal !== 'None'),
@@ -245,7 +260,14 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       .filter((l, i) => l.schoolName.includes(searchBySchool));
     // console.log('NEW onsite data', newOnsiteData);
     setCsvOnsiteData(newOnsiteData);
-  }, [searchBySchool, searchByGroup, searchByTeacher, searchByTeacher2, searchByTeacher3, searchByTeacher4]);
+  }, [
+    searchBySchool,
+    searchByGroup,
+    searchByTeacher,
+    searchByTeacher2,
+    searchByTeacher3,
+    searchByTeacher4,
+  ]);
 
   // takes 'none' meals out of allMealsArray
   // useEffect(() => {
@@ -559,11 +581,12 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
   //   .filter((l, i) => l.schoolName.includes(searchBySchool));
 
   const onsiteHeaders = [
-    { label: 'School Name', key: 'schoolName' },
-    { label: 'Student Name', key: 'studentName' },
+    // { label: 'School Name', key: 'schoolName' },
+    { label: 'Group', key: 'group' },
+    { label: 'Name', key: 'studentName' },
+    // { label: 'First Name', key: 'studentFirstName' },
     // { label: 'Last Name', key: 'lastName' },
     { label: 'Teacher', key: 'teacher' },
-    { label: 'Group', key: 'group' },
     { label: 'Food Allergy', key: 'allergies' },
     { label: 'Complete', key: 'complete' },
   ];
@@ -629,6 +652,9 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       ? (answer = window.confirm('Mark this order as completed?'))
       : (answer = window.confirm('Mark this order as not completed?'));
     if (answer) {
+      request.orderStatus === false
+      ? (window.confirm('Order is complete!'))
+      : (window.confirm('Order marked as not completed'));
       request.orderStatus =
         e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
@@ -646,6 +672,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         request.orderStatus,
         request.mealRequest
       );
+      // window.confirm('Order is complete!')
       setState({ ...state, search: '', linksByDate: requests });
       // setLinksByDate(requests);
     }
@@ -667,6 +694,9 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       ? (answer = window.confirm('Mark this order as completed?'))
       : (answer = window.confirm('Mark this order as not completed?'));
     if (answer) {
+      request.complete === false
+      ? (answer = window.confirm('Order is complete!'))
+      : (answer = window.confirm('Order marked as not complete'));
       request.complete =
         e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
@@ -683,6 +713,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
       });
 
       handleComplete(request._id, request.complete, request.mealRequest);
+      // window.confirm('Order is complete!');
       // setAllMealsArray(requests);
       setState({ ...state, allMealsArray: requests });
     }
@@ -810,7 +841,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                     <a>
                       {
                         l.postedBy === null ? 'user deleted' : l.studentName // make link to receipt
-                        
+
                         // + ' ' + l.lastName
                       }
                     </a>
