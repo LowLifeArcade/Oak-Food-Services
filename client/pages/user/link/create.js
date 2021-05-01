@@ -1564,6 +1564,10 @@ const Create = ({ token, user }) => {
             Pickup at Cafeteria
           </label>
           {selectPickupTimeCafeteriaOnly()}
+          {pickupTime != 'Cafeteria' && setState({ // quick fix but deservers a refactor and figure out a better solution 
+            ...state,
+            pickupTime: 'Cafeteria',
+          })}
         </div>
       ) : (
         <div className="form-group">

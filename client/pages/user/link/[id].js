@@ -1034,7 +1034,7 @@ const Update = ({ oldLink, token, user, _id }) => {
 
   const selectAdminPickupOptions = (i) => (
     <>
-    {console.log(state.mealRequest)}
+      {console.log(state.mealRequest)}
       <div key={i} className="form-group">
         <select
           type="select"
@@ -1047,9 +1047,7 @@ const Update = ({ oldLink, token, user, _id }) => {
           className="form-control"
         >
           {' '}
-          <option value={'Breakfast and Lunch'}>
-            Breakfast and Lunch
-          </option>
+          <option value={'Breakfast and Lunch'}>Breakfast and Lunch</option>
           <option value={'Breakfast Only'}>Breakfast Only</option>
           <option value={'Lunch Only'}>Lunch Only</option>
           <option value={'Lunch Onsite'}>Lunch Onsite</option>
@@ -1102,7 +1100,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             className="form-control"
           >
             {' '}
-            <option disabled value="">
+            <option selected disabled value="">
               Choose an option
             </option>
             {isAuth().role === 'admin' && (
@@ -1816,6 +1814,10 @@ const Update = ({ oldLink, token, user, _id }) => {
             Pickup at Cafeteria
           </label>
           {selectPickupTimeCafeteriaOnly()}
+          {pickupTime != 'Cafeteria' && setState({ // quick fix but deservers a refactor and figure out a better solution 
+            ...state,
+            pickupTime: 'Cafeteria',
+          })}
         </div>
       ) : (
         <div className="form-group">

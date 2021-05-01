@@ -779,10 +779,14 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
                 <td>
                   {l.postedBy === null
                     ? 'user deleted'
-                    : l.postedBy.students.map((s) => (
+                    : l.mealRequest.map((s) => (
                         <>
-                          {s.name} {s.schoolName} {','}{' '}
+                          {s.studentName} {s.schoolName} {','}{' '}
                         </>
+                    // : l.postedBy.students.map((s) => (
+                    //     <>
+                    //       {s.name} {s.schoolName} {','}{' '}
+                    //     </>
                       ))}
                 </td>
                 {showStatus && (

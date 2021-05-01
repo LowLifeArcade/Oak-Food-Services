@@ -79,7 +79,7 @@ const Home = () => {
                     loading="lazy"
                     alt=""
                     class="stepimage"
-                    width="300"
+                    width="320"
                   />
 
                   <div className={'pt-4 ' + styles.bodyregular}>
@@ -124,7 +124,7 @@ const Home = () => {
                     loading="lazy"
                     alt=""
                     class="stepimage"
-                    width="300"
+                    width="340"
                   />
 
                   <div className={'pt-4 ' + styles.bodyregular}>
@@ -150,7 +150,7 @@ const Home = () => {
                     loading="lazy"
                     alt=""
                     class="stepimage"
-                    width="300"
+                    width="340"
                   />
                   <span> 
 
@@ -209,7 +209,10 @@ const Home = () => {
                     </span>
                     <span>
                     <h1 id="printCode" className="code" onClick={printData}>
+                      <div className="h6 text-center invisible">example only</div>
                       Gf-NESS-03
+                      {/* <div className="h6 text-center invisible">example only</div> */}
+                      <div className="p-2"></div>
                     </h1>
 
                     </span>
