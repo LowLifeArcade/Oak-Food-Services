@@ -137,7 +137,7 @@ const Menus = ({ categories }) => {
                       parseInt(moment(c.pickupWeek).format('MMDD')) >
                       parseInt(
                         moment(new Date())
-                          .add(14, 'day')
+                          .add(13, 'day')
                           .format('MMDD')
                       )? 
                           (
@@ -158,7 +158,7 @@ const Menus = ({ categories }) => {
                           <div style={{ color: '#419ca8' }} className={'pt-1'}>
                             <hr />
                             <b>
-                              Meal requests are closed for {' '}
+                              Meal requests are <u><i>closed</i></u> for {' '}
                               {moment(c.pickupWeek)
                                 // .subtract(14, 'day')
                                 .format('MMMM Do')}
@@ -302,7 +302,7 @@ const Menus = ({ categories }) => {
                               parseInt(moment(c.pickupWeek).format('MMDD')) >
                                 parseInt(
                                   moment(new Date())
-                                    .add(14, 'day')
+                                    .add(13, 'day')
                                     .format('MMDD')
                                 ) && (
                                 <Link href="/user/link/create">

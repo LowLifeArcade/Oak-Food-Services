@@ -207,7 +207,7 @@ const Links = ({
                       parseInt(moment(category.pickupWeek).format('MMDD')) >
                       parseInt(
                         moment(new Date())
-                          .add(14, 'day')
+                          .add(13, 'day')
                           .format('MMDD')
                       )? 
                           (
@@ -228,7 +228,7 @@ const Links = ({
                           <div style={{ color: '#419ca8' }} className={'pt-1'}>
                             <hr />
                             <b>
-                              Meal requests are closed for {' '}
+                              Meal requests are <u><i>closed</i></u> for {' '}
                               {moment(category.pickupWeek)
                                 // .subtract(14, 'day')
                                 .format('MMMM Do')}
@@ -345,7 +345,7 @@ const Links = ({
               {isAuth()
                 ? parseInt(moment(category.pickupWeek).format('MMDD')) >
                     parseInt(
-                      moment(new Date()).add(14, 'day').format('MMDD')
+                      moment(new Date()).add(13, 'day').format('MMDD')
                     ) && (
                     // ? category.menu.length > 0 &&
                     // new Date() < twoWeeksFromNow
