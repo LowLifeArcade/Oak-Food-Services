@@ -16,7 +16,6 @@ const Update = ({ oldLink, token, user, _id }) => {
       'ATENTION! Please cancel at least a week in advance of pickup date if possible.'
     );
     if (answer) {
-      
       handleDelete(id);
     }
   };
@@ -107,9 +106,13 @@ const Update = ({ oldLink, token, user, _id }) => {
           <div
             key={242}
             className={
-              (oldLink && oldLink.orderStatus === true) || oldLink  &&
-              moment(oldLink.pickupDate).format('MDD').toString() <
-                moment(new Date()).format('MDD').toString()
+              (oldLink && oldLink.orderStatus === true) ||
+              (oldLink &&
+                moment(oldLink.pickupDate).format('MDD').toString() <
+                  moment(new Date())
+                    .subtract(4, 'day')
+                    .format('MDD')
+                    .toString())
                 ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
                 : 'p-4 alert  alert-warning ' + styles.subcard // completed order
             }
@@ -125,55 +128,62 @@ const Update = ({ oldLink, token, user, _id }) => {
                   <hr />
                 </b>
               )}
-              {oldLink && moment(oldLink.pickupDate).format('MDD').toString() <
-                moment(new Date()).format('MDD').toString() && (
-                <b className="text-danger ">
-                  <h2>
-                    * EXPIRED *
-                    <br />
-                    {/* on {moment(l.updatedAt).format('MMM Do')} */}
-                  </h2>
-                  <hr />
-                </b>
-              )}
+              {oldLink &&
+                moment(oldLink.pickupDate).format('MDD').toString() <
+                  moment(new Date()) // .add(2, 'day') // add 2 expires the reciept saturday when pickup(weekof) is monday
+                    .subtract(4, 'day')
+                    .format('MDD')
+                    .toString() && (
+                  <b className="text-danger ">
+                    <h2>
+                      * EXPIRED *
+                      <br />
+                      {/* on {moment(l.updatedAt).format('MMM Do')} */}
+                    </h2>
+                    <hr />
+                  </b>
+                )}
             </h4>
             {/* {console.log('old link', oldLink)} */}
-            {oldLink && oldLink.mealRequest.filter(
-              (l) =>
-                // l.meal == 'Standard' ||
-                // l.meal == 'Vegetarian' ||
-                // l.meal == 'Gluten Free' ||
-                // l.meal == 'Vegan' ||
-                // l.meal == 'Standard DF' ||
-                // l.meal == 'GlutenFree DF' ||
-                l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
-                l.pickupOption === 'Lunch Only' ||
-                l.pickupOption === 'Breakfast Only' ||
-                l.pickupOption === 'Breakfast and Lunch'
-            ).length != 0 && (
-              <>
-                <h3 className="pt-2 d-flex justify-content-center ">
-                  CURBSIDE PICKUP
-                </h3>
-                <h4>
-                  <div className="d-flex justify-content-center">
-                    <b>
-                      {'On ' +
-                        moment(oldLink.pickupDate)
-                          .subtract(3, 'day')
-                          .format('MMMM Do')}
-                    </b>
-                  </div>
-                </h4>
-                <span className="d-flex justify-content-center ">
-                  <b className="pb-2 ">{'Between ' + oldLink.pickupTime} </b>
-                </span>
-              </>
-            )}
+            {oldLink &&
+              oldLink.mealRequest.filter(
+                (l) =>
+                  // l.meal == 'Standard' ||
+                  // l.meal == 'Vegetarian' ||
+                  // l.meal == 'Gluten Free' ||
+                  // l.meal == 'Vegan' ||
+                  // l.meal == 'Standard DF' ||
+                  // l.meal == 'GlutenFree DF' ||
+                  l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                  l.pickupOption ===
+                    'Two Onsite / Three Breakfast and Lunches' ||
+                  l.pickupOption === 'Lunch Only' ||
+                  l.pickupOption === 'Breakfast Only' ||
+                  l.pickupOption === 'Breakfast and Lunch'
+              ).length != 0 && (
+                <>
+                  <h3 className="pt-2 d-flex justify-content-center ">
+                    CURBSIDE PICKUP
+                  </h3>
+                  <h4>
+                    <div className="d-flex justify-content-center">
+                      <b>
+                        {'On ' +
+                          moment(oldLink.pickupDate)
+                            .subtract(3, 'day')
+                            .format('MMMM Do')}
+                      </b>
+                    </div>
+                  </h4>
+                  <span className="d-flex justify-content-center ">
+                    <b className="pb-2 ">{'Between ' + oldLink.pickupTime} </b>
+                  </span>
+                </>
+              )}
             <hr className={styles.hr} />
             <h3>
-              {oldLink && oldLink.mealRequest.filter(
+              {oldLink &&
+              oldLink.mealRequest.filter(
                 (l) =>
                   // l.meal == 'Standard' ||
                   // l.meal == 'Vegetarian' ||
@@ -209,182 +219,190 @@ const Update = ({ oldLink, token, user, _id }) => {
               )}
             </h3>
             <hr className={styles.hr} />
-            {oldLink && oldLink.mealRequest.filter(
-              (l) =>
-                // l.meal == 'Standard' ||
-                // l.meal == 'Vegetarian' ||
-                // l.meal == 'Gluten Free' ||
-                // l.meal == 'Vegan' ||
-                // l.meal == 'Standard DF' ||
-                // l.meal == 'GlutenFree DF' ||
-                l.pickupOption === 'Breakfast Only' ||
-                l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
-                l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                l.pickupOption === 'Lunch Only' ||
-                l.pickupOption === 'Breakfast and Lunch'
-            ).length != 0 && (
-              <h6>
-                Pickup is at <b className="text">Brookside Elementary</b>.
-                Display the above code{' '}
-                <b className="text-danger">on your dashboard </b>or show from
-                your phone.
-              </h6>
-            )}
+            {oldLink &&
+              oldLink.mealRequest.filter(
+                (l) =>
+                  // l.meal == 'Standard' ||
+                  // l.meal == 'Vegetarian' ||
+                  // l.meal == 'Gluten Free' ||
+                  // l.meal == 'Vegan' ||
+                  // l.meal == 'Standard DF' ||
+                  // l.meal == 'GlutenFree DF' ||
+                  l.pickupOption === 'Breakfast Only' ||
+                  l.pickupOption ===
+                    'Two Onsite / Three Breakfast and Lunches' ||
+                  l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                  l.pickupOption === 'Lunch Only' ||
+                  l.pickupOption === 'Breakfast and Lunch'
+              ).length != 0 && (
+                <h6>
+                  Pickup is at <b className="text">Brookside Elementary</b>.
+                  Display the above code{' '}
+                  <b className="text-danger">on your dashboard </b>or show from
+                  your phone.
+                </h6>
+              )}
             <p></p>
             <div className="p-2">
               <h5 className="pb-1">
                 <div className="p-3">
-                  {oldLink && oldLink.mealRequest
-                    .filter((l) => oldLink.meal !== 'None')
-                    .map((k, i) => (
-                      <>
-                        <h5 className="">
-                          <b>
-                            {k.student === undefined
-                              ? 'user deleted'
-                              : oldLink.postedBy.students.filter((student) =>
-                                  student._id.includes(k.student)
-                                ) && k.studentName}
-                            :
-                          </b>
-                          <br></br>
-                        </h5>
-                        {k.student === undefined ? (
-                          'user deleted'
-                        ) : k.group === 'a-group' || k.group === 'b-group' ? (
-                          k.pickupOption ===
-                          'Lunch Onsite / Breakfast Pickup' ? (
-                            <>
-                              <div className="p-1">
-                                <div className="pb-2 ">Curbside Breakfast </div>
-                                <div
-                                  className="p-2"
-                                  style={{ fontSize: '16px' }}
-                                >
-                                  PLUS:
-                                  <br />
-                                  *Onsite Lunches{' '}
-                                  {k.group === 'b-group'
-                                    ? '- B'
-                                    : k.group === 'a-group'
-                                    ? '- A'
-                                    : ''}
-                                  *
-                                  <br />
-                                  *Week of{' '}
-                                  {moment(oldLink.pickupDate)
-                                    // .add(3, 'day')
-                                    .format('MMMM Do')}
-                                  *
+                  {oldLink &&
+                    oldLink.mealRequest
+                      .filter((l) => oldLink.meal !== 'None')
+                      .map((k, i) => (
+                        <>
+                          <h5 className="">
+                            <b>
+                              {k.student === undefined
+                                ? 'user deleted'
+                                : oldLink.postedBy.students.filter((student) =>
+                                    student._id.includes(k.student)
+                                  ) && k.studentName}
+                              :
+                            </b>
+                            <br></br>
+                          </h5>
+                          {k.student === undefined ? (
+                            'user deleted'
+                          ) : k.group === 'a-group' || k.group === 'b-group' ? (
+                            k.pickupOption ===
+                            'Lunch Onsite / Breakfast Pickup' ? (
+                              <>
+                                <div className="p-1">
+                                  <div className="pb-2 ">
+                                    Curbside Breakfast{' '}
+                                  </div>
+                                  <div
+                                    className="p-2"
+                                    style={{ fontSize: '16px' }}
+                                  >
+                                    PLUS:
+                                    <br />
+                                    *Onsite Lunches{' '}
+                                    {k.group === 'b-group'
+                                      ? '- B'
+                                      : k.group === 'a-group'
+                                      ? '- A'
+                                      : ''}
+                                    *
+                                    <br />
+                                    *Week of{' '}
+                                    {moment(oldLink.pickupDate)
+                                      // .add(3, 'day')
+                                      .format('MMMM Do')}
+                                    *
+                                  </div>
                                 </div>
-                              </div>
-                            </>
-                          ) : k.pickupOption ===
-                            'Two Onsite / Three Breakfast and Lunches' ? (
-                            <>
-                              <div className="p-1">
-                                <div className="pb-2 ">
-                                  Curbside: Three Lunches and Five Breakfasts
-                                </div>
-                                <div
-                                  className="p-2"
-                                  style={{ fontSize: '16px' }}
-                                >
-                                  PLUS:
-                                  <br />
-                                  *Onsite Lunches{' '}
-                                  {k.group === 'b-group'
-                                    ? '- B'
-                                    : k.group === 'a-group'
-                                    ? '- A'
-                                    : ''}
-                                  *
-                                  <br />
-                                  *Week of{' '}
-                                  {moment(oldLink.pickupDate)
-                                    // .add(3, 'day')
-                                    .format('MMMM Do')}
-                                  *
-                                  <br />
-                                  <br />
-                                  {/* TYPE:
+                              </>
+                            ) : k.pickupOption ===
+                              'Two Onsite / Three Breakfast and Lunches' ? (
+                              <>
+                                <div className="p-1">
+                                  <div className="pb-2 ">
+                                    Curbside: Three Lunches and Five Breakfasts
+                                  </div>
+                                  <div
+                                    className="p-2"
+                                    style={{ fontSize: '16px' }}
+                                  >
+                                    PLUS:
+                                    <br />
+                                    *Onsite Lunches{' '}
+                                    {k.group === 'b-group'
+                                      ? '- B'
+                                      : k.group === 'a-group'
+                                      ? '- A'
+                                      : ''}
+                                    *
+                                    <br />
+                                    *Week of{' '}
+                                    {moment(oldLink.pickupDate)
+                                      // .add(3, 'day')
+                                      .format('MMMM Do')}
+                                    *
+                                    <br />
+                                    <br />
+                                    {/* TYPE:
                                 <br />
                                 {k.pickupOption} */}
+                                  </div>
                                 </div>
-                              </div>
-                            </>
+                              </>
+                            ) : (
+                              <>
+                                <div className="p-1">
+                                  Onsite Lunches
+                                  <br />
+                                  <div
+                                    className="p-2"
+                                    style={{ fontSize: '16px' }}
+                                  >
+                                    *
+                                    {k.group === 'b-group'
+                                      ? 'Cohort B'
+                                      : k.group === 'a-group'
+                                      ? 'Cohort A'
+                                      : ''}
+                                    * <br />
+                                    *Week of{' '}
+                                    {moment(oldLink.pickupDate)
+                                      // .add(3, 'day')
+                                      .format('MMMM Do')}
+                                    *
+                                  </div>
+                                </div>
+                              </>
+                            )
                           ) : (
                             <>
                               <div className="p-1">
-                                Onsite Lunches
-                                <br />
+                                Curbside: {k.meal}{' '}
                                 <div
                                   className="p-2"
                                   style={{ fontSize: '16px' }}
                                 >
-                                  *
-                                  {k.group === 'b-group'
-                                    ? 'Cohort B'
-                                    : k.group === 'a-group'
-                                    ? 'Cohort A'
-                                    : ''}
-                                  * <br />
-                                  *Week of{' '}
-                                  {moment(oldLink.pickupDate)
-                                    // .add(3, 'day')
-                                    .format('MMMM Do')}
-                                  *
+                                  TYPE:
+                                  <br />
+                                  {k.pickupOption}
                                 </div>
                               </div>
                             </>
-                          )
-                        ) : (
-                          <>
-                            <div className="p-1">
-                              Curbside: {k.meal}{' '}
-                              <div className="p-2" style={{ fontSize: '16px' }}>
-                                TYPE:
-                                <br />
-                                {k.pickupOption}
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        <hr />
-                      </>
-                    ))}
+                          )}
+                          <hr />
+                        </>
+                      ))}
                 </div>
               </h5>
             </div>
             Receipt for week of{' '}
-            <b>Monday {oldLink && moment(oldLink.pickupDate).format('MMMM Do')}</b>
-
-            {isAuth().role === 'admin' && 
-<>
-<br/>
-<br/>
-<span>
-  <b>
-
-  Admin Only info:
-  </b>
-</span>
-<br/>
-
-parent email: {oldLink.postedBy.email}
-<br/>
-parent first name: {oldLink.postedBy.name}
-<br/>
-parent last name: {oldLink.postedBy.lastName}
-</>
-}
-
+            <b>
+              Monday {oldLink && moment(oldLink.pickupDate).format('MMMM Do')}
+            </b>
+            {isAuth().role === 'admin' && (
+              <>
+                <br />
+                <br />
+                <span>
+                  <b>Admin Only info:</b>
+                </span>
+                <br />
+                parent email: {oldLink.postedBy.email}
+                <br />
+                parent first name: {oldLink.postedBy.name}
+                <br />
+                parent last name: {oldLink.postedBy.lastName}
+              </>
+            )}
             <div className={' pb-3 pt-3 ' + styles.noPrint}>
               {
                 // l.postedBy.students[i] === undefined ? null :
-                oldLink && oldLink.orderStatus === false &&
+                oldLink &&
+                  oldLink.orderStatus === false &&
                   moment(oldLink.pickupDate).format('MDD').toString() >
-                    moment(new Date()).format('MDD').toString() && (
+                    moment(new Date())
+                      .add(9, 'day') // add to push edit date further back
+                      .format('MDD')
+                      .toString() && (
                     <Link href={`/user/link/${oldLink._id}`}>
                       <button className="btn btn-sm btn-outline-dark text float-left">
                         <i class="far fa-edit"></i> &nbsp;Edit
@@ -393,9 +411,9 @@ parent last name: {oldLink.postedBy.lastName}
                   )
               }
 
-
               <span>&nbsp;&nbsp;</span>
-              {oldLink && oldLink.orderStatus === false &&
+              {oldLink &&
+                oldLink.orderStatus === false &&
                 oldLink.mealRequest.filter(
                   (l) =>
                     l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
@@ -413,7 +431,10 @@ parent last name: {oldLink.postedBy.lastName}
                     &nbsp;Print Code
                   </button>
                 )}
-              {oldLink && oldLink.orderStatus === false && isAuth() && isAuth().role !== 'admin' &&
+              {oldLink &&
+                oldLink.orderStatus === false &&
+                isAuth() &&
+                isAuth().role !== 'admin' &&
                 moment(oldLink.pickupDate).format('MDD').toString() >
                   moment(new Date()).format('MDD').toString() && (
                   <Link href="">
@@ -425,7 +446,10 @@ parent last name: {oldLink.postedBy.lastName}
                     </button>
                   </Link>
                 )}
-              {oldLink && oldLink.orderStatus === false && isAuth() && isAuth().role === 'admin' &&
+              {oldLink &&
+                oldLink.orderStatus === false &&
+                isAuth() &&
+                isAuth().role === 'admin' &&
                 moment(oldLink.pickupDate).format('MDD').toString() >
                   moment(new Date()).format('MDD').toString() && (
                   <Link href="">
@@ -440,7 +464,9 @@ parent last name: {oldLink.postedBy.lastName}
               <div className="pt-3 ">
                 <span className="">
                   {' '}
-                  Requested {oldLink && moment(oldLink.createdAt).format('l')} by{' '}
+                  Requested {oldLink &&
+                    moment(oldLink.createdAt).format('l')}{' '}
+                  by{' '}
                   {oldLink && oldLink.postedBy == null
                     ? 'user deleted'
                     : oldLink && oldLink.postedBy.name}{' '}
@@ -482,7 +508,6 @@ parent last name: {oldLink.postedBy.lastName}
           <div className={'d-flex justify-content-center   '}>
             {/* <div className={"flex-column justify-content-center " + styles.mobile}> */}
             {receipt(oldLink, confirmDelete)}
-            
           </div>
           {/* </div> */}
           {/* </div> */}

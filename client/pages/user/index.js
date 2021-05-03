@@ -98,7 +98,7 @@ const User = ({ user, token, l, userLinks }) => {
               className={
                 l.orderStatus === true ||
                 moment(l.pickupDate).format('MDD').toString() <
-                  moment(new Date()).add(2, 'day').format('MDD').toString()
+                  moment(new Date()).subtract(4, 'day').format('MDD').toString()
                   ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
                   : 'p-4 alert  alert-warning ' + styles.subcard // completed order
               }
@@ -125,9 +125,13 @@ const User = ({ user, token, l, userLinks }) => {
                           <hr />
                         </b>
                       )}
+                      {
+                        // 1 < 1
+                      }
                       {moment(l.pickupDate).format('MDD').toString() <
                         moment(new Date())
-                          .add(6, 'day') // 2 makes it expire on monday
+                          // .add(2, 'day') // add 2 expires the reciept saturday when pickup(weekof) is monday
+                          .subtract(4, 'day')
                           .format('MDD')
                           .toString() && (
                         <b className="text-danger ">
@@ -453,10 +457,12 @@ const User = ({ user, token, l, userLinks }) => {
                 <div style={{ fontSize: '12px' }} className=" pb-3 pt-3">
                   {
                     // l.postedBy.students[i] === undefined ? null :
+                    // 10 > 1
                     l.orderStatus === false &&
                       moment(l.pickupDate).format('MDD').toString() >
                         moment(new Date())
-                          .add(2, 'day')
+                          .add(9, 'day') // add to push edit date further back
+                          // .subtract(4, 'day')
                           .format('MDD')
                           .toString() && (
                         <Link href={`/user/link/${l._id}`}>
