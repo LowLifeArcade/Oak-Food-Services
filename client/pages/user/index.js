@@ -127,7 +127,7 @@ const User = ({ user, token, l, userLinks }) => {
                       )}
                       {moment(l.pickupDate).format('MDD').toString() <
                         moment(new Date())
-                          .add(2, 'day')
+                          .add(6, 'day') // 2 makes it expire on monday
                           .format('MDD')
                           .toString() && (
                         <b className="text-danger ">

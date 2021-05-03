@@ -133,7 +133,14 @@ const Menus = ({ categories }) => {
                         </h3>
                       )}
 
-                      {c.menu.length > 0 && (
+                      {c.menu.length > 0 && 
+                      parseInt(moment(c.pickupWeek).format('MMDD')) >
+                      parseInt(
+                        moment(new Date())
+                          .add(14, 'day')
+                          .format('MMDD')
+                      )? 
+                          (
                         <>
                           <div style={{ color: '#419ca8' }} className={'pt-1'}>
                             <hr />
@@ -146,7 +153,21 @@ const Menus = ({ categories }) => {
                           </div>
                           <div className=""></div>
                         </>
-                      )}
+                      ): (
+                        <>
+                          <div style={{ color: '#419ca8' }} className={'pt-1'}>
+                            <hr />
+                            <b>
+                              Meal requests are closed for {' '}
+                              {moment(c.pickupWeek)
+                                // .subtract(14, 'day')
+                                .format('MMMM Do')}
+                            </b>
+                          </div>
+                          <div className=""></div>
+                        </>
+                      )
+                    }
                       <hr />
                       <div>
                         {c.menu.length > 0 && (

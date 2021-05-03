@@ -201,16 +201,44 @@ const Links = ({
               </h3>
             )}
 
-            <hr />
+            
 
-            <div style={{ color: '#419ca8' }} className={'pt-2 p-2'}>
-              <b>
-                Meal requests must be made by 11:59pm{' '}
-                {moment(category.pickupWeek)
-                  .subtract(14, 'day')
-                  .format('MMMM Do')}
-              </b>
-            </div>
+            {category.menu.length > 0 && 
+                      parseInt(moment(category.pickupWeek).format('MMDD')) >
+                      parseInt(
+                        moment(new Date())
+                          .add(14, 'day')
+                          .format('MMDD')
+                      )? 
+                          (
+                        <>
+                          <div style={{ color: '#419ca8' }} className={'pt-1'}>
+                            <hr />
+                            <b>
+                              Meal requests must be made by 11:59pm{' '}
+                              {moment(category.pickupWeek)
+                                .subtract(14, 'day')
+                                .format('MMMM Do')}
+                            </b>
+                          </div>
+                          <div className=""></div>
+                        </>
+                      ): (
+                        <>
+                          <div style={{ color: '#419ca8' }} className={'pt-1'}>
+                            <hr />
+                            <b>
+                              Meal requests are closed for {' '}
+                              {moment(category.pickupWeek)
+                                // .subtract(14, 'day')
+                                .format('MMMM Do')}
+                            </b>
+                          </div>
+                          <div className=""></div>
+                        </>
+                      )
+                    }
+                    <hr />
 
             <div className="alert-seconary pt-3">
               {category.menu.length > 0 && <h4>Curbside Pickup</h4>}
