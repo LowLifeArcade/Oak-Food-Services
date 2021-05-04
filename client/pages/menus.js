@@ -388,6 +388,7 @@ const Menus = ({ categories }) => {
         </>
       ));
   return (
+    <>
     <div className={styles.background}>
       <div className={styles.mobilehome}>
         <Layout>
@@ -405,10 +406,11 @@ const Menus = ({ categories }) => {
         <h2 className="font-weight-bold pb-3">Trending</h2>
         <div className="col-md-12 overflow-hidden">{listOfLinks()}</div>
       </div> */}
+        <div className="p-5">&nbsp;</div>
         </Layout>
-        <div className="p-5"></div>
       </div>
     </div>
+        </>
   );
 };
 // all above for admin only view OR this will be the available food orders and people click request
