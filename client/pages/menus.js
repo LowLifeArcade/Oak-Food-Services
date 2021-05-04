@@ -83,26 +83,14 @@ const Menus = ({ categories }) => {
       .sort((a, b) => Date.parse(a.pickupWeek) - Date.parse(b.pickupWeek))
       .map((c, i) => (
         <>
-          {/* {console.log('show menu check by date',
-            moment(c.pickupWeek).format('l') <
-              moment(new Date()).add(12, 'day').format('l')
-          )} */}
           {parseInt(moment(c.pickupWeek).format('MMDD')) >
-            parseInt(moment(new Date()).add(9, 'day').format('MMDD')) && (
-            // moment(c.pickupWeek).format('l') <
-            //   moment(new Date()).add(18, 'day').format('l')
-
+            parseInt(moment(new Date()).add(3, 'day').format('MMDD')) && ( // displays menu up to Thursday of the week in question
             <div className="">
               <div
                 key={i}
-                // className={'col-md-12 pt-2'}
                 style={{
-                  // color: 'grey',
                   border: '1px solid grey',
-                  // padding: '10px',
                   boxShadow: '4px 3px 7px 2px rgba(0,0,0,0.2)',
-                  // borderRadius: '8px',
-                  // borderBlock: '5px',
                 }}
                 className="bg-white"
               >
@@ -133,14 +121,11 @@ const Menus = ({ categories }) => {
                         </h3>
                       )}
 
-                      {c.menu.length > 0 && 
+                      {c.menu.length > 0 &&
                       parseInt(moment(c.pickupWeek).format('MMDD')) >
-                      parseInt(
-                        moment(new Date())
-                          .add(13, 'day')
-                          .format('MMDD')
-                      )? 
-                          (
+                        parseInt(
+                          moment(new Date()).add(13, 'day').format('MMDD')
+                        ) ? (
                         <>
                           <div style={{ color: '#419ca8' }} className={'pt-1'}>
                             <hr />
@@ -153,12 +138,16 @@ const Menus = ({ categories }) => {
                           </div>
                           <div className=""></div>
                         </>
-                      ): (
+                      ) : (
                         <>
                           <div style={{ color: '#419ca8' }} className={'pt-1'}>
                             <hr />
                             <b>
-                              Meal requests are <u><i>closed</i></u> for {' '}
+                              Meal requests are{' '}
+                              <u>
+                                <i>closed</i>
+                              </u>{' '}
+                              for{' '}
                               {moment(c.pickupWeek)
                                 // .subtract(14, 'day')
                                 .format('MMMM Do')}
@@ -166,8 +155,7 @@ const Menus = ({ categories }) => {
                           </div>
                           <div className=""></div>
                         </>
-                      )
-                    }
+                      )}
                       <hr />
                       <div>
                         {c.menu.length > 0 && (
@@ -418,6 +406,7 @@ const Menus = ({ categories }) => {
         <div className="col-md-12 overflow-hidden">{listOfLinks()}</div>
       </div> */}
         </Layout>
+        <div className="p-5"></div>
       </div>
     </div>
   );

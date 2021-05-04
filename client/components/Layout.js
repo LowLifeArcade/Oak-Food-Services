@@ -398,6 +398,23 @@ const Layout = ({ children }) => {
               </Link>
             </li>
           )}
+          {
+          // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
+          process.browser &&  !isAuth()  &&
+          (
+            <li
+              key="1133"
+              onClick={() => setShowSidebar(false)}
+              className="nav-item pointer-hand "
+            >
+              <Link href="/menus">
+                <a className="nav-link text-white">
+                  {/* <i class="fas fa-book-open"></i> */}
+                  <i class="fas fa-columns"></i> Menus
+                </a>
+              </Link>
+            </li>
+          )}
           
           {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode !== 'STAO' && (
             <li
