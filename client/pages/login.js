@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import FakeLoginForm from '../components/FakeLoginForm';
+import FormInput from '../components/FormInput';
 import Link from 'next/link';
 import Router from 'next/router';
 import axios from 'axios';
-import { showErrorMessage, showSuccessMessage } from '../helpers/alerts';
 import { API } from '../config';
-
-import styles from '../styles/Home.module.css';
+import { showErrorMessage, showSuccessMessage } from '../helpers/alerts';
 import { authenticate, isAuth } from '../helpers/auth';
+import styles from '../styles/Home.module.css';
 
 const Login = () => {
   const [state, setState] = useState({
@@ -18,16 +19,17 @@ const Login = () => {
     buttonText: 'Login',
   });
 
+  const { email, password, error, success, buttonText } = state;
+  const [loaded, setLoaded] = useState(false);
+
+  // redirects if already logged in
   useEffect(() => {
     isAuth() && isAuth().role === 'admin'
       ? Router.push('admin/link/list')
       : isAuth() && isAuth().role === 'subscriber' && Router.push('user');
-    // : Router.push('/login');
   }, []);
 
-  const { email, password, error, success, buttonText } = state;
-  const [loaded, setLoaded] = useState(false);
-
+  // shows fake form while loading
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
@@ -67,33 +69,10 @@ const Login = () => {
     }
   };
 
-  const FakeForm = () => (
-    <div className="col-md-6 offset-md-3 pt-4">
-      <div className={styles.subcard}>
-        <div className="row">
-          <div className="col-md-12">
-            <div className={'p-5 ' + styles.animatedBg}></div>
-            <h3 className="text-dark"></h3>
-            &nbsp;
-            <div className={'p-3 ' + styles.animatedBg}></div>
-            <div className={'p-3 ' + styles.animatedBg}></div>
-            <div className="p-1"></div>
-            <div className="p-1"></div>
-            <div className="p-1"></div>
-            {/* <div className={'p-3 ' + styles.animatedBg}></div> */}
-            {/* <div className={'p-5 ' + styles.animatedBg}></div>
-            <div className={'p-3 ' + styles.animatedBg}></div>
-            <div className={'p-3 ' + styles.animatedBg}></div> */}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   const loginForm = () => (
     <form onSubmit={handleSubmit} action="POST">
       <div className="form-group">
-        <input
+        <FormInput
           value={email}
           onChange={handleChange('email')}
           type="email"
@@ -101,17 +80,17 @@ const Login = () => {
           autoComplete="username"
           className="form-control"
           placeholder="Enter your email"
-          required
+          required='required'
         />
       </div>
       <div className="form-group">
-        <input
+        <FormInput
           value={password}
           onChange={handleChange('password')}
           type="password"
           className="form-control"
           placeholder="Type your password"
-          required
+          required='required'
         />
       </div>
       <div className="form-group">
@@ -119,7 +98,6 @@ const Login = () => {
           <i className="far fa-paper-plane"></i> &nbsp;
           {buttonText}
         </button>
-
         <Link href="/auth/password/forgot">
           <a className="text-danger float-right" style={{ fontSize: '13px' }}>
             Forgot Password?
@@ -151,7 +129,7 @@ const Login = () => {
               </div>
             </div>
           ) : (
-                <FakeForm/>
+            <FakeLoginForm />
           )}
         </div>
       </Layout>
