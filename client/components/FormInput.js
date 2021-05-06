@@ -1,25 +1,16 @@
 import React from 'react';
 import styles from '../styles/Home.module.css';
 
-const FormInput = ({
-  value,
-  onChange,
-  type,
-  name,
-  autoComplete,
-  className,
-  placeholder,
-  ...props
-}) => {
+const FormInput = (props) => {
   return (
     <input
-      value={value}
-      onChange={onChange}
-      type={type}
-      name={name}
-      autoComplete={autoComplete}
-      className={className}
-      placeholder={placeholder}
+      value={props.value}
+      onChange={props.onChange}
+      type={props.type}
+      name={props.name}
+      autoComplete={props.autoComplete}
+      className='form-control'
+      placeholder={props.placeholder}
       required={props.required}
     />
   );

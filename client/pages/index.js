@@ -54,13 +54,30 @@ const Home = () => {
   }
   return (
     <React.Fragment>
+                {/* <div
+                  style={{
+                    background: '#FEC1E3',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '300px',
+                  }}
+                >
+                  <div className="p-5"></div>
+                  <h1 className={'text-center ' + styles.h4}>
+                    Weekly OPUSD Meals Request
+                  </h1>
+                </div> */}
       <Layout>
         <>
           {loaded ? (
+            <>
             <div className={styles.body}>
               <div className={styles.section}>
                 <div className="pt-4 pb-">
-                  <h3 className={'text-center ' + styles.h4}>Weekly OPUSD Meals Request</h3>
+                  <h3 className={'text-center ' + styles.h4}>
+                    Weekly OPUSD Meals Request
+                  </h3>
                   <div className={' ' + styles.columnscontainer}>
                     <div className={styles.bodyregular}>
                       Here's how it works
@@ -84,34 +101,31 @@ const Home = () => {
 
                   <div className={'pt-4 ' + styles.bodyregular}>
                     <span>
-
-                    <b>Start a Meal Request</b>
+                      <b>Start a Meal Request</b>
                     </span>
                   </div>
                   <div className={'pb-5 ' + styles.bodyregular}>
                     Look over the &nbsp;
                     <span>
-
-                    {
-                      <Link href="/menus">
-                        <a
-                          className="text-"
-                          style={{ textDecorater: 'none', color: '#419ca8' }}
-                        >
-                          <i class="fas fa-columns"></i>
-                          <span>&nbsp;&nbsp;</span>
-                          <b>weekly menu</b>
-                        </a>
-                      </Link>
-                    }
+                      {
+                        <Link href="/menus">
+                          <a
+                            className="text-"
+                            style={{ textDecorater: 'none', color: '#419ca8' }}
+                          >
+                            <i class="fas fa-columns"></i>
+                            <span>&nbsp;&nbsp;</span>
+                            <b>weekly menu</b>
+                          </a>
+                        </Link>
+                      }
                     </span>
                     <span>
-
-                    , then start a request with one of the{' '}
-                    <b>
-                      yellow <i>Meal Request</i> buttons
-                    </b>{' '}
-                    found throughout the site.
+                      , then start a request with one of the{' '}
+                      <b>
+                        yellow <i>Meal Request</i> buttons
+                      </b>{' '}
+                      found throughout the site.
                     </span>
                     {/* located either
                 on your nav bar, the weekly menu, or your receipts page. */}
@@ -131,15 +145,14 @@ const Home = () => {
                     <b> Make Your Selections</b>
                   </div>
                   <span>
-
-                  <p className={styles.bodyregular}>
-                    Select the school week, make your{' '}
-                    <b>student's meal selections</b> for that week, select a
-                    pickup time, and submit your request.
-                    <br />
-                    <br />
-                    {/* You can edit your student's cohort and allery group for differnt meal options in  <b>update profile</b>.  */}
-                  </p>
+                    <p className={styles.bodyregular}>
+                      Select the school week, make your{' '}
+                      <b>student's meal selections</b> for that week, select a
+                      pickup time, and submit your request.
+                      <br />
+                      <br />
+                      {/* You can edit your student's cohort and allery group for differnt meal options in  <b>update profile</b>.  */}
+                    </p>
                   </span>
                 </div>
 
@@ -152,20 +165,18 @@ const Home = () => {
                     class="stepimage"
                     width="340"
                   />
-                  <span> 
-
-                  <div className={'pt-4 ' + styles.bodyregular}>
-                    <b>For Onsite Requests</b>
-                  </div>
+                  <span>
+                    <div className={'pt-4 ' + styles.bodyregular}>
+                      <b>For Onsite Requests</b>
+                    </div>
                   </span>
                   <span>
-
-                  <p className={'pb-2 ' + styles.bodyregular}>
-                    You're all done! Your hybrid student is now on the lunch
-                    roster for the <b>week found on your receipt</b>.
-                    <br />
-                    <br />
-                  </p>
+                    <p className={'pb-2 ' + styles.bodyregular}>
+                      You're all done! Your hybrid student is now on the lunch
+                      roster for the <b>week found on your receipt</b>.
+                      <br />
+                      <br />
+                    </p>
                   </span>
                 </div>
                 <div className={styles.columnscontainer}>
@@ -178,25 +189,22 @@ const Home = () => {
                     width="340"
                   />
                   <span>
-                  <div className={'pt-4 ' + styles.bodyregular}>
-                    <b>For Curbside Requests</b>
-                  </div>
-
+                    <div className={'pt-4 ' + styles.bodyregular}>
+                      <b>For Curbside Requests</b>
+                    </div>
                   </span>
                   <span>
-                  <p className={'pb-5 ' + styles.bodyregular}>
-                    Simply <b>print out your code</b> and drive to the{' '}
-                    <b>pickup location</b> on the date and time found on your
-                    receipt.
-                  </p>
-
+                    <p className={'pb-5 ' + styles.bodyregular}>
+                      Simply <b>print out your code</b> and drive to the{' '}
+                      <b>pickup location</b> on the date and time found on your
+                      receipt.
+                    </p>
                   </span>
                 </div>
                 <span>
-                {/* <p className={'pb-2 ' + styles.bodyregular}> */}
-                <h1 className={'pb-3 ' + styles.h4}> Display Code</h1>
-                {/* </p> */}
-
+                  {/* <p className={'pb-2 ' + styles.bodyregular}> */}
+                  <h1 className={'pb-3 ' + styles.h4}> Display Code</h1>
+                  {/* </p> */}
                 </span>
 
                 <div className={'pt-4 alert-warning ' + styles.sectionair}>
@@ -204,40 +212,36 @@ const Home = () => {
                     <h3 className={'p-3 ' + styles.h4}>On Your Dashboard</h3>
                     {/* <hr className={styles.hr} /> */}
                     <span>
-
-                    <b>Click Example:</b>
+                      <b>Click Example:</b>
                     </span>
                     <span>
-                    <h1 id="printCode" className="code" onClick={printData}>
-                      <div className="h6 text-center invisible">example only</div>
-                      Gf-NESS-03
-                      {/* <div className="h6 text-center invisible">example only</div> */}
-                      <div className="p-2"></div>
-                    </h1>
-
+                      <h1 id="printCode" className="code" onClick={printData}>
+                        <div className="h6 text-center invisible">
+                          example only
+                        </div>
+                        Gf-NESS-03
+                        {/* <div className="h6 text-center invisible">example only</div> */}
+                        <div className="p-2"></div>
+                      </h1>
                     </span>
                     {/* <hr className={styles.hr} /> */}
                     <span>
-                    <div className={'p-4 ' + styles.bodyregular}>
-                      Print (or write out) your{' '}
-                      <b>code found on your receipt</b> and display it on your
-                      dashboard.
-                    </div>
-
+                      <div className={'p-4 ' + styles.bodyregular}>
+                        Print (or write out) your{' '}
+                        <b>code found on your receipt</b> and display it on your
+                        dashboard.
+                      </div>
                     </span>
-                    
+
                     <button
                       type="button"
                       className="btn btn-sm btn-outline-dark text float-left print"
                       onClick={printData}
                     >
                       <span>
-                      <i class="fas fa-print"></i>
+                        <i class="fas fa-print"></i>
                       </span>
-                      <span>
-
-                      &nbsp;Print Code
-                      </span>
+                      <span>&nbsp;Print Code</span>
                     </button>
                   </div>
                 </div>
@@ -246,14 +250,14 @@ const Home = () => {
                   <b> That's it! </b>
                 </div>
                 <span>
-                <p className={styles.bodyregular}>
-                  Lastly, please don't forget to thank our hardworking staff as
-                  they work diligently to feed our students every week.
-                </p>
-
+                  <p className={styles.bodyregular}>
+                    Lastly, please don't forget to thank our hardworking staff
+                    as they work diligently to feed our students every week.
+                  </p>
                 </span>
               </div>
             </div>
+            </>
           ) : (
             <>
               <div className={'d-flex justify-content-center  '}>
@@ -293,7 +297,7 @@ const Home = () => {
           >
             <div className={'text-white col-md-9 ' + styles.bodyregular}>
               <div className="p-2"></div>
-              <ul style={{ fontSize: '14px' }}className={styles.lists}>
+              <ul style={{ fontSize: '14px' }} className={styles.lists}>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/10593">
                     <a className="text-white  " target="_blank">
@@ -303,15 +307,15 @@ const Home = () => {
                 </li>
                 <li>
                   <div className="float-right ">
-                  <Link href="https://www.oakparkusd.org/Page/1">
-                    <a className="text-white  " target="_blank">
-                    <img
-                      src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
-                      loading="lazy"
-                      alt=""
-                      width="100"
-                    />
-                    </a>
+                    <Link href="https://www.oakparkusd.org/Page/1">
+                      <a className="text-white  " target="_blank">
+                        <img
+                          src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/OPUSD+White+Lettering+(2).png"
+                          loading="lazy"
+                          alt=""
+                          width="100"
+                        />
+                      </a>
                     </Link>
                   </div>
                 </li>
@@ -341,9 +345,7 @@ const Home = () => {
                 </li> */}
                 <li>
                   <Link href="/faq">
-                    <a className="text-white  " >
-                      FAQ
-                    </a>
+                    <a className="text-white  ">FAQ</a>
                   </Link>
                 </li>
 

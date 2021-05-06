@@ -113,90 +113,90 @@ const Update = ({ oldLink, token, user, _id }) => {
                   meal.meal = 'Lunch Onsite';
                   meal.pickupOption = 'Lunch Only';
                   break;
-                case meal.group === 'distance-learning':
-                  (meal.meal =
-                    //soy
-                    user.students[index].foodAllergy.dairy === false &&
-                    user.students[index].foodAllergy.gluten === false &&
-                    user.students[index].foodAllergy.soy === true &&
-                    user.students[index].foodAllergy.sesame === true
-                      ? 'Soy and Sesame Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Soy Dairy Gluten Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === false &&
-                        user.students[index].foodAllergy.gluten === false
-                      ? 'Standard Soy Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === false &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Gluten Soy Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === false
-                      ? 'Soy Sesame Dairy Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === false
-                      ? 'Soy Dairy Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === false &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Soy Sesame Gluten Free'
-                      : user.students[index].foodAllergy.soy === true &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Soy Sesame Dairy Gluten Free'
-                      : // dairy and gluten
-                      user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Gluten Free Dairy Free'
-                      : user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === false
-                      ? 'Standard Dairy Free'
-                      : user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === false &&
-                        user.students[index].foodAllergy.dairy === false &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Gluten Free'
-                      : // sesame
-                      user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === false &&
-                        user.students[index].foodAllergy.gluten === false
-                      ? 'Standard Sesame Free'
-                      : // sesame gluten dairy combos
-                      user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === false
-                      ? 'Sesame Dairy Free'
-                      : user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === false &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Sesame Gluten Free'
-                      : user.students[index].foodAllergy.soy === false &&
-                        user.students[index].foodAllergy.sesame === true &&
-                        user.students[index].foodAllergy.dairy === true &&
-                        user.students[index].foodAllergy.gluten === true
-                      ? 'Sesame Dairy Gluten Free'
-                      : 'Standard'),
-                    (meal.pickupOption = 'Breakfast and Lunch');
-                  break;
+                // case meal.group === 'distance-learning':
+                //   (meal.meal =
+                //     //soy
+                //     user.students[index].foodAllergy.dairy === false &&
+                //     user.students[index].foodAllergy.gluten === false &&
+                //     user.students[index].foodAllergy.soy === true &&
+                //     user.students[index].foodAllergy.sesame === true
+                //       ? 'Soy and Sesame Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Soy Dairy Gluten Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === false &&
+                //         user.students[index].foodAllergy.gluten === false
+                //       ? 'Standard Soy Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === false &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Gluten Soy Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === false
+                //       ? 'Soy Sesame Dairy Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === false
+                //       ? 'Soy Dairy Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === false &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Soy Sesame Gluten Free'
+                //       : user.students[index].foodAllergy.soy === true &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Soy Sesame Dairy Gluten Free'
+                //       : // dairy and gluten
+                //       user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Gluten Free Dairy Free'
+                //       : user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === false
+                //       ? 'Standard Dairy Free'
+                //       : user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === false &&
+                //         user.students[index].foodAllergy.dairy === false &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Gluten Free'
+                //       : // sesame
+                //       user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === false &&
+                //         user.students[index].foodAllergy.gluten === false
+                //       ? 'Standard Sesame Free'
+                //       : // sesame gluten dairy combos
+                //       user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === false
+                //       ? 'Sesame Dairy Free'
+                //       : user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === false &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Sesame Gluten Free'
+                //       : user.students[index].foodAllergy.soy === false &&
+                //         user.students[index].foodAllergy.sesame === true &&
+                //         user.students[index].foodAllergy.dairy === true &&
+                //         user.students[index].foodAllergy.gluten === true
+                //       ? 'Sesame Dairy Gluten Free'
+                //       : 'Standard'),
+                //     (meal.pickupOption = 'Breakfast and Lunch');
+                //   break;
 
                 // soy disabled these don't do anything
                 case students[index].foodAllergy.sesame &&
@@ -1851,14 +1851,6 @@ const Update = ({ oldLink, token, user, _id }) => {
           <div className={styles.subcard}>
             <div className="row">
               <div className="col-md-12">
-                {/* <h3>
-                  Meal Request for:{' '}
-                  {pickupDate && (
-                    <span onClick={() => setShowSearch(!showSearch)}>
-                      {moment(oldLink.pickupDate).format('MMMM Do')}
-                    </span>
-                  )}
-                </h3> */}
                 <h4 className="text-secondary">
                   Meal Request for the Week of:{' '}
                   {pickupDate && (
@@ -1885,7 +1877,7 @@ const Update = ({ oldLink, token, user, _id }) => {
               </div>
             </div>
             <hr />
-            {/* Admin code */}
+
             {isAuth().role === 'admin' && user.userCode === 'DOOB' && (
               <div className=" form-group">
                 <input

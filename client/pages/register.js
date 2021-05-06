@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
+import Layout from '../components/Layout';
 import Router from 'next/router';
 import axios from 'axios';
 import {
@@ -8,8 +8,8 @@ import {
   showMessageMessage,
 } from '../helpers/alerts';
 import { API } from '../config';
-import styles from '../styles/Home.module.css';
 import { isAuth } from '../helpers/auth';
+import styles from '../styles/Home.module.css';
 
 const Register = () => {
   const [state, setState] = useState({
@@ -27,7 +27,6 @@ const Register = () => {
     students: [],
     groups: [],
     loadedGroups: [],
-    // special: {sendEmail: true}
   });
 
   useEffect(() => {
@@ -48,29 +47,18 @@ const Register = () => {
   } = state;
 
   useEffect(() => {
-    // isAuth() && isAuth().role === 'admin'
-    //   ? Router.push('admin')
-    //   : isAuth() && isAuth().role === 'subscriber'
-    //   ? Router.push('user')
-    //   : !isAuth()
-    //   ? console.log('not registered or signed in')
-    //   : Router.push('/');
-    success && 
-    setTimeout(() => {
-        Router.push('/login')
-    }, 50000)
-    setState({...state, goodMessage: ''})
+    success &&
+      setTimeout(() => {
+        Router.push('/login');
+      }, 50000);
+    setState({ ...state, goodMessage: '' });
   }, [success]);
 
-  // const makeUserCode = (length) => {
-  //   let result = '';
-  //   const chars = 'abcdefghijklmnopqrstuvwxyz';
-  //   const charsLength = chars.length;
-  //   for (var i = 0; i < length; i++) {
-  //     result += chars.charAt(Math.floor(Math.random() * charsLength));
-  //   }
-  //   return result;
-  // };
+  useEffect(() => {
+    if (password === '') {
+      setState({ ...state, message: '', goodMessage: '', error: '' });
+    }
+  }, [password]);
 
   const handleChange = (name) => (e) => {
     setState({
@@ -87,20 +75,25 @@ const Register = () => {
     let shallowGoodMessage = '';
 
     if (password.length < 7) {
-      shallowMessage = 'Password must be at least 8 characters long and have at least one capital letter, one special character, and one number';
+      shallowMessage =
+        'Password must be at least 8 characters long and have at least one capital letter, one special character, and one number';
     } else if (!e.target.value.match(/[A-Z]/g)) {
+      shallowGoodMessage = '';
       shallowMessage = 'Password must contain at least one capital letter';
     } else if (!e.target.value.match(/[^A-Za-z0-9]/g)) {
+      shallowGoodMessage = '';
       shallowMessage = 'Password must contain at least one special character';
     } else if (!e.target.value.match(/[0-9]/g)) {
+      shallowGoodMessage = '';
       shallowMessage = 'Password must contain at least one number';
     } else if (password.length < 13) {
+      shallowMessage = '';
       shallowGoodMessage = 'Good password';
     } else if (password.length > 12) {
+      shallowMessage = '';
       shallowGoodMessage = 'Great Password!';
     }
 
-    // console.log('regex check', e.target.value);
     setState({
       ...state,
       password: e.target.value,
@@ -117,22 +110,38 @@ const Register = () => {
 
     setState({ ...state, buttonText: 'Registering' });
     if (password !== confirmPassword) {
-      setState({ ...state, error: "Passwords don't match" });
+      setState({
+        ...state,
+        message: '',
+        goodMessage: '',
+        error: "Passwords don't match",
+      });
     } else if (password.length < 7) {
-      setState({ ...state, error: 'Password MUST be at least 8 characters' });
+      setState({
+        ...state,
+        message: '',
+        goodMessage: '',
+        error: 'Password MUST be at least 8 characters',
+      });
     } else if (password.match(/[A-Z]/g) === null) {
       setState({
         ...state,
+        message: '',
+        goodMessage: '',
         error: 'Password MUST contain at least one capitol letter',
       });
     } else if (!password.match(/[^A-Za-z0-9]/g)) {
       setState({
         ...state,
+        message: '',
+        goodMessage: '',
         error: 'Password MUST contain at least one special character',
       });
     } else if (password.match(/[0-9]/g) === null) {
       setState({
         ...state,
+        message: '',
+        goodMessage: '',
         error: 'Password MUST contain at least one special number',
       });
     } else {
@@ -143,7 +152,6 @@ const Register = () => {
           email,
           password,
         });
-        // console.log(response);
         setState({
           ...state,
           password: '',
@@ -152,10 +160,11 @@ const Register = () => {
           success: response.data.message,
         });
       } catch (error) {
-        console.log('submit error',error);
+        console.log('submit error', error);
         setState({
           ...state,
           buttonText: 'Register',
+          goodMessage: '',
           error: error.response.data.error,
         });
       }
@@ -235,16 +244,21 @@ const Register = () => {
           {message && showMessageMessage(message)}
           <br />
 
-          {success ?
-            <button disabled='true' type="text" className="text-warning btn btn-outline-warning">
-            <i className="far fa-paper-plane"></i> &nbsp;
-            {buttonText}
-          </button> :
+          {success ? (
+            <button
+              disabled="true"
+              type="text"
+              className="text-warning btn btn-outline-warning"
+            >
+              <i className="far fa-paper-plane"></i> &nbsp;
+              {buttonText}
+            </button>
+          ) : (
             <button type="text" className="text-white btn btn-warning">
-            <i className="far fa-paper-plane"></i> &nbsp;
-            {buttonText}
-          </button>
-          }
+              <i className="far fa-paper-plane"></i> &nbsp;
+              {buttonText}
+            </button>
+          )}
         </div>
       </div>
     </form>
@@ -265,7 +279,6 @@ const Register = () => {
         </div>
       </Layout>
       <div className="p-5"></div>
-
     </div>
   );
 };

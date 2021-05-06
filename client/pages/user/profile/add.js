@@ -15,22 +15,27 @@ import Router from 'next/router';
 
 const head = () => (
   <>
-    {/* bootstrap */}
+    {
+      // bootstrap
+    }
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossOrigin="anonymous"
     />
-    {/* progress bar cdn */}
+    {
+      // progress bar
+    }
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"
       integrity="sha512-42kB9yDlYiCEfx2xVwq0q7hT4uf26FUgSIZBK8uiaEnTdShXjwr8Ip1V4xGJMg3mHkUt9nNuTDxunHF0/EgxLQ=="
       crossOrigin="anonymous"
     />
-    {/* <link rel="stylesheet" href="../styles/Home.module.css"/> */}
-
+    {
+      // font awesome
+    }
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
@@ -68,7 +73,7 @@ const Profile = ({ user, token }) => {
     success: '',
     buttonText: 'Register',
     addButtonText: 'Add Student',
-    special: { sendEmail: true, gfplus:false, vgplus: false, twothree: false },
+    special: { sendEmail: true, gfplus: false, vgplus: false, twothree: false },
     groups: [],
     teachers: [],
     loadedGroups: [],

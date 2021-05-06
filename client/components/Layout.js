@@ -370,6 +370,7 @@ const Layout = ({ children }) => {
 
           <li>
           {process.browser && isAuth() && isAuth().role === 'admin' && isAuth().userCode !== 'STAO' && (
+            <>
             <Link href="/user/link/create">
               <a
                 className="nav-link text-white btn btn-warning"
@@ -378,9 +379,10 @@ const Layout = ({ children }) => {
                 <i class="fas fa-pencil-alt"></i>
               </a>
             </Link>
+          &nbsp;&nbsp;
+          </>
           )}
           </li>
-          &nbsp;&nbsp;
           {
           // process.browser && isAuth()&& isAuth().role === 'subscriber' && 
           process.browser &&  isAuth() && isAuth().userCode !== 'STAO' &&
