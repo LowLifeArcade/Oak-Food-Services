@@ -38,6 +38,7 @@ class MyDocument extends Document {
           </Head>
         <body lang="en" class="notranslate" translate="no" className="notranslate">
           <Main />
+          {/* <div id="modal" /> */}
           <NextScript />
         </body>
       </Html>

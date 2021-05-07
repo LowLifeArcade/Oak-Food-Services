@@ -12,6 +12,7 @@ const FormInput = (props) => {
       className='form-control'
       placeholder={props.placeholder}
       required={props.required}
+      // {...props}
     />
   );
 };

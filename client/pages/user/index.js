@@ -461,7 +461,7 @@ const User = ({ user, token, l, userLinks }) => {
                     l.orderStatus === false &&
                       moment(l.pickupDate).format('MDD').toString() >
                         moment(new Date())
-                          .add(9, 'day') // add to push edit date further back
+                          .add(2, 'day') // add to push edit date further back (9) is a week before
                           // .subtract(4, 'day')
                           .format('MDD')
                           .toString() && (

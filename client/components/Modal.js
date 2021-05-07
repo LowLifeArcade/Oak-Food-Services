@@ -4,6 +4,29 @@ import { useState } from 'react';
 const Modal = (props) => {
   return (
     <>
+    <div className="container">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5>Modal</h5>
+          <button>
+            &times;
+          </button>
+          <div className="modal-body">...</div>
+          <div className="modal-footer">
+            <button
+              type='button'
+              className='btn btn-secondary'
+              data-dismiss='modal'
+            >
+              Accept
+            </button>
+            <button type="button" class="btn btn-primary">
+    //           Save changes
+    //         </button>
+          </div>
+        </div>
+      </div>
+    </div>
     
     
     
