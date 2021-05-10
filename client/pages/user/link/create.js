@@ -11,6 +11,7 @@ import moment from 'moment';
 import Router from 'next/router';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import AdminPanel from '../../../components/AdminPanel';
 // import PickupDate from '../../../helpers/pickupDate';
 
 const Create = ({ token, user }) => {
@@ -206,7 +207,7 @@ const Create = ({ token, user }) => {
 
   // puts date into localstorage
   useEffect(() => {
-    localStorage.removeItem('search-date');
+    localStorage.removeItem('search-date'); // TODO put this in clearnup above
     // localStorage.setItem('search-date', JSON.stringify(pickupDate));
     // localStorage.setItem('curbsideToggle', JSON.stringify(orderType));
   }, []);
@@ -235,7 +236,7 @@ const Create = ({ token, user }) => {
     });
   }, [mealRequest]);
 
-  // this handles the front code. Others are redundent I think.
+  // this handles the front code.
   useEffect(() => {
     let frontCode = [];
     mealRequest.forEach((item) => {
@@ -244,12 +245,13 @@ const Create = ({ token, user }) => {
         item.pickupOption != 'Breakfast Only'
       ) {
         switch (item.meal) {
-          case 'Standard':
+          case 'Standard': // TODO add if statement to handle L instead of blank
             frontCode.push('');
             break;
           // case 'Vegetarian' && !item.pickupOption === 'Lunch Only':
           //   frontCode.push('Vt');
           //   break;
+          // I can probably handle all vegetarian cases in the case statement with if statments
           case 'Vegan':
             frontCode.push('Vg');
             break;
@@ -511,18 +513,13 @@ const Create = ({ token, user }) => {
         break;
     }
 
-    code = frontCode; // let meal is mealRequest: [...meal[i]] basically and meal.meal is {meal[i]: e.target.value} which i can't just write sadly
+    code = frontCode;
     codes[i] = code;
 
     let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
     let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
     meal.meal = e.target.value;
-    // meal.student = student;
-    // meal.studentName = studentName;
-    // meal.group = group; // I might regret turnind this off
-    // meal.teacher = teacher; // I might regret turnind this off
     meal.pickupOption = pickupOptionLO;
-    // meal.foodAllergy = foodAllergy;
 
     meals[i] = meal; // puts meal[i] back into mealRequest array
 
@@ -867,7 +864,7 @@ const Create = ({ token, user }) => {
     });
   };
 
-  const handleOnChange = (name) => (e) => {
+  const handleAdminPanelChange = (name) => (e) => {
     let i = e.target.getAttribute('data-index');
 
     let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
@@ -876,6 +873,7 @@ const Create = ({ token, user }) => {
 
     meals[i] = meal; // puts meal[i] back into mealRequest array
 
+    console.log(meals);
     setState({
       ...state,
       mealRequest: [...meals],
@@ -884,7 +882,124 @@ const Create = ({ token, user }) => {
       error: '',
     }); //puts ...mealRequest with new meal back into mealRequest: []
   };
-  console.log(mealRequest);
+
+  const testCallback = () => {
+    console.log('test callback');
+  };
+
+  // const adminPanel = (i, x) => (
+  //   <div key={i} className="form-group">
+  //     <div className="pb-2">
+  //       <h4>ADMIN PANEL for student number {`${i + 1}`} </h4>
+  //       <input
+  //         data-index={i}
+  //         // key={i}
+  //         type="text"
+  //         className="form-control"
+  //         placeholder="Student Name"
+  //         onChange={handleAdminPanelChange('studentName')}
+  //       />
+  //     </div>
+
+  //     <div className="pb-2">
+  //       <select
+  //         data-index={i}
+  //         // key={i}
+  //         type="text"
+  //         className="form-control"
+  //         placeholder="Student School"
+  //         onChange={handleAdminPanelChange('schoolName')}
+  //       >
+  //         <option value="">Choose School</option>
+  //         <option value="DK">Preschool</option>
+  //         <option value="BES">BES</option>
+  //         <option value="OHES">OHES</option>
+  //         <option value="ROES">ROES</option>
+  //         <option value="MCMS">MCMS</option>
+  //         <option value="OPHS">OPHS</option>
+  //         <option value="OVHS">OVHS</option>
+  //         <option value="OPIS">OPIS</option>
+  //         <option value="NON">Non OPUSD </option>
+  //       </select>
+  //     </div>
+
+  //     {/* TODO pb-2 div */}
+  //     <div className="pb-2">
+  //       <select
+  //         data-index={i}
+  //         // key={i}
+  //         type="text"
+  //         className="form-control"
+  //         placeholder="Cohort"
+  //         defaultValue={x.group}
+  //         onChange={handleAdminPanelChange('group')}
+  //       >
+  //         <option value="">Choose Cohort</option>
+  //         <option value="distance-learning">Distance</option>
+  //         <option value="a-group">A Cohort</option>
+  //         <option value="b-group">B Cohort</option>
+  //       </select>
+  //     </div>
+
+  //     {x.group != 'distance-learning' && (
+  //       <select
+  //         data-index={i}
+  //         // key={i}
+  //         type="text"
+  //         className="form-control"
+  //         placeholder="Cohort"
+  //         onChange={handleAdminPanelChange('teacher')}
+  //       >
+  //         <option value="">Choose Teacher</option>
+  //         <option value="k-annino/lee">K - Annino/Lee</option>
+  //         <option value="k-milbourn">K - Milbourn</option>
+  //         <option value="k-sloan">K - Sloan</option>
+  //         <option value="k-foy">K - Foy</option>
+  //         <option value="k-lobianco">K - LoBianco</option>
+  //         <option value="1st-hirano">1st - Hirano</option>
+  //         <option value="1st-morrow">1st - Morrow</option>
+  //         <option value="1st-aaronson">1st - Aaronson</option>
+  //         <option value="1st-bretzing">1st - Bretzing</option>
+  //         <option value="1st-bird">1st - Bird</option>
+  //         <option value="1st-ewing">1st - Ewing</option>
+  //         <option value="1st-holland">1st - Holland</option>
+  //         <option value="2nd-watson">2nd - Watson</option>
+  //         <option value="2nd-gerin">2nd - Gerin</option>
+  //         <option value="2nd-lieberman">2nd - Lieberman</option>
+  //         <option value="2nd-ruben">2nd - Ruben</option>
+  //         <option value="2nd-mcdowell">2nd - McDowell</option>
+  //         <option value="2nd-share">2nd - Share</option>
+  //         <option value="3rd-squire">3rd - Squire</option>
+  //         <option value="3rd-altman">3rd - Altman</option>
+  //         <option value="3rd-rosenblum">3rd - Rosenblum</option>
+  //         <option value="3rd-cantillon">3rd - Cantillon</option>
+  //         <option value="3rd-strong">3rd - Strong</option>
+  //         <option value="3rd-arnold">3rd - Arnold</option>
+  //         <option value="4th-keane">4th - Keane</option>
+  //         <option value="4th-farlow">4th - Farlow</option>
+  //         <option value="4th-lockrey">4th - Lockrey</option>
+  //         <option value="4th-chobanian">4th - Chobanian</option>
+  //         <option value="4th-duffy">4th - Duffy</option>
+  //         <option value="4th-matthews">4th - Matthews</option>
+  //         <option value="5th-stephens">5th - Stephens</option>
+  //         <option value="5th-becker">5th - Becker</option>
+  //         <option value="5th-powers">5th - Powers</option>
+  //         <option value="5th-bailey">5th - Bailey</option>
+  //         <option value="5th-bodily">5th - Bodily</option>
+  //         <option value="5th-cass">5th - Cass</option>
+  //         <option value="6th-grade">6th </option>
+  //         <option value="7th-grade">7th </option>
+  //         <option value="8th-grade">8th </option>
+  //         <option value="9th-grade">9th</option>
+  //         <option value="10th-grade">10th </option>
+  //         <option value="11th-grade">11th </option>
+  //         <option value="12th-grade">12th </option>
+  //       </select>
+  //     )}
+  //     <hr/>
+  //   </div>
+  // );
+
   const selectOnsiteMealRequest = (
     i,
     student,
@@ -985,7 +1100,7 @@ const Create = ({ token, user }) => {
 
   const selectAdminPickupOptions = (i) => (
     <>
-    {console.log()}
+      {console.log()}
       <div key={i} className="form-group">
         <select
           type="select"
@@ -1564,10 +1679,12 @@ const Create = ({ token, user }) => {
             Pickup at Cafeteria
           </label>
           {selectPickupTimeCafeteriaOnly()}
-          {pickupTime != 'Cafeteria' && setState({ // quick fix but deservers a refactor and figure out a better solution 
-            ...state,
-            pickupTime: 'Cafeteria',
-          })}
+          {pickupTime != 'Cafeteria' &&
+            setState({
+              // quick fix but deservers a refactor and figure out a better solution
+              ...state,
+              pickupTime: 'Cafeteria',
+            })}
         </div>
       ) : (
         <div className="form-group">
@@ -1607,10 +1724,7 @@ const Create = ({ token, user }) => {
                       Meal Request for the Week of:{' '}
                       {pickupDate && (
                         <>
-                          <span
-                            // ref={calendarButton}
-                            onClick={() => setShowSearch(!showSearch)}
-                          >
+                          <span onClick={() => setShowSearch(!showSearch)}>
                             {moment(state.pickupDate).format('MMMM Do')}
                             &nbsp;{' '}
                             <i className="text-danger far fa-calendar-check"></i>
@@ -1653,34 +1767,17 @@ const Create = ({ token, user }) => {
               </div>
               <hr />
               {/* Admin can change code */}
-              {isAuth().role === 'admin' && user.userCode === 'DOOB' && (
+              {(isAuth().role === 'admin' && isAuth().userCode === 'DOOB') ||
+              (isAuth().role === 'admin' && isAuth().userCode === 'LYF') ? (
                 <div className=" form-group">
                   <input
                     type="text"
                     className=" form-control"
-                    placeholder="Enter a 4 digit User Code"
-                    onChange={(e) => handleCodeChange(e)}
-                  />
-                  {/* <input
-                    // data-index={i}
-                    // key={i}
-                    type="text"
-                    className="form-control"
-                    placeholder="Parent Last Name"
-                    onChange={handleRequestChange('lastName')}
-                  /> */}
-                </div>
-              )}
-              {isAuth().role === 'admin' && user.userCode === 'LYF' && (
-                <div className=" form-group">
-                  <input
-                    type="text"
-                    className=" form-control"
-                    placeholder="Enter a 4 digit User Code"
+                    placeholder="Enter a 4 digit User Code test"
                     onChange={(e) => handleCodeChange(e)}
                   />
                 </div>
-              )}
+              ) : null}
 
               <div className="row">
                 <div className="col-md-12">
@@ -1689,223 +1786,79 @@ const Create = ({ token, user }) => {
                       <>
                         <div>
                           <label key={i} className="text-secondary">
-                            {isAuth().role != 'admin' && <h6>
-                              {' '}
-                              <b>{`${state.students[i].name}`}'s</b>{' '}
-                              {state.students[i].group ===
-                              'distance-learning' ? (
-                                <>Curbside</>
-                              ) : (
-                                <>Onsite</>
-                              )}{' '}
-                              Meals
-                            </h6>}
-                            {isAuth().role === 'admin' && (
-                              <div key={i} className='form-group'>
-                                <h4>ADMIN PANEL for student number {`${i+1}`} </h4>
-                                <input
-                                  data-index={i}
-                                  // key={i}
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Student Name"
-                                  onChange={handleOnChange('studentName')}
-                                />
-
-                                <select
-                                  data-index={i}
-                                  // key={i}
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Student School"
-                                  onChange={handleOnChange('schoolName')}
-                                >
-                                  <option value="">Choose School</option>
-                                  <option value="DK">Preschool</option>
-                                  <option value="BES">BES</option>
-                                  <option value="OHES">OHES</option>
-                                  <option value="ROES">ROES</option>
-                                  <option value="MCMS">MCMS</option>
-                                  <option value="OPHS">OPHS</option>
-                                  <option value="OVHS">OVHS</option>
-                                  <option value="OPIS">OPIS</option>
-                                  <option value="NON">Non OPUSD </option>
-                                </select>
-                                <select
-                                  data-index={i}
-                                  // key={i}
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Cohort"
-                                  defaultValue={x.group}
-                                  onChange={handleOnChange('group')}
-                                >
-                                  <option value="">Choose Cohort</option>
-                                  <option value="distance-learning">
-                                    Distance
-                                  </option>
-                                  <option value="a-group">A Cohort</option>
-                                  <option value="b-group">B Cohort</option>
-                                </select>
-                                {x.group != 'distance-learning' && (
-                                  <select
-                                    data-index={i}
-                                    // key={i}
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Cohort"
-                                    onChange={handleOnChange('teacher')}
-                                  >
-                                    <option value="">Choose Teacher</option>
-                                    <option value="k-annino/lee">
-                                      K - Annino/Lee
-                                    </option>
-                                    <option value="k-milbourn">
-                                      K - Milbourn
-                                    </option>
-                                    <option value="k-sloan">K - Sloan</option>
-                                    <option value="k-foy">K - Foy</option>
-                                    <option value="k-lobianco">
-                                      K - LoBianco
-                                    </option>
-                                    <option value="1st-hirano">
-                                      1st - Hirano
-                                    </option>
-                                    <option value="1st-morrow">
-                                      1st - Morrow
-                                    </option>
-                                    <option value="1st-aaronson">
-                                      1st - Aaronson
-                                    </option>
-                                    <option value="1st-bretzing">
-                                      1st - Bretzing
-                                    </option>
-                                    <option value="1st-bird">1st - Bird</option>
-                                    <option value="1st-ewing">
-                                      1st - Ewing
-                                    </option>
-                                    <option value="1st-holland">
-                                      1st - Holland
-                                    </option>
-                                    <option value="2nd-watson">
-                                      2nd - Watson
-                                    </option>
-                                    <option value="2nd-gerin">
-                                      2nd - Gerin
-                                    </option>
-                                    <option value="2nd-lieberman">
-                                      2nd - Lieberman
-                                    </option>
-                                    <option value="2nd-ruben">
-                                      2nd - Ruben
-                                    </option>
-                                    <option value="2nd-mcdowell">
-                                      2nd - McDowell
-                                    </option>
-                                    <option value="2nd-share">
-                                      2nd - Share
-                                    </option>
-                                    <option value="3rd-squire">
-                                      3rd - Squire
-                                    </option>
-                                    <option value="3rd-altman">
-                                      3rd - Altman
-                                    </option>
-                                    <option value="3rd-rosenblum">
-                                      3rd - Rosenblum
-                                    </option>
-                                    <option value="3rd-cantillon">
-                                      3rd - Cantillon
-                                    </option>
-                                    <option value="3rd-strong">
-                                      3rd - Strong
-                                    </option>
-                                    <option value="3rd-arnold">
-                                      3rd - Arnold
-                                    </option>
-                                    <option value="4th-keane">
-                                      4th - Keane
-                                    </option>
-                                    <option value="4th-farlow">
-                                      4th - Farlow
-                                    </option>
-                                    <option value="4th-lockrey">
-                                      4th - Lockrey
-                                    </option>
-                                    <option value="4th-chobanian">
-                                      4th - Chobanian
-                                    </option>
-                                    <option value="4th-duffy">
-                                      4th - Duffy
-                                    </option>
-                                    <option value="4th-matthews">
-                                      4th - Matthews
-                                    </option>
-                                    <option value="5th-stephens">
-                                      5th - Stephens
-                                    </option>
-                                    <option value="5th-becker">
-                                      5th - Becker
-                                    </option>
-                                    <option value="5th-powers">
-                                      5th - Powers
-                                    </option>
-                                    <option value="5th-bailey">
-                                      5th - Bailey
-                                    </option>
-                                    <option value="5th-bodily">
-                                      5th - Bodily
-                                    </option>
-                                    <option value="5th-cass">5th - Cass</option>
-                                    <option value="6th-grade">6th </option>
-                                    <option value="7th-grade">7th </option>
-                                    <option value="8th-grade">8th </option>
-                                    <option value="9th-grade">9th</option>
-                                    <option value="10th-grade">10th </option>
-                                    <option value="11th-grade">11th </option>
-                                    <option value="12th-grade">12th </option>
-                                  </select>
-                                )}
-                              </div>
+                            {isAuth().role != 'admin' && (
+                              <h6>
+                                {' '}
+                                <b>{`${state.students[i].name}`}'s</b>{' '}
+                                {state.students[i].group ===
+                                'distance-learning' ? (
+                                  <>Curbside</>
+                                ) : (
+                                  <>Onsite</>
+                                )}{' '}
+                                Meals
+                              </h6>
                             )}
-                            {/* {isAuth().role === 'admin' && (
-                              
-                            )} */}
+
+                            {isAuth().role === 'admin' && (
+                              <AdminPanel
+                                index={i}
+                                meal={x}
+                                handleAdminPanelChange={handleAdminPanelChange}
+                              />
+                            )}
                           </label>
                         </div>
                         <div key={i} className="">
-                          {state.students[i].group === 'a-group' &&
+                          {isAuth().role !== 'admin' &&
+                            students[i] &&
+                            students[i].group === 'a-group' &&
                             selectOnsiteMealRequest(
                               i,
-                              state.students[i]._id,
-                              state.students[i].name,
-                              state.students[i].schoolName,
-                              state.students[i].group,
-                              state.students[i].teacher,
-                              state.students[i].pickupOption,
-                              state.students[i].foodAllergy
+                              students[i]._id,
+                              students[i].name,
+                              students[i].schoolName,
+                              students[i].group,
+                              students[i].teacher,
+                              students[i].pickupOption,
+                              students[i].foodAllergy
                             )}
-                          {state.students[i].group === 'b-group' &&
+                          {isAuth().role !== 'admin' &&
+                            students[i] &&
+                            students[i].group === 'b-group' &&
                             selectOnsiteMealRequest(
                               i,
-                              state.students[i]._id,
-                              state.students[i].name,
-                              state.students[i].schoolName,
-                              state.students[i].group,
-                              state.students[i].teacher,
-                              state.students[i].pickupOption,
-                              state.students[i].foodAllergy
+                              students[i]._id,
+                              students[i].name,
+                              students[i].schoolName,
+                              students[i].group,
+                              students[i].teacher,
+                              students[i].pickupOption,
+                              students[i].foodAllergy
                             )}
-                          {state.students[i].group === 'distance-learning' &&
+                          {isAuth().role !== 'admin' &&
+                            students[i] &&
+                            students[i].group === 'distance-learning' &&
                             selectMealRequest(
                               i,
-                              state.students[i]._id,
-                              state.students[i].name,
-                              state.students[i].schoolName,
-                              state.students[i].group,
-                              state.students[i].teacher,
-                              state.students[i].pickupOption,
-                              state.students[i].foodAllergy
+                              students[i]._id,
+                              students[i].name,
+                              students[i].schoolName,
+                              students[i].group,
+                              students[i].teacher,
+                              students[i].pickupOption,
+                              students[i].foodAllergy
+                            )}
+                          {isAuth().role === 'admin' &&
+                            selectMealRequest(
+                              i,
+                              students[i]._id,
+                              students[i].name,
+                              students[i].schoolName,
+                              students[i].group,
+                              students[i].teacher,
+                              students[i].pickupOption,
+                              students[i].foodAllergy
                             )}
                         </div>
 

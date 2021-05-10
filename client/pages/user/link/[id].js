@@ -2071,7 +2071,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                             )} */}
 
                       <div key={i} className="">
-                        {students[i] &&
+                        {isAuth().role !== 'admin' && students[i] &&
                           students[i].group === 'a-group' &&
                           selectOnsiteMealRequest(
                             i,
@@ -2083,7 +2083,7 @@ const Update = ({ oldLink, token, user, _id }) => {
                             students[i].pickupOption,
                             students[i].foodAllergy
                           )}
-                        {students[i] &&
+                        {isAuth().role !== 'admin' && students[i] &&
                           students[i].group === 'b-group' &&
                           selectOnsiteMealRequest(
                             i,
@@ -2095,8 +2095,19 @@ const Update = ({ oldLink, token, user, _id }) => {
                             students[i].pickupOption,
                             students[i].foodAllergy
                           )}
-                        {students[i] &&
-                          students[i].group === 'distance-learning' &&
+                        {isAuth().role !== 'admin' && students[i] &&
+                          students[i].group === 'distance-learning'  &&
+                          selectMealRequest(
+                            i,
+                            students[i]._id,
+                            students[i].name,
+                            students[i].schoolName,
+                            students[i].group,
+                            students[i].teacher,
+                            students[i].pickupOption,
+                            students[i].foodAllergy
+                          )}
+                        {isAuth().role === 'admin'  &&
                           selectMealRequest(
                             i,
                             students[i]._id,
