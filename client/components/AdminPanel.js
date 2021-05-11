@@ -1,28 +1,14 @@
-import { useCallback } from "react";
-
-// const handleAdminPanelChange = (name) => (e) => {
-//   let i = e.target.getAttribute('data-index');
-
-//   let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
-//   let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-//   meal[name] = e.target.value;
-
-//   meals[i] = meal; // puts meal[i] back into mealRequest array
-
-//   setState({
-//     ...state,
-//     mealRequest: [...meals],
-//     buttonText: 'Submit',
-//     success: '',
-//     error: '',
-//   }); //puts ...mealRequest with new meal back into mealRequest: []
-// };
-// console.log(mealRequest);
-
-const AdminPanel = ({index, meal, handleAdminPanelChange}) => (
-  <div  className="form-group">
-    <div className="pb-2">
+const AdminPanel = ({
+  index,
+  meal,
+  handleAdminPanelChange,
+}) => (
+  <div className="form-group">
+    <div className="text-secondary pb-2">
       <h4>ADMIN PANEL for student number {`${index + 1}`} </h4>
+    </div>
+
+    <div className="pb-2">
       <input
         data-index={index}
         // key={i}
@@ -129,8 +115,8 @@ const AdminPanel = ({index, meal, handleAdminPanelChange}) => (
         <option value="12th-grade">12th </option>
       </select>
     )}
-    <hr/>
+    <hr />
   </div>
 );
 
-export default AdminPanel
+export default AdminPanel;
