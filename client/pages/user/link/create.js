@@ -1,24 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
+import Router from 'next/router';
 import styles from '../../../styles/Home.module.css';
 // components and helpers
 import Layout from '../../../components/Layout';
-import Toggle from '../../../components/Toggle';
 import AdminPanel from '../../../components/AdminPanel';
+import AddMeal from '../../../components/AddMeal';
+import AdminCode from '../../../components/AdminCode';
 import SelectMealRequest from '../../../components/SelectMealRequest';
+import SelectPickupOption from '../../../components/SelectPickupOption';
+import SelectPickupTime from '../../../components/SelectPickupTime';
+import SubmitButton from '../../../components/SubmitButton';
+import RemoveMeal from '../../../components/RemoveMeal';
+import SelectDaysPanel from '../../../components/SelectDaysPanel';
+import MealRequestStudent from '../../../components/MealRequestStudent';
+import FakeMealRequestForm from '../../../components/FakeMealRequestForm';
+import MealRequestCalanderPanel from '../../../components/MealRequestCalanderPanel';
 import { getCookie, isAuth } from '../../../helpers/auth';
-import { showErrorMessage, showSuccessMessage } from '../../../helpers/alerts';
 import withUser from '../../withUser';
 import { API } from '../../../config';
 // dependencies
 import axios from 'axios';
 import moment from 'moment';
-import Router from 'next/router';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+// import Calendar from 'react-calendar';
+// import 'react-calendar/dist/Calendar.css';
 
 const Create = ({ token, user }) => {
-  const username = user.username; // TODO don't need but don't want to break code deleting DELETE later
-  const [showSearch, setShowSearch] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [state, setState] = useState({
     mealRequest: [
@@ -157,22 +163,6 @@ const Create = ({ token, user }) => {
     error,
   } = state;
 
-  const calendarButton = useRef();
-
-  // shows and hides calendar
-  useEffect(() => {
-    const handleClick = (event) => {
-      if (
-        calendarButton.current &&
-        !calendarButton.current.contains(event.target)
-      ) {
-        setShowSearch(false);
-      }
-    };
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
-  });
-
   // displays loading form for n seconds
   useEffect(() => {
     setTimeout(() => {
@@ -194,16 +184,12 @@ const Create = ({ token, user }) => {
       } catch (error) {
         setState({ ...state, error: error });
       }
+      localStorage.removeItem('search-date');
     }
   }, []);
 
-  // puts date into local storage
-  useEffect(() => {
-    localStorage.removeItem('search-date'); // TODO: put this in clean up above
-  }, []);
-
   // sets default pickupTime as onsite 'Cafeteria' if all meals are onsite meals
-  useEffect(() => {
+  useEffect(() => { // TODO: refactor into helper or component 
     setState({
       ...state,
       pickupTime:
@@ -220,7 +206,7 @@ const Create = ({ token, user }) => {
     });
   }, [mealRequest]);
 
-  // Generates pickup code
+  // Generates pickup code TODO: reafactor into helper or component 
   useEffect(() => {
     let frontCode = [];
     mealRequest.forEach((item) => {
@@ -321,182 +307,205 @@ const Create = ({ token, user }) => {
       ...state,
       buttonText: 'Submit',
       pickupCode: newPickupCode,
-      pickupCodeAdd: frontCode,
+      pickupCodeAdd: frontCode, // FIXME: i don't think i need this
       success: '',
       error: '',
     });
   }, [mealRequest]);
 
-  // changes pickup date
-  const onDateChange = (pickupDate) => {
-    setState({ ...state, pickupDate: moment(pickupDate).format('l') });
-    setShowSearch(!showSearch);
-  };
+  // // Calendar
+  // const [showSearch, setShowSearch] = useState(false);
+  // const calendarButton = useRef();
 
-  // disabled dates on calendar
-  const handleDisabledDates = ({ date, view }) =>
-    date.getDay() !== 1 ||
-    date.getMonth() === 5 ||
-    (date.getMonth() === 6 && date !== '2021-04-31');
+  // // shows and hides calendar
+  // useEffect(() => {
+  //   const handleClick = (event) => {
+  //     if (
+  //       calendarButton.current &&
+  //       !calendarButton.current.contains(event.target)
+  //     ) {
+  //       setShowSearch(false);
+  //     }
+  //   };
+  //   document.addEventListener('click', handleClick);
+  //   return () => document.removeEventListener('click', handleClick);
+  // });
+
+  // // changes pickup date
+  // const onDateChange = (pickupDate) => {
+  //   setState({ ...state, pickupDate: moment(pickupDate).format('l') });
+  //   setShowSearch(!showSearch);
+  // };
+
+  // // disabled dates on calendar
+  // const handleDisabledDates = ({ date, view }) =>
+  //   date.getDay() !== 1 ||
+  //   date.getMonth() === 5 ||
+  //   (date.getMonth() === 6 && date !== '2021-04-31');
+
+  // // handles lead time for orders
+  // let twoWeeksFromNow = new Date();
+  // twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
 
   // handles meal selection and pickupOption aka meal types (breakfast only, lunch only, breakfast and lunch etc)
-  const handleSelectChange = (e) => {
-    let i = e.target.getAttribute('data-index');
+  // const handleSelectChange = (e) => {
+  //   let i = e.target.getAttribute('data-index');
 
-    // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
-    // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   // let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
+  //   // let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
 
-    let input = e.target.value;
-    // let frontCode = '';
-    let pickupOptionLO = '';
-    // let groupLO = '';
-    switch (input) {
-      // specials
-      case 'Lunch Only' && code.meal === 'Vegetarian':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Lunch Only' && code.meal === 'Standard':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Breakfast Only':
-        pickupOptionLO = 'Breakfast Only';
-        break;
-      case 'Vegan B': // Vegan with breakfast
-        pickupOptionLO = 'Breakfast and Lunch';
-        break;
-      case 'Gluten Free with Breakfast':
-        pickupOptionLO = 'Breakfast and Lunch';
-        break;
-      case '2on 3off':
-        pickupOptionLO = 'Two Onsite / Three Breakfast and Lunches';
-        break;
+  //   let input = e.target.value;
+  //   // let frontCode = '';
+  //   let pickupOptionLO = '';
+  //   // let groupLO = '';
+  //   switch (input) {
+  //     // specials
+  //     case 'Lunch Only' && code.meal === 'Vegetarian':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Lunch Only' && code.meal === 'Standard':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Breakfast Only':
+  //       pickupOptionLO = 'Breakfast Only';
+  //       break;
+  //     case 'Vegan B': // Vegan with breakfast
+  //       pickupOptionLO = 'Breakfast and Lunch';
+  //       break;
+  //     case 'Gluten Free with Breakfast':
+  //       pickupOptionLO = 'Breakfast and Lunch';
+  //       break;
+  //     case '2on 3off':
+  //       pickupOptionLO = 'Two Onsite / Three Breakfast and Lunches';
+  //       break;
 
-      // standard options
-      case 'Standard':
-        pickupOptionLO = 'Breakfast and Lunch';
-        break;
-      case 'Vegetarian':
-        pickupOptionLO = 'Breakfast and Lunch';
-        break;
-      case 'Vegan':
-        pickupOptionLO = 'Lunch Only';
-        break;
+  //     // standard options
+  //     case 'Standard':
+  //       pickupOptionLO = 'Breakfast and Lunch';
+  //       break;
+  //     case 'Vegetarian':
+  //       pickupOptionLO = 'Breakfast and Lunch';
+  //       break;
+  //     case 'Vegan':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
 
-      // gluten dairy options
-      case 'Gluten Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Standard Dairy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Gluten Free Dairy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
+  //     // gluten dairy options
+  //     case 'Gluten Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Standard Dairy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Gluten Free Dairy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
 
-      // sesame gluten dairy combos
-      case 'Gluten Sesame Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Sesame Dairy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Sesame Dairy Gluten Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
+  //     // sesame gluten dairy combos
+  //     case 'Gluten Sesame Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Sesame Dairy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Sesame Dairy Gluten Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
 
-      // sesame options
-      case 'Standard Sesame Free':
-        pickupOptionLO = 'Breakfast and Lunch';
-        break;
-      case 'Vegetarian Sesame Free':
-        pickupOptionLO = 'Breakfast and Lunch';
-        break;
-      case 'Vegan Sesame Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
+  //     // sesame options
+  //     case 'Standard Sesame Free':
+  //       pickupOptionLO = 'Breakfast and Lunch';
+  //       break;
+  //     case 'Vegetarian Sesame Free':
+  //       pickupOptionLO = 'Breakfast and Lunch';
+  //       break;
+  //     case 'Vegan Sesame Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
 
-      // soy options
-      case 'Standard Soy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Vegetarian Soy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Vegan Soy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Gluten Soy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Soy and Sesame Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Soy Dairy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Soy Sesame Dairy Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Soy Sesame Gluten Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Soy Sesame Dairy Gluten Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
-      case 'Soy Dairy Gluten Free':
-        pickupOptionLO = 'Lunch Only';
-        break;
+  //     // soy options
+  //     case 'Standard Soy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Vegetarian Soy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Vegan Soy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Gluten Soy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Soy and Sesame Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Soy Dairy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Soy Sesame Dairy Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Soy Sesame Gluten Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Soy Sesame Dairy Gluten Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
+  //     case 'Soy Dairy Gluten Free':
+  //       pickupOptionLO = 'Lunch Only';
+  //       break;
 
-      // other
-      case 'Standard Onsite':
-        pickupOptionLO = 'Lunch Onsite';
-        break;
-      case 'None':
-        pickupOptionLO = 'None';
-        break;
-      default:
-        break;
-    }
+  //     // other
+  //     case 'Standard Onsite':
+  //       pickupOptionLO = 'Lunch Onsite';
+  //       break;
+  //     case 'None':
+  //       pickupOptionLO = 'None';
+  //       break;
+  //     default:
+  //       break;
+  //   }
 
-    // code = frontCode;
-    // codes[i] = code;
+  //   // code = frontCode;
+  //   // codes[i] = code;
 
-    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
-    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal.meal = e.target.value; // handles actual meal selected
-    meal.pickupOption = pickupOptionLO;
+  //   let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+  //   let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   meal.meal = e.target.value; // handles actual meal selected
+  //   meal.pickupOption = pickupOptionLO;
 
-    meals[i] = meal; // puts meal[i] back into mealRequest array
+  //   meals[i] = meal; // puts meal[i] back into mealRequest array
 
-    setState({
-      ...state,
-      mealRequest: [...meals],
-      buttonText: 'Submit',
-      success: '',
-      error: '',
-    });
-  };
+  //   setState({
+  //     ...state,
+  //     mealRequest: [...meals],
+  //     buttonText: 'Submit',
+  //     success: '',
+  //     error: '',
+  //   });
+  // };
 
-  const handleDayChange = (day) => (e) => {
-    let i = e.target.getAttribute('data-index');
-    let value =
-      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+  // for toggle panel
+  // const handleDayChange = (day) => (e) => {
+  //   let i = e.target.getAttribute('data-index');
+  //   let value =
+  //     e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
-    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
-    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal.days[day] = value;
+  //   let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+  //   let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   meal.days[day] = value;
 
-    meals[i] = meal; // puts meal[i] back into mealRequest array
+  //   meals[i] = meal; // puts meal[i] back into mealRequest array
 
-    setState({
-      ...state,
-      mealRequest: [...meals],
-      buttonText: 'Submit',
-      // pickupCodeAdd: codes,
-      success: '',
-      error: '',
-    }); //puts ...mealRequest with new meal back into mealRequest: []
-  };
+  //   setState({
+  //     ...state,
+  //     mealRequest: [...meals],
+  //     buttonText: 'Submit',
+  //     // pickupCodeAdd: codes,
+  //     success: '',
+  //     error: '',
+  //   }); //puts ...mealRequest with new meal back into mealRequest: []
+  // };
 
   // const selectMealRequest = (i) => (
   //   <>
@@ -778,23 +787,23 @@ const Create = ({ token, user }) => {
   // };
 
   // callback for AdminPanel component
-  const handleAdminPanelChange = (name) => (e) => {
-    let i = e.target.getAttribute('data-index');
+  // const handleAdminPanelChange = (name) => (e) => {
+  //   let i = e.target.getAttribute('data-index');
 
-    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
-    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal[name] = e.target.value;
+  //   let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+  //   let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   meal[name] = e.target.value;
 
-    meals[i] = meal; // puts meal[i] back into mealRequest array
+  //   meals[i] = meal; // puts meal[i] back into mealRequest array
 
-    setState({
-      ...state,
-      mealRequest: [...meals],
-      buttonText: 'Submit',
-      success: '',
-      error: '',
-    }); //puts ...mealRequest with new meal back into mealRequest: []
-  };
+  //   setState({
+  //     ...state,
+  //     mealRequest: [...meals],
+  //     buttonText: 'Submit',
+  //     success: '',
+  //     error: '',
+  //   }); //puts ...mealRequest with new meal back into mealRequest: []
+  // };
 
   // const adminPanel = (i, x) => (
   //   <div key={i} className="form-group">
@@ -950,114 +959,114 @@ const Create = ({ token, user }) => {
   //   </>
   // );
 
-  const handlePickupOption = (i, e) => {
-    // handles pickup options (all, breakfast only, lunch only) select
-    let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
-    let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    meal.pickupOption = e.target.value;
+  // const handlePickupOption = (i, e) => {
+  //   // handles pickup options (all, breakfast only, lunch only) select
+  //   let meals = [...state.mealRequest]; // spreads array from mealRequest: [] into an array called meal
+  //   let meal = { ...meals[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   meal.pickupOption = e.target.value;
 
-    meals[i] = meal;
+  //   meals[i] = meal;
 
-    let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
-    let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
-    let input = e.target.value;
-    let frontCode = ''; // TODO refactor and get rid of this random variable
+  //   let codes = [...state.pickupCodeAdd]; // spreads array from mealRequest: [] into an array called meal
+  //   let code = { ...codes[i] }; // takes a meal out of the mealRequest array that matches the index we're at
+  //   let input = e.target.value;
+  //   let frontCode = ''; // TODO refactor and get rid of this random variable
 
-    switch (input) {
-      case 'Breakfast Only':
-        frontCode = 'B';
-        break;
-      case 'Lunch Onsite / Breakfast Pickup':
-        frontCode = 'B';
-        break;
-      default:
-        break;
-    }
-    code = frontCode;
-    codes[i] = code;
+  //   switch (input) {
+  //     case 'Breakfast Only':
+  //       frontCode = 'B';
+  //       break;
+  //     case 'Lunch Onsite / Breakfast Pickup':
+  //       frontCode = 'B';
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   code = frontCode;
+  //   codes[i] = code;
 
-    setState({
-      ...state,
-      mealRequest: [...meals],
-      pickupTime: '',
-      buttonText: 'Submit',
-      pickupCodeAdd: codes,
-      success: '',
-      error: '',
-    });
-  };
+  //   setState({
+  //     ...state,
+  //     mealRequest: [...meals],
+  //     pickupTime: '',
+  //     buttonText: 'Submit',
+  //     pickupCodeAdd: codes,
+  //     success: '',
+  //     error: '',
+  //   });
+  // };
 
-  // TODO: refactor all of these pickupOption functions into a component
+  // TODO : refactor all of these pickupOption functions into a component
 
-  const selectAdminPickupOptions = (i) => (
-    <>
-      {console.log()}
-      <div key={i} className="form-group">
-        <select
-          type="select"
-          data-index={i}
-          defaultValue={state.mealRequest[i].pickupOption}
-          value={state.mealRequest[i].pickupOption}
-          onChange={(e) => handlePickupOption(i, e)}
-          className="form-control"
-        >
-          <option selected value={'Breakfast and Lunch'}>
-            Breakfast and Lunch
-          </option>
-          <option value={'Breakfast Only'}>Breakfast Only</option>
-          <option value={'Lunch Only'}>Lunch Only</option>
-          <option value={'Lunch Onsite'}>Lunch Onsite</option>
-          <option value={'Lunch Onsite / Breakfast Pickup'}>
-            Lunch Onsite / Breakfast Pickup
-          </option>
-        </select>
-        <div className="p-1"></div>
-      </div>
-    </>
-  );
-  const selectPickupOption = (i) => (
-    <>
-      <div key={i} className="form-group">
-        <select
-          type="select"
-          defaultValue={state.mealRequest[i].pickupOption}
-          // value={state.mealRequest[i].pickupOption}
-          data-index={i}
-          onChange={(e) => handlePickupOption(i, e)}
-          className="form-control"
-        >
-          {' '}
-          <option selected value={'Breakfast and Lunch'}>
-            Breakfast and Lunch
-          </option>
-          <option value={'Breakfast Only'}>Breakfast Only</option>
-          <option value={'Lunch Only'}>Lunch Only</option>
-        </select>
-        <div className="p-1"></div>
-      </div>
-    </>
-  );
+  // const selectAdminPickupOptions = (i) => (
+  //   <>
+  //     {console.log()}
+  //     <div key={i} className="form-group">
+  //       <select
+  //         type="select"
+  //         data-index={i}
+  //         defaultValue={state.mealRequest[i].pickupOption}
+  //         value={state.mealRequest[i].pickupOption}
+  //         onChange={(e) => handlePickupOption(i, e)}
+  //         className="form-control"
+  //       >
+  //         <option selected value={'Breakfast and Lunch'}>
+  //           Breakfast and Lunch
+  //         </option>
+  //         <option value={'Breakfast Only'}>Breakfast Only</option>
+  //         <option value={'Lunch Only'}>Lunch Only</option>
+  //         <option value={'Lunch Onsite'}>Lunch Onsite</option>
+  //         <option value={'Lunch Onsite / Breakfast Pickup'}>
+  //           Lunch Onsite / Breakfast Pickup
+  //         </option>
+  //       </select>
+  //       <div className="p-1"></div>
+  //     </div>
+  //   </>
+  // );
+  // const selectPickupOption = (i) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <select
+  //         type="select"
+  //         defaultValue={state.mealRequest[i].pickupOption}
+  //         // value={state.mealRequest[i].pickupOption}
+  //         data-index={i}
+  //         onChange={(e) => handlePickupOption(i, e)}
+  //         className="form-control"
+  //       >
+  //         {' '}
+  //         <option selected value={'Breakfast and Lunch'}>
+  //           Breakfast and Lunch
+  //         </option>
+  //         <option value={'Breakfast Only'}>Breakfast Only</option>
+  //         <option value={'Lunch Only'}>Lunch Only</option>
+  //       </select>
+  //       <div className="p-1"></div>
+  //     </div>
+  //   </>
+  // );
 
-  const selectPickupLunchOnlyOption = (i) => (
-    <>
-      <div key={i} className="form-group">
-        <select
-          type="select"
-          defaultValue={state.mealRequest[i].pickupOption}
-          value={state.mealRequest[i].pickupOption}
-          data-index={i}
-          onChange={(e) => handlePickupOption(i, e)}
-          className="form-control"
-        >
-          {' '}
-          <option selected value={'Lunch Only'}>
-            Lunch Only
-          </option>
-        </select>
-        <div className="p-1"></div>
-      </div>
-    </>
-  );
+  // const selectPickupLunchOnlyOption = (i) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <select
+  //         type="select"
+  //         defaultValue={state.mealRequest[i].pickupOption}
+  //         value={state.mealRequest[i].pickupOption}
+  //         data-index={i}
+  //         onChange={(e) => handlePickupOption(i, e)}
+  //         className="form-control"
+  //       >
+  //         {' '}
+  //         <option selected value={'Lunch Only'}>
+  //           Lunch Only
+  //         </option>
+  //       </select>
+  //       <div className="p-1"></div>
+  //     </div>
+  //   </>
+  // );
 
   // const selectNonePickupOption = (i) => (
   //   <>
@@ -1080,338 +1089,439 @@ const Create = ({ token, user }) => {
   //   </>
   // );
 
-  const selectPickupLunchOnsiteBreakfastOffsiteOption = (i) => (
-    <>
-      <div key={i} className="form-group">
-        <select
-          type="select"
-          defaultValue={state.mealRequest[i].pickupOption}
-          value={state.mealRequest[i].pickupOption}
-          data-index={i}
-          onChange={(e) => handlePickupOption(i, e)}
-          className="form-control"
-        >
-          {' '}
-          <option selected value={'Lunch Onsite'}>
-            Lunch Onsite
-          </option>
-          <option value={'Lunch Onsite / Breakfast Pickup'}>
-            Lunch Onsite / Breakfast Pickup
-          </option>
-        </select>
-        <div className="p-1"></div>
-      </div>
-    </>
-  );
+  // const selectPickupLunchOnsiteBreakfastOffsiteOption = (i) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <select
+  //         type="select"
+  //         defaultValue={state.mealRequest[i].pickupOption}
+  //         value={state.mealRequest[i].pickupOption}
+  //         data-index={i}
+  //         onChange={(e) => handlePickupOption(i, e)}
+  //         className="form-control"
+  //       >
+  //         {' '}
+  //         <option selected value={'Lunch Onsite'}>
+  //           Lunch Onsite
+  //         </option>
+  //         <option value={'Lunch Onsite / Breakfast Pickup'}>
+  //           Lunch Onsite / Breakfast Pickup
+  //         </option>
+  //       </select>
+  //       <div className="p-1"></div>
+  //     </div>
+  //   </>
+  // );
 
-  const selectPickupLunchOnsiteBreakfastOffsiteOptionH = (i) => (
-    <>
-      <div key={i} className="form-group">
-        <select
-          type="select"
-          defaultValue={state.mealRequest[i].pickupOption}
-          value={state.mealRequest[i].pickupOption}
-          data-index={i}
-          onChange={(e) => handlePickupOption(i, e)}
-          className="form-control"
-        >
-          {' '}
-          <option value={'Lunch Onsite'}>Lunch Onsite</option>
-          <option selected value={'Lunch Onsite / Breakfast Pickup'}>
-            Lunch Onsite / Breakfast Pickup
-          </option>
-        </select>
-        <div className="p-1"></div>
-      </div>
-    </>
-  );
-  const select2on3offOption = (i) => (
-    <>
-      <div key={i} className="form-group">
-        <select
-          type="select"
-          defaultValue={state.mealRequest[i].pickupOption}
-          value={state.mealRequest[i].pickupOption}
-          data-index={i}
-          onChange={(e) => handlePickupOption(i, e)}
-          className="form-control"
-        >
-          {' '}
-          {/* <option value={'Lunch Onsite'}>
-            Lunch Onsite
-          </option> */}
-          <option selected value={'Two Onsite / Three Breakfast and Lunches'}>
-            Two Onsite / Three Breakfast and Lunches
-          </option>
-        </select>
-        <div className="p-1"></div>
-      </div>
-    </>
-  );
+  // const selectPickupLunchOnsiteBreakfastOffsiteOptionH = (i) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <select
+  //         type="select"
+  //         defaultValue={state.mealRequest[i].pickupOption}
+  //         value={state.mealRequest[i].pickupOption}
+  //         data-index={i}
+  //         onChange={(e) => handlePickupOption(i, e)}
+  //         className="form-control"
+  //       >
+  //         {' '}
+  //         <option value={'Lunch Onsite'}>Lunch Onsite</option>
+  //         <option selected value={'Lunch Onsite / Breakfast Pickup'}>
+  //           Lunch Onsite / Breakfast Pickup
+  //         </option>
+  //       </select>
+  //       <div className="p-1"></div>
+  //     </div>
+  //   </>
+  // );
+  // const select2on3offOption = (i) => (
+  //   <>
+  //     <div key={i} className="form-group">
+  //       <select
+  //         type="select"
+  //         defaultValue={state.mealRequest[i].pickupOption}
+  //         value={state.mealRequest[i].pickupOption}
+  //         data-index={i}
+  //         onChange={(e) => handlePickupOption(i, e)}
+  //         className="form-control"
+  //       >
+  //         {' '}
+  //         {/* <option value={'Lunch Onsite'}>
+  //           Lunch Onsite
+  //         </option> */}
+  //         <option selected value={'Two Onsite / Three Breakfast and Lunches'}>
+  //           Two Onsite / Three Breakfast and Lunches
+  //         </option>
+  //       </select>
+  //       <div className="p-1"></div>
+  //     </div>
+  //   </>
+  // );
 
   // pickup times select
-  const handlePickupTimeChange = (e) => {
-    setState({
-      ...state,
-      pickupTime: e.target.value,
-      buttonText: 'Submit',
-      success: '',
-      error: '',
-    });
-  };
+  // const handlePickupTimeChange = (e) => {
+  //   setState({
+  //     ...state,
+  //     pickupTime: e.target.value,
+  //     buttonText: 'Submit',
+  //     success: '',
+  //     error: '',
+  //   });
+  // };
 
   // TODO refactor all of these pickupTime functions
-  const selectPickupTime = (i) => (
-    <>
-      <div key={i}>
-        <div className="">
-          <select
-            type="select"
-            value={pickupTime}
-            data-index={i}
-            onChange={(e) => handlePickupTimeChange(e)}
-            className="form-control"
-          >
-            {' '}
-            <option disabled value="">
-              Choose an option
-            </option>
-            <option value={'7am-9am'}>7am-9am</option>
-            <option value={'11am-1pm'}>11am-1pm</option>
-            <option value={'4pm-6pm'}>4pm-6pm</option>
-            {isAuth().role === 'admin' && (
-              <option value={'Cafeteria'}>
-                Student Cafeteria Lunch Onsite
-              </option>
-            )}
-          </select>
-          <div className="p-1"></div>
-        </div>
-      </div>
-    </>
-  );
+  // const selectPickupTime = (i) => (
+  //   <>
+  //     <div key={i}>
+  //       <div className="">
+  //         <select
+  //           type="select"
+  //           value={pickupTime}
+  //           data-index={i}
+  //           onChange={(e) => handlePickupTimeChange(e)}
+  //           className="form-control"
+  //         >
+  //           {' '}
+  //           <option disabled value="">
+  //             Choose an option
+  //           </option>
+  //           <option value={'7am-9am'}>7am-9am</option>
+  //           <option value={'11am-1pm'}>11am-1pm</option>
+  //           <option value={'4pm-6pm'}>4pm-6pm</option>
+  //           {isAuth().role === 'admin' && (
+  //             <option value={'Cafeteria'}>
+  //               Student Cafeteria Lunch Onsite
+  //             </option>
+  //           )}
+  //         </select>
+  //         <div className="p-1"></div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
-  const selectPickupTimeCafeteriaOnly = (i) => (
-    <>
-      <div key={i}>
-        <div className="">
-          <select
-            type="select"
-            value={pickupTime}
-            data-index={i}
-            onChange={(e) => handlePickupTimeChange(e)}
-            className="form-control"
-          >
-            {' '}
-            <option disabled value="">
-              Choose an option
-            </option>
-            {isAuth().role === 'admin' && (
-              <option value={'7am-9am'}>7am-9am</option>
-            )}
-            {isAuth().role === 'admin' && (
-              <option value={'11am-1pm'}>11am-1pm</option>
-            )}
-            {isAuth().role === 'admin' && (
-              <option value={'4pm-6pm'}>4pm-6pm</option>
-            )}
-            <option value={'Cafeteria'}>Student Cafeteria Lunch Onsite</option>
-          </select>
-          <div className="p-1"></div>
-        </div>
-      </div>
-    </>
-  );
+  // const selectPickupTimeCafeteriaOnly = (i) => (
+  //   <>
+  //     <div key={i}>
+  //       <div className="">
+  //         <select
+  //           type="select"
+  //           value={pickupTime}
+  //           data-index={i}
+  //           onChange={(e) => handlePickupTimeChange(e)}
+  //           className="form-control"
+  //         >
+  //           {' '}
+  //           <option disabled value="">
+  //             Choose an option
+  //           </option>
+  //           {isAuth().role === 'admin' && (
+  //             <option value={'7am-9am'}>7am-9am</option>
+  //           )}
+  //           {isAuth().role === 'admin' && (
+  //             <option value={'11am-1pm'}>11am-1pm</option>
+  //           )}
+  //           {isAuth().role === 'admin' && (
+  //             <option value={'4pm-6pm'}>4pm-6pm</option>
+  //           )}
+  //           <option value={'Cafeteria'}>Student Cafeteria Lunch Onsite</option>
+  //         </select>
+  //         <div className="p-1"></div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
-  // add meal button
-  const addMeal = (
-    i,
-    student,
-    studentName,
-    schoolName,
-    group,
-    teacher,
-    pickupOption,
-    foodAllergy
-  ) => {
-    setState({
-      ...state,
-      mealRequest: [
-        ...mealRequest,
-        {
-          meal:
-            group === 'a-group' || group === 'b-group'
-              ? 'Standard Onsite'
-              : // soy options
-              foodAllergy.dairy === false &&
-                foodAllergy.gluten === false &&
-                foodAllergy.soy === true &&
-                foodAllergy.sesame === true
-              ? 'Soy and Sesame Free'
-              : foodAllergy.soy === true &&
-                foodAllergy.sesame === false &&
-                foodAllergy.dairy === false &&
-                foodAllergy.gluten === false
-              ? 'Standard Soy Free'
-              : foodAllergy.soy === true &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === true &&
-                foodAllergy.gluten === false
-              ? 'Soy Sesame Dairy Free'
-              : foodAllergy.soy === true &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === false &&
-                foodAllergy.gluten === true
-              ? 'Soy Sesame Gluten Free'
-              : foodAllergy.soy === true &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === true &&
-                foodAllergy.gluten === true
-              ? 'Soy Sesame Dairy Gluten Free'
-              : // gf df
-              foodAllergy.soy === false &&
-                foodAllergy.sesame === false &&
-                foodAllergy.dairy === true &&
-                foodAllergy.gluten === true
-              ? 'Gluten Free Dairy Free'
-              : foodAllergy.soy === false &&
-                foodAllergy.sesame === false &&
-                foodAllergy.dairy === true &&
-                foodAllergy.gluten === false
-              ? 'Standard Dairy Free'
-              : foodAllergy.soy === false &&
-                foodAllergy.sesame === false &&
-                foodAllergy.dairy === false &&
-                foodAllergy.gluten === true
-              ? 'Gluten Free'
-              : // sesame
-              foodAllergy.soy === false &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === false &&
-                foodAllergy.gluten === false
-              ? 'Standard Sesame Free'
-              : // gf df sesame combos
-              foodAllergy.soy === false &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === false &&
-                foodAllergy.gluten === true
-              ? 'Gluten Sesame Free'
-              : foodAllergy.soy === false &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === true &&
-                foodAllergy.gluten === false
-              ? 'Sesame Dairy Free'
-              : foodAllergy.soy === false &&
-                foodAllergy.sesame === true &&
-                foodAllergy.dairy === true &&
-                foodAllergy.gluten === true
-              ? 'Sesame Dairy Gluten Free'
-              : // else standard
-                'Standard',
-          student: student,
-          studentName: studentName,
-          lastName: user.lastName,
-          schoolName: schoolName,
-          group: group,
-          teacher: teacher,
-          // sets default pickupOption when adding meal
-          pickupOption:
-            group === 'a-group' || group === 'b-group'
-              ? 'Lunch Onsite'
-              : foodAllergy.egg === true ||
-                foodAllergy.soy === true ||
-                foodAllergy.dairy === true ||
-                foodAllergy.gluten === true
-              ? 'Lunch Only'
-              : 'Breakfast and Lunch',
-          foodAllergy: foodAllergy,
-          parentEmail: user.email,
-          parentName: user.name,
-          individualPickupTime: '',
-          complete: false,
-          // unused but will use for coming school year potentially
-          days:
-            group === 'a-group'
-              ? {
-                  sunday: false,
-                  monday: true, // a
-                  tuesday: true, // a
-                  wednesday: false,
-                  thursday: false,
-                  friday: false,
-                  saturday: false,
-                }
-              : group === 'b-group'
-              ? {
-                  sunday: false,
-                  monday: false,
-                  tuesday: false,
-                  wednesday: true, // b
-                  thursday: true, // b
-                  friday: false,
-                  saturday: false,
-                }
-              : {
-                  sunday: false,
-                  monday: false,
-                  tuesday: false,
-                  wednesday: false,
-                  thursday: false,
-                  friday: false,
-                  saturday: false,
-                },
-        },
-      ],
-      pickupCodeAdd: [...pickupCodeAdd, ''],
-    });
-  };
+  // add meal button TODO : refactor to component
+  // const addMeal = (
+  //   i,
+  //   student,
+  //   studentName,
+  //   schoolName,
+  //   group,
+  //   teacher,
+  //   pickupOption,
+  //   foodAllergy
+  // ) => {
+  //   setState({
+  //     ...state,
+  //     mealRequest: [
+  //       ...mealRequest,
+  //       {
+  //         meal:
+  //           group === 'a-group' || group === 'b-group'
+  //             ? 'Standard Onsite'
+  //             : // soy options
+  //             foodAllergy.dairy === false &&
+  //               foodAllergy.gluten === false &&
+  //               foodAllergy.soy === true &&
+  //               foodAllergy.sesame === true
+  //             ? 'Soy and Sesame Free'
+  //             : foodAllergy.soy === true &&
+  //               foodAllergy.sesame === false &&
+  //               foodAllergy.dairy === false &&
+  //               foodAllergy.gluten === false
+  //             ? 'Standard Soy Free'
+  //             : foodAllergy.soy === true &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === true &&
+  //               foodAllergy.gluten === false
+  //             ? 'Soy Sesame Dairy Free'
+  //             : foodAllergy.soy === true &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === false &&
+  //               foodAllergy.gluten === true
+  //             ? 'Soy Sesame Gluten Free'
+  //             : foodAllergy.soy === true &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === true &&
+  //               foodAllergy.gluten === true
+  //             ? 'Soy Sesame Dairy Gluten Free'
+  //             : // gf df
+  //             foodAllergy.soy === false &&
+  //               foodAllergy.sesame === false &&
+  //               foodAllergy.dairy === true &&
+  //               foodAllergy.gluten === true
+  //             ? 'Gluten Free Dairy Free'
+  //             : foodAllergy.soy === false &&
+  //               foodAllergy.sesame === false &&
+  //               foodAllergy.dairy === true &&
+  //               foodAllergy.gluten === false
+  //             ? 'Standard Dairy Free'
+  //             : foodAllergy.soy === false &&
+  //               foodAllergy.sesame === false &&
+  //               foodAllergy.dairy === false &&
+  //               foodAllergy.gluten === true
+  //             ? 'Gluten Free'
+  //             : // sesame
+  //             foodAllergy.soy === false &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === false &&
+  //               foodAllergy.gluten === false
+  //             ? 'Standard Sesame Free'
+  //             : // gf df sesame combos
+  //             foodAllergy.soy === false &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === false &&
+  //               foodAllergy.gluten === true
+  //             ? 'Gluten Sesame Free'
+  //             : foodAllergy.soy === false &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === true &&
+  //               foodAllergy.gluten === false
+  //             ? 'Sesame Dairy Free'
+  //             : foodAllergy.soy === false &&
+  //               foodAllergy.sesame === true &&
+  //               foodAllergy.dairy === true &&
+  //               foodAllergy.gluten === true
+  //             ? 'Sesame Dairy Gluten Free'
+  //             : // else standard
+  //               'Standard',
+  //         student: student,
+  //         studentName: studentName,
+  //         lastName: user.lastName,
+  //         schoolName: schoolName,
+  //         group: group,
+  //         teacher: teacher,
+  //         // sets default pickupOption when adding meal
+  //         pickupOption:
+  //           group === 'a-group' || group === 'b-group'
+  //             ? 'Lunch Onsite'
+  //             : foodAllergy.egg === true ||
+  //               foodAllergy.soy === true ||
+  //               foodAllergy.dairy === true ||
+  //               foodAllergy.gluten === true
+  //             ? 'Lunch Only'
+  //             : 'Breakfast and Lunch',
+  //         foodAllergy: foodAllergy,
+  //         parentEmail: user.email,
+  //         parentName: user.name,
+  //         individualPickupTime: '',
+  //         complete: false,
+  //         // unused but will use for coming school year potentially
+  //         days:
+  //           group === 'a-group'
+  //             ? {
+  //                 sunday: false,
+  //                 monday: true, // a
+  //                 tuesday: true, // a
+  //                 wednesday: false,
+  //                 thursday: false,
+  //                 friday: false,
+  //                 saturday: false,
+  //               }
+  //             : group === 'b-group'
+  //             ? {
+  //                 sunday: false,
+  //                 monday: false,
+  //                 tuesday: false,
+  //                 wednesday: true, // b
+  //                 thursday: true, // b
+  //                 friday: false,
+  //                 saturday: false,
+  //               }
+  //             : {
+  //                 sunday: false,
+  //                 monday: false,
+  //                 tuesday: false,
+  //                 wednesday: false,
+  //                 thursday: false,
+  //                 friday: false,
+  //                 saturday: false,
+  //               },
+  //       },
+  //     ],
+  //     pickupCodeAdd: [...pickupCodeAdd, ''],
+  //   });
+  // };
 
   // remove meal button
-  const removeMeal = (index) => {
-    const list = [...state.mealRequest];
-    list.splice(-1)[0];
+  // const removeMeal = (index) => {
+  //   const list = [...state.mealRequest];
+  //   list.splice(-1)[0];
 
-    const list2 = [...state.pickupCodeAdd];
-    list2.splice(-1)[0];
-    setState({ ...state, mealRequest: list, pickupCodeAdd: list2 });
-  };
+  //   const list2 = [...state.pickupCodeAdd];
+  //   list2.splice(-1)[0];
+  //   setState({ ...state, mealRequest: list, pickupCodeAdd: list2 });
+  // };
 
-  // handles lead time for orders
-  let twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+  // const submit = () => {
+  //   localStorage.removeItem('search-date');
+  //   const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
 
-  const submit = () => {
-    localStorage.removeItem('search-date');
-    const newPickupCodeAdd = pickupCodeAdd.filter((code) => code != 'None');
+  //   let length = mealRequest
+  //     .filter((meal) => meal.meal != 'None')
+  //     .filter((meal) => meal.pickupOption != 'Lunch Onsite').length;
 
-    let length = mealRequest
-      .filter((meal) => meal.meal != 'None')
-      .filter((meal) => meal.pickupOption != 'Lunch Onsite').length;
+  //   let newPickupCode = '';
 
-    let newPickupCode = '';
+  //   isAuth().role === 'admin'
+  //     ? (newPickupCode =
+  //         (newPickupCodeAdd.join('') != ''
+  //           ? newPickupCodeAdd.join('') + '-'
+  //           : '') +
+  //         (pickupCodeInput != '' ? pickupCodeInput : user.userCode) +
+  //         '-0' +
+  //         length)
+  //     : (newPickupCode =
+  //         (newPickupCodeAdd.join('') != ''
+  //           ? newPickupCodeAdd.join('') + '-'
+  //           : '') +
+  //         user.userCode +
+  //         '-0' +
+  //         length);
 
-    isAuth().role === 'admin'
-      ? (newPickupCode =
-          (newPickupCodeAdd.join('') != ''
-            ? newPickupCodeAdd.join('') + '-'
-            : '') +
-          (pickupCodeInput != '' ? pickupCodeInput : user.userCode) +
-          '-0' +
-          length)
-      : (newPickupCode =
-          (newPickupCodeAdd.join('') != ''
-            ? newPickupCodeAdd.join('') + '-'
-            : '') +
-          user.userCode +
-          '-0' +
-          length);
+  //   setState({
+  //     ...state,
+  //     pickupCode: newPickupCode,
+  //     pickupCodeAdd: newPickupCodeAdd,
+  //   });
+  // };
 
-    setState({
-      ...state,
-      pickupCode: newPickupCode,
-      pickupCodeAdd: newPickupCodeAdd,
-    });
-  };
+  // const handleToggle = (c) => () => {
+  //   // return the first index or -1
+  //   const clickedCategory = categories.indexOf(c);
+  //   const all = [...categories];
+
+  //   if (clickedCategory === -1) {
+  //     all.push(c);
+  //   } else {
+  //     all.splice(clickedCategory, 1);
+  //   }
+
+  //   setState({ ...state, categories: all, success: '', error: '' });
+  // };
+
+  // // category checkboxes
+  // const showCategories = () => {
+  //   return (
+  //     loadedCategories &&
+  //     loadedCategories.map((c, i) => (
+  //       <li className="list-unstyled" key={c._id}>
+  //         <input
+  //           type="checkbox"
+  //           onChange={handleToggle(c._id)}
+  //           className="mr-2"
+  //         />
+  //         <label htmlFor="" className="form-check-label">
+  //           {c.name}
+  //         </label>
+  //       </li>
+  //     ))
+  //   );
+  // };
+
+  // const handleCodeChange = (e) => {
+  //   e.preventDefault;
+  //   setState({
+  //     ...state,
+  //     pickupCodeInput: e.target.value.toUpperCase(),
+  //     userCode: e.target.value.toUpperCase(),
+  //   });
+  // };
+
+  // create form
+  // const submitLinkForm = () => (
+  //   <div className="col-md-6 p-3">
+  //     {mealRequest
+  //       .filter((meal) => meal.meal !== 'None')
+  //       .every(
+  //         (meal) =>
+  //           meal.meal == 'Standard Onsite' &&
+  //           meal.pickupOption == 'Lunch Onsite'
+  //       ) ? (
+  //       <div className="form-group">
+  //         <label htmlFor="" className="text-muted">
+  //           Pickup at Cafeteria
+  //         </label>
+  //         {selectPickupTimeCafeteriaOnly()}
+  //         {pickupTime != 'Cafeteria' &&
+  //           setState({
+  //             // quick fix but deservers a refactor and figure out a better solution
+  //             ...state,
+  //             pickupTime: 'Cafeteria',
+  //           })}
+  //       </div>
+  //     ) : (
+  //       <div className="form-group">
+  //         <label htmlFor="" className="text-muted">
+  //           Pickup Time
+  //         </label>
+  //         {selectPickupTime()}
+  //       </div>
+  //     )}
+  //     {/* TODO : refactor into submit component */}
+  //     <form
+  //       onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
+  //     >
+  //       {success && showSuccessMessage(success)}
+  //       {error && showErrorMessage(error)}
+  //       <div>
+  //         <button
+  //           disabled={!token}
+  //           className={'btn  ' + styles.button}
+  //           onClick={submit}
+  //           type="submit"
+  //         >
+  //           <i class="far fa-paper-plane"></i> &nbsp;&nbsp;
+  //           {isAuth() || token ? state.buttonText : 'Login to Make Request'}
+  //         </button>
+  //       </div>
+  //     </form>
+  //   </div>
+  // );
+
+  // const adminCode = () => (
+  //   <div className=" form-group">
+  //     <input
+  //       type="text"
+  //       className=" form-control"
+  //       value={pickupCodeInput}
+  //       placeholder="Enter a 4 digit User Code test"
+  //       onChange={(e) => handleCodeChange(e)}
+  //     />
+  //   </div>
+  // );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1423,7 +1533,7 @@ const Create = ({ token, user }) => {
           mealRequest,
           pickupTime,
           pickupDate,
-          username, // don't think i need this
+          // username, // don't think i need this
           pickupCode,
           pickupCodeAdd,
           orderStatus,
@@ -1467,7 +1577,7 @@ const Create = ({ token, user }) => {
           mealRequest,
           pickupTime,
           pickupDate,
-          username, // don't think i need this
+          // username, // don't think i need this
           pickupCode,
           pickupCodeAdd,
           orderStatus,
@@ -1499,116 +1609,19 @@ const Create = ({ token, user }) => {
     }
   };
 
-  // const handleToggle = (c) => () => {
-  //   // return the first index or -1
-  //   const clickedCategory = categories.indexOf(c);
-  //   const all = [...categories];
-
-  //   if (clickedCategory === -1) {
-  //     all.push(c);
-  //   } else {
-  //     all.splice(clickedCategory, 1);
-  //   }
-
-  //   setState({ ...state, categories: all, success: '', error: '' });
-  // };
-
-  // // category checkboxes
-  // const showCategories = () => {
-  //   return (
-  //     loadedCategories &&
-  //     loadedCategories.map((c, i) => (
-  //       <li className="list-unstyled" key={c._id}>
-  //         <input
-  //           type="checkbox"
-  //           onChange={handleToggle(c._id)}
-  //           className="mr-2"
-  //         />
-  //         <label htmlFor="" className="form-check-label">
-  //           {c.name}
-  //         </label>
-  //       </li>
-  //     ))
-  //   );
-  // };
-
-  const handleCodeChange = (e) => {
-    e.preventDefault;
-    setState({
-      ...state,
-      pickupCodeInput: e.target.value.toUpperCase(),
-      userCode: e.target.value.toUpperCase(),
-    });
-  };
-
-  // create form
-  const submitLinkForm = (student) => (
-    <form
-      onSubmit={isAuth().role === 'admin' ? handleAdminSubmit : handleSubmit}
-    >
-      {mealRequest
-        .filter((meal) => meal.meal !== 'None')
-        .every(
-          (meal) =>
-            meal.meal == 'Standard Onsite' &&
-            meal.pickupOption == 'Lunch Onsite'
-        ) ? (
-        <div className="form-group">
-          <label htmlFor="" className="text-muted">
-            Pickup at Cafeteria
-          </label>
-          {selectPickupTimeCafeteriaOnly()}
-          {pickupTime != 'Cafeteria' &&
-            setState({
-              // quick fix but deservers a refactor and figure out a better solution
-              ...state,
-              pickupTime: 'Cafeteria',
-            })}
-        </div>
-      ) : (
-        <div className="form-group">
-          <label htmlFor="" className="text-muted">
-            Pickup Time
-          </label>
-          {selectPickupTime()}
-        </div>
-      )}
-
-      {success && showSuccessMessage(success)}
-      {error && showErrorMessage(error)}
-      <div>
-        <button
-          disabled={!token}
-          className={'btn  ' + styles.button}
-          onClick={submit}
-          type="submit"
-        >
-          <i class="far fa-paper-plane"></i> &nbsp;&nbsp;
-          {isAuth() || token ? state.buttonText : 'Login to Make Request'}
-        </button>
-      </div>
-    </form>
-  );
-
-  const adminCode = () => (
-    <div className=" form-group">
-      <input
-        type="text"
-        className=" form-control"
-        value={pickupCodeInput}
-        placeholder="Enter a 4 digit User Code test"
-        onChange={(e) => handleCodeChange(e)}
-      />
-    </div>
-  );
-
   return (
     <div className={styles.background}>
       <Layout>
         {loaded ? (
           <div className="col-md-6 offset-md-3 pt-4">
             <div className={styles.subcard}>
-              <div className="row">
+              <MealRequestCalanderPanel
+                pickupDate={pickupDate}
+                auth={isAuth()}
+                state={state}
+                setState={setState}
+              />
+              {/* <div className="row">
                 <div className="col-md-9">
                   <span ref={calendarButton}>
                     <h4 className="text-dark">
@@ -1655,20 +1668,27 @@ const Create = ({ token, user }) => {
                         )}
                   </span>
                 </div>
-              </div>
+              </div> */}
+
               <hr />
               {/* Admin can change code */}
-              {(isAuth().role === 'admin' && isAuth().userCode === 'DOOB') ||
+              {/* {(isAuth().role === 'admin' && isAuth().userCode === 'DOOB') ||
               (isAuth().role === 'admin' && isAuth().userCode === 'LYF')
                 ? adminCode()
-                : null}
+                : null} */}
+              <AdminCode
+                state={state}
+                setState={setState}
+                auth={isAuth()}
+                pickupCodeInput={pickupCodeInput}
+              />
 
               <div className="row">
                 <div className="col-md-12">
                   {state.mealRequest.map((x, i) => {
                     return (
                       <>
-                        <div>
+                        {/* <div>
                           <label key={i} className="text-secondary">
                             {isAuth().role != 'admin' && (
                               <h6>
@@ -1684,54 +1704,66 @@ const Create = ({ token, user }) => {
                               </h6>
                             )}
                           </label>
-                        </div>
-
-                        {isAuth().role === 'admin' && (
-                          <AdminPanel
-                            index={i}
-                            meal={x}
-                            handleAdminPanelChange={handleAdminPanelChange}
-                          />
-                        )}
-                        <div key={i} className="">
-                          <SelectMealRequest
-                            i={i}
-                            user={user}
-                            meal={state.mealRequest[i].meal}
-                            student={students[i]}
-                            handleSelectChange={handleSelectChange}
-                          />
-                        </div>
+                        </div> */}
+                        <MealRequestStudent
+                          i={i}
+                          state={state}
+                          auth={isAuth()}
+                        />
+                        <AdminPanel
+                          index={i}
+                          meal={x}
+                          setState={setState}
+                          state={state}
+                          auth={isAuth()}
+                        />
+                        <SelectMealRequest
+                          i={i}
+                          user={user}
+                          meal={state.mealRequest[i].meal}
+                          student={students[i]}
+                          state={state}
+                          setState={setState}
+                        />
+                        <SelectPickupOption
+                          i={i}
+                          x={x}
+                          state={state}
+                          setState={setState}
+                          auth={isAuth()}
+                          user={user}
+                        />
+                        <SelectDaysPanel
+                          i={i}
+                          x={x}
+                          auth={isAuth()}
+                          state={state}
+                          setState={setState}
+                        />
+                        {/* {x.meal !== '2on 3off'
+                          ? isAuth().role === 'admin'
+                            ? selectAdminPickupOptions(i)
+                            : x.meal != 'None'
+                            ? state.students[i].group === 'distance-learning'
+                              ? x.meal === 'Gluten Free' ||
+                                x.meal === 'Gluten Free Dairy Free' ||
+                                x.meal === 'Standard Dairy Free' ||
+                                x.meal === 'Vegan' ||
+                                user.students[i].foodAllergy.egg === true ||
+                                user.students[i].foodAllergy.soy === true ||
+                                user.students[i].foodAllergy.dairy === true ||
+                                user.students[i].foodAllergy.gluten === true
+                                ? selectPickupLunchOnlyOption(i)
+                                : selectPickupOption(i) // if not distance learning then:
+                              : selectPickupLunchOnsiteBreakfastOffsiteOption(i)
+                            : null
+                          : null}
+                        {x.meal === '2on 3off' && select2on3offOption(i)} */}
 
                         {
-                          x.meal !== '2on 3off' // put all special options here to turn off this field then put them below this to activate another select menu
-                            ? isAuth().role === 'admin'
-                              ? selectAdminPickupOptions(i)
-                              : x.meal != 'None' // put option here to turn off pickup selection like for none
-                              ? // ? x.meal != '2on 3off'
-                                state.students[i].group === 'distance-learning'
-                                ? x.meal === 'Gluten Free' ||
-                                  x.meal === 'Gluten Free Dairy Free' ||
-                                  x.meal === 'Standard Dairy Free' ||
-                                  x.meal === 'Vegan' ||
-                                  user.students[i].foodAllergy.egg === true ||
-                                  user.students[i].foodAllergy.soy === true ||
-                                  user.students[i].foodAllergy.dairy === true ||
-                                  user.students[i].foodAllergy.gluten === true
-                                  ? selectPickupLunchOnlyOption(i)
-                                  : selectPickupOption(i) // if not distance learning then:
-                                : selectPickupLunchOnsiteBreakfastOffsiteOption(
-                                    i
-                                  )
-                              : // : select2on3offOption(i)
-                                null
-                            : null
-                          // selectNonePickupOption(i)
+                          // Toggles for onsite days
                         }
-
-                        {x.meal === '2on 3off' && select2on3offOption(i)}
-
-                        {(process.browser &&
+                        {/* {(process.browser &&
                           isAuth().role === 'admin' &&
                           x.meal === '2on 3off' &&
                           x.group === 'a-group') ||
@@ -1749,7 +1781,7 @@ const Create = ({ token, user }) => {
                                 toggleId="sunday"
                                 toggleName="Sunday"
                                 handleToggle={handleDayChange('sunday')}
-                              ></Toggle> */}
+                              ></Toggle> 
                                 <Toggle
                                   toggleKey={i}
                                   dataIndex={i}
@@ -1773,7 +1805,7 @@ const Create = ({ token, user }) => {
                                   toggleId="wednesday"
                                   toggleName="Wednesday"
                                   handleToggle={handleDayChange('wednesday')}
-                                ></Toggle> */}
+                                ></Toggle> 
                                 {/* <Toggle
                                   toggleKey={i}
                                   dataIndex={i}
@@ -1789,7 +1821,7 @@ const Create = ({ token, user }) => {
                                   toggleId="friday"
                                   toggleName="Friday"
                                   handleToggle={handleDayChange('friday')}
-                                ></Toggle> */}
+                                ></Toggle> 
                                 {/* <Toggle
                                 toggleKey={i}
                                 dataIndex={i}
@@ -1797,7 +1829,7 @@ const Create = ({ token, user }) => {
                                 toggleId="saturday"
                                 toggleName="Saturday"
                                 handleToggle={handleDayChange('saturday')}
-                              ></Toggle> */}
+                              ></Toggle> 
                               </div>
                             </div>
                           </>
@@ -1819,7 +1851,7 @@ const Create = ({ token, user }) => {
                                 toggleId="sunday"
                                 toggleName="Sunday"
                                 handleToggle={handleDayChange('sunday')}
-                              ></Toggle> */}
+                              ></Toggle> 
                                 {/* <Toggle
                                   toggleKey={i}
                                   dataIndex={i}
@@ -1827,7 +1859,7 @@ const Create = ({ token, user }) => {
                                   toggleId="monday"
                                   toggleName="Monday"
                                   handleToggle={handleDayChange('monday')}
-                                ></Toggle> */}
+                                ></Toggle> 
                                 {/* <Toggle
                                   toggleKey={i}
                                   dataIndex={i}
@@ -1835,7 +1867,7 @@ const Create = ({ token, user }) => {
                                   toggleId="tuesday"
                                   toggleName="Tuesday"
                                   handleToggle={handleDayChange('tuesday')}
-                                ></Toggle> */}
+                                ></Toggle> 
                                 <Toggle
                                   toggleKey={i}
                                   dataIndex={i}
@@ -1859,7 +1891,7 @@ const Create = ({ token, user }) => {
                                   toggleId="friday"
                                   toggleName="Friday"
                                   handleToggle={handleDayChange('friday')}
-                                ></Toggle> */}
+                                ></Toggle> 
                                 {/* <Toggle
                                 toggleKey={i}
                                 dataIndex={i}
@@ -1867,80 +1899,67 @@ const Create = ({ token, user }) => {
                                 toggleId="saturday"
                                 toggleName="Saturday"
                                 handleToggle={handleDayChange('saturday')}
-                              ></Toggle> */}
+                              ></Toggle> 
                               </div>
                             </div>
                           </>
                         ) : (
                           ''
-                        )}
+                        )} */}
                         <hr />
                       </>
                     );
                   })}
-
-                  <div className="">
-                    {state.mealRequest.length < state.students.length && (
-                      <button
-                        className={
-                          'btn  btn-outline-info ' + styles.buttonshadow
-                        }
-                        onClick={() =>
-                          state.mealRequest.map((x, i) =>
-                            addMeal(
-                              i,
-                              state.students[`${i + 1}`]._id,
-                              state.students[`${i + 1}`].name,
-                              state.students[`${i + 1}`].schoolName,
-                              state.students[`${i + 1}`].group,
-                              state.students[`${i + 1}`].teacher,
-                              state.students[`${i + 1}`].pickupOption,
-                              state.students[`${i + 1}`].foodAllergy
-                            )
-                          )
-                        }
-                      >
-                        <i class="fas fa-utensils"></i>
-                        &nbsp;&nbsp; Show Next Student
-                      </button>
-                    )}
-
-                    {state.mealRequest.length !== 1 && (
+                  <div>
+                    <AddMeal
+                      state={state}
+                      setState={setState}
+                      user={user}
+                      mealRequest={mealRequest}
+                      pickupCodeAdd={pickupCodeAdd}
+                    />
+                    <RemoveMeal state={state} setState={setState} />
+                    {/* {state.mealRequest.length !== 1 && (
                       <button
                         className={'btn float-right ' + styles.buttonshadow}
                         onClick={() => removeMeal()}
                       >
                         Remove
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </div>
-                <div className="col-md-6 p-3">{submitLinkForm()}</div>
+                <div className="col-md-6 p-3">
+                  <SelectPickupTime
+                    auth={isAuth()}
+                    mealRequest={mealRequest}
+                    state={state}
+                    setState={setState}
+                    pickupTime={pickupTime}
+                  />
+                  <SubmitButton
+                    auth={isAuth()}
+                    userCode={user.userCode}
+                    success={success}
+                    error={error}
+                    mealRequest={mealRequest}
+                    handleAdminSubmit={handleAdminSubmit}
+                    handleSubmit={handleSubmit}
+                    pickupCodeAdd={pickupCodeAdd}
+                    pickupCodeInput={pickupCodeInput}
+                    state={state}
+                    setState={setState}
+                    token={token}
+                  />
+                </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="col-md-6 offset-md-3 pt-4">
-            <div className={styles.subcard}>
-              <div className="row">
-                <div className="col-md-12">
-                  <h3 className="text-dark"></h3>
-                  &nbsp;
-                  <div className={'p-5 ' + styles.animatedBg}></div>
-                  <div className={'p-3 ' + styles.animatedBg}></div>
-                  <div className={'p-3 ' + styles.animatedBg}></div>
-                  <div className={'p-3 ' + styles.animatedBg}></div>
-                  <div className={'p-5 ' + styles.animatedBg}></div>
-                  <div className={'p-3 ' + styles.animatedBg}></div>
-                  <div className={'p-3 ' + styles.animatedBg}></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <FakeMealRequestForm />
         )}
       </Layout>
       <div className="p-5"></div>
-      {/* <div className="p-5"></div> */}
     </div>
   );
 };
