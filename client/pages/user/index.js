@@ -89,7 +89,7 @@ const User = ({ user, token, l, userLinks }) => {
       .map((l, i) => (
         <>
           {moment(l.pickupDate).format('MDD').toString() > // doesn't show receipts older than 3 days past pickupdate (actually mealweek date i need to change pickupdate to mealweek)
-            moment(new Date()).subtract(2, 'day').format('MDD').toString()  && (
+            moment(new Date()).subtract(2, 'day').format('MDD').toString() && (
             // <Link href={`/user/receipt/${l._id}`}>
             //   <a style={{ textDecoration: 'none' }}>
             <div
@@ -98,9 +98,13 @@ const User = ({ user, token, l, userLinks }) => {
               className={
                 l.orderStatus === true ||
                 moment(l.pickupDate).format('MDD').toString() <
-                  moment(new Date()).subtract(4, 'day').format('MDD').toString()
-                  ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
-                  : 'p-4 alert  alert-warning ' + styles.subcard // completed order
+                  moment(new Date())
+                    .subtract(4, 'day')
+                    .format('MDD')
+                    .toString() ||
+                l.pickupDate === moment('05/31/2021').format('l')
+                  ? 'p-4 alert  alert-secondary ' + styles.subcard // completed order
+                  : 'p-4 alert  alert-warning ' + styles.subcard //  active order
               }
             >
               {/* {console.log(
@@ -145,8 +149,8 @@ const User = ({ user, token, l, userLinks }) => {
                       )}
                     </h4>
 
-                    
-                    {l.mealRequest.filter( // If any of these are true, display as a curbside pickup 
+                    {l.mealRequest.filter(
+                      // If any of these are true, display as a curbside pickup
                       (l) =>
                         l.meal == 'Standard' ||
                         l.meal == 'Vegetarian' ||
@@ -155,25 +159,37 @@ const User = ({ user, token, l, userLinks }) => {
                         l.meal == 'Standard Dairy Free' ||
                         l.meal == 'GlutenFree Dairy Free' ||
                         l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                        l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
+                        l.pickupOption ===
+                          'Two Onsite / Three Breakfast and Lunches' ||
                         l.pickupOption === 'Lunch Only' ||
                         l.pickupOption === 'Breakfast and Lunch' ||
                         l.pickupOption === 'Breakfast Only'
                     ).length != 0 && (
                       <React.Fragment>
-                        <h3 className="pt-2 d-flex justify-content-center ">
-                          CURBSIDE PICKUP
-                        </h3>
+                        {l.pickupDate ===
+                        moment('05/31/2021').format('l') ? null : (
+                          <h3 className="pt-2 d-flex justify-content-center ">
+                            CURBSIDE PICKUP
+                          </h3>
+                        )}
                         <h4>
                           <div className="d-flex justify-content-center">
                             {/* {'On '} */}
                             {l.pickupDate ===
                             moment('05/31/2021').format('l') ? (
-                              <b>
-                                {moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
-                                  .subtract(5, 'day') // i can make the number a variable that is set in the menu creation phase or something
-                                  .format('dddd MMMM Do')}
-                              </b>
+                              <>
+                                <b className="text-center text-danger">
+                                  The pickup for 
+                                  <br />
+                                  {moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                                    .subtract(3, 'day') // i can make the number a variable that is set in the menu creation phase or something
+                                    .format('dddd MMMM Do')} 
+                                    <br />
+                                    has been
+                                  <br />
+                                  <b className="text-center">CANCELLED</b>
+                                </b>
+                              </>
                             ) : (
                               <b>
                                 {moment(l.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
@@ -191,7 +207,8 @@ const User = ({ user, token, l, userLinks }) => {
                     <hr className={styles.hr} />
 
                     <h3>
-                      {l.mealRequest.filter( // decides to display print code 
+                      {l.mealRequest.filter(
+                        // decides to display print code
                         (l) =>
                           l.meal == 'Standard' ||
                           l.meal == 'Vegetarian' ||
@@ -201,7 +218,8 @@ const User = ({ user, token, l, userLinks }) => {
                           l.meal == 'GlutenFree DF' ||
                           l.pickupOption ===
                             'Lunch Onsite / Breakfast Pickup' ||
-                          l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
+                          l.pickupOption ===
+                            'Two Onsite / Three Breakfast and Lunches' ||
                           l.pickupOption === 'Lunch Only' ||
                           l.pickupOption === 'Breakfast Only' ||
                           l.pickupOption === 'Breakfast and Lunch'
@@ -230,7 +248,8 @@ const User = ({ user, token, l, userLinks }) => {
                     </h3>
 
                     <hr className={styles.hr} />
-                    {l.mealRequest.filter( // decides to show instructions
+                    {l.mealRequest.filter(
+                      // decides to show instructions
                       (l) =>
                         l.meal == 'Standard' ||
                         l.meal == 'Vegetarian' ||
@@ -239,7 +258,8 @@ const User = ({ user, token, l, userLinks }) => {
                         l.meal == 'Standard DF' ||
                         l.meal == 'GlutenFree DF' ||
                         l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                        l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
+                        l.pickupOption ===
+                          'Two Onsite / Three Breakfast and Lunches' ||
                         l.pickupOption === 'Breakfast Only' ||
                         l.pickupOption === 'Lunch Only' ||
                         l.pickupOption === 'Breakfast and Lunch'
@@ -314,11 +334,12 @@ const User = ({ user, token, l, userLinks }) => {
                                       </div>
                                     </>
                                   ) : k.pickupOption ===
-                                  "Two Onsite / Three Breakfast and Lunches" ? (
+                                    'Two Onsite / Three Breakfast and Lunches' ? (
                                     <>
                                       <div className="p-1">
                                         <div className="pb-2 ">
-                                        Curbside: Three Lunches and Five Breakfasts
+                                          Curbside: Three Lunches and Five
+                                          Breakfasts
                                         </div>
                                         <div
                                           className="p-2"
@@ -340,22 +361,43 @@ const User = ({ user, token, l, userLinks }) => {
                                             .format('MMMM Do')}
                                           *
                                           <br />
-                                          {k.days && k.days.monday && <>*Monday*<br/></>}
-                                          {k.days && k.days.tuesday && <>*Tuesday*<br/></>}
-                                          {k.days && k.days.wednesday && <>*Wednesday*<br/></>}
-                                          {k.days && k.days.thursday && <>*Thursday*<br/></>}
-                                          {k.days && k.days.friday && <>*Friday*<br/></>}
-
+                                          {k.days && k.days.monday && (
+                                            <>
+                                              *Monday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.tuesday && (
+                                            <>
+                                              *Tuesday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.wednesday && (
+                                            <>
+                                              *Wednesday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.thursday && (
+                                            <>
+                                              *Thursday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.friday && (
+                                            <>
+                                              *Friday*
+                                              <br />
+                                            </>
+                                          )}
                                           {/* TYPE:
                                         <br />
                                         {k.pickupOption} */}
                                         </div>
                                       </div>
                                     </>
-                                  
-                                  ) 
-                                  :
-                                  (
+                                  ) : (
                                     <>
                                       <div className="p-1">
                                         Onsite Lunches
@@ -376,14 +418,37 @@ const User = ({ user, token, l, userLinks }) => {
                                             // .add(3, 'day')
                                             .format('MMMM Do')}
                                           *
-                                          <br/>
-                                          
-                                          {k.days && k.days.monday && <>*Monday*<br/></>}
-                                          {k.days && k.days.tuesday && <>*Tuesday*<br/></>}
-                                          {k.days && k.days.wednesday && <>*Wednesday*<br/></>}
-                                          {k.days && k.days.thursday && <>*Thursday*<br/></>}
-                                          {k.days && k.days.friday && <>*Friday*<br/></>}
-                                          
+                                          <br />
+                                          {k.days && k.days.monday && (
+                                            <>
+                                              *Monday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.tuesday && (
+                                            <>
+                                              *Tuesday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.wednesday && (
+                                            <>
+                                              *Wednesday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.thursday && (
+                                            <>
+                                              *Thursday*
+                                              <br />
+                                            </>
+                                          )}
+                                          {k.days && k.days.friday && (
+                                            <>
+                                              *Friday*
+                                              <br />
+                                            </>
+                                          )}
                                         </div>
                                       </div>
                                     </>
@@ -411,7 +476,8 @@ const User = ({ user, token, l, userLinks }) => {
                     </a>
                   </Link>
                 </div>
-                {l.mealRequest.filter( // decides to show reheat instructions 
+                {l.mealRequest.filter(
+                  // decides to show reheat instructions
                   (l) =>
                     l.meal == 'Standard' ||
                     l.meal == 'Vegetarian' ||
@@ -420,7 +486,8 @@ const User = ({ user, token, l, userLinks }) => {
                     l.meal == 'Standard Dairy Free' ||
                     l.meal == 'GlutenFree Dairy Free' ||
                     l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-                    l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
+                    l.pickupOption ===
+                      'Two Onsite / Three Breakfast and Lunches' ||
                     l.pickupOption === 'Lunch Only' ||
                     l.pickupOption === 'Breakfast and Lunch'
                 ).length != 0 && (
@@ -429,15 +496,18 @@ const User = ({ user, token, l, userLinks }) => {
                       href={`https://drive.google.com/drive/folders/1rF6PSME6_yyWIdsmIhWng8x2Wo2xt4h9`}
                     >
                       <a target="_blank">
-                        <button className="btn btn-sm btn-outline-dark text float-left" style={{
-                              // boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
-                              fontSize: '20px'
-                            }}>
+                        <button
+                          className="btn btn-sm btn-outline-dark text float-left"
+                          style={{
+                            // boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
+                            fontSize: '20px',
+                          }}
+                        >
                           <i
                             className="text-warning fas fa-fire"
                             style={{
                               // boxShadow: '0 3px 3px 0 rgba(0, 0, 0, 0.2)',
-                              fontSize: '20px'
+                              fontSize: '20px',
                             }}
                           ></i>{' '}
                           &nbsp;Reheating Instructions
@@ -473,38 +543,37 @@ const User = ({ user, token, l, userLinks }) => {
                       )
                   }
                   <span>&nbsp;&nbsp;</span>
-                  {
-                    l.orderStatus === false &&
-                      l.mealRequest.filter( // shows print code 
-                        (l) =>
-                          l.meal == 'Standard' ||
-                          l.meal == 'Vegetarian' ||
-                          l.meal == 'GlutenFree' ||
-                          l.meal == 'Vegan' ||
-                          l.meal == 'Standard DF' ||
-                          l.meal == 'GlutenFree DF' ||
-                          l.pickupOption ===
-                            'Lunch Onsite / Breakfast Pickup' ||
-                          l.pickupOption === 'Two Onsite / Three Breakfast and Lunches' ||
-                          l.pickupOption === 'Lunch Only' ||
-                          l.pickupOption === 'Breakfast and Lunch'
-                      ).length != 0 &&
-                      moment(l.pickupDate).format('MDD').toString() >
-                        moment(new Date()).format('MDD').toString() && (
-                        <a>
-                          <button
-                            type="button"
-                            // ref={printEl}
-                            className="btn btn-sm btn-outline-dark text  print"
-                            data-index={`${i}+printCode`}
-                            onClick={(e) => printData(e)}
-                          >
-                            <i class="fas fa-print"></i>
-                            &nbsp;Print Code
-                          </button>
-                        </a>
-                      )
-                  }
+                  {l.orderStatus === false &&
+                    l.mealRequest.filter(
+                      // shows print code
+                      (l) =>
+                        l.meal == 'Standard' ||
+                        l.meal == 'Vegetarian' ||
+                        l.meal == 'GlutenFree' ||
+                        l.meal == 'Vegan' ||
+                        l.meal == 'Standard DF' ||
+                        l.meal == 'GlutenFree DF' ||
+                        l.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+                        l.pickupOption ===
+                          'Two Onsite / Three Breakfast and Lunches' ||
+                        l.pickupOption === 'Lunch Only' ||
+                        l.pickupOption === 'Breakfast and Lunch'
+                    ).length != 0 &&
+                    moment(l.pickupDate).format('MDD').toString() >
+                      moment(new Date()).format('MDD').toString() && (
+                      <a>
+                        <button
+                          type="button"
+                          // ref={printEl}
+                          className="btn btn-sm btn-outline-dark text  print"
+                          data-index={`${i}+printCode`}
+                          onClick={(e) => printData(e)}
+                        >
+                          <i class="fas fa-print"></i>
+                          &nbsp;Print Code
+                        </button>
+                      </a>
+                    )}
                   {l.orderStatus === false &&
                     moment(l.pickupDate).format('MDD').toString() >
                       moment(new Date()).format('MDD').toString() && (

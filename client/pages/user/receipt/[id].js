@@ -112,9 +112,10 @@ const Update = ({ oldLink, token, user, _id }) => {
                   moment(new Date())
                     .subtract(4, 'day')
                     .format('MDD')
-                    .toString())
-                ? 'p-4 alert  alert-secondary ' + styles.subcard // active order
-                : 'p-4 alert  alert-warning ' + styles.subcard // completed order
+                    .toString()) ||
+                    oldLink.pickupDate === moment('05/31/2021').format('l')
+                ? 'p-4 alert  alert-secondary ' + styles.subcard // completed order
+                : 'p-4 alert  alert-warning ' + styles.subcard // active order
             }
           >
             <h4>
@@ -167,12 +168,30 @@ const Update = ({ oldLink, token, user, _id }) => {
                   </h3>
                   <h4>
                     <div className="d-flex justify-content-center">
-                      <b>
+                    {oldLink.pickupDate ===
+                            moment('05/31/2021').format('l') ? (
+                              <>
+                                <b className="text-center text-danger">
+                                  {moment(oldLink.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                                    .subtract(5, 'day') // i can make the number a variable that is set in the menu creation phase or something
+                                    .format('dddd MMMM Do')}
+                                  <br />
+                                  <b className="text-center">CANCELLED</b>
+                                </b>
+                              </>
+                            ) : (
+                              <b>
+                                {moment(oldLink.pickupDate) // if pickupdate is certain date then subtract certain days. I can hard code some of that.
+                                  .subtract(3, 'day') // i can make the number a variable that is set in the menu creation phase or something
+                                  .format('dddd MMMM Do')}
+                              </b>
+                            )}
+                      {/* <b>
                         {'On ' +
                           moment(oldLink.pickupDate)
                             .subtract(3, 'day')
                             .format('MMMM Do')}
-                      </b>
+                      </b> */}
                     </div>
                   </h4>
                   <span className="d-flex justify-content-center ">

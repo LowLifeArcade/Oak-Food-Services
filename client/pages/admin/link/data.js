@@ -24,18 +24,30 @@ const Admin = ({ token, user, initRequests }) => {
   });
 
   const [userList, setUserList] = useState([]);
-
+  const [completed, setCompleted] = useState(false);
   const { requests, pickupDate, pickupButton, meals, error } = state;
   let myDate = '';
 
   useEffect(() => {
+    let shallowRequests = requests;
+    const requestsWithStatus = () => {
+      return shallowRequests.map((request) =>
+        request.mealRequest.map((each) => {
+          let newEach = each;
+          newEach.complete = request.orderStatus;
+          each = newEach;
+          return each;
+        })
+      );
+    };
+
     let allMealsArray = [];
     const pushAllMeals = (meal) => {
-      requests.map((r, i) =>
-        r.mealRequest.map((meal) => allMealsArray.push(meal))
+      requestsWithStatus().map(
+        (r, i) => r.map((meal) => allMealsArray.push(meal)) // used to be r.mealRequest.map but doesn't work with new way of getting meals from above
       );
-      console.log('all meals by date', pickupDate, allMealsArray);
-      console.log('all requests by date', pickupDate, requests);
+      // console.log('all meals by date', pickupDate, allMealsArray);
+      // console.log('all requests by date', pickupDate, requests);
     };
     pushAllMeals();
     setState({
@@ -51,7 +63,6 @@ const Admin = ({ token, user, initRequests }) => {
 
   useEffect(() => {
     const data = localStorage.getItem('search-date');
-    console.log('data', data);
     if (data) {
       try {
         handleDateChange(JSON.parse(data));
@@ -88,7 +99,6 @@ const Admin = ({ token, user, initRequests }) => {
       meals: allMealsArray2,
       pickupButton: pickupTimeSelected,
     });
-    console.log('req ', meals);
   };
   const resetTimeSelect = (e, pickupTimeSelected) => {
     e.preventDefault();
@@ -100,18 +110,20 @@ const Admin = ({ token, user, initRequests }) => {
       .map((r, i) => r.mealRequest.map((meal) => allMealsArray2.push(meal)));
 
     setState({ ...state, meals: allMealsArray2, pickupButton: '' });
-    console.log('req ', meals);
   };
 
-  const bagsCounter = () =>
+  const bagsCounter = (completed) =>
     state.meals
       .filter((m) => m.meal !== 'None')
-      .filter((m) => m.pickupOption !== 'Lunch Onsite').length;
+      .filter((m) => m.complete != completed && m.pickupOption !== 'Lunch Onsite').length;
 
-  const mealCounter = (meal, pickupOption) =>
+  const mealCounter = (meal, pickupOption, completed) =>
     state.meals.filter(
       (m) =>
-        m.meal == meal && m.meal !== 'None' && m.pickupOption == pickupOption
+        m.meal == meal &&
+        m.meal !== 'None' &&
+        m.complete != completed &&
+        m.pickupOption == pickupOption
       //  && m.pickupOption !== 'Lunch Only'
     ).length;
   const sesameMealCounter = (meal) =>
@@ -119,10 +131,13 @@ const Admin = ({ token, user, initRequests }) => {
       (m) => m.meal == meal && m.meal !== 'None'
       //  && m.pickupOption !== 'Lunch Only'
     ).length;
-  const lunchOnlymealCounter = (meal, pickupOption) =>
+  const lunchOnlymealCounter = (meal, pickupOption, completed) =>
     state.meals.filter(
       (m) =>
-        m.meal == meal && m.pickupOption == pickupOption && m.meal !== 'None'
+        m.meal == meal &&
+        m.pickupOption == pickupOption &&
+        m.complete != completed &&
+        m.meal !== 'None'
       //  && m.pickupOption !== 'Lunch Only'
     ).length;
 
@@ -130,21 +145,22 @@ const Admin = ({ token, user, initRequests }) => {
     state.meals.filter((m) => m.meal == meal && m.pickupOption === 'Lunch Only')
       .length;
 
-  const mealBreakfastOnlyCounter = (meal) =>
+  const mealBreakfastOnlyCounter = (meal, completed) =>
     state.meals.filter(
       (m) =>
-        m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
-        m.pickupOption === 'Breakfast Only'
+        (m.complete != completed &&
+          m.pickupOption === 'Lunch Onsite / Breakfast Pickup') ||
+        (m.complete != completed && m.pickupOption === 'Breakfast Only')
     ).length;
-  console.log(
-    'all Breakfast Only',
-    state.meals.filter(
-      (m) =>
-        m.pickupOption === 'Lunch Onsite / Breakfast Pickup' &&
-        m.meal === 'Standard Onsite'
-      // m.pickupOption === 'Breakfast Only'
-    )
-  );
+  // console.log(
+  //   'all Breakfast Only',
+  //   state.meals.filter(
+  //     (m) =>
+  //       m.pickupOption === 'Lunch Onsite / Breakfast Pickup' &&
+  //       m.meal === 'Standard Onsite'
+  //     // m.pickupOption === 'Breakfast Only'
+  //   )
+  // );
 
   const allOnsiteMeals = () =>
     // requests.filter((m) => m.mealRequest.map((meal) => meal.group == 'distance-learning')).length
@@ -184,21 +200,28 @@ const Admin = ({ token, user, initRequests }) => {
         m.pickupOption === 'Lunch Onsite / Breakfast Pickup'
     ).length;
 
-  const pickupMealsForLunch = () =>
+  const pickupMealsForLunch = (completed) =>
     meals.filter(
       (m) =>
         // m.group === 'distance-learning' ||
         // m.group === 'distance-learning' ||
+        m.complete != completed &&
         m.pickupOption === 'Lunch Only' ||
+        m.complete != completed &&
         m.pickupOption === 'Breakfast and Lunch' ||
+        m.complete != completed &&
         m.pickupOption === 'Two Onsite / Three Breakfast and Lunches'
     ).length;
-  const pickupMealsForBreakfast = () =>
+  const pickupMealsForBreakfast = (completed) =>
     meals.filter(
       (m) =>
+      m.complete != completed &&
         m.pickupOption === 'Breakfast Only' ||
+        m.complete != completed &&
         m.pickupOption === 'Breakfast and Lunch' ||
+        m.complete != completed &&
         m.pickupOption === 'Lunch Onsite / Breakfast Pickup' ||
+        m.complete != completed &&
         m.pickupOption === 'Two Onsite / Three Breakfast and Lunches'
     ).length;
 
@@ -595,7 +618,8 @@ const Admin = ({ token, user, initRequests }) => {
     // not sure what it does
     return (
       <div className="h2 text-center pb-3">
-        <span className='text-danger'> {requests.length}</span> - Meal Requests for Friday Pickup{' '}
+        <span className="text-danger"> {requests.length}</span> - Meal Requests
+        for Friday Pickup{' '}
         {`${moment(pickupDate).subtract(3, 'day').format('MMMM Do')}`} Week of{' '}
         {`${pickupDate}`} {`${pickupButton}`}
       </div>
@@ -724,8 +748,8 @@ const Admin = ({ token, user, initRequests }) => {
           <b className="h2 text-danger">{requests.length}</b> -{' '}
           <b className="h2 ">Meal Requests</b>
         </div> */}
-        {/* <div className="col"> */}
-          {/* {user.userCode === 'LYF' && (
+      {/* <div className="col"> */}
+      {/* {user.userCode === 'LYF' && (
             <CSVLink
               className="btn btn-sm btn-outline-dark text float-right mr-3 mb-3"
               headers={emailHeaders}
@@ -755,8 +779,8 @@ const Admin = ({ token, user, initRequests }) => {
               ordered CSV{' '}
             </CSVLink>
           )} */}
-          {/* &nbsp;&nbsp; */}
-          {/* {user.userCode === 'LYF' && (
+      {/* &nbsp;&nbsp; */}
+      {/* {user.userCode === 'LYF' && (
             <CSVLink
               className="btn btn-sm btn-outline-dark text float-right mr-3"
               headers={emailHeaders}
@@ -776,7 +800,7 @@ const Admin = ({ token, user, initRequests }) => {
               Full Email List of {userList.length} users CSV{' '}
             </CSVLink>
           )} */}
-        {/* </div> */}
+      {/* </div> */}
       {/* </div> */}
 
       {/* {filter((l) =>
@@ -786,7 +810,7 @@ const Admin = ({ token, user, initRequests }) => {
           .includes(search.toLowerCase())
       )} */}
 
-      {console.log(
+      {/* {console.log(
         // This shows descripency with All Onsite numbers first filter returning more. Including all the orders with breakfast pickups.
         'totals check OR sesame check',
         requests
@@ -813,9 +837,9 @@ const Admin = ({ token, user, initRequests }) => {
             .map((request) => request.postedBy.email)
             .includes(user.email)
         )
-      )}
+      )} */}
 
-      {
+      {/* {
         // this returns the user information that has a certain peram (meal here) in their mealRequest
         console.log(
           'userList vs mealRequest',
@@ -833,9 +857,9 @@ const Admin = ({ token, user, initRequests }) => {
               .includes(user.email)
           )
         )
-      }
+      } */}
 
-      {
+      {/* {
         // let's find sesame
         console.log(
           'sesame user finder',
@@ -845,9 +869,9 @@ const Admin = ({ token, user, initRequests }) => {
               .includes(true)
           )
         )
-      }
+      } */}
       <div className="p-4"></div>
-      <Title  pickupDate={pickupDate} pickupButton={pickupButton} />
+      <Title pickupDate={pickupDate} pickupButton={pickupButton} />
       <div className="row" id="dataCards">
         <div className="col-sm-4 pb-4" id="curbside">
           <div
@@ -946,12 +970,18 @@ const Admin = ({ token, user, initRequests }) => {
               Fulfilled Curbside
             </div>
             <hr />
-            <b className="h5">Curbside Kitchen Prep Data</b>
+            <b className="h5">{completed ? <>Unfulfilled</> : <>Fulfilled</>}</b>
+            <button
+              className="btn btn-sm float-right"
+              onClick={() => setCompleted(!completed)}
+            >
+              {completed ? <>Show Complete</> : <>Show Incomplete</>}
+            </button>
             <div className="pt-3"></div>
-            <b className="text-danger">{bagsCounter()}</b> - Total Bags <p />
-            <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
+            <b className="text-danger">{bagsCounter(completed)}</b> - Total Bags <p />
+            <b className="text-danger">{pickupMealsForLunch(completed)}</b> - Individual
             Curbside Lunches <p />
-            <b className="text-danger">{pickupMealsForBreakfast()}</b> -
+            <b className="text-danger">{pickupMealsForBreakfast(completed)}</b> -
             Individual Curbside Breakfasts
             {/* <hr/>
             <hr/>
@@ -975,6 +1005,13 @@ const Admin = ({ token, user, initRequests }) => {
               // borderBlock: '5px',
             }}
           >
+            <b className="h5">Curbside Kitchen Prep Data</b>
+            <div className="pt-3"></div>
+            <b className="text-danger">{bagsCounter()}</b> - Total Bags <p />
+            <b className="text-danger">{pickupMealsForLunch()}</b> - Individual
+            Curbside Lunches <p />
+            <b className="text-danger">{pickupMealsForBreakfast()}</b> -
+            Individual Curbside Breakfasts
             {/* <b className="text-danger h3">
               {requests.filter((meal) => meal.pickupTime != 'Cafeteria').length}
             </b>{' '}
@@ -1064,12 +1101,12 @@ const Admin = ({ token, user, initRequests }) => {
             Individual Curbside Breakfasts
             <hr/>
             <hr/> */}
-            <b className="h3 text-danger">{allOnsiteMeals()}</b> -{' '}
+            {/* <b className="h3 text-danger">{allOnsiteMeals()}</b> -{' '}
             <b className="h3 ">All Onsite</b> <hr />
             <b className="h5">Onsite Kitchen Prep Data</b>
             <div className="pt-3"></div>
             <b className="text-danger">{allIndividualOnsiteMeals()}</b> -
-            Individual Onsite Meals
+            Individual Onsite Meals */}
             <div className="p-1"></div>
           </div>
         </div>
@@ -1088,37 +1125,56 @@ const Admin = ({ token, user, initRequests }) => {
             {/* <b className="h3">Curbside Requests</b>
             <hr /> */}
             <b className="h5 strong">Standard Requests</b>
+            {/* <button
+              className="btn btn-sm float-right"
+              onClick={() => setCompleted(!completed)}
+            >
+              {completed ? <>Show Complete</> : <>Show Incomplete</>}
+            </button> */}
             <hr />
             <div className="">
               <h6>
-                {mealCounter('Standard', 'Breakfast and Lunch')} -{' '}
+                {mealCounter('Standard', 'Breakfast and Lunch', completed)} -{' '}
                 <b>Standard</b> Breakfast and Lunch
                 <br />
                 <br />
-                {lunchOnlymealCounter('Standard', 'Lunch Only')} -{' '}
-                <b>Standard</b> Lunch Only
+                {lunchOnlymealCounter(
+                  'Standard',
+                  'Lunch Only',
+                  completed
+                )} - <b>Standard</b> Lunch Only
                 <br />
                 <br />
-                {mealCounter('Vegetarian', 'Breakfast and Lunch')} -{' '}
-                <b>Vegetarian</b> Breakfast and Lunch
+                {mealCounter(
+                  'Vegetarian',
+                  'Breakfast and Lunch',
+                  completed
+                )} - <b>Vegetarian</b> Breakfast and Lunch
                 <br />
                 <br />
-                {lunchOnlymealCounter('Vegetarian', 'Lunch Only')} -{' '}
-                <b>Vegetarian</b> Lunch Only
+                {lunchOnlymealCounter(
+                  'Vegetarian',
+                  'Lunch Only',
+                  completed
+                )} - <b>Vegetarian</b> Lunch Only
                 <br />
                 <br />
-                {mealCounter('Vegan', 'Lunch Only')} - <b>Vegan</b> Meals
-                <br />
-                <br />
-                {mealCounter('Gluten Free', 'Lunch Only')} - <b>Gluten Free</b>{' '}
+                {mealCounter('Vegan', 'Lunch Only', completed)} - <b>Vegan</b>{' '}
                 Meals
                 <br />
                 <br />
-                {mealCounter('Standard Dairy Free', 'Lunch Only')} -{' '}
-                <b>Dairy Free</b> Meals
+                {mealCounter('Gluten Free', 'Lunch Only', completed)} -{' '}
+                <b>Gluten Free</b> Meals
                 <br />
                 <br />
-                {mealBreakfastOnlyCounter('Standard Onsite')} -{' '}
+                {mealCounter(
+                  'Standard Dairy Free',
+                  'Lunch Only',
+                  completed
+                )} - <b>Dairy Free</b> Meals
+                <br />
+                <br />
+                {mealBreakfastOnlyCounter('Standard Onsite', completed)} -{' '}
                 <b>BREAKFAST ONLY </b> Meals
                 {/* {lunchOnlyMealCounter('Standard')} - <b>LUNCH ONLY</b> Standard
           <hr />
@@ -1128,24 +1184,30 @@ const Admin = ({ token, user, initRequests }) => {
                 <hr />
                 <div className="">
                   <h6>
-                    {mealCounter('Vegan B', 'Breakfast and Lunch')} -{' '}
+                    {mealCounter('Vegan B', 'Breakfast and Lunch', completed)} -{' '}
                     <b>Vegan</b> with Breakfast
                     <br />
                     <br />
                     {mealCounter(
                       'Gluten Free with Breakfast',
-                      'Breakfast and Lunch'
+                      'Breakfast and Lunch',
+                      completed
                     )}{' '}
                     - <b>Gluten Free</b> with Breakfast
                     <br />
                     <br />
-                    {mealCounter('Gluten Free Dairy Free', 'Lunch Only')} -{' '}
-                    <b>Gluten Free Dairy Free</b>
+                    {mealCounter(
+                      'Gluten Free Dairy Free',
+                      'Lunch Only',
+                      completed
+                    )}{' '}
+                    - <b>Gluten Free Dairy Free</b>
                     <br />
                     <br />
                     {mealCounter(
                       '2on 3off',
-                      'Two Onsite / Three Breakfast and Lunches'
+                      'Two Onsite / Three Breakfast and Lunches',
+                      completed
                     )}{' '}
                     - <b>Two On Three Off</b>
                     {/* <br />
@@ -1269,7 +1331,10 @@ const Admin = ({ token, user, initRequests }) => {
               // borderBlock: '5px',
             }}
           >
-            <b className="h4">Onsite School Numbers</b>
+            {/* <b className="h3 text-danger">{allOnsiteMeals()}</b> -{' '}
+            <b className="h3 ">All Onsite</b> <hr /> */}
+            <b className="h4"><b className="text-danger">{allIndividualOnsiteMeals()}</b> - Onsite Meals</b>
+            
             <div className="pl-3">
               <hr />
               <h6>
