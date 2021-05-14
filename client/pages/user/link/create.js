@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Router from 'next/router';
 import styles from '../../../styles/Home.module.css';
 // components and helpers
@@ -162,12 +162,25 @@ const Create = ({ token, user }) => {
   } = state;
 
   // displays loading form for n seconds
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 600);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLoaded(true);
+  //   }, 600);
+  // }, []);
+
+  const [firstImageLoaded, setFirstImageLoaded] = useState(false);
+  const imageLoaded = () => setFirstImageLoaded(true);
+
+  const firstImage = useCallback((firstImageNode) => {
+    firstImageNode && firstImageNode.addEventListener('load', imageLoaded());
+    return () => firstImageNode.removeEventListener('load', imageLoaded());
   }, []);
 
+  useEffect(() => {
+    return () => {
+      setLoaded(true);
+    };
+  }, [firstImageLoaded]);
   // reroutes if not signed in
   useEffect(() => {
     !isAuth() && Router.push('/');
@@ -187,7 +200,8 @@ const Create = ({ token, user }) => {
   }, []);
 
   // sets default pickupTime as onsite 'Cafeteria' if all meals are onsite meals
-  useEffect(() => { // TODO: refactor into helper or component 
+  useEffect(() => {
+    // TODO: refactor into helper or component
     setState({
       ...state,
       pickupTime:
@@ -204,7 +218,7 @@ const Create = ({ token, user }) => {
     });
   }, [mealRequest]);
 
-  // Generates pickup code TODO: reafactor into helper or component 
+  // Generates pickup code TODO: reafactor into helper or component
   useEffect(() => {
     let frontCode = [];
     mealRequest.forEach((item) => {
@@ -498,7 +512,18 @@ const Create = ({ token, user }) => {
             </div>
           </div>
         ) : (
-          <FakeMealRequestForm />
+          <>
+            <FakeMealRequestForm />
+            <img
+              ref={firstImage}
+              hidden
+              src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
+              // loading="lazy"
+              alt=""
+              class="stepimage"
+              width="320"
+            />
+          </>
         )}
       </Layout>
       <div className="p-5"></div>

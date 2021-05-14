@@ -81,6 +81,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
   const calanderButton = useRef();
 
+  // detects if user clicked away from calendar and closes it if so
   useEffect(() => {
     const handleClick = (event) => {
       if (

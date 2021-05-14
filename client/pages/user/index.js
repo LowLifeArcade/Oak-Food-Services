@@ -1,5 +1,5 @@
 import styles from '../../styles/Home.module.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { API } from '../../config';
 import withUser from '../withUser';
@@ -21,11 +21,25 @@ const User = ({ user, token, l, userLinks }) => {
 
   // const orderByDateUserLinks = userLinks.filter
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 800);
+  const [firstImageLoaded, setFirstImageLoaded] = useState(false);
+  const imageLoaded = () => setFirstImageLoaded(true);
+
+  const firstImage = useCallback((firstImageNode) => {
+    firstImageNode && firstImageNode.addEventListener('load', imageLoaded());
+    return () => firstImageNode.removeEventListener('load', imageLoaded());
   }, []);
+
+  useEffect(() => {
+    return () => {
+      setLoaded(true);
+    };
+  }, [firstImageLoaded]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLoaded(true);
+  //   }, 800);
+  // }, []);
 
   const confirmDelete = (e, id) => {
     e.preventDefault();
@@ -709,6 +723,15 @@ const User = ({ user, token, l, userLinks }) => {
                       <div className={styles.animatedBg}>&nbsp;</div>
                     </div>
                   </div>
+                  <img
+                ref={firstImage}
+                hidden
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
+                // loading="lazy"
+                alt=""
+                class="stepimage"
+                width="320"
+              />
                 </>
               )}
             </div>
