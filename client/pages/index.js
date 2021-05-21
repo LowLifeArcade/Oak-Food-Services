@@ -7,7 +7,7 @@ import moment from 'moment'
 import Router from 'next/router';
 
 const Home = () => {
-  const [loaded, setLoaded] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     localStorage.getItem('no-students') && Router.push('/user/profile/add');
   });
@@ -24,7 +24,10 @@ const Home = () => {
 
   useEffect(() => {
     return () => {
-      setLoaded(true);
+      // setTimeout(() => {
+        
+        setLoaded(true);
+      // },1000)
     };
   }, [firstImageLoaded]);
 
@@ -74,10 +77,13 @@ const Home = () => {
           {loaded ? (
             <>
               <div
-                className={
+                className={ 
+                  // setTimeout(() => {
+                  
                   new Date().getHours() > 6 && new Date().getHours() < 19
-                    ? `${styles.skewedBg}`
-                    : `${styles.skewedBgNight} `
+                  ? `${styles.skewedBg}`
+                  : `${styles.skewedBgNight} `
+                // },200)
                 }
               >
                 <div className={`${styles.desktop} ${styles.heroContent} `}>
@@ -490,8 +496,9 @@ const Home = () => {
                 width="320"
               />
               <img
+              ref={firstImage}
                 hidden
-                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3a.png"
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
                 // loading="lazy"
                 alt=""
                 class="stepimage"
@@ -500,9 +507,9 @@ const Home = () => {
               <img
                 ref={firstImage}
                 hidden
-                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3a.png"
                 // loading="lazy"
-                alt=""
+                // alt=""
                 // class="stepimage"
                 // width="320"
               />

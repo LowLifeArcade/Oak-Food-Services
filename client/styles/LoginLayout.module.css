@@ -73,7 +73,7 @@
 
 .sidebar {
   position: fixed;
-  background-color: #72868a;
+  background-color: #72868a6b;
   box-shadow: 0px 0px 18px 20px rgba(0, 0, 0, 0.3);
 
   top: 0;
@@ -89,7 +89,7 @@
 
 .sidebarVisible {
   position: fixed;
-  background-color: #72868a;
+  background-color: #72868a70;
   box-shadow: 0px 0px 18px 20px rgba(0, 0, 0, 0.3);
 
   /* background-color: #4d6e74; */
@@ -106,7 +106,7 @@
 
 .sideMenu {
   position: fixed;
-  background-color: #034a57;
+  background-color: #034a5770;
   /* box-shadow: 0px 0px 18px 20px rgba(0, 0, 0, 0.3); */
 
   top: 0;
@@ -122,8 +122,8 @@
 
 .sideMenuVisible {
   position: fixed;
-  background-color: #034a57;
-  box-shadow: 0px 0px 1px 2px rgb(1, 37, 46);
+  background-color: #034a576b;
+  /* box-shadow: 0px 0px 1px 2px rgb(1, 37, 46); */
 
   /* background-color: #4d6e74; */
   top: 0;
