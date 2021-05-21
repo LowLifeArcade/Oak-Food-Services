@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../styles/Pages.module.css';
 import Link from 'next/link';
-import Layout from '../components/Layout';
+import LayoutLogin from '../components/LayoutLogin';
+import moment from 'moment'
 // import { isAuth } from '../helpers/auth';
 import Router from 'next/router';
 
 const Home = () => {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
   useEffect(() => {
     localStorage.getItem('no-students') && Router.push('/user/profile/add');
   });
 
-  // TODO: refactor. It works but is messy. 
-  // This loads a hidden image and when it's done loading we display the actual page instead of the fake loading screen 
+  // TODO: refactor. It works but is messy.
+  // This loads a hidden image and when it's done loading we display the actual page instead of the fake loading screen
   const [firstImageLoaded, setFirstImageLoaded] = useState(false);
   const imageLoaded = () => setFirstImageLoaded(true);
 
@@ -64,44 +65,240 @@ const Home = () => {
       newWin.close();
     }, 100);
   }
+
+  // let desktop = true
   return (
     <React.Fragment>
-      {/* <div
-                  style={{
-                    background: '#FEC1E3',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '300px',
-                  }}
-                >
-                  <div className="p-5"></div>
-                  <h1 className={'text-center ' + styles.h4}>
-                    Weekly OPUSD Meals Request
-                  </h1>
-                </div> */}
-      <Layout>
+      <LayoutLogin>
         <>
           {loaded ? (
             <>
-              <div className={styles.body}>
-                <div className={styles.section}>
-                  <div className="pt-4 pb-">
-                    <h3 className={'text-center ' + styles.h4}>
-                      Weekly OPUSD Meals Request
-                    </h3>
-                    <div className={' ' + styles.columnscontainer}>
-                      <div className={styles.bodyregular}>
-                        Here's how it works
+              <div
+                className={
+                  new Date().getHours() > 6 && new Date().getHours() < 19
+                    ? `${styles.skewedBg}`
+                    : `${styles.skewedBgNight} `
+                }
+              >
+                <div className={`${styles.desktop} ${styles.heroContent} `}>
+                  <div class="container">
+                    <div class={`${styles.hero} jumbotron`}>
+                      <h1 className={` ${styles.font} display-2 pb-3`}>
+                        Weekly
+                        <span className={`${styles.fontTwo}`}>
+                          &nbsp;OPUSD&nbsp;
+                        </span>
+                        Meals Request
+                      </h1>
+
+                      {/* <h1
+                        className={`${styles.mobile} ${styles.fontMobile} pt-5 pb-5`}
+                      >
+                        Weekly
+                        <span className={`${styles.fontTwo}`}>
+                          &nbsp;OPUSD&nbsp;
+                        </span>
+                        <br />
+                        Meals Request
+                      </h1> */}
+
+                      {
+                        <div className={styles.desktop}>
+                          <hr />
+                          <hr />
+                          <div>
+                          <div className='float-left' >Est. 1822</div>
+                            OAK PARK, CA - {moment(new Date).format('dddd MMMM DD, YYYY').toLocaleUpperCase()} - SEVEN
+                            PAGES
+                            <div className='float-right' >PRICE 5C</div>
+                          </div>
+                          <hr />
+                          <hr />
+                        </div>
+                      }
+                      <div className={`pt-4 d-flex flex-row  container`}>
+                        <p className={`col text-left mx-2`}>
+                          <h4 class="text-secondary pb-2 text-center">
+                            Who We Are
+                          </h4>
+                          The Oak Park School Meals Programs are aimed at
+                          providing the students of our district the best
+                          nutrition options in the country. We are dedicated to
+                          the mission 'Nutrition should never come second' and
+                          we push the boundaries in school nutrition leading the
+                          way in quality meals servicing our students.
+                        </p>
+                        {/* <hr style={`width: 1px`}></hr> */}
+                        <p className={`col text-left mx-2`}>
+                          <h4 class="text-secondary pb-2 text-center">
+                            Onsite and Offsite Meals
+                          </h4>
+                          In these trying times, we've met the challenges by
+                          providing meals both offsite during the stay at home
+                          orders and onsite as schools begin to reopen. We put
+                          forth the same quality we have for years during
+                          distance learning by maintaing our commitment to
+                          highly nutritious meals.
+                          {/* Our kitchens are supplied with high quality ingrediants 
+                          every day and, there for, our meals are filled with
+                          nutritional value. We prepare our food daily (no packaged foods) 
+                          fulfilling our mission statement 'Food prepared daily'. */}
+                        </p>
+                        <p className={`col text-left mx-2`}>
+                          <h4 class="text-secondary pb-2 text-center">
+                            Why We Do It
+                          </h4>
+                          The Country is in a health crisis. Measures have been
+                          put in place to handle the issues we face across our
+                          country and the state of California, but we here at
+                          the Oak Park School District want to take a lead and
+                          show our peers what can be done with a solid mission
+                          statement aiming to make every meal a delightful
+                          nutritious meal.
+                        </p>
                       </div>
+                      <p className="pt-3">
+                        <Link href="/faq">
+                          <a
+                            className={`float-left btn ${styles.button}  btn-lg`}
+                            role="button"
+                          >
+                            Learn More &raquo;
+                          </a>
+                        </Link>
+                        <Link href="/register">
+                          <a
+                            className={`float-left btn ${
+                              styles.buttonSecondary
+                            } mx-4 btn-lg`}
+                            href="#"
+                            role="button"
+                          >
+                            Register Now
+                          </a>
+                        </Link>
+                      </p>
                     </div>
+                  </div>
+                </div>
+
+                <div className={`${styles.heroContent} ${styles.mobile}`}>
+                  <div class={``}>
+                    <div class="container">
+
+                      <h1
+                        className={`${styles.mobile} ${styles.fontMobile} pt-5 pb-5`}
+                      >
+                        Weekly
+                        <span className={`${styles.fontTwo}`}>
+                          &nbsp;OPUSD&nbsp;
+                        </span>
+                        <br />
+                        Meals Request
+                      </h1>
+
+                      {/* {
+                        <div className={styles.desktop}>
+                          <hr />
+                          <div>
+                            OAK PARK, CA - THURSDAY AUGUST 30, 1978 - SEVEN
+                            PAGES
+                          </div>
+                          <hr />
+                        </div>
+                      } */}
+                      <div className={`pt-4 d-flex flex-column  container`}>
+                        <p className={`text-left pb-4`}>
+                          <h4 class="text-white pb-2 text-center">
+                            Who We Are
+                          </h4>
+                          The Oak Park School Meals Programs are aimed at
+                          providing the students of our district the best
+                          nutrition options in the country. We are dedicated to
+                          the mission 'Nutrition should never come second' and
+                          we push the boundaries in school nutrition leading the
+                          way in quality meals servicing our students.
+                        </p>
+                        {/* <hr style={`width: 1px`}></hr> */}
+                        <p className={`text-left pb-4`}>
+                          <h4 class="text-white pb-2 text-center">
+                            Onsite and Offsite Meals
+                          </h4>
+                          In these trying times, we've met the challenges by
+                          providing meals both offsite during the stay at home
+                          orders and onsite as schools begin to reopen. We put
+                          forth the same quality we have for years during
+                          distance learning by maintaing our commitment to
+                          highly nutritious meals.
+                          {/* Our kitchens are supplied with high quality ingrediants 
+                          every day and, there for, our meals are filled with
+                          nutritional value. We prepare our food daily (no packaged foods) 
+                          fulfilling our mission statement 'Food prepared daily'. */}
+                        </p>
+                        <p className={`text-left mx-`}>
+                          <h4 class="text-white pb-2 text-center">
+                            Why We Do It
+                          </h4>
+                          The Country is in a health crisis. Measures have been
+                          put in place to handle the issues we face across our
+                          country and the state of California, but we here at
+                          the Oak Park School District want to take a lead and
+                          show our peers what can be done with a solid mission
+                          statement aiming to make every meal a delightful
+                          nutritious meal.
+                        </p>
+                      </div>
+                      <p className="pt-3">
+                        <div className="p-4"></div>
+                        <Link href="/faq">
+                          <a
+                            className={`float-left btn ${styles.button}  btn-lg`}
+                            role="button"
+                          >
+                            Learn More &raquo;
+                          </a>
+                        </Link>
+                        <Link href="/register">
+                          <a
+                            className={`float-left btn ${styles.buttonSecondary} float-right btn-lg`}
+                            href="#"
+                            role="button"
+                          >
+                            Register Now
+                          </a>
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`${styles.body}  `}>
+                <div className={styles.section}>
+                  <div className="pt-5 pb-5">
+                    <div className={' ' + styles.columnscontainer}>
+                      <div className="p-4"></div>
+                      <div className={`${styles.desktop} `}>
+                        <div
+                          style={{ fontSize: '40px' }}
+                          className={`d-flex justify-content-center ${styles.bodyregular} `}
+                        >
+                          Here's How It Works!
+                        </div>
+                      </div>
+                      <h2 className={`pb-3 ${styles.mobile}`}>
+                        Here's How It Works!
+                      </h2>
+                    </div>
+                    <div className="p-4"></div>
                   </div>
                   <p className={'pb-4 ' + styles.bodyregular}>
                     {/* Request school meals for each student at least 2 weeks in advance. */}
                   </p>
                 </div>
-
-                <div className={styles.sectioncolumns}>
+                
+                <div className={`${styles.sectioncolumns}`}>
+                  
                   <div className={' ' + styles.columnscontainer}>
                     <img
                       // ref={firstImage}
@@ -112,12 +309,12 @@ const Home = () => {
                       width="320"
                     />
 
-                    <div className={'pt-4 ' + styles.bodyregular}>
+                    <div className={`pt-4 ${styles.bodyregular}`}>
                       <span>
                         <b>Start a Meal Request</b>
                       </span>
                     </div>
-                    <div className={'pb-5 ' + styles.bodyregular}>
+                    <div className={'pb-5 col-md-10 ' + styles.bodyregular}>
                       Look over the &nbsp;
                       <span>
                         {
@@ -143,8 +340,6 @@ const Home = () => {
                         </b>{' '}
                         found throughout the site.
                       </span>
-                      {/* located either
-                on your nav bar, the weekly menu, or your receipts page. */}
                     </div>
                   </div>
 
@@ -160,8 +355,8 @@ const Home = () => {
                     <div className={'pt-4 ' + styles.bodyregular}>
                       <b> Make Your Selections</b>
                     </div>
-                    <span>
-                      <p className={styles.bodyregular}>
+                    {/* <span> */}
+                      <p className={'pb-5 col-md-10 ' + styles.bodyregular}>
                         Select the school week, make your{' '}
                         <b>student's meal selections</b> for that week, select a
                         pickup time, and submit your request.
@@ -169,7 +364,7 @@ const Home = () => {
                         <br />
                         {/* You can edit your student's cohort and allery group for differnt meal options in  <b>update profile</b>.  */}
                       </p>
-                    </span>
+                    {/* </span> */}
                   </div>
 
                   <div className={styles.columnscontainer}>
@@ -186,14 +381,15 @@ const Home = () => {
                         <b>For Onsite Requests</b>
                       </div>
                     </span>
-                    <span>
-                      <p className={'pb-2 ' + styles.bodyregular}>
+                    {/* <span> */}
+                      <p className={'pb-2 col-md-10 ' + styles.bodyregular}>
                         You're all done! Your hybrid student is now on the lunch
-                        roster for the <b>week found on your receipt</b>.
+                        roster for the <b>week found on your receipt</b>
+                        .
                         <br />
                         <br />
                       </p>
-                    </span>
+                    {/* </span> */}
                   </div>
                   <div className={styles.columnscontainer}>
                     <img
@@ -209,13 +405,13 @@ const Home = () => {
                         <b>For Curbside Requests</b>
                       </div>
                     </span>
-                    <span>
-                      <p className={'pb-5 ' + styles.bodyregular}>
+                    {/* <span> */}
+                      <p className={'pb-5 col-md-10 ' + styles.bodyregular}>
                         Simply <b>print out your code</b> and drive to the{' '}
                         <b>pickup location</b> on the date and time found on
                         your receipt.
                       </p>
-                    </span>
+                    {/* </span> */}
                   </div>
                   <span>
                     {/* <p className={'pb-2 ' + styles.bodyregular}> */}
@@ -263,14 +459,15 @@ const Home = () => {
                   </div>
 
                   <div className={'pt-5 ' + styles.bodyregular}>
-                    <b> That's it! </b>
+                  <h1 className={'pb-5 display-3 ' + styles.h4}>That's it!</h1>
                   </div>
-                  <span>
-                    <p className={styles.bodyregular}>
-                      Lastly, please don't forget to thank our hardworking staff
+                  {/* <span> */}
+                        <h2>Lastly, </h2>
+                    <p className={'pb-5 col-md-9 ' + styles.bodyregular}>
+                      Please don't forget to thank our hardworking staff
                       as they work diligently to feed our students every week.
                     </p>
-                  </span>
+                  {/* </span> */}
                 </div>
               </div>
             </>
@@ -306,37 +503,41 @@ const Home = () => {
                 src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
                 // loading="lazy"
                 alt=""
-                class="stepimage"
-                width="320"
+                // class="stepimage"
+                // width="320"
               />
-              <div className={'d-flex justify-content-center  '}>
-                <div className="col-md-8">
-                  <div className="p-2"></div>
-                  &nbsp;
-                  <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
-                  <div className={styles.animatedBg}>&nbsp;</div>
-                  <div className={styles.animatedBg}>&nbsp;</div>
-                  <div className={styles.animatedBg}>&nbsp;</div>
+              <div className="container">
+                <div className={'d-flex justify-content-center  '}>
+                  <div className="p-5"></div>
+                  <div className="col">
+                    <div className="p-2"></div>
+                    &nbsp;
+                    <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                  </div>
                 </div>
-              </div>
-              <div className="p-4"></div>
+                <div className="p-4"></div>
 
-              <div
-                className={'d-flex justify-content-center  ' + styles.desktop}
-              >
-                <div className="col-md-8">
-                  <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
-                  <div className="p-2"></div>
-                  &nbsp;
-                  <div className={styles.animatedBg}>&nbsp;</div>
-                  <div className={styles.animatedBg}>&nbsp;</div>
-                  <div className={styles.animatedBg}>&nbsp;</div>
+                <div
+                  className={'d-flex justify-content-center  ' + styles.desktop}
+                >
+                  <div className="col">
+                    <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
+                    <div className="p-2"></div>
+                    &nbsp;
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                  </div>
                 </div>
               </div>
             </>
           )}
         </>
-      </Layout>
+      </LayoutLogin>
+
       {loaded && (
         <div className={styles.footer}>
           <div
@@ -345,16 +546,21 @@ const Home = () => {
             }
           >
             <div className={'text-white col-md-9 ' + styles.bodyregular}>
-              <div className="p-2"></div>
+              <div className="p-3"></div>
               <ul style={{ fontSize: '14px' }} className={styles.lists}>
+                <li>
+
+              <h5>Business Links</h5>
+              <div className="p-2"></div>
+                </li>
                 <li>
                   <Link href="https://www.oakparkusd.org/Page/10593">
                     <a className="text-white  " target="_blank">
-                      Program Info
+                      Program Info <i class="fas fa-external-link-alt"></i>
                     </a>
                   </Link>
                 </li>
-                <li>
+                <li className="my-2">
                   <div className="float-right ">
                     <Link href="https://www.oakparkusd.org/Page/1">
                       <a className="text-white  " target="_blank">
@@ -368,21 +574,21 @@ const Home = () => {
                     </Link>
                   </div>
                 </li>
-                <li>
+                <li className="my-2">
                   <Link href="https://www.oakparkusd.org/Page/6499">
                     <a className="text-white  " target="_blank">
-                      Who is Eligible
+                      Who is Eligible <i class="fas fa-external-link-alt"></i>
                     </a>
                   </Link>
                 </li>
-                <li>
+                <li className="my-2">
                   <a
                     className="text-white  "
                     id="mailto"
                     href="mailto:schoolmeals@opusd.org"
                     target="_blank"
                   >
-                    Contact
+                    Contact <i class="fas fa-external-link-alt"></i>
                   </a>
                 </li>
                 {/* <li>

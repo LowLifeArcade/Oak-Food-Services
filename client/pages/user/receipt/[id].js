@@ -101,6 +101,7 @@ const Update = ({ oldLink, token, user, _id }) => {
   const receipt = (oldLink, confirmDelete) => {
     return (
       <>
+          
         {
           // <div className={' p-4 alert alert-warning ' + styles.receipt}>
           <div
@@ -520,6 +521,7 @@ const Update = ({ oldLink, token, user, _id }) => {
 
   return (
     <div className={styles.background}>
+      <div className="p-4"></div>
       <Layout>
         <div className={styles.printReceipt}>
           <div className={'p-4 '}></div>

@@ -60,8 +60,8 @@ const ActivateAccount = ({ router }) => {
   return (
     <Layout>
       <div className="row">
-        {/* <div className="p-5"></div> */}
         <div className="p-4 pt-5 col-md-8 offset-md-2">
+        <div className="p-4"></div>
           <h2>Hello, {name}, click the button below to activate your account.</h2>
           <h6 className="pt-4 p-2 text-muted">
             On your first login, please register your participating students.

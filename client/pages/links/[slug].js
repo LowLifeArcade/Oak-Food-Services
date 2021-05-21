@@ -187,7 +187,8 @@ const Links = ({
     <>
       {head()}
       <Layout>
-        <div className="row ">
+        <div className="row mx-5">
+          <div className="p-5"></div>
           <div className="col-md-12 pt-4">
             {/* <h1 className=" font-weight-bold pt-3 pb-2">{category.name}</h1> */}
             {/* <h3 className="font-weight-bold ">Menus for Week of {moment(category.pickupWeek).format('MMMM Do')}</h3> */}

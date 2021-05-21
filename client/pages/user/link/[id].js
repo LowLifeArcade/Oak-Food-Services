@@ -1847,8 +1847,10 @@ const Update = ({ oldLink, token, user, _id }) => {
   return (
     <div className={styles.background}>
       <Layout>
+        <div className="p-4"></div>
+        <div className="p-2"></div>
         <div className="col-md-6 offset-md-3 pt-4">
-          <div className={styles.subcard}>
+          <div className={`${styles.subcard}`}>
             <div className="row">
               <div className="col-md-12">
                 <h4 className="text-secondary">
@@ -2343,6 +2345,7 @@ const Update = ({ oldLink, token, user, _id }) => {
             </div>
           </div>
         </div>
+              <div className="p-5"></div>
       </Layout>
     </div>
   );

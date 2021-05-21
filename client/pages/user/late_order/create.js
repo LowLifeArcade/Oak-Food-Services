@@ -1600,6 +1600,7 @@ const Create = ({ token, user }) => {
       <Layout>
         {loaded ? (
           <div className="col-md-6 offset-md-3 pt-4">
+            <div className="p-5"></div>
             <div className={styles.subcard}>
               <div className="row">
                 <div className="col-md-9">
@@ -1936,6 +1937,7 @@ const Create = ({ token, user }) => {
           </div>
         ) : (
           <div className="col-md-6 offset-md-3 pt-4">
+             <div className="p-5"></div>
             <div className={styles.subcard}>
               <div className="row">
                 <div className="col-md-12">

@@ -37,31 +37,29 @@
 .nav {
   /* background-color: #2f3c51 !important; */
   /* background-color: #4d6e74 !important; */
-  background-color: #215963 !important;
+  background-color: #21596300 !important;
   /* background-color: #353535 !important; */
   font-family: 'Arimo';
   /* background-color: #4d6e74 !important; */
-  /* box-shadow: 0 0.3px 1.2px 0px rgba(0, 0, 0, 0.6); */
-  box-shadow: 0 0.3px 5.2px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.3px 7.2px 0px rgba(0, 0, 0, 0.12);
   z-index: 1;
-  position: fixed;
+  position: sticky;
   display: flex;
   top: 0;
   left: 0;
   right: 0;
-  height: 53px;
+  height: 73px;
   /* overflow: hidden; */
   /* display: none; */
 }
 
 .accordion {
   font-family: 'Arimo';
-  background-color: #215963 !important;
+  background-color: #21596300 !important;
   /* box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.4); */
-  /* box-shadow: 0 0.3px 1.2px 0px rgba(0, 0, 0, 0.6); */
-  box-shadow: 0 0.3px 5.2px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.3px 7.2px 0px rgba(0, 0, 0, 0.12);
   z-index: 1;
-  position: fixed;
+  position: sticky;
   display: flex;
   top: 0;
   left: 0;

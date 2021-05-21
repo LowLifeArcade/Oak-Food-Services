@@ -56,10 +56,11 @@ const Read = ({ user, token }) => {
             style={{
               color: 'grey',
               // border: '1px solid grey',
-              padding: '10px',
-              boxShadow: '10px 2px 10px 4px rgba(0,0,0,0.2)',
+              padding: '5px',
+              margin: '10px',
+              boxShadow: '0px 2px 10px 0px rgba(0,0,0,0.2)',
               borderRadius: '8px',
-              borderBlock: '5px',
+              // borderBlock: '5px',
             }}
             className="bg-light p-3 col-md-6"
           >
@@ -98,13 +99,14 @@ const Read = ({ user, token }) => {
 
   return (
     <Layout>
-      <div className="row">
+        <div className="p-5"></div>
+      <div className="container d-flex align-items-center">
         <div className="col-md-12 pt-3">
           <h1>List of Posts</h1>
           <br />
+      <div className="row">{listCategories()} </div>
         </div>
       </div>
-      <div className="row">{listCategories()} </div>
     </Layout>
   );
 };

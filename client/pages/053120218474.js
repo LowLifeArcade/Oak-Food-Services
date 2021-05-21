@@ -35,6 +35,8 @@ const Home = () => {
     <React.Fragment>
       <Layout>
         <>
+        <div className="container pt-5">
+
           <h2 className='pt-5'>Late Order for Week of May 31st</h2>
           <br />
           Click to place late order. (You must be logged in)
@@ -48,13 +50,14 @@ const Home = () => {
                   localStorage.setItem(
                     'search-date',
                     JSON.stringify(moment('05/31/2021').format('l'))
-                  )
-                }
-              >
+                    )
+                  }
+                  >
                 Late Order
               </button>
             </a>
           </Link>
+                </div>
         </>
       </Layout>
     </React.Fragment>

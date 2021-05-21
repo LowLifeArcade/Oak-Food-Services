@@ -1117,6 +1117,8 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
 
   return (
     <Layout>
+      <div className="container pt-5">
+        <div className="pt-3"></div>
       <div className={'row ' + styles.noPrint}>
         <div className="col-md-12 pt-4">
           <h3>
@@ -1475,6 +1477,7 @@ const Requests = ({ token, initRequests, initIndividualMealsArray }) => {
         {orderType === 'Pickup'
           ? listOfLinks(state.search, searchPickupTime, searchByStatus)
           : listOfOnsiteLinks(state.search, searchPickupTime, searchByStatus)}
+      </div>
       </div>
     </Layout>
   );

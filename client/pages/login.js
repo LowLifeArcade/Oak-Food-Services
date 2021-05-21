@@ -113,11 +113,15 @@ const Login = () => {
       }}
     >
       <Layout>
+        {/* <div className={'d-flex align-items-center'}> */}
         <div className={styles.body}>
           <div className="pt-5 pb-5"></div>
 
           {loaded ? (
-            <div className="col-md-6 offset-md-3 pt-4">
+            // <div className="d-flex align-items-center">
+            <div className="container">
+
+            <div className="col-md-6 offset-md-3 pt-5">
               <div className={styles.subcard}>
                 <h2 className={'text-muted ' + styles.title}>Login</h2>
                 <br />
@@ -125,6 +129,8 @@ const Login = () => {
                 {error && showErrorMessage(error)}
                 {loginForm()}
               </div>
+            </div>
+            {/* </div> */}
             </div>
           ) : (
             <FakeLoginForm />

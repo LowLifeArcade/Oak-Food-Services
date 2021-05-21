@@ -66,8 +66,11 @@ const ForgotPassword = () => {
 
   return (
     <Layout>
+      <div className="container d-flex justify-content-center">
+
       <div className="row">
-        <div className="col-md-6 offset-md3 pt-3">
+        <div className="col-md-12 pt-3">
+        <div className="p-4"></div>
           <h2>Forgot Password</h2>
           <div className="col-md">
             <br />
@@ -81,6 +84,7 @@ const ForgotPassword = () => {
           {error && showErrorMessage(error)}
           {passwordForgotForm()}
         </div>
+      </div>
       </div>
     </Layout>
   );

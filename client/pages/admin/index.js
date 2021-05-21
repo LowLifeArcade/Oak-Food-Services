@@ -151,6 +151,7 @@ const Admin = ({ token, user }) => {
       <br />
       <div className="row">
         <div className="col-md-4">
+          <div className="p-4"></div>
           <h1>Admin Dashboard</h1>
           <hr />
           <div className="">

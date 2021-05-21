@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import { isAuth, logout } from '../helpers/auth';
-import styles from '../styles/Home.module.css';
+import styles from '../styles/LoginLayout.module.css';
 // import ContextWrapper from './ContextWrapper';
 
 // import user from '../pages/user';
@@ -103,7 +103,7 @@ const Layout = ({ children }) => {
 
   const nav = () => (
     <div className={styles.noPrint}>
-      <nav className={'fixed-top ' + styles.nav}>
+      <nav className={styles.nav}>
         <ul className={'nav align-items-center ' + styles.nav}>
           <li key="1" className="nav-item pointer-hand">
             {/* <Link href="/">
@@ -346,7 +346,7 @@ const Layout = ({ children }) => {
 
   const accordian = () => (
     <div className={styles.noPrint}>
-      <div className={'fixed-top ' + styles.accordion}>
+      <div className={styles.accordion}>
         <ul className={'nav align-items-center ' + styles.accordion}>
           <li>
             <Link href="/">
@@ -470,9 +470,13 @@ const Layout = ({ children }) => {
             isAuth().userCode === 'STAO' && (
               <li
                 onClick={() => setShowSidebar(false)}
-                className={` nav-item  pointer-hand`}
+                className="nav-item  pointer-hand"
               >
                 <Link href="/admin/link/list">
+                  {/* <a className="nav-link text-white btn btn-warning">
+                    <i class="far fa-folder-open"></i> &nbsp;&nbsp; Curbside
+                    List
+                  </a> */}
                   <a className={`${styles.orderButton} nav-link text-white btn btn-sm btn-warning`}>
                     <i class="far fa-folder-open"></i> &nbsp;Curbside
                     List

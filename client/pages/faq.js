@@ -56,6 +56,7 @@ const Home = () => {
     <React.Fragment>
       <Layout>
         <>
+        <div className="container pt-5">
           {loaded ? (
             <div className={styles.body}>
               <div className={styles.section}>
@@ -226,8 +227,9 @@ const Home = () => {
             </div>
           ) : (
             <>
+            <div className="container">
               <div className={'d-flex justify-content-center  '}>
-                <div className="col-md-8">
+                <div className="col-md-12">
                   <div className="p-2"></div>
                   &nbsp;
                   <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
@@ -241,7 +243,7 @@ const Home = () => {
               <div
                 className={'d-flex justify-content-center  ' + styles.desktop}
               >
-                <div className="col-md-8">
+                <div className="col-md-12">
                   <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
                   <div className="p-2"></div>
                   &nbsp;
@@ -250,8 +252,10 @@ const Home = () => {
                   <div className={styles.animatedBg}>&nbsp;</div>
                 </div>
               </div>
+              </div>
             </>
           )}
+          </div>
         </>
       </Layout>
       {loaded && (

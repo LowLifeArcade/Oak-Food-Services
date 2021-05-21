@@ -889,7 +889,8 @@ const Create = ({ user, token }) => {
 
   return (
     <Layout>
-      <div className="row">
+      <div className="container pt-5">
+      <div className="row pt-3">
         <div className="col-md-10 offset-md-1 pt-3">
           <h1>Create Post</h1>
           <br />
@@ -897,6 +898,7 @@ const Create = ({ user, token }) => {
           {createCategoryForm()}
         </div>
       </div>
+    </div>
     </Layout>
   );
 };

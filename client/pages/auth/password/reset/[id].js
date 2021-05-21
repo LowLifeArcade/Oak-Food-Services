@@ -163,8 +163,9 @@ const ResetPassword = ({ router }) => {
 
   return (
     <Layout>
-      <div className="row">
-        <div className="col-md-6 offset-md3 pt-3">
+      <div className="row container">
+        <div className="col-md-6 offset-md3 pt-3 container">
+        <div className="p-5"></div>
           <h2>Hi {name}, Please reset your password now.</h2>
           <div className="col-md-3">
             <br />

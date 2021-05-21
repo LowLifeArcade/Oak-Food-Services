@@ -923,13 +923,15 @@ const Update = ({ oldCategory, token }) => {
 
   return (
     <Layout>
-      <div className="row">
-        <div className="col-md-6 offset-md-3 pt-3">
+      <div className="container pt-5">
+      <div className="row pt-3">
+        <div className="col-md-6 offset-md-1 pt-3">
           <h1>Update Post</h1>
           <br />
           {success && showSuccessMessage(success)}
           {error && showErrorMessage(error)}
           {updateCategoryForm()}
+        </div>
         </div>
       </div>
     </Layout>

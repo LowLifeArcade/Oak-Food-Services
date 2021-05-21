@@ -2,7 +2,9 @@ import React from 'react';
 import styles from '../styles/Home.module.css';
 
 const FakeLoginForm = () => (
-  <div className="col-md-6 offset-md-3 pt-4">
+  <div className="container">
+
+  <div className="col-md-6 offset-md-3 pt-5">
     <div className={styles.subcard}>
       <div className="row">
         <div className="col-md-12">
@@ -15,6 +17,7 @@ const FakeLoginForm = () => (
           <div className="p-1"></div>
           <div className="p-1"></div>
         </div>
+  </div>
       </div>
     </div>
   </div>

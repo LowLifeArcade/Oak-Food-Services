@@ -6,7 +6,6 @@ import Layout from '../components/Layout';
 import Router from 'next/router';
 import moment from 'moment';
 
-
 const Home = () => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -35,26 +34,28 @@ const Home = () => {
     <React.Fragment>
       <Layout>
         <>
-          <h2 className='pt-5'>Late Order for Week of May 10th</h2>
-          <br />
-          Click to place late order. (You must be logged in)
-          <br />
-          <br />
-          <Link href="/user/late_order/create">
-            <a>
-              <button
-                className={'btn btn-outline-secondary'}
-                onClick={(e) =>
-                  localStorage.setItem(
-                    'search-date',
-                    JSON.stringify(moment('05/10/2021').format('l'))
-                  )
-                }
-              >
-                Late Order
-              </button>
-            </a>
-          </Link>
+          <div className="container pt-5">
+            <h2 className="pt-5">Late Order for Week of May 10th</h2>
+            <br />
+            Click to place late order. (You must be logged in)
+            <br />
+            <br />
+            <Link href="/user/late_order/create">
+              <a>
+                <button
+                  className={'btn btn-outline-secondary'}
+                  onClick={(e) =>
+                    localStorage.setItem(
+                      'search-date',
+                      JSON.stringify(moment('05/10/2021').format('l'))
+                    )
+                  }
+                >
+                  Late Order
+                </button>
+              </a>
+            </Link>
+          </div>
         </>
       </Layout>
     </React.Fragment>
@@ -62,4 +63,3 @@ const Home = () => {
 };
 
 export default Home;
-

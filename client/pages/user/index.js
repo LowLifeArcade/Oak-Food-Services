@@ -102,6 +102,7 @@ const User = ({ user, token, l, userLinks }) => {
       .sort((a, b) => Date.parse(a.pickupDate) - Date.parse(b.pickupDate))
       .map((l, i) => (
         <>
+        <div className="container">
           {moment(l.pickupDate).format('MDD').toString() > // doesn't show receipts older than 3 days past pickupdate (actually mealweek date i need to change pickupdate to mealweek)
             moment(new Date()).subtract(2, 'day').format('MDD').toString() && (
             // <Link href={`/user/receipt/${l._id}`}>
@@ -613,13 +614,14 @@ const User = ({ user, token, l, userLinks }) => {
               </div>
             </div>
           )}
+          </div>
         </>
       ));
 
   return (
-    <div>
+    <div className='container pt-5'>
       <Layout>
-        <div>
+        <div className='pt-3'>
           <h2 className=" pt-3">{user.name}'s Receipts </h2>
           <hr />
           <div className="p-1">
