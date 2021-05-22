@@ -13,6 +13,7 @@ const Home = () => {
   });
 
   const [timeOfDay] = useState(() => new Date().getHours() > 6 && new Date().getHours() < 19) 
+  console.log('time of day state',timeOfDay,'new date', new Date().getHours())
   
 
   // TODO: refactor. It works but is messy.
