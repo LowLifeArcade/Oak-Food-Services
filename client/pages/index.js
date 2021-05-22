@@ -7,29 +7,28 @@ import moment from 'moment'
 import Router from 'next/router';
 
 const Home = () => {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
   useEffect(() => {
     localStorage.getItem('no-students') && Router.push('/user/profile/add');
   });
 
+
   // TODO: refactor. It works but is messy.
   // This loads a hidden image and when it's done loading we display the actual page instead of the fake loading screen
-  const [firstImageLoaded, setFirstImageLoaded] = useState(false);
-  const imageLoaded = () => setFirstImageLoaded(true);
+  // const [firstImageLoaded, setFirstImageLoaded] = useState(false);
+  // const imageLoaded = () => setFirstImageLoaded(true);
 
-  const firstImage = useCallback((firstImageNode) => {
-    firstImageNode && firstImageNode.addEventListener('load', imageLoaded());
-    return () => firstImageNode.removeEventListener('load', imageLoaded());
-  }, []);
+  // const firstImage = useCallback((firstImageNode) => {
+  //   firstImageNode && firstImageNode.addEventListener('load', imageLoaded());
+  //   return () => firstImageNode.removeEventListener('load', imageLoaded());
+  // }, []);
 
-  useEffect(() => {
-    return () => {
-      // setTimeout(() => {
-        
-        setLoaded(true);
-      // },1000)
-    };
-  }, [firstImageLoaded]);
+  // useEffect(() => {
+  //   firstImageLoaded === false && setLoaded(false)
+  //   return () => {
+  //       setLoaded(true);
+  //   };
+  // }, [firstImageLoaded]);
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -490,6 +489,7 @@ const Home = () => {
                   <div class="container">
                   <div class={`${styles.hero} jumbotron`}>
               <img
+              
                 hidden
                 src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step1.png"
                 // loading="lazy"
@@ -498,6 +498,7 @@ const Home = () => {
                 width="320"
               />
               <img
+              
                 hidden
                 src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step2.png"
                 // loading="lazy"
@@ -506,7 +507,7 @@ const Home = () => {
                 width="320"
               />
               <img
-              ref={firstImage}
+              
                 hidden
                 src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
                 // loading="lazy"
@@ -566,40 +567,6 @@ const Home = () => {
                 <div className={`${styles.mobile} ${styles.heroContent} `}>
                   <div class="container">
                   {/* <div class={`${styles.hero} jumbotron`}> */}
-              <img
-                hidden
-                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step1.png"
-                // loading="lazy"
-                alt=""
-                class="stepimage"
-                width="320"
-              />
-              <img
-                hidden
-                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step2.png"
-                // loading="lazy"
-                alt=""
-                class="stepimage"
-                width="320"
-              />
-              <img
-              ref={firstImage}
-                hidden
-                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
-                // loading="lazy"
-                alt=""
-                class="stepimage"
-                width="320"
-              />
-              <img
-                ref={firstImage}
-                hidden
-                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3a.png"
-                // loading="lazy"
-                // alt=""
-                // class="stepimage"
-                // width="320"
-              />
               <div className="container">
                 
                 <div className={'d-flex justify-content-center  '}>
