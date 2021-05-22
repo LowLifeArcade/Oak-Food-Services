@@ -479,6 +479,16 @@ const Home = () => {
             </>
           ) : (
             <>
+            <div
+                className={ 
+                  new Date().getHours() > 6 && new Date().getHours() < 19
+                  ? `${styles.skewedBg}`
+                  : `${styles.skewedBgNight} `
+                }
+              >
+                <div className={`${styles.desktop} ${styles.heroContent} `}>
+                  <div class="container">
+                  <div class={`${styles.hero} jumbotron`}>
               <img
                 hidden
                 src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step1.png"
@@ -514,8 +524,9 @@ const Home = () => {
                 // width="320"
               />
               <div className="container">
+                
                 <div className={'d-flex justify-content-center  '}>
-                  <div className="p-5"></div>
+                  {/* <div className="p-5"></div> */}
                   <div className="col">
                     <div className="p-2"></div>
                     &nbsp;
@@ -539,6 +550,87 @@ const Home = () => {
                     <div className={styles.animatedBg}>&nbsp;</div>
                   </div>
                 </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              
+            <div
+                className={ 
+                  new Date().getHours() > 6 && new Date().getHours() < 19
+                  ? `${styles.mobile}  ${styles.skewedBg}`
+                  : `${styles.mobile}  ${styles.skewedBgNight} `
+                }
+              >
+                <div className={`${styles.mobile} ${styles.heroContent} `}>
+                  <div class="container">
+                  {/* <div class={`${styles.hero} jumbotron`}> */}
+              <img
+                hidden
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step1.png"
+                // loading="lazy"
+                alt=""
+                class="stepimage"
+                width="320"
+              />
+              <img
+                hidden
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step2.png"
+                // loading="lazy"
+                alt=""
+                class="stepimage"
+                width="320"
+              />
+              <img
+              ref={firstImage}
+                hidden
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
+                // loading="lazy"
+                alt=""
+                class="stepimage"
+                width="320"
+              />
+              <img
+                ref={firstImage}
+                hidden
+                src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3a.png"
+                // loading="lazy"
+                // alt=""
+                // class="stepimage"
+                // width="320"
+              />
+              <div className="container">
+                
+                <div className={'d-flex justify-content-center  '}>
+                  {/* <div className="p-5"></div> */}
+                  <div className="col">
+                    <div className="p-2"></div>
+                    &nbsp;
+                    <div className={' p-5 ' + styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                  </div>
+                </div>
+                <div className="p-4"></div>
+
+                <div
+                  className={'d-flex justify-content-center  ' + styles.desktop}
+                >
+                  <div className="col">
+                    <div className={'p-5 ' + styles.animatedBg}>&nbsp;</div>
+                    <div className="p-2"></div>
+                    &nbsp;
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                    <div className={styles.animatedBg}>&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+              {/* </div> */}
               </div>
             </>
           )}

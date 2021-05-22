@@ -269,14 +269,14 @@
 }
 
 .mobile {
-  /* display: flex; */
-  margin: 0;
+  display: block;
+  /* margin: 0; */
   /* flex-direction: row; */
 }
 
 .desktop {
-  /* display: flex; */
-  margin: 0;
+  display: block;
+  /* margin: 0; */
   /* flex-direction: column; */
 }
 
