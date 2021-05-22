@@ -463,7 +463,7 @@ const Home = () => {
                       </button>
                     </div>
                   </div>
-
+                          <div className="p-3"></div>
                   <div className={'pt-5 ' + styles.bodyregular}>
                   <h1 className={'pb-5 display-3 ' + styles.h4}>That's it!</h1>
                   </div>
