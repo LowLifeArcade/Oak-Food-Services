@@ -12,6 +12,8 @@ const Home = () => {
     localStorage.getItem('no-students') && Router.push('/user/profile/add');
   });
 
+  const [timeOfDay] = useState(() => new Date().getHours() > 6 && new Date().getHours() < 19) 
+  
 
   // TODO: refactor. It works but is messy.
   // This loads a hidden image and when it's done loading we display the actual page instead of the fake loading screen
@@ -77,12 +79,9 @@ const Home = () => {
             <>
               <div
                 className={ 
-                  // setTimeout(() => {
-                  
-                  new Date().getHours() > 6 && new Date().getHours() < 19
+                  timeOfDay
                   ? `${styles.skewedBg}`
                   : `${styles.skewedBgNight} `
-                // },200)
                 }
               >
                 <div className={`${styles.desktop} ${styles.heroContent} `}>
@@ -480,7 +479,7 @@ const Home = () => {
             <>
             <div
                 className={ 
-                  new Date().getHours() > 6 && new Date().getHours() < 19
+                  timeOfDay
                   ? `${styles.skewedBg}`
                   : `${styles.skewedBgNight} `
                 }
@@ -559,7 +558,7 @@ const Home = () => {
               
             <div
                 className={ 
-                  new Date().getHours() > 6 && new Date().getHours() < 19
+                  timeOfDay
                   ? `${styles.mobile}  ${styles.skewedBg}`
                   : `${styles.mobile}  ${styles.skewedBgNight} `
                 }
