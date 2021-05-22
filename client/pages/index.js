@@ -12,8 +12,10 @@ const Home = () => {
     localStorage.getItem('no-students') && Router.push('/user/profile/add');
   });
 
-  const [timeOfDay] = useState(() => new Date().getHours() > 6 && new Date().getHours() < 19) 
-  console.log('time of day state',timeOfDay,'new date', new Date().getHours())
+  // const [date] = useState(new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"}))
+  const [date] = useState(new Date().getUTCHours())
+  const [timeOfDay] = useState(() => date - 7 > 6 && date - 7 < 19) 
+  console.log('time of day state',timeOfDay,'new date', date)
   
 
   // TODO: refactor. It works but is messy.
