@@ -405,9 +405,6 @@ const Links = ({
                 </button>
               </Link>
             )} */}
-          </div>
-        </div>
-        <br />
         {process.browser && isAuth() && isAuth().role === 'admin' && (
           <div className="">
             <Link href={`/admin/category/${category.slug}`}>
@@ -415,15 +412,18 @@ const Links = ({
                 Edit
               </button>
             </Link>
-            &nbsp;
-            <button
+            {/* &nbsp; */}
+            {/* <button
               onClick={(e) => confirmDelete(e, category.slug)}
               className="badge btn btn-sm btn-outline-danger "
             >
               Delete
-            </button>
+            </button> */}
           </div>
         )}
+          </div>
+        </div>
+        <br />
         {/* formated link area */}
         {/* <div className="row">
         <div className="col-md-8">{listOfLinks()}</div>

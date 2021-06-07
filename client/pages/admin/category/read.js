@@ -84,12 +84,12 @@ const Read = ({ user, token }) => {
                     Edit
                   </button>
                 </Link>
-                <button
+                {/* <button
                   onClick={(e) => confirmDelete(e, c.slug)}
                   className="btn btn-sm btn-outline-danger btn-block"
                 >
                   Delete
-                </button>
+                </button> */}
               </div>
               
             </div>

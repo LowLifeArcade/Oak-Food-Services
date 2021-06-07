@@ -342,15 +342,17 @@ exports.remove = (req, res) => {
       });
     }
     // find image in aws and remove from s3 before updating
-    const deleteParams = {
-      Bucket: 'oakfoods',
-      Key: `${data.image.key}`,
-    };
-
-    s3.deleteObject(deleteParams, function (err, data) {
-      if (err) console.log('S3 DELETE ERROR DURING ', err);
-      else console.log('S3 DELETED DURING ', data); //deleted
-    });
+    // if (data.image && data.image.key) {
+    //   const deleteParams = {
+    //     Bucket: 'oakfoods',
+    //     Key: `${data.image.key}`,
+    //   };
+  
+    //   s3.deleteObject(deleteParams, function (err, data) {
+    //     if (err) console.log('S3 DELETE ERROR DURING ', err);
+    //     else console.log('S3 DELETED DURING ', data); //deleted
+    //   });
+    // }
     res.json({
       message: 'Category delete successful',
     });

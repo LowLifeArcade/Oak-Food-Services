@@ -426,12 +426,7 @@ const Create = ({ token, user }) => {
                 setState={setState}
               />
               <hr />
-              <AdminCode
-                state={state}
-                setState={setState}
-                auth={isAuth()}
-                pickupCodeInput={pickupCodeInput}
-              />
+              <AdminCode state={state} setState={setState} />
               <div className="row">
                 <div className="col-md-12">
                   {state.mealRequest.map((x, i) => {

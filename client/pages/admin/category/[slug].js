@@ -39,6 +39,7 @@ import 'react-quill/dist/quill.snow.css';
 import Router from 'next/router';
 import { isAuth } from '../../../helpers/auth';
 import Link from 'next/link';
+import category from '../../../../server/models/category';
 
 const Update = ({ oldCategory, token }) => {
   const [state, setState] = useState({
@@ -61,7 +62,7 @@ const Update = ({ oldCategory, token }) => {
   const [content, setContent] = useState(oldCategory.content);
   const [group, setGroup] = useState(oldCategory.group);
   const [menuType, setMenuType] = useState('Pickup');
-  const [menuPost, setMenuPost] = useState(true);
+  const [menuPost, setMenuPost] = useState(false);
 
   const [imageUploadButtonName, setImageUploadButtonName] = useState(
     'Update image'
@@ -81,6 +82,11 @@ const Update = ({ oldCategory, token }) => {
     buttonText,
     imageUploadText,
   } = state;
+
+  // useEffect(() => {
+  //   if (menu) setMenuPost(true)
+  //   console.log('menu', menu == true)
+  // }, [])
 
   useEffect(() => {
     buttonText === 'Updated'
@@ -387,7 +393,7 @@ const Update = ({ oldCategory, token }) => {
 
   const updateCategoryForm = () => (
     <form action="" onSubmit={handleSubmit}>
-      <div className="form-group">
+      <div className="form-group col-md-4">
         <label className="text-muted">Name</label>
         <input
           type="text"
@@ -497,7 +503,7 @@ const Update = ({ oldCategory, token }) => {
               </thead>
             )}
             <tbody>
-              {console.log('what"s in menu', menu)}
+
               {menuType === 'Pickup'
                 ? menu.map((l, i) => (
                     <>
@@ -650,7 +656,7 @@ const Update = ({ oldCategory, token }) => {
               </thead>
             )}
             <tbody>
-              {console.log('what"s in menu', menu)}
+
               {menuType === 'Onsite'
                 ? menu2.map((l, i) => (
                     <>
@@ -798,7 +804,7 @@ const Update = ({ oldCategory, token }) => {
               </thead>
             )}
             <tbody>
-              {console.log('what"s in menu', menu)}
+
               {menuType === 'Pickup'
                 ? menu3.map((l, i) => (
                     <>
@@ -918,6 +924,7 @@ const Update = ({ oldCategory, token }) => {
       {success && showSuccessMessage(success)}
       {error && showErrorMessage(error)}
       <button className="btn btn-outline-warning">{buttonText}</button>
+      <button onClick={e => confirmDelete(e, oldCategory.slug)} className="btn btn-outline-danger float-right">Delete</button>
     </form>
   );
 
@@ -925,7 +932,7 @@ const Update = ({ oldCategory, token }) => {
     <Layout>
       <div className="container pt-5">
       <div className="row pt-3">
-        <div className="col-md-6 offset-md-1 pt-3">
+        <div className="col-md-10 offset-md-1 pt-3">
           <h1>Update Post</h1>
           <br />
           {success && showSuccessMessage(success)}

@@ -7,15 +7,14 @@ const handleCodeChange = (e, state, setState) => {
   });
 };
 
-const AdminCode = ({ state, setState, auth, pickupCodeInput }) =>
-  (auth.role === 'admin' && auth.userCode === 'DOOB') ||
-  (auth.role === 'admin' && auth.userCode === 'LYF') ? (
+const AdminCode = ({ state, setState, pickupCodeInput }) =>
+  state.userCode === 'DOOB' || state.userCode === 'LYF' ? (
     <>
       <div className=" form-group">
         <input
           type="text"
           className=" form-control"
-          value={pickupCodeInput}
+          value={state.pickupCodeInput}
           placeholder="Enter a 4 digit User Code test"
           onChange={(e) => handleCodeChange(e, state, setState)}
         />
