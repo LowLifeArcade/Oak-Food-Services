@@ -124,10 +124,10 @@ const Home = () => {
                         </div>
                       }
                       <div className={`pt-4 d-flex flex-row  container`}>
-                        <p className={`col text-left mx-2`}>
-                          <h4 class="text-secondary pb-2 text-center">
+                        <p className={`col text-justify mx-2`}>
+                          <h1 class="text-secondary pb-2 text-center">
                             Who We Are
-                          </h4>
+                          </h1>
                           OPUSD school meals are aimed at providing our students
                           with the best nutrition options in the country. We
                           believe that good nutrition should never come second
@@ -141,8 +141,8 @@ const Home = () => {
                           way in quality meals servicing our students. */}
                         </p>
                         {/* <hr style={`width: 1px`}></hr> */}
-                        <p className={`col text-left mx-2`}>
-                          <h4 class="text-secondary pb-2 text-center">
+                        <p className={`col text-justify mx-2`}>
+                          <h4 class="text-secondary pb-2 text-center font-italic">
                             Onsite and Offsite Meals
                           </h4>
                           In the past year, we have met the challenge of
@@ -164,10 +164,10 @@ const Home = () => {
                           nutritional value. We prepare our food daily (no packaged foods) 
                           fulfilling our mission statement 'Food prepared daily'. */}
                         </p>
-                        <p className={`col text-left mx-2`}>
-                          <h4 class="text-secondary pb-2 text-center">
+                        <p className={`col text-justify mx-2`}>
+                          <h3 class="text-secondary pb-2 text-center text-monospace">
                             Why We Do It
-                          </h4>
+                          </h3>
                           The country is in health crisis. Measures have been
                           put in place to handle the issues we face across our
                           country and the state of California, but we here at
