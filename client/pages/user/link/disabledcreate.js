@@ -414,12 +414,114 @@ const Create = ({ token, user }) => {
   return (
     <div className={styles.background}>
       <Layout>
-        <div className="pt-5"></div>
-        <div className="d-flex flex-column justify-content-center align-items-center pt-5 p-3">
-
-        <h2>Sorry, requests have been disabled</h2>
-        <p>We are currently not servering from this programming as school has returned to onsite learning only.</p>
-        </div>
+        {loaded ? (
+          <div className="col-md-6 offset-md-3 pt-4">
+            <div className="p-4"></div>
+            <div className="p-2"></div>
+            <div className={styles.subcard}>
+              <MealRequestCalanderPanel
+                pickupDate={pickupDate}
+                auth={isAuth()}
+                state={state}
+                setState={setState}
+              />
+              <hr />
+              <AdminCode state={state} setState={setState} />
+              <div className="row">
+                <div className="col-md-12">
+                  {state.mealRequest.map((x, i) => {
+                    return (
+                      <>
+                        <MealRequestStudent
+                          i={i}
+                          state={state}
+                          auth={isAuth()}
+                        />
+                        <AdminPanel
+                          index={i}
+                          meal={x}
+                          setState={setState}
+                          state={state}
+                          auth={isAuth()}
+                        />
+                        <SelectMealRequest
+                          i={i}
+                          user={user}
+                          meal={state.mealRequest[i].meal}
+                          student={students[i]}
+                          state={state}
+                          setState={setState}
+                        />
+                        <SelectPickupOption
+                          i={i}
+                          x={x}
+                          state={state}
+                          setState={setState}
+                          auth={isAuth()}
+                          user={user}
+                        />
+                        <SelectDaysPanel
+                          i={i}
+                          x={x}
+                          auth={isAuth()}
+                          state={state}
+                          setState={setState}
+                        />
+                        <hr />
+                      </>
+                    );
+                  })}
+                  <div>
+                    <AddMeal
+                      state={state}
+                      setState={setState}
+                      user={user}
+                      mealRequest={mealRequest}
+                      pickupCodeAdd={pickupCodeAdd}
+                    />
+                    <RemoveMeal state={state} setState={setState} />
+                  </div>
+                </div>
+                <div className="col-md-6 p-3">
+                  <SelectPickupTime
+                    auth={isAuth()}
+                    mealRequest={mealRequest}
+                    state={state}
+                    setState={setState}
+                    pickupTime={pickupTime}
+                  />
+                  <SubmitButton
+                    auth={isAuth()}
+                    userCode={user.userCode}
+                    success={success}
+                    error={error}
+                    mealRequest={mealRequest}
+                    handleAdminSubmit={handleAdminSubmit}
+                    handleSubmit={handleSubmit}
+                    pickupCodeAdd={pickupCodeAdd}
+                    pickupCodeInput={pickupCodeInput}
+                    state={state}
+                    setState={setState}
+                    token={token}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <FakeMealRequestForm />
+            <img
+              ref={firstImage}
+              hidden
+              src="https://oakfoods.s3.us-east-2.amazonaws.com/Food+app+images/Food+app+images/step3b.png"
+              // loading="lazy"
+              alt=""
+              class="stepimage"
+              width="320"
+            />
+          </>
+        )}
       </Layout>
       <div className="p-5"></div>
     </div>

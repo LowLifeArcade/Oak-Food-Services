@@ -3,16 +3,16 @@ import Router from 'next/router';
 
 // set in cookie
 export const setCookie = (key, value) => {
-  let now = new Date();
-  now.setTime(now.getTime() + 1 * 3600 * 1000);
+  // let now = new Date();
+  // now.setTime(now.getTime() + 1 * 3600 * 1000);
 
   if (process.browser) {
     // if window.
     cookie.set(key, value, {
-      expires: 1,
+      expires: 7,
     });
   }
-  console.log('jwt expires in ', now.toUTCString())
+  // console.log('jwt expires in ', now.toUTCString())
 };
 
 // remove from cookie

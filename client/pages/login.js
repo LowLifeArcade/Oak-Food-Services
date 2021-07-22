@@ -60,11 +60,12 @@ const Login = () => {
           : Router.push('user')
       );
     } catch (error) {
-      console.log(error);
+      console.log('error in login',error);
       setState({
         ...state,
         buttonText: 'Login',
-        error: error.response.data.error,
+        error: 'Login error',
+        // error: error.response.data.error,
       });
     }
   };
