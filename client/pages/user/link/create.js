@@ -418,7 +418,7 @@ const Create = ({ token, user }) => {
         <div className="d-flex flex-column justify-content-center align-items-center pt-5 p-3">
 
         <h2>Sorry, requests have been disabled</h2>
-        <p>We are currently not servering from this programming as school has returned to onsite learning only.</p>
+        <p>We are currently not servering from this program as school has returned to onsite learning only.</p>
         </div>
       </Layout>
       <div className="p-5"></div>
